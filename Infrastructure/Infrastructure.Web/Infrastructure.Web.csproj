@@ -1,0 +1,551 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{D2AC8387-FC21-4E8E-810B-C0A637D44222}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Infrastructure.Web</RootNamespace>
+    <AssemblyName>Infrastructure.Web</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SccProjectName>
+    </SccProjectName>
+    <SccLocalPath>
+    </SccLocalPath>
+    <SccAuxPath>
+    </SccAuxPath>
+    <SccProvider>
+    </SccProvider>
+    <TargetFrameworkProfile />
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;NET45</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <RunCodeAnalysis>false</RunCodeAnalysis>
+    <Prefer32Bit>false</Prefer32Bit>
+    <DocumentationFile>bin\Debug\Infrastructure.Web.XML</DocumentationFile>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>none</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Infrastructure.Web\Release\</OutputPath>
+    <DefineConstants>TRACE;NET45</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Infrastructure.Web\Release\Infrastructure.Web.XML</DocumentationFile>
+    <Prefer32Bit>false</Prefer32Bit>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>false</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>Infrastructure.Keys.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <PropertyGroup>
+    <DelaySign>false</DelaySign>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Autofac">
+      <HintPath>..\..\packages\Autofac.3.5.2\lib\net40\Autofac.dll</HintPath>
+    </Reference>
+    <Reference Include="Autofac.Integration.Mvc">
+      <HintPath>..\..\packages\Autofac.Mvc5.3.3.4\lib\net45\Autofac.Integration.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="log4net, Version=1.2.13.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\log4net.2.0.3\lib\net40-full\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.Core">
+      <HintPath>..\..\packages\Microsoft.AspNet.Identity.Core.2.2.1\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.SignalR.Core, Version=2.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Microsoft.AspNet.SignalR.Core.2.2.0\lib\net45\Microsoft.AspNet.SignalR.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.SignalR.SystemWeb">
+      <HintPath>..\..\packages\Microsoft.AspNet.SignalR.SystemWeb.2.2.0\lib\net45\Microsoft.AspNet.SignalR.SystemWeb.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.OData.Core, Version=6.13.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Microsoft.OData.Core.6.13.0\lib\portable-net40+sl5+wp8+win8+wpa\Microsoft.OData.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.OData.Edm, Version=6.13.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Microsoft.OData.Edm.6.13.0\lib\portable-net40+sl5+wp8+win8+wpa\Microsoft.OData.Edm.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Microsoft.Owin.3.0.1\lib\net45\Microsoft.Owin.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Host.SystemWeb">
+      <HintPath>..\..\packages\Microsoft.Owin.Host.SystemWeb.3.0.1\lib\net45\Microsoft.Owin.Host.SystemWeb.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Microsoft.Owin.Security.3.0.1\lib\net45\Microsoft.Owin.Security.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Spatial, Version=6.13.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Microsoft.Spatial.6.13.0\lib\portable-net40+sl5+wp8+win8+wpa\Microsoft.Spatial.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Newtonsoft.Json.6.0.8\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="Novell.Directory.Ldap, Version=2.1.4.0, Culture=neutral">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Dll\Novell.Directory.Ldap.dll</HintPath>
+    </Reference>
+    <Reference Include="Owin">
+      <HintPath>..\..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Net.Http.Formatting, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Microsoft.AspNet.WebApi.Client.5.2.3\lib\net45\System.Net.Http.Formatting.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http.WebRequest" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.Helpers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Http, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Microsoft.AspNet.WebApi.Core.5.2.3\lib\net45\System.Web.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Http.WebHost, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Microsoft.AspNet.WebApi.WebHost.5.2.3\lib\net45\System.Web.Http.WebHost.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Mvc, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Microsoft.AspNet.Mvc.5.2.3\lib\net45\System.Web.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.OData, Version=5.7.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Microsoft.AspNet.OData.5.7.0\lib\net45\System.Web.OData.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Microsoft.AspNet.Razor.3.2.3\lib\net45\System.Web.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Deployment, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.Deployment.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="ApplicationContext.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DependencyRegistrar.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Extensions\HttpRequestExtensions.cs" />
+    <Compile Include="Fakes\Extensions.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Fakes\FakeHttpContext.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Fakes\FakeHttpRequest.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Fakes\FakeHttpResponse.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Fakes\FakeHttpSessionState.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Fakes\FakeIdentity.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Fakes\FakePrincipal.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="FileSystems\VirtualPath\DefaultVirtualPathMonitor.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="FileSystems\VirtualPath\DefaultVirtualPathProvider.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="FileSystems\VirtualPath\ICustomVirtualPathProvider.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="FileSystems\VirtualPath\IVirtualPathMonitor.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="FileSystems\VirtualPath\IVirtualPathProvider.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="FileSystems\WebSite\IWebSiteFolder.cs" />
+    <Compile Include="FileSystems\WebSite\WebSiteFolder.cs" />
+    <Compile Include="GlobalConfigurationManager.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Helpers\DateTimeHelper.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Helpers\DateTimeSettings.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Helpers\IDateTimeHelper.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Helpers\IUserAgentHelper.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Helpers\UserAgentHelper.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Http\BaseApiController.cs" />
+    <Compile Include="Http\Caching\CachingHandler.cs" />
+    <Compile Include="Http\Caching\EntityTagKey.cs" />
+    <Compile Include="Http\Caching\IEntityTagStore.cs" />
+    <Compile Include="Http\Caching\InMemoryEntityTagStore.cs" />
+    <Compile Include="Http\Caching\InMemoryThrottleStore.cs" />
+    <Compile Include="Http\Caching\IThrottleStore.cs" />
+    <Compile Include="Http\Caching\ThrottleEntry.cs" />
+    <Compile Include="Http\Caching\TimedEntityTagHeaderValue.cs" />
+    <Compile Include="Http\Content\CompressedContent.cs" />
+    <Compile Include="Http\Content\CompressHandler.cs" />
+    <Compile Include="Http\Extensions\ActionExtensions.cs" />
+    <Compile Include="Http\Extensions\AreaRegistrationContextExtensions.cs" />
+    <Compile Include="Http\Extensions\ConfigurationExtensions.cs" />
+    <Compile Include="Http\Extensions\ContentNegotiationExtensions.cs" />
+    <Compile Include="Http\Extensions\HttpMessageExtensions.cs" />
+    <Compile Include="Http\Filters\EnableCorsAttribute.cs" />
+    <Compile Include="Http\Filters\ExceptionHandlingAttribute.cs" />
+    <Compile Include="Http\Filters\OnlineUserFilterBaseAttribute.cs" />
+    <Compile Include="Http\Filters\ValidationAttribute.cs" />
+    <Compile Include="Http\Formattings\CSVMediaTypeFormatter.cs" />
+    <Compile Include="Http\Formattings\PlainTextFormatter.cs" />
+    <Compile Include="Http\Handlers\BasicAuthenticationHandlerBase.cs" />
+    <Compile Include="Http\Handlers\DigestAuthenticationHandle.cs" />
+    <Compile Include="Http\Handlers\EncodingHandler.cs" />
+    <Compile Include="Http\Handlers\ETagHandler.cs" />
+    <Compile Include="Http\Handlers\HeadMessageHandler.cs" />
+    <Compile Include="Http\Handlers\HttpMethodTunnelMessageHandler.cs" />
+    <Compile Include="Http\Handlers\MethodOverrideHandler.cs" />
+    <Compile Include="Http\Handlers\NotAcceptableMessageHandler.cs" />
+    <Compile Include="Http\Handlers\RequestResponseTraceHandlerHandler.cs" />
+    <Compile Include="Http\Handlers\RequireHttpsHandler.cs" />
+    <Compile Include="Http\Handlers\SelfHostConsoleOutputHandler.cs" />
+    <Compile Include="Http\Handlers\SimpleCorsHandler.cs" />
+    <Compile Include="Http\Handlers\ThrottlingHandler.cs" />
+    <Compile Include="Http\Handlers\TokenAuthenticationHandlerBase.cs" />
+    <Compile Include="Http\Handlers\TraceMessageHandler.cs" />
+    <Compile Include="Http\Handlers\UriFormatExtensionHandler.cs" />
+    <Compile Include="Http\Internal\EnumerableExtensions.cs" />
+    <Compile Include="Http\Internal\HttpHeaderNames.cs" />
+    <Compile Include="Http\Internal\IsInExtensions.cs" />
+    <Compile Include="Http\Internal\MediaTypeConstants.cs" />
+    <Compile Include="Http\Internal\ReflectionHelper.cs" />
+    <Compile Include="Http\Logging\ApiLoggingInfo.cs" />
+    <Compile Include="Http\Logging\ILoggingRepository.cs" />
+    <Compile Include="Http\Messages\ConflictResponse.cs" />
+    <Compile Include="Http\Messages\CreateResponse.cs" />
+    <Compile Include="Http\Messages\IApiResource.cs" />
+    <Compile Include="Http\Messages\MovedPermanentlyResponse.cs" />
+    <Compile Include="Http\Messages\NotModifiedResponse.cs" />
+    <Compile Include="Http\Messages\OkResponse.cs" />
+    <Compile Include="Http\Messages\RedirectResponse.cs" />
+    <Compile Include="Http\Messages\ResourceIdentifierBase.cs" />
+    <Compile Include="Http\Messages\ResourceLocation.cs" />
+    <Compile Include="Http\Messages\ResourceResponseBase.cs" />
+    <Compile Include="Http\Messages\TemporaryRedirectResponse.cs" />
+    <Compile Include="Http\ModelBinders\MvcActionValueBinder.cs" />
+    <Compile Include="Http\ModelBinders\MvcStyleBindingAttribute.cs" />
+    <Compile Include="Http\Routing\StartsWithConstraint.cs" />
+    <Compile Include="Http\Security\ClientCryptoDelegatingHandler.cs" />
+    <Compile Include="Http\Security\HostCryptoDelegatingHandler.cs" />
+    <Compile Include="Http\Selectors\AreaHttpControllerSelector.cs" />
+    <Compile Include="Http\Selectors\CorsActionSelector.cs" />
+    <Compile Include="Http\Serialization\IHttpMessageSerializerAsync.cs" />
+    <Compile Include="Http\Serialization\MessageContentHttpMessageSerializer.cs" />
+    <Compile Include="Http\Serialization\TaskHelpers.cs" />
+    <Compile Include="Http\Serialization\TaskHelpersExtensions.cs" />
+    <Compile Include="Http\Tracing\TraceWriter.cs" />
+    <Compile Include="Http\WebHttpHelper.cs" />
+    <Compile Include="Identity\Authorizer.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Identity\CreateUserParams.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Identity\IAuthorizationService.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Identity\IEncryptionService.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Identity\ISslSettingsProvider.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Identity\Permissions\IPermissionProvider.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Identity\Permissions\Permission.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Identity\Providers\DefaultSslSettingsProvider.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Identity\SecurityFilter.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Identity\StandardPermissions.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Image\ImageUtility.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Localization\IText.cs" />
+    <Compile Include="Localization\LocalizationUtilities.cs" />
+    <Compile Include="Localization\LocalizedString.cs" />
+    <Compile Include="Localization\Localizer.cs" />
+    <Compile Include="Localization\NullLocalizer.cs" />
+    <Compile Include="Localization\Services\DefaultLocalizedStringManager.cs" />
+    <Compile Include="Localization\Services\ILocalizedStringManager.cs" />
+    <Compile Include="Localization\Text.cs" />
+    <Compile Include="Logging\Log4NetLog.cs" />
+    <Compile Include="Logging\Log4NetLoggerAdapter.cs" />
+    <Compile Include="Mvc\AdminBaseController.cs" />
+    <Compile Include="Mvc\Attribute\AdminAuthorizeAttribute.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Mvc\Attribute\CustomAuthorizeAttribute.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Mvc\BaseController.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Mvc\Binders\JsonBinder.cs" />
+    <Compile Include="Mvc\Binders\StringTrimModelBinder.cs" />
+    <Compile Include="Mvc\Extensions\Caching\RecordWriter.cs" />
+    <Compile Include="Mvc\Extensions\HtmlHelperExtensions.cs" />
+    <Compile Include="Mvc\Extensions\WebViewPageExtensions.cs" />
+    <Compile Include="Mvc\Filters\FilterProvider.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Mvc\Filters\HandleAjaxErrorAttribute.cs" />
+    <Compile Include="Mvc\Filters\NonRequireHttpsAttribute.cs" />
+    <Compile Include="Mvc\Filters\OnlineUserFilterBaseAttribute.cs" />
+    <Compile Include="Mvc\Handlers\HttpDate.cs" />
+    <Compile Include="Mvc\Handlers\StaticFileHandler.cs" />
+    <Compile Include="Mvc\Handlers\StaticHandler.cs" />
+    <Compile Include="Mvc\IOWinAuthorizeProvider.cs" />
+    <Compile Include="Mvc\PluginControllerFactory.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Mvc\PluginRazorViewEngine.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Mvc\Routing\CoreModule.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Mvc\Routing\IRouteProvider.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Mvc\Routing\IRoutePublisher.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Mvc\Routing\RoutePublisher.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Mvc\Spooling\HtmlStringWriter.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Mvc\Routing\LowerCaseUrlConverter.cs" />
+    <Compile Include="Mvc\Routing\RewriteLowerCaseUrlRoute.cs" />
+    <Compile Include="Mvc\Routing\RewriteUrlRouteExtensions.cs" />
+    <Compile Include="Mvc\Routing\RouteHelper.cs" />
+    <Compile Include="Mvc\Security\AjaxOnlyAttribute.cs" />
+    <Compile Include="Mvc\ThemeRazorViewEngine.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Net\Alipay\AlipayConfig.cs" />
+    <Compile Include="Net\Alipay\AlipayCore.cs" />
+    <Compile Include="Net\Alipay\AlipayNotify.cs" />
+    <Compile Include="Net\Alipay\AlipayNotifyInfo.cs" />
+    <Compile Include="Net\Alipay\AlipayRequest.cs" />
+    <Compile Include="Net\Alipay\DeliverErrorCode.cs" />
+    <Compile Include="Net\Alipay\LogisticsPayment.cs" />
+    <Compile Include="Net\Alipay\LogisticsType.cs" />
+    <Compile Include="Net\Alipay\RefundStatus.cs" />
+    <Compile Include="Net\Alipay\TradeStatus.cs" />
+    <Compile Include="Net\Mail\EmailMessageRecord.cs" />
+    <Compile Include="Net\Mail\EmailMessageService.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Net\Mail\EmailMessageSettingsRecord.cs" />
+    <Compile Include="Net\WebPull\Images\Forum.cs" />
+    <Compile Include="Net\WebPull\Images\Group.cs" />
+    <Compile Include="Net\WebPull\Images\ImagePullBase.cs" />
+    <Compile Include="Net\WebPull\Images\ImagePullEventArgs.cs" />
+    <Compile Include="Net\WebPull\Images\NextSearchMode.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Security\LDAP\ILDAPUtil.cs" />
+    <Compile Include="Security\LDAP\LDAPSettingsRecord.cs" />
+    <Compile Include="Security\LDAP\LDAPUser.cs" />
+    <Compile Include="Security\LDAP\LDAPUtil.cs" />
+    <Compile Include="Security\OnlineType.cs" />
+    <Compile Include="Security\OnlineUser.cs" />
+    <Compile Include="Security\OnlineUserStoreBase.cs" />
+    <Compile Include="Security\UserCommon.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="SignalR\Hubs\ErrorHandlingHubPipelineModule.cs" />
+    <Compile Include="SignalR\Hubs\VariableParameterResolver.cs" />
+    <Compile Include="SignalR\Security\HostCryptoHubPipelineModule.cs" />
+    <Compile Include="Starter.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Tasks\IScheduleTaskService.cs" />
+    <Compile Include="Tasks\ITask.cs" />
+    <Compile Include="Tasks\ScheduleTaskService.cs" />
+    <Compile Include="Tasks\Task.cs" />
+    <Compile Include="Tasks\TaskManager.cs" />
+    <Compile Include="Tasks\TaskThread.cs" />
+    <Compile Include="UI\AjaxResult2.cs" />
+    <Compile Include="UI\AjaxResultType.cs" />
+    <Compile Include="UI\Extensions.cs" />
+    <Compile Include="UI\EasyUITreeData.cs" />
+    <Compile Include="UI\GridData.cs" />
+    <Compile Include="UI\GridRequest.cs" />
+    <Compile Include="Mvc\ParentController.cs" />
+    <Compile Include="UI\AjaxResult.cs" />
+    <Compile Include="UI\JqgridTreeData.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="UI\PageParameter.cs" />
+    <Compile Include="UI\Resources\IResourceManager.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="UI\Resources\IResourceManifest.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="UI\Resources\IResourceManifestProvider.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="UI\Resources\LinkEntry.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="UI\Resources\MetaEntry.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="UI\Resources\RequireSettings.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="UI\Resources\ResourceDefinition.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="UI\Resources\ResourceLocation.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="UI\Resources\ResourceManager.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="UI\Resources\ResourceManifest.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="UI\Resources\ResourceManifestBuilder.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="UI\Resources\ResourceRegister.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="UI\Resources\ResourceRequiredContext.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="WebHelper.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="WebWorkContext.cs" />
+    <Compile Include="WorkContextExtensions.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Infrastructure.Core.Data\Infrastructure.Core.Data.csproj">
+      <Project>{d58a373c-1a9c-4bf7-833d-427e4aef8502}</Project>
+      <Name>Infrastructure.Core.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Infrastructure.Core\Infrastructure.Core.csproj">
+      <Project>{f7c67c95-facb-4160-9a88-cb738e65e034}</Project>
+      <Name>Infrastructure.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Infrastructure.Utility\Infrastructure.Utility.csproj">
+      <Project>{946e0a0a-8280-46b3-893e-1b00a554ccab}</Project>
+      <Name>Infrastructure.Utility</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="Infrastructure.Keys.snk" />
+    <None Include="packages.Infrastructure.Web.config" />
+    <None Include="Scripts\jquery-1.10.2.min.map" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Security\oAuth2\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Scripts\jquery-1.10.2.intellisense.js" />
+    <Content Include="Scripts\jquery-1.10.2.js" />
+    <Content Include="Scripts\jquery-1.10.2.min.js" />
+    <Content Include="Scripts\jquery.signalR-2.2.0.js" />
+    <Content Include="Scripts\jquery.signalR-2.2.0.min.js" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

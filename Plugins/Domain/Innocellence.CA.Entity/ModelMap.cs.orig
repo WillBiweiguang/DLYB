@@ -1,0 +1,35 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using AutoMapper;
+using Innocellence.LED.ModelsView;
+
+namespace Innocellence.LED.Entity
+{
+   public  class ModelMap
+    {
+        public class ModelMappers
+        {
+            public static void MapperRegister()
+            {
+                //Identity
+                Mapper.CreateMap<TrainingCourseView, TrainingCourse>();
+                Mapper.CreateMap<NewsInfoView,NewsInfo >();
+                Mapper.CreateMap<SurveyView, Survey>();
+                Mapper.CreateMap<CourseDateRangeView, CourseDateRange>();
+                Mapper.CreateMap<SysUserView, SysUser>();
+                Mapper.CreateMap<SysRoleView, SysRole>();
+<<<<<<< HEAD
+                Mapper.CreateMap<CourseAttentionView, CourseAttention>();
+=======
+                Mapper.CreateMap<MessageView, Message>();
+                Mapper.CreateMap<LogsView, Logs>();
+                Mapper.CreateMap<FeedbackView, Feedback>();
+                Mapper.CreateMap<SearchKeywordsView, SearchKeywords>();
+>>>>>>> 74d2df9b0b8c6c24050353572623244818f60982
+            }
+        }
+    }
+}

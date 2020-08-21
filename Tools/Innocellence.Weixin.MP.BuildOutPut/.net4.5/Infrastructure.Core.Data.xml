@@ -1,0 +1,605 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Infrastructure.Core.Data</name>
+    </assembly>
+    <members>
+        <member name="T:Infrastructure.Core.Data.CodeFirstDbContext">
+            <summary>
+            EntityFramework-CodeFirst数据上下文
+            </summary>
+        </member>
+        <member name="M:Infrastructure.Core.Data.CodeFirstDbContext.#ctor">
+            <summary>
+            初始化一个<see cref="T:Infrastructure.Core.Data.CodeFirstDbContext"/>类型的新实例
+            </summary>
+        </member>
+        <member name="M:Infrastructure.Core.Data.CodeFirstDbContext.#ctor(System.String)">
+            <summary>
+            使用连接名称或连接字符串 初始化一个<see cref="T:Infrastructure.Core.Data.CodeFirstDbContext"/>类型的新实例
+            </summary>
+        </member>
+        <member name="M:Infrastructure.Core.Data.CodeFirstDbContext.GetConnectionStringName">
+            <summary>
+            获取 数据库连接串名称
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Infrastructure.Core.Data.CodeFirstDbContext.ExecuteSqlCommand(Infrastructure.Core.TransactionalBehavior,System.String,System.Object[])">
+            <summary>
+            对数据库执行给定的 DDL/DML 命令。 
+            与接受 SQL 的任何 API 一样，对任何用户输入进行参数化以便避免 SQL 注入攻击是十分重要的。 您可以在 SQL 查询字符串中包含参数占位符，然后将参数值作为附加参数提供。 
+            您提供的任何参数值都将自动转换为 DbParameter。 unitOfWork.ExecuteSqlCommand("UPDATE dbo.Posts SET Rating = 5 WHERE Author = @p0", userSuppliedAuthor); 
+            或者，您还可以构造一个 DbParameter 并将它提供给 SqlQuery。 这允许您在 SQL 查询字符串中使用命名参数。 unitOfWork.ExecuteSqlCommand("UPDATE dbo.Posts SET Rating = 5 WHERE Author = @author", new SqlParameter("@author", userSuppliedAuthor));
+            </summary>
+            <param name="transactionalBehavior">对于此命令控制事务的创建。</param>
+            <param name="sql">命令字符串。</param>
+            <param name="parameters">要应用于命令字符串的参数。</param>
+            <returns>执行命令后由数据库返回的结果。</returns>
+        </member>
+        <member name="M:Infrastructure.Core.Data.CodeFirstDbContext.SqlQuery``1(System.String,System.Object[])">
+            <summary>
+            创建一个原始 SQL 查询，该查询将返回给定泛型类型的元素。 类型可以是包含与从查询返回的列名匹配的属性的任何类型，也可以是简单的基元类型。 该类型不必是实体类型。
+             即使返回对象的类型是实体类型，上下文也决不会跟踪此查询的结果。 使用 SqlQuery(String, Object[]) 方法可返回上下文跟踪的实体。 
+            与接受 SQL 的任何 API 一样，对任何用户输入进行参数化以便避免 SQL 注入攻击是十分重要的。 您可以在 SQL 查询字符串中包含参数占位符，然后将参数值作为附加参数提供。 
+            您提供的任何参数值都将自动转换为 DbParameter。 unitOfWork.SqlQuery&lt;Post&gt;("SELECT * FROM dbo.Posts WHERE Author = @p0", userSuppliedAuthor); 
+            或者，您还可以构造一个 DbParameter 并将它提供给 SqlQuery。 这允许您在 SQL 查询字符串中使用命名参数。 unitOfWork.SqlQuery&lt;Post&gt;("SELECT * FROM dbo.Posts WHERE Author = @author", new SqlParameter("@author", userSuppliedAuthor));
+            </summary>
+            <typeparam name="TElement">查询所返回对象的类型。</typeparam>
+            <param name="sql">SQL 查询字符串。</param>
+            <param name="parameters">要应用于 SQL 查询字符串的参数。 如果使用输出参数，则它们的值在完全读取结果之前不可用。 这是由于 DbDataReader 的基础行为而导致的，有关详细信息，请参见 http://go.microsoft.com/fwlink/?LinkID=398589。</param>
+            <returns></returns>
+        </member>
+        <member name="M:Infrastructure.Core.Data.CodeFirstDbContext.SqlQuery(System.Type,System.String,System.Object[])">
+            <summary>
+            创建一个原始 SQL 查询，该查询将返回给定类型的元素。 类型可以是包含与从查询返回的列名匹配的属性的任何类型，也可以是简单的基元类型。 该类型不必是实体类型。 即使返回对象的类型是实体类型，上下文也决不会跟踪此查询的结果。 使用 SqlQuery(String, Object[]) 方法可返回上下文跟踪的实体。 与接受 SQL 的任何 API 一样，对任何用户输入进行参数化以便避免 SQL 注入攻击是十分重要的。 您可以在 SQL 查询字符串中包含参数占位符，然后将参数值作为附加参数提供。 您提供的任何参数值都将自动转换为 DbParameter。 context.Database.SqlQuery(typeof(Post), "SELECT * FROM dbo.Posts WHERE Author = @p0", userSuppliedAuthor); 或者，您还可以构造一个 DbParameter 并将它提供给 SqlQuery。 这允许您在 SQL 查询字符串中使用命名参数。 context.Database.SqlQuery(typeof(Post), "SELECT * FROM dbo.Posts WHERE Author = @author", new SqlParameter("@author", userSuppliedAuthor));
+            </summary>
+            <param name="elementType">查询所返回对象的类型。</param>
+            <param name="sql">SQL 查询字符串。</param>
+            <param name="parameters">要应用于 SQL 查询字符串的参数。 如果使用输出参数，则它们的值在完全读取结果之前不可用。 这是由于 DbDataReader 的基础行为而导致的，有关详细信息，请参见 http://go.microsoft.com/fwlink/?LinkID=398589。</param>
+            <returns></returns>
+        </member>
+        <member name="M:Infrastructure.Core.Data.CodeFirstDbContext.SaveChanges">
+            <summary>
+            提交当前单元操作的更改。
+            </summary>
+            <returns>操作影响的行数</returns>
+        </member>
+        <member name="M:Infrastructure.Core.Data.CodeFirstDbContext.SaveChanges(System.Boolean)">
+            <summary>
+            提交当前单元操作的更改。
+            </summary>
+            <param name="validateOnSaveEnabled">提交保存时是否验证实体约束有效性。</param>
+            <returns>操作影响的行数</returns>
+        </member>
+        <member name="M:Infrastructure.Core.Data.CodeFirstDbContext.ExecuteSqlCommandAsync(Infrastructure.Core.TransactionalBehavior,System.String,System.Object[])">
+            <summary>
+            对数据库执行给定的 DDL/DML 命令。 
+            与接受 SQL 的任何 API 一样，对任何用户输入进行参数化以便避免 SQL 注入攻击是十分重要的。 您可以在 SQL 查询字符串中包含参数占位符，然后将参数值作为附加参数提供。 
+            您提供的任何参数值都将自动转换为 DbParameter。 unitOfWork.ExecuteSqlCommand("UPDATE dbo.Posts SET Rating = 5 WHERE Author = @p0", userSuppliedAuthor); 
+            或者，您还可以构造一个 DbParameter 并将它提供给 SqlQuery。 这允许您在 SQL 查询字符串中使用命名参数。 unitOfWork.ExecuteSqlCommand("UPDATE dbo.Posts SET Rating = 5 WHERE Author = @author", new SqlParameter("@author", userSuppliedAuthor));
+            </summary>
+            <param name="transactionalBehavior">对于此命令控制事务的创建。</param>
+            <param name="sql">命令字符串。</param>
+            <param name="parameters">要应用于命令字符串的参数。</param>
+            <returns>执行命令后由数据库返回的结果。</returns>
+        </member>
+        <member name="M:Infrastructure.Core.Data.CodeFirstDbContext.SaveChangesAsync">
+            <summary>
+            异步提交当前单元操作的更改。
+            </summary>
+            <returns>操作影响的行数</returns>
+        </member>
+        <member name="M:Infrastructure.Core.Data.CodeFirstDbContext.SaveChangesAsync(System.Boolean)">
+            <summary>
+            提交当前单元操作的更改。
+            </summary>
+            <param name="validateOnSaveEnabled">提交保存时是否验证实体约束有效性。</param>
+            <returns>操作影响的行数</returns>
+        </member>
+        <member name="P:Infrastructure.Core.Data.CodeFirstDbContext.TransactionEnabled">
+            <summary>
+            获取或设置 是否开启事务提交
+            </summary>
+        </member>
+        <member name="P:Infrastructure.Core.Data.CodeFirstDbContext.DataLoggingEnabled">
+            <summary>
+            获取 是否允许数据日志记录
+            </summary>
+        </member>
+        <member name="T:Infrastructure.Core.Data.DatabaseInitializer">
+            <summary>
+            数据库初始化操作类
+            </summary>
+        </member>
+        <member name="M:Infrastructure.Core.Data.DatabaseInitializer.Initialize">
+            <summary>
+            设置数据库初始化，策略为自动迁移到最新版本
+            </summary>
+        </member>
+        <member name="M:Infrastructure.Core.Data.DatabaseInitializer.AddMapperAssembly(System.Reflection.Assembly)">
+            <summary>
+            添加需要搜索实体映射的程序集到检索集合中
+            </summary>
+        </member>
+        <member name="M:Infrastructure.Core.Data.DatabaseInitializer.GetAllEntityMapper">
+            <summary>
+            EF用mapping
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="P:Infrastructure.Core.Data.DatabaseInitializer.EntityMappers">
+            <summary>
+            获取 数据实体映射配置信息集合
+            </summary>
+        </member>
+        <member name="T:Infrastructure.Core.Data.DataHelper">
+            <summary>
+            数据辅助操作类
+            </summary>
+        </member>
+        <member name="M:Infrastructure.Core.Data.DataHelper.GetSqlExceptionMessage(System.Int32)">
+            <summary>
+            由错误码返回指定的自定义SqlException异常信息
+            </summary>
+            <param name="number"> </param>
+            <returns> </returns>
+        </member>
+        <member name="T:Infrastructure.Core.Data.EntityConfigurationBase`2">
+            <summary>
+            数据实体映射配置基类
+            </summary>
+            <typeparam name="TEntity">动态实体类型</typeparam>
+            <typeparam name="TKey">动态主键类型</typeparam>
+        </member>
+        <member name="T:Infrastructure.Core.Data.IEntityMapper">
+            <summary>
+            实体映射接口
+            </summary>
+        </member>
+        <member name="M:Infrastructure.Core.Data.IEntityMapper.RegistTo(System.Data.Entity.ModelConfiguration.Configuration.ConfigurationRegistrar)">
+            <summary>
+            将当前实体映射对象注册到当前数据访问上下文实体映射配置注册器中
+            </summary>
+            <param name="configurations">实体映射配置注册器</param>
+        </member>
+        <member name="M:Infrastructure.Core.Data.EntityConfigurationBase`2.RegistTo(System.Data.Entity.ModelConfiguration.Configuration.ConfigurationRegistrar)">
+            <summary>
+            将当前实体映射对象注册到当前数据访问上下文实体映射配置注册器中
+            </summary>
+            <param name="configurations">实体映射配置注册器</param>
+        </member>
+        <member name="T:Infrastructure.Core.Data.ComplexTypeConfigurationBase`2">
+            <summary>
+            复合数据实体映射配置基类
+            </summary>
+            <typeparam name="TComplexType">动态复合实体类型</typeparam>
+            <typeparam name="TKey">动态主键类型</typeparam>
+        </member>
+        <member name="M:Infrastructure.Core.Data.ComplexTypeConfigurationBase`2.RegistTo(System.Data.Entity.ModelConfiguration.Configuration.ConfigurationRegistrar)">
+            <summary>
+            将当前实体映射对象注册到当前数据访问上下文实体映射配置注册器中
+            </summary>
+            <param name="configurations">实体映射配置注册器</param>
+        </member>
+        <member name="T:Infrastructure.Core.Data.AutoMapperExtension">
+            <summary>
+            AutoMapper 辅助扩展方法
+            </summary>
+        </member>
+        <member name="M:Infrastructure.Core.Data.AutoMapperExtension.MapTo``1(System.Object)">
+            <summary>
+            创建映射，使用源对象创建目标对象
+            </summary>
+            <typeparam name="TTarget">目标类型</typeparam>
+            <param name="source">源对象</param>
+            <returns>创建的目标对象</returns>
+        </member>
+        <member name="M:Infrastructure.Core.Data.AutoMapperExtension.MapTo``2(``0,``1)">
+            <summary>
+            更新映射，使用源对象更新目标对象
+            </summary>
+            <typeparam name="TSource">源类型</typeparam>
+            <typeparam name="TTarget">目标类型</typeparam>
+            <param name="source">源对象</param>
+            <param name="target">要更新的目标对象</param>
+            <returns>更新后的目标对象</returns>
+        </member>
+        <member name="T:Infrastructure.Core.Data.DbContextExtensions">
+            <summary>
+            上下文扩展辅助操作类
+            </summary>
+        </member>
+        <member name="M:Infrastructure.Core.Data.DbContextExtensions.Update``2(System.Data.Entity.DbContext,``0[])">
+            <summary>
+            更新上下文中指定的实体的状态
+            </summary>
+            <typeparam name="TEntity">实体类型</typeparam>
+            <typeparam name="TKey">主键类型</typeparam>
+            <param name="dbContext">上下文对象</param>
+            <param name="entities">要更新的实体类型</param>
+        </member>
+        <member name="M:Infrastructure.Core.Data.DbContextExtensions.Update``2(System.Data.Entity.DbContext,System.Linq.Expressions.Expression{System.Func{``0,System.Object}},``0[])">
+            <summary>
+            按实体属性更新上下文中指定实体的状态
+            </summary>
+            <typeparam name="TEntity">实体类型</typeparam>
+            <typeparam name="TKey">实体主键类型</typeparam>
+            <param name="dbContext">上下文对象</param>
+            <param name="propertyExpression">实体属性表达式，提供要更新的实体属性</param>
+            <param name="entities">附带新值的实体对象，必须包含主键</param>
+        </member>
+        <member name="M:Infrastructure.Core.Data.DbContextExtensions.GetEntityOperateLogs(System.Data.Entity.DbContext)">
+            <summary>
+            获取数据上下文的变更日志信息
+            </summary>
+        </member>
+        <member name="M:Infrastructure.Core.Data.DbContextExtensions.GetEntityOperateLogsAsync(System.Data.Entity.DbContext)">
+            <summary>
+            异步获取数据上下文的变更日志信息
+            </summary>
+            <param name="dbContext"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Infrastructure.Core.Data.DbContextExtensions.GetAddedLog(System.Data.Entity.Core.Objects.ObjectStateEntry)">
+            <summary>
+            获取添加数据的日志信息
+            </summary>
+            <param name="entry"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Infrastructure.Core.Data.DbContextExtensions.GetModifiedLog(System.Data.Entity.Core.Objects.ObjectStateEntry)">
+            <summary>
+            获取修改数据的日志信息
+            </summary>
+            <param name="entry"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Infrastructure.Core.Data.DbContextExtensions.GetDeletedLog(System.Data.Entity.Core.Objects.ObjectStateEntry)">
+            <summary>
+            获取删除数据的日志信息
+            </summary>
+            <param name="entry"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Infrastructure.Core.Data.Migrations.CreateDatabaseIfNotExistsWithSeed">
+            <summary>
+            在数据库不存在时使用种子数据创建数据库
+            </summary>
+        </member>
+        <member name="P:Infrastructure.Core.Data.Migrations.CreateDatabaseIfNotExistsWithSeed.SeedActions">
+            <summary>
+            获取 数据库创建时的种子数据操作信息集合，各个模块可以添加自己的初始化数据
+            </summary>
+        </member>
+        <member name="T:Infrastructure.Core.Data.Migrations.ISeedAction">
+            <summary>
+            初始化种子数据接口
+            </summary>
+        </member>
+        <member name="M:Infrastructure.Core.Data.Migrations.ISeedAction.Action(System.Data.Entity.DbContext)">
+            <summary>
+            定义种子数据初始化过程
+            </summary>
+            <param name="context">数据上下文</param>
+        </member>
+        <member name="P:Infrastructure.Core.Data.Migrations.ISeedAction.Order">
+            <summary>
+            获取 操作排序，数值越小越先执行
+            </summary>
+        </member>
+        <member name="T:Infrastructure.Core.Data.Migrations.MigrationsConfiguration">
+            <summary>
+            默认迁移配置
+            </summary>
+        </member>
+        <member name="M:Infrastructure.Core.Data.Migrations.MigrationsConfiguration.#ctor">
+            <summary>
+            初始化一个<see cref="T:Infrastructure.Core.Data.Migrations.MigrationsConfiguration"/>类型的新实例
+            </summary>
+        </member>
+        <member name="P:Infrastructure.Core.Data.Migrations.MigrationsConfiguration.SeedActions">
+            <summary>
+            获取 数据迁移初始化种子数据操作信息集合，各个模块可以添加自己的数据初始化操作
+            </summary>
+        </member>
+        <member name="T:Infrastructure.Core.Data.Repository`2">
+            <summary>
+            EntityFramework的仓储实现
+            </summary>
+            <typeparam name="TEntity">实体类型</typeparam>
+            <typeparam name="TKey">主键类型</typeparam>
+        </member>
+        <member name="M:Infrastructure.Core.Data.Repository`2.#ctor(Infrastructure.Core.IUnitOfWork)">
+            <summary>
+            初始化一个<see cref="T:Infrastructure.Core.Data.Repository`2"/>类型的新实例
+            </summary>
+        </member>
+        <member name="M:Infrastructure.Core.Data.Repository`2.Insert(`0)">
+            <summary>
+            插入实体
+            </summary>
+            <param name="entity">实体对象</param>
+            <returns>操作影响的行数</returns>
+        </member>
+        <member name="M:Infrastructure.Core.Data.Repository`2.Insert(System.Collections.Generic.IEnumerable{`0})">
+            <summary>
+            批量插入实体
+            </summary>
+            <param name="entities">实体对象集合</param>
+            <returns>操作影响的行数</returns>
+        </member>
+        <member name="M:Infrastructure.Core.Data.Repository`2.Insert``1(System.Collections.Generic.ICollection{``0},System.Action{``0},System.Func{``0,`0,`0})">
+            <summary>
+            以DTO为载体批量插入实体
+            </summary>
+            <typeparam name="TAddDto">添加DTO类型</typeparam>
+            <param name="dtos">添加DTO信息集合</param>
+            <param name="checkAction">添加信息合法性检查委托</param>
+            <param name="updateFunc">由DTO到实体的转换委托</param>
+            <returns>业务操作结果</returns>
+        </member>
+        <member name="M:Infrastructure.Core.Data.Repository`2.Delete(`0)">
+            <summary>
+            删除实体
+            </summary>
+            <param name="entity">实体对象</param>
+            <returns>操作影响的行数</returns>
+        </member>
+        <member name="M:Infrastructure.Core.Data.Repository`2.Delete(`1[])">
+            <summary>
+            删除多条
+            </summary>
+            <param name="keys"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Infrastructure.Core.Data.Repository`2.Delete(`1)">
+            <summary>
+            删除指定编号的实体
+            </summary>
+            <param name="key">实体编号</param>
+            <returns>操作影响的行数</returns>
+        </member>
+        <member name="M:Infrastructure.Core.Data.Repository`2.Delete(System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}})">
+            <summary>
+            删除所有符合特定条件的实体
+            </summary>
+            <param name="predicate">查询条件谓语表达式</param>
+            <returns>操作影响的行数</returns>
+        </member>
+        <member name="M:Infrastructure.Core.Data.Repository`2.Delete(System.Collections.Generic.IEnumerable{`0})">
+            <summary>
+            批量删除删除实体
+            </summary>
+            <param name="entities">实体对象集合</param>
+            <returns>操作影响的行数</returns>
+        </member>
+        <member name="M:Infrastructure.Core.Data.Repository`2.Delete(System.Collections.Generic.ICollection{`1},System.Action{`0},System.Func{`0,`0})">
+            <summary>
+            以标识集合批量删除实体
+            </summary>
+            <param name="ids">标识集合</param>
+            <param name="checkAction">删除前置检查委托</param>
+            <param name="deleteFunc">删除委托，用于删除关联信息</param>
+            <returns>业务操作结果</returns>
+        </member>
+        <member name="M:Infrastructure.Core.Data.Repository`2.Update(`0)">
+            <summary>
+            更新实体对象
+            </summary>
+            <param name="entity">更新后的实体对象</param>
+            <returns>操作影响的行数</returns>
+        </member>
+        <member name="M:Infrastructure.Core.Data.Repository`2.Update``1(System.Collections.Generic.ICollection{``0},System.Action{``0},System.Func{``0,`0,`0})">
+            <summary>
+            以DTO为载体批量更新实体
+            </summary>
+            <typeparam name="TEditDto">更新DTO类型</typeparam>
+            <param name="dtos">更新DTO信息集合</param>
+            <param name="checkAction">更新信息合法性检查委托</param>
+            <param name="updateFunc">由DTO到实体的转换委托</param>
+            <returns>业务操作结果</returns>
+        </member>
+        <member name="M:Infrastructure.Core.Data.Repository`2.CheckExists(System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}},`1)">
+            <summary>
+            检查实体是否存在
+            </summary>
+            <param name="predicate">查询条件谓语表达式</param>
+            <param name="id">编辑的实体标识</param>
+            <returns>是否存在</returns>
+        </member>
+        <member name="M:Infrastructure.Core.Data.Repository`2.GetByKey(`1)">
+            <summary>
+            查找指定主键的实体
+            </summary>
+            <param name="key">实体主键</param>
+            <returns>符合主键的实体，不存在时返回null</returns>
+        </member>
+        <member name="M:Infrastructure.Core.Data.Repository`2.GetInclude``1(System.Linq.Expressions.Expression{System.Func{`0,``0}})">
+            <summary>
+            获取贪婪加载导航属性的查询数据集
+            </summary>
+            <param name="path">属性表达式，表示要贪婪加载的导航属性</param>
+            <returns>查询数据集</returns>
+        </member>
+        <member name="M:Infrastructure.Core.Data.Repository`2.GetIncludes(System.String[])">
+            <summary>
+            获取贪婪加载多个导航属性的查询数据集
+            </summary>
+            <param name="paths">要贪婪加载的导航属性名称数组</param>
+            <returns>查询数据集</returns>
+        </member>
+        <member name="M:Infrastructure.Core.Data.Repository`2.SqlQuery(System.String,System.Boolean,System.Object[])">
+            <summary>
+            创建一个原始 SQL 查询，该查询将返回此集中的实体。 
+            默认情况下，上下文会跟踪返回的实体；可通过对返回的 DbRawSqlQuery 调用 AsNoTracking 来更改此设置。 请注意返回实体的类型始终是此集的类型，而不会是派生的类型。 如果查询的一个或多个表可能包含其他实体类型的数据，则必须编写适当的 SQL 查询以确保只返回适当类型的实体。 与接受 SQL 的任何 API 一样，对任何用户输入进行参数化以便避免 SQL 注入攻击是十分重要的。 您可以在 SQL 查询字符串中包含参数占位符，然后将参数值作为附加参数提供。 您提供的任何参数值都将自动转换为 DbParameter。 context.Set(typeof(Blog)).SqlQuery("SELECT * FROM dbo.Posts WHERE Author = @p0", userSuppliedAuthor); 或者，您还可以构造一个 DbParameter 并将它提供给 SqlQuery。 这允许您在 SQL 查询字符串中使用命名参数。 context.Set(typeof(Blog)).SqlQuery("SELECT * FROM dbo.Posts WHERE Author = @author", new SqlParameter("@author", userSuppliedAuthor));
+            </summary>
+            <param name="trackEnabled">是否跟踪返回实体</param>
+            <param name="sql">SQL 查询字符串。</param>
+            <param name="parameters">要应用于 SQL 查询字符串的参数。 如果使用输出参数，则它们的值在完全读取结果之前不可用。 这是由于 DbDataReader 的基础行为而导致的，有关详细信息，请参见 http://go.microsoft.com/fwlink/?LinkID=398589。</param>
+            <returns></returns>
+        </member>
+        <member name="M:Infrastructure.Core.Data.Repository`2.InsertAsync(`0)">
+            <summary>
+            异步插入实体
+            </summary>
+            <param name="entity">实体对象</param>
+            <returns>操作影响的行数</returns>
+        </member>
+        <member name="M:Infrastructure.Core.Data.Repository`2.InsertAsync(System.Collections.Generic.IEnumerable{`0})">
+            <summary>
+            异步批量插入实体
+            </summary>
+            <param name="entities">实体对象集合</param>
+            <returns>操作影响的行数</returns>
+        </member>
+        <member name="M:Infrastructure.Core.Data.Repository`2.DeleteAsync(`0)">
+            <summary>
+            异步删除实体
+            </summary>
+            <param name="entity">实体对象</param>
+            <returns>操作影响的行数</returns>
+        </member>
+        <member name="M:Infrastructure.Core.Data.Repository`2.DeleteAsync(`1)">
+            <summary>
+            异步删除指定编号的实体
+            </summary>
+            <param name="key">实体编号</param>
+            <returns>操作影响的行数</returns>
+        </member>
+        <member name="M:Infrastructure.Core.Data.Repository`2.DeleteAsync(System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}})">
+            <summary>
+            异步删除所有符合特定条件的实体
+            </summary>
+            <param name="predicate">查询条件谓语表达式</param>
+            <returns>操作影响的行数</returns>
+        </member>
+        <member name="M:Infrastructure.Core.Data.Repository`2.DeleteAsync(System.Collections.Generic.IEnumerable{`0})">
+            <summary>
+            异步批量删除删除实体
+            </summary>
+            <param name="entities">实体对象集合</param>
+            <returns>操作影响的行数</returns>
+        </member>
+        <member name="M:Infrastructure.Core.Data.Repository`2.UpdateAsync(`0)">
+            <summary>
+            异步更新实体对象
+            </summary>
+            <param name="entity">更新后的实体对象</param>
+            <returns>操作影响的行数</returns>
+        </member>
+        <member name="M:Infrastructure.Core.Data.Repository`2.CheckExistsAsync(System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}},`1)">
+            <summary>
+            异步检查实体是否存在
+            </summary>
+            <param name="predicate">查询条件谓语表达式</param>
+            <param name="id">编辑的实体标识</param>
+            <returns>是否存在</returns>
+        </member>
+        <member name="M:Infrastructure.Core.Data.Repository`2.GetByKeyAsync(`1)">
+            <summary>
+            异步查找指定主键的实体
+            </summary>
+            <param name="key">实体主键</param>
+            <returns>符合主键的实体，不存在时返回null</returns>
+        </member>
+        <member name="P:Infrastructure.Core.Data.Repository`2.LoginUserID">
+            <summary>
+            登录ID
+            </summary>
+        </member>
+        <member name="P:Infrastructure.Core.Data.Repository`2.UnitOfWork">
+            <summary>
+            获取 当前单元操作对象
+            </summary>
+        </member>
+        <member name="P:Infrastructure.Core.Data.Repository`2.Entities">
+            <summary>
+            获取 当前实体类型的查询数据集
+            </summary>
+        </member>
+        <member name="T:Infrastructure.Core.Data.BaseService`1">
+            <summary>
+            业务实现基类
+            </summary>
+        </member>
+        <member name="M:Infrastructure.Core.Data.BaseService`1.#ctor(Infrastructure.Core.IUnitOfWork)">
+            <summary>
+            
+            </summary>
+            <param name="unitOfWork"></param>
+        </member>
+        <member name="M:Infrastructure.Core.Data.BaseService`1.#ctor">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Infrastructure.Core.Data.BaseService`1.#ctor(System.String)">
+            <summary>
+            构造函数，直接连接串
+            </summary> : base(new CodeFirstDbContext(strDBName))
+            <param name="strDBName"></param>
+        </member>
+        <member name="M:Infrastructure.Core.Data.BaseService`1.InsertView``1(``0)">
+            <summary>
+            插入viewmodel
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="obj"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Infrastructure.Core.Data.BaseService`1.UpdateView``1(``0)">
+            <summary>
+            更新viewmodel
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="obj"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Infrastructure.Core.Data.BaseService`1.UpdateView``1(``0,System.Collections.Generic.List{System.String})">
+            <summary>
+            
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="obj"></param>
+            <param name="lst"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Infrastructure.Core.Data.BaseService`1.GetList``1(System.Int32,System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}},System.Collections.Generic.List{Infrastructure.Utility.Data.SortCondition})">
+            <summary>
+            
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="iTop"></param>
+            <param name="predicate"></param>
+            <param name="sortConditions"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Infrastructure.Core.Data.BaseService`1.GetList``1(System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}},Infrastructure.Utility.Data.PageCondition)">
+            <summary>
+            
+            </summary>
+            <param name="predicate"></param>
+            <param name="con"></param>
+            <typeparam name="T"></typeparam>
+            <returns></returns>
+        </member>
+        <member name="M:Infrastructure.Core.Data.BaseService`1.GetList``1(System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}},System.Int32,System.Int32,System.Int32@,System.Collections.Generic.List{Infrastructure.Utility.Data.SortCondition})">
+            <summary>
+            分页查询
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="predicate"></param>
+            <param name="pageIndex"></param>
+            <param name="pageSize"></param>
+            <param name="total"></param>
+            <param name="sortConditions"></param>
+            <returns></returns>
+        </member>
+        <member name="P:Infrastructure.Core.Data.BaseService`1.Repository">
+            <summary>
+            
+            </summary>
+        </member>
+    </members>
+</doc>

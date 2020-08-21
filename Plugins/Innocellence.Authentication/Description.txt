@@ -1,0 +1,11 @@
+Group: Discount requirements
+FriendlyName: Authentication Management
+SystemName: DLYB.Authentication
+Version: 0.50
+SupportedVersions: 2.00
+Author: ying.he
+DisplayOrder: 1
+FileName: DLYB.Authentication.dll
+Dependences: 
+Controllers: DLYB.Authentication.Controllers
+Install: 1

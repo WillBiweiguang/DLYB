@@ -1,0 +1,18 @@
+﻿using System.Collections.Generic;
+
+namespace Infrastructure.Web.Identity.Permissions {
+    public class Permission {
+        public string Name { get; set; }
+        public string Description { get; set; }
+        public string Category { get; set; }
+
+        public string URL { get; set; }
+
+        public IEnumerable<Permission> ImpliedBy { get; set; }
+        public bool RequiresOwnership { get; set; }
+
+        public static Permission Named(string name) {
+            return new Permission { Name = name };
+        }
+    }
+}

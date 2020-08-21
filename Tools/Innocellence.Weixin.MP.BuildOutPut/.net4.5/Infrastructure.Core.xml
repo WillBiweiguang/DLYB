@@ -1,0 +1,3196 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Infrastructure.Core</name>
+    </assembly>
+    <members>
+        <member name="T:Infrastructure.Core.ApplicationContextBase">
+            <summary>
+            当前应用程序上下文对象
+            </summary>
+        </member>
+        <member name="F:Infrastructure.Core.ApplicationContextBase.sitePaths">
+            <summary>
+            站点路径信息
+            </summary>
+        </member>
+        <member name="M:Infrastructure.Core.ApplicationContextBase.PreApplicationStartInitialize">
+            <summary>
+            初始化插件
+            </summary>
+        </member>
+        <member name="M:Infrastructure.Core.ApplicationContextBase.Initialize">
+            <summary>
+            初始化
+            </summary>
+        </member>
+        <member name="P:Infrastructure.Core.ApplicationContextBase.SitePaths">
+            <summary>
+            网站路径
+            </summary>
+        </member>
+        <member name="P:Infrastructure.Core.ApplicationContextBase.CurrentAppDomain">
+            <summary>
+            当前应用程序域
+            </summary>
+        </member>
+        <member name="P:Infrastructure.Core.ApplicationContextBase.ApplicationMode">
+            <summary>
+            应用程序模式
+            </summary>
+        </member>
+        <member name="P:Infrastructure.Core.ApplicationContextBase.ThemesList">
+            <summary>
+            主题列表
+            </summary>
+        </member>
+        <member name="P:Infrastructure.Core.ApplicationContextBase.DefaultTheme">
+            <summary>
+            策略管理器
+            </summary>
+              public abstract StrategyManagerBase StrategyManager { get; set; }
+            <summary>
+            默认主题
+            </summary>
+        </member>
+        <member name="P:Infrastructure.Core.ApplicationContextBase.PlusAssemblysList">
+            <summary>
+            插件列表
+            </summary>
+        </member>
+        <member name="P:Infrastructure.Core.ApplicationContextBase.ConfigManager">
+            <summary>
+            配置管理器
+            </summary>
+        </member>
+        <member name="P:Infrastructure.Core.ApplicationContextBase.IsDebug">
+            <summary>
+            是否调试模式
+            </summary>
+        </member>
+        <member name="P:Infrastructure.Core.ApplicationContextBase.IsSqlTrace">
+            <summary>
+            是否为Sql跟踪模式
+            </summary>
+        </member>
+        <member name="P:Infrastructure.Core.ApplicationContextBase.IsTrace">
+            <summary>
+            是否为跟踪模式
+            </summary>
+        </member>
+        <member name="T:Infrastructure.Core.ApplicationModes">
+            <summary>
+            应用程序模式
+            </summary>
+        </member>
+        <member name="F:Infrastructure.Core.ApplicationModes.Trace">
+            <summary>
+            跟踪模式
+            </summary>
+        </member>
+        <member name="F:Infrastructure.Core.ApplicationModes.Debug">
+            <summary>
+            调试模式
+            </summary>
+        </member>
+        <member name="F:Infrastructure.Core.ApplicationModes.Release">
+            <summary>
+            发布模式
+            </summary>
+        </member>
+        <member name="T:Infrastructure.Core.Caching.SimpleAcquireContext">
+            <summary>
+            Simple implementation of "IAcquireContext" given a lamdba
+            </summary>
+        </member>
+        <member name="T:Infrastructure.Core.Caching.DefaultCacheHolder">
+            <summary>
+            Provides the default implementation for a cache holder.
+            The cache holder is responsible for actually storing the references to cached entities.
+            </summary>
+        </member>
+        <member name="T:Infrastructure.Core.ISingletonDependency">
+            <summary>
+            Base interface for services that are instantiated per shell/tenant.
+            </summary>
+        </member>
+        <member name="T:Infrastructure.Core.IDependency">
+            <summary>
+            依赖注入接口，表示该接口的实现类将自动注册到IoC容器中
+            </summary>
+        </member>
+        <member name="M:Infrastructure.Core.Caching.DefaultCacheHolder.GetCache``2(System.Type)">
+            <summary>
+            Gets a Cache entry from the cache. If none is found, an empty one is created and returned.
+            </summary>
+            <typeparam name="TKey">The type of the key within the component.</typeparam>
+            <typeparam name="TResult">The type of the result.</typeparam>
+            <param name="component">The component context.</param>
+            <returns>An entry from the cache, or a new, empty one, if none is found.</returns>
+        </member>
+        <member name="T:Infrastructure.Core.Caching.DefaultCacheManager">
+            <summary>
+            Provides the default implementation for a cache manager. 
+            The cache manager provides an abstraction over the cache holder allowing it to be easily swaped and isolating it within a component context.
+            </summary>
+        </member>
+        <member name="M:Infrastructure.Core.Caching.DefaultCacheManager.#ctor(System.Type,Infrastructure.Core.Caching.ICacheHolder)">
+            <summary>
+            Constructs a new cache manager for a given component type and with a specific cache holder implementation.
+            </summary>
+            <param name="component">The component to which the cache applies (context).</param>
+            <param name="cacheHolder">The cache holder that contains the entities cached.</param>
+        </member>
+        <member name="M:Infrastructure.Core.Caching.DefaultCacheManager.GetCache``2">
+            <summary>
+            Gets a cache entry from the cache holder.
+            </summary>
+            <typeparam name="TKey">The type of the key to be used to fetch the cache entry.</typeparam>
+            <typeparam name="TResult">The type of the entry to be obtained from the cache.</typeparam>
+            <returns>The entry from the cache.</returns>
+        </member>
+        <member name="M:Infrastructure.Core.Caching.DefaultCacheManager.Get(System.String)">
+            <summary>
+            从缓存中获取数据
+            </summary>
+            <param name="key">缓存键</param>
+            <returns>获取的数据</returns>
+        </member>
+        <member name="M:Infrastructure.Core.Caching.DefaultCacheManager.Get``1(System.String,System.Func{``0})">
+            <summary>
+            Get a cached item. If it's not in the cache yet, then load and cache it
+            </summary>
+            <typeparam name="T">Type</typeparam>
+            <param name="cacheManager">Cache manager</param>
+            <param name="key">Cache key</param>
+            <param name="acquire">Function to load item if it's not in the cache yet</param>
+            <returns>Cached item</returns>
+        </member>
+        <member name="M:Infrastructure.Core.Caching.DefaultCacheManager.Get``1(System.String,System.Int32,System.Func{``0})">
+            <summary>
+            Get a cached item. If it's not in the cache yet, then load and cache it
+            </summary>
+            <typeparam name="T">Type</typeparam>
+            <param name="cacheManager">Cache manager</param>
+            <param name="key">Cache key</param>
+            <param name="cacheTime">Cache time in minutes (0 - do not cache)</param>
+            <param name="acquire">Function to load item if it's not in the cache yet</param>
+            <returns>Cached item</returns>
+        </member>
+        <member name="M:Infrastructure.Core.Caching.DefaultCacheManager.Clear">
+            <summary>
+            清除所有缓存
+            </summary>
+        </member>
+        <member name="M:Infrastructure.Core.Caching.DefaultCacheManager.Set(System.String,System.Object,System.TimeSpan)">
+            <summary>
+            添加或替换缓存项并设置相对过期时间
+            </summary>
+            <param name="key">缓存键</param>
+            <param name="value">缓存数据</param>
+            <param name="slidingExpiration">修改为绝对过期时间</param>
+        </member>
+        <member name="T:Infrastructure.Core.Caching.IParallelCacheContext">
+            <summary>
+            Provides services to enable parallel tasks aware of the current cache context.
+            </summary>
+        </member>
+        <member name="M:Infrastructure.Core.Caching.IParallelCacheContext.CreateContextAwareTask``1(System.Func{``0})">
+            <summary>
+            Create a task that wraps some piece of code that implictly depends on the cache context.
+            The return task can be used in any execution thread (e.g. System.Threading.Tasks).
+            </summary>
+        </member>
+        <member name="M:Infrastructure.Core.Caching.DefaultParallelCacheContext.CreateContextAwareTask``1(System.Func{``0})">
+            <summary>
+            Create a task that wraps some piece of code that implictly depends on the cache context.
+            The return task can be used in any execution thread (e.g. System.Threading.Tasks).
+            </summary>
+        </member>
+        <member name="P:Infrastructure.Core.Caching.DefaultParallelCacheContext.Disabled">
+            <summary>
+             Allow disabling parallel behavior through HostComponents.config
+            </summary>
+        </member>
+        <member name="M:Infrastructure.Core.Caching.ITask`1.Execute">
+            <summary>
+            Execute task and collect eventual volatile tokens
+            </summary>
+        </member>
+        <member name="M:Infrastructure.Core.Caching.ITask`1.Finish">
+            <summary>
+            Forward collected tokens to current cache context
+            </summary>
+        </member>
+        <member name="P:Infrastructure.Core.Caching.ITask`1.Tokens">
+            <summary>
+            Return tokens collected during task execution. May be empty if nothing collected,
+            or if the task was executed in the same context as the current 
+            ICacheContextAccessor.Current.
+            </summary>
+        </member>
+        <member name="M:Infrastructure.Core.Caching.DefaultParallelCacheContext.TaskWithAcquireContext`1.Execute">
+            <summary>
+            Execute task and collect eventual volatile tokens
+            </summary>
+        </member>
+        <member name="M:Infrastructure.Core.Caching.DefaultParallelCacheContext.TaskWithAcquireContext`1.Finish">
+            <summary>
+            Forward collected tokens to current cache context
+            </summary>
+        </member>
+        <member name="P:Infrastructure.Core.Caching.DefaultParallelCacheContext.TaskWithAcquireContext`1.Tokens">
+            <summary>
+            Return tokens collected during task execution
+            </summary>
+        </member>
+        <member name="T:Infrastructure.Core.CommonHelper">
+            <summary>
+            Represents a common helper
+            </summary>
+        </member>
+        <member name="M:Infrastructure.Core.CommonHelper.EnsureSubscriberEmailOrThrow(System.String)">
+            <summary>
+            Ensures the subscriber email or throw.
+            </summary>
+            <param name="email">The email.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Infrastructure.Core.CommonHelper.IsValidEmail(System.String)">
+            <summary>
+            Verifies that a string is in valid e-mail format
+            </summary>
+            <param name="email">Email to verify</param>
+            <returns>true if the string is a valid e-mail address and false if it's not</returns>
+        </member>
+        <member name="M:Infrastructure.Core.CommonHelper.GenerateRandomDigitCode(System.Int32)">
+            <summary>
+            Generate random digit code
+            </summary>
+            <param name="length">Length</param>
+            <returns>Result string</returns>
+        </member>
+        <member name="M:Infrastructure.Core.CommonHelper.GenerateRandomInteger(System.Int32,System.Int32)">
+            <summary>
+            Returns an random interger number within a specified rage
+            </summary>
+            <param name="min">Minimum number</param>
+            <param name="max">Maximum number</param>
+            <returns>Result</returns>
+        </member>
+        <member name="M:Infrastructure.Core.CommonHelper.EnsureMaximumLength(System.String,System.Int32,System.String)">
+            <summary>
+            Ensure that a string doesn't exceed maximum allowed length
+            </summary>
+            <param name="str">Input string</param>
+            <param name="maxLength">Maximum length</param>
+            <param name="postfix">A string to add to the end if the original string was shorten</param>
+            <returns>Input string if its lengh is OK; otherwise, truncated input string</returns>
+        </member>
+        <member name="M:Infrastructure.Core.CommonHelper.EnsureNumericOnly(System.String)">
+            <summary>
+            Ensures that a string only contains numeric values
+            </summary>
+            <param name="str">Input string</param>
+            <returns>Input string with only numeric values, empty string if input is null/empty</returns>
+        </member>
+        <member name="M:Infrastructure.Core.CommonHelper.EnsureNotNull(System.String)">
+            <summary>
+            Ensure that a string is not null
+            </summary>
+            <param name="str">Input string</param>
+            <returns>Result</returns>
+        </member>
+        <member name="M:Infrastructure.Core.CommonHelper.AreNullOrEmpty(System.String[])">
+            <summary>
+            Indicates whether the specified strings are null or empty strings
+            </summary>
+            <param name="stringsToValidate">Array of strings to validate</param>
+            <returns>Boolean</returns>
+        </member>
+        <member name="M:Infrastructure.Core.CommonHelper.ArraysEqual``1(``0[],``0[])">
+            <summary>
+            Compare two arrasy
+            </summary>
+            <typeparam name="T">Type</typeparam>
+            <param name="a1">Array 1</param>
+            <param name="a2">Array 2</param>
+            <returns>Result</returns>
+        </member>
+        <member name="M:Infrastructure.Core.CommonHelper.GetTrustLevel">
+            <summary>
+            Finds the trust level of the running application (http://blogs.msdn.com/dmitryr/archive/2007/01/23/finding-out-the-current-trust-level-in-asp-net.aspx)
+            </summary>
+            <returns>The current trust level.</returns>
+        </member>
+        <member name="M:Infrastructure.Core.CommonHelper.SetProperty(System.Object,System.String,System.Object)">
+            <summary>
+            Sets a property on an object to a valuae.
+            </summary>
+            <param name="instance">The object whose property to set.</param>
+            <param name="propertyName">The name of the property to set.</param>
+            <param name="value">The value to set the property to.</param>
+        </member>
+        <member name="M:Infrastructure.Core.CommonHelper.To(System.Object,System.Type)">
+            <summary>
+            Converts a value to a destination type.
+            </summary>
+            <param name="value">The value to convert.</param>
+            <param name="destinationType">The type to convert the value to.</param>
+            <returns>The converted value.</returns>
+        </member>
+        <member name="M:Infrastructure.Core.CommonHelper.To(System.Object,System.Type,System.Globalization.CultureInfo)">
+            <summary>
+            Converts a value to a destination type.
+            </summary>
+            <param name="value">The value to convert.</param>
+            <param name="destinationType">The type to convert the value to.</param>
+            <param name="culture">Culture</param>
+            <returns>The converted value.</returns>
+        </member>
+        <member name="M:Infrastructure.Core.CommonHelper.To``1(System.Object)">
+            <summary>
+            Converts a value to a destination type.
+            </summary>
+            <param name="value">The value to convert.</param>
+            <typeparam name="T">The type to convert the value to.</typeparam>
+            <returns>The converted value.</returns>
+        </member>
+        <member name="M:Infrastructure.Core.CommonHelper.ConvertEnum(System.String)">
+            <summary>
+            Convert enum for front-end
+            </summary>
+            <param name="str">Input string</param>
+            <returns>Converted string</returns>
+        </member>
+        <member name="M:Infrastructure.Core.CommonHelper.SetTelerikCulture">
+            <summary>
+            Set Telerik (Kendo UI) culture
+            </summary>
+        </member>
+        <member name="T:Infrastructure.Core.ComponentModel.WriteLockDisposable">
+            <summary>
+            Provides a convenience methodology for implementing locked access to resources. 
+            </summary>
+            <remarks>
+            Intended as an infrastructure class.
+            </remarks>
+        </member>
+        <member name="M:Infrastructure.Core.ComponentModel.WriteLockDisposable.#ctor(System.Threading.ReaderWriterLockSlim)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Infrastructure.Core.ComponentModel.WriteLockDisposable"/> class.
+            </summary>
+            <param name="rwLock">The rw lock.</param>
+        </member>
+        <member name="T:Infrastructure.Core.Config.ConfigBase">
+            <summary>
+            配置
+            </summary>
+        </member>
+        <member name="T:Infrastructure.Core.Config.ConfigManager">
+            <summary>
+            配置管理器
+            </summary>
+        </member>
+        <member name="T:Infrastructure.Core.Config.ConfigManagerBase">
+            <summary>
+            配置管理器
+            </summary>
+        </member>
+        <member name="M:Infrastructure.Core.Config.ConfigManagerBase.LoadConfig``1">
+            <summary>
+            加载配置
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Infrastructure.Core.Config.ConfigManagerBase.SaveConfig``1(``0)">
+            <summary>
+            保存配置
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Infrastructure.Core.Config.ConfigManagerBase.GetConfig``1">
+            <summary>
+            获取策略
+            </summary>
+            <typeparam name="T"></typeparam>
+            <returns></returns>
+        </member>
+        <member name="M:Infrastructure.Core.Config.ConfigManagerBase.GetConfigWhenSuccess``1(System.Action{``0})">
+            <summary>
+            获取策略，如果获取成功，则执行成功函数
+            </summary>
+            <typeparam name="T"></typeparam>
+            <returns></returns>
+        </member>
+        <member name="M:Infrastructure.Core.Config.ConfigManagerBase.GetConfigWhenComplete``1(System.Action{``0})">
+            <summary>
+            获取策略，获取完成后执行指定函数
+            </summary>
+            <typeparam name="T"></typeparam>
+            <returns></returns>
+        </member>
+        <member name="T:Infrastructure.Core.Config.Info.AccountAuthenticationInfo">
+            <summary>
+             OAuth账户配置
+            </summary>
+        </member>
+        <member name="P:Infrastructure.Core.Config.Info.AccountAuthenticationInfo.AccountConfigInfoList">
+            <summary>
+            OAuth账户配置列表
+            </summary>
+        </member>
+        <member name="T:Infrastructure.Core.Config.Info.AccountConfigInfo">
+            <summary>
+            账户配置信息
+            </summary>
+        </member>
+        <member name="P:Infrastructure.Core.Config.Info.AccountConfigInfo.Id">
+            <summary>
+            Id或Key
+            </summary>
+        </member>
+        <member name="P:Infrastructure.Core.Config.Info.AccountConfigInfo.Secret">
+            <summary>
+            密钥
+            </summary>
+        </member>
+        <member name="P:Infrastructure.Core.Config.Info.AccountConfigInfo.AccountType">
+            <summary>
+            账户类型
+            </summary>
+        </member>
+        <member name="P:Infrastructure.Core.Config.Info.AccountConfigInfo.Enable">
+            <summary>
+            是否启用
+            </summary>
+        </member>
+        <member name="T:Infrastructure.Core.Config.Info.AccountTypes">
+            <summary>
+            账户类型
+            </summary>
+        </member>
+        <member name="P:Infrastructure.Core.Config.Info.AdminSiteConfigInfo.AdminAccessIps">
+            <summary>
+            后台访问IP
+            </summary>
+        </member>
+        <member name="P:Infrastructure.Core.Config.Info.AdminSiteConfigInfo.AdminRoles">
+            <summary>
+            后台登陆角色
+            </summary>
+        </member>
+        <member name="T:Infrastructure.Core.Config.Info.MailConfigInfo">
+            <summary>
+            邮箱配置
+            </summary>
+        </member>
+        <member name="P:Infrastructure.Core.Config.Info.MailConfigInfo.SmtpServer">
+            <summary>
+            SMTP服务器
+            </summary>
+        </member>
+        <member name="P:Infrastructure.Core.Config.Info.MailConfigInfo.SmtpPort">
+            <summary>
+            SMTP服务器端口
+            </summary>
+        </member>
+        <member name="P:Infrastructure.Core.Config.Info.MailConfigInfo.MailFrom">
+            <summary>
+            发送邮箱
+            </summary>
+        </member>
+        <member name="P:Infrastructure.Core.Config.Info.MailConfigInfo.FromNickName">
+            <summary>
+            邮件发送昵称
+            </summary>
+        </member>
+        <member name="P:Infrastructure.Core.Config.Info.MailConfigInfo.UserName">
+            <summary>
+            账户名
+            </summary>
+        </member>
+        <member name="P:Infrastructure.Core.Config.Info.MailConfigInfo.Password">
+            <summary>
+            密码
+            </summary>
+        </member>
+        <member name="P:Infrastructure.Core.Config.Info.SiteConfigInfo.SiteName">
+            <summary>
+            站点名称
+            </summary>
+        </member>
+        <member name="P:Infrastructure.Core.Config.Info.SiteConfigInfo.SiteUrl">
+            <summary>
+            网站网址
+            </summary>
+        </member>
+        <member name="P:Infrastructure.Core.Config.Info.SiteConfigInfo.SiteTitle">
+            <summary>
+            网站标题
+            </summary>
+        </member>
+        <member name="P:Infrastructure.Core.Config.Info.SiteConfigInfo.SiteDefaultUrl">
+            <summary>
+            网站默认页
+            </summary>
+        </member>
+        <member name="P:Infrastructure.Core.Config.Info.SiteConfigInfo.SEOKeyword">
+            <summary>
+            SEO关键字
+            </summary>
+        </member>
+        <member name="P:Infrastructure.Core.Config.Info.SiteConfigInfo.SEODescription">
+            <summary>
+            SEO描述
+            </summary>
+        </member>
+        <member name="P:Infrastructure.Core.Config.Info.SiteConfigInfo.HeadHtmlOrScripts">
+            <summary>
+            顶部代码
+            </summary>
+        </member>
+        <member name="P:Infrastructure.Core.Config.Info.SiteConfigInfo.FootHtmlOrScripts">
+            <summary>
+            底部代码
+            </summary>
+        </member>
+        <member name="P:Infrastructure.Core.Config.Info.SiteConfigInfo.IsShowLicensed">
+            <summary>
+            是否显示版权
+            </summary>
+        </member>
+        <member name="P:Infrastructure.Core.Config.Info.SiteConfigInfo.IsSupportMobile">
+            <summary>
+            是否支持手机访问
+            </summary>
+        </member>
+        <member name="P:Infrastructure.Core.Config.Info.SiteConfigInfo.DefaultTheme">
+            <summary>
+            默认主题
+            </summary>
+        </member>
+        <member name="P:Infrastructure.Core.Config.Info.SiteConfigInfo.IsCloseSite">
+            <summary>
+            是否关闭站点
+            </summary>
+        </member>
+        <member name="P:Infrastructure.Core.Config.Info.SiteConfigInfo.CloseSiteMessage">
+            <summary>
+            站点关闭信息
+            </summary>
+        </member>
+        <member name="T:Infrastructure.Core.Config.Info.SystemConfigInfo">
+            <summary>
+            系统配置
+            </summary>
+        </member>
+        <member name="P:Infrastructure.Core.Config.Info.SystemConfigInfo.ApplicationMode">
+            <summary>
+            应用程序模式
+            </summary>
+        </member>
+        <member name="P:Infrastructure.Core.Config.Info.SystemConfigInfo.IsMinCss">
+            <summary>
+            是否压缩样式
+            </summary>
+        </member>
+        <member name="P:Infrastructure.Core.Config.Info.SystemConfigInfo.IsMinJs">
+            <summary>
+            是否压脚本文件
+            </summary>
+        </member>
+        <member name="P:Infrastructure.Core.Config.Info.SystemConfigInfo.IsSqlTrace">
+            <summary>
+            是否进行SQl跟踪
+            </summary>
+        </member>
+        <member name="P:Infrastructure.Core.Config.Info.SystemConfigInfo.SqlConnectName">
+            <summary>
+            SQL连接字符串名称
+            </summary>
+        </member>
+        <member name="P:Infrastructure.Core.Config.Info.SystemConfigInfo.EnableDevelopersPanel">
+            <summary>
+            启用开发人员面板
+            </summary>
+        </member>
+        <member name="T:Infrastructure.Core.EntityBase`1">
+            <summary>
+            可持久化到数据库的数据模型基类
+            </summary>
+            <typeparam name="TKey"></typeparam>
+        </member>
+        <member name="M:Infrastructure.Core.EntityBase`1.#ctor">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Infrastructure.Core.EntityBase`1.Id">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Infrastructure.Core.EntityBase`1.Timestamp">
+            <summary>
+            获取或设置 版本控制标识，用于处理并发
+            </summary>
+        </member>
+        <member name="P:Infrastructure.Core.Tasks.ScheduleTask.Name">
+            <summary>
+            Gets or sets the name
+            </summary>
+        </member>
+        <member name="P:Infrastructure.Core.Tasks.ScheduleTask.Seconds">
+            <summary>
+            Gets or sets the run period (in seconds)
+            </summary>
+        </member>
+        <member name="P:Infrastructure.Core.Tasks.ScheduleTask.Type">
+            <summary>
+            Gets or sets the type of appropriate ITask class
+            </summary>
+        </member>
+        <member name="P:Infrastructure.Core.Tasks.ScheduleTask.Enabled">
+            <summary>
+            Gets or sets the value indicating whether a task is enabled
+            </summary>
+        </member>
+        <member name="P:Infrastructure.Core.Tasks.ScheduleTask.StopOnError">
+            <summary>
+            Gets or sets the value indicating whether a task should be stopped on some error
+            </summary>
+        </member>
+        <member name="P:Infrastructure.Core.Tasks.ScheduleTask.StartDateUtc">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:Infrastructure.Core.EntityUser">
+            <summary>
+            可持久化到数据库的数据模型基类
+            </summary>
+            <typeparam name="TKey"></typeparam>
+        </member>
+        <member name="M:Infrastructure.Core.EntityUser.#ctor">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Infrastructure.Core.EntityUser.Id">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:Infrastructure.Core.IBaseService`1">
+            <summary>
+            
+            </summary>
+            <typeparam name="TEntity"></typeparam>
+        </member>
+        <member name="M:Infrastructure.Core.IBaseService`1.InsertView``1(``0)">
+            <summary>
+            插入viewmodel
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="obj"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Infrastructure.Core.IBaseService`1.UpdateView``1(``0)">
+            <summary>
+            更新viewmodel
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="obj"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Infrastructure.Core.IBaseService`1.GetList``1(System.Int32,System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}},System.Collections.Generic.List{Infrastructure.Utility.Data.SortCondition})">
+            <summary>
+            获取列表
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="iTop"></param>
+            <param name="predicate"></param>
+            <param name="sortConditions"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Infrastructure.Core.IBaseService`1.GetList``1(System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}},System.Int32,System.Int32,System.Int32@,System.Collections.Generic.List{Infrastructure.Utility.Data.SortCondition})">
+            <summary>
+            获取分页列表
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="predicate"></param>
+            <param name="pageIndex"></param>
+            <param name="pageSize"></param>
+            <param name="total"></param>
+            <param name="sortConditions"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Infrastructure.Core.IBaseService`1.GetList``1(System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}},Infrastructure.Utility.Data.PageCondition)">
+            <summary>
+            获取分页列表
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="predicate"></param>
+            <param name="con"></param>
+            <param name="sortConditions"></param>
+            <returns></returns>
+        </member>
+        <member name="P:Infrastructure.Core.IBaseService`1.Repository">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:Infrastructure.Core.IAddDto">
+            <summary>
+            添加DTO
+            </summary>
+        </member>
+        <member name="T:Infrastructure.Core.IEditDto`1">
+            <summary>
+            编辑DTO
+            </summary>
+            <typeparam name="TKey"></typeparam>
+        </member>
+        <member name="P:Infrastructure.Core.IEditDto`1.Id">
+            <summary>
+            获取或设置 主键，唯一标识
+            </summary>
+        </member>
+        <member name="T:Infrastructure.Core.IRepository`2">
+            <summary>
+            实体仓储模型的数据标准操作
+            </summary>
+            <typeparam name="TEntity">实体类型</typeparam>
+            <typeparam name="TKey">主键类型</typeparam>
+        </member>
+        <member name="M:Infrastructure.Core.IRepository`2.Insert(`0)">
+            <summary>
+            插入实体
+            </summary>
+            <param name="entity">实体对象</param>
+            <returns>操作影响的行数</returns>
+        </member>
+        <member name="M:Infrastructure.Core.IRepository`2.Insert(System.Collections.Generic.IEnumerable{`0})">
+            <summary>
+            批量插入实体
+            </summary>
+            <param name="entities">实体对象集合</param>
+            <returns>操作影响的行数</returns>
+        </member>
+        <member name="M:Infrastructure.Core.IRepository`2.Insert``1(System.Collections.Generic.ICollection{``0},System.Action{``0},System.Func{``0,`0,`0})">
+            <summary>
+            以DTO为载体批量插入实体
+            </summary>
+            <typeparam name="TAddDto">添加DTO类型</typeparam>
+            <param name="dtos">添加DTO信息集合</param>
+            <param name="checkAction">添加信息合法性检查委托</param>
+            <param name="updateFunc">由DTO到实体的转换委托</param>
+            <returns>业务操作结果</returns>
+        </member>
+        <member name="M:Infrastructure.Core.IRepository`2.Delete(`0)">
+            <summary>
+            删除实体
+            </summary>
+            <param name="entity">实体对象</param>
+            <returns>操作影响的行数</returns>
+        </member>
+        <member name="M:Infrastructure.Core.IRepository`2.Delete(`1)">
+            <summary>
+            删除指定编号的实体
+            </summary>
+            <param name="key">实体编号</param>
+            <returns>操作影响的行数</returns>
+        </member>
+        <member name="M:Infrastructure.Core.IRepository`2.Delete(`1[])">
+            <summary>
+            删除多个指定编号的实体
+            </summary>
+            <param name="keys"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Infrastructure.Core.IRepository`2.Delete(System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}})">
+            <summary>
+            删除所有符合特定条件的实体
+            </summary>
+            <param name="predicate">查询条件谓语表达式</param>
+            <returns>操作影响的行数</returns>
+        </member>
+        <member name="M:Infrastructure.Core.IRepository`2.Delete(System.Collections.Generic.IEnumerable{`0})">
+            <summary>
+            批量删除删除实体
+            </summary>
+            <param name="entities">实体对象集合</param>
+            <returns>操作影响的行数</returns>
+        </member>
+        <member name="M:Infrastructure.Core.IRepository`2.Delete(System.Collections.Generic.ICollection{`1},System.Action{`0},System.Func{`0,`0})">
+            <summary>
+            以标识集合批量删除实体
+            </summary>
+            <param name="ids">标识集合</param>
+            <param name="checkAction">删除前置检查委托</param>
+            <param name="deleteFunc">删除委托，用于删除关联信息</param>
+            <returns>业务操作结果</returns>
+        </member>
+        <member name="M:Infrastructure.Core.IRepository`2.Update(`0)">
+            <summary>
+            更新实体对象
+            </summary>
+            <param name="entity">更新后的实体对象</param>
+            <returns>操作影响的行数</returns>
+        </member>
+        <member name="M:Infrastructure.Core.IRepository`2.Update(`0,System.Collections.Generic.List{System.String})">
+            <summary>
+            更新指定的字段
+            </summary>
+            <param name="entity"></param>
+            <param name="lstColumns">需要更新的实体属性名称集合</param>
+            <returns></returns>
+        </member>
+        <member name="M:Infrastructure.Core.IRepository`2.Update``1(System.Collections.Generic.ICollection{``0},System.Action{``0},System.Func{``0,`0,`0})">
+            <summary>
+            以DTO为载体批量更新实体
+            </summary>
+            <typeparam name="TEditDto">更新DTO类型</typeparam>
+            <param name="dtos">更新DTO信息集合</param>
+            <param name="checkAction">更新信息合法性检查委托</param>
+            <param name="updateFunc">由DTO到实体的转换委托</param>
+            <returns>业务操作结果</returns>
+        </member>
+        <member name="M:Infrastructure.Core.IRepository`2.CheckExists(System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}},`1)">
+            <summary>
+            检查实体是否存在
+            </summary>
+            <param name="predicate">查询条件谓语表达式</param>
+            <param name="id">编辑的实体标识</param>
+            <returns>是否存在</returns>
+        </member>
+        <member name="M:Infrastructure.Core.IRepository`2.GetByKey(`1)">
+            <summary>
+            查找指定主键的实体
+            </summary>
+            <param name="key">实体主键</param>
+            <returns>符合主键的实体，不存在时返回null</returns>
+        </member>
+        <member name="M:Infrastructure.Core.IRepository`2.GetInclude``1(System.Linq.Expressions.Expression{System.Func{`0,``0}})">
+            <summary>
+            获取贪婪加载导航属性的查询数据集
+            </summary>
+            <param name="path">属性表达式，表示要贪婪加载的导航属性</param>
+            <returns>查询数据集</returns>
+        </member>
+        <member name="M:Infrastructure.Core.IRepository`2.GetIncludes(System.String[])">
+            <summary>
+            获取贪婪加载多个导航属性的查询数据集
+            </summary>
+            <param name="paths">要贪婪加载的导航属性名称数组</param>
+            <returns>查询数据集</returns>
+        </member>
+        <member name="M:Infrastructure.Core.IRepository`2.SqlQuery(System.String,System.Boolean,System.Object[])">
+            <summary>
+            创建一个原始 SQL 查询，该查询将返回此集中的实体。 
+            默认情况下，上下文会跟踪返回的实体；可通过对返回的 DbRawSqlQuery 调用 AsNoTracking 来更改此设置。 请注意返回实体的类型始终是此集的类型，而不会是派生的类型。 如果查询的一个或多个表可能包含其他实体类型的数据，则必须编写适当的 SQL 查询以确保只返回适当类型的实体。 与接受 SQL 的任何 API 一样，对任何用户输入进行参数化以便避免 SQL 注入攻击是十分重要的。 您可以在 SQL 查询字符串中包含参数占位符，然后将参数值作为附加参数提供。 您提供的任何参数值都将自动转换为 DbParameter。 context.Set(typeof(Blog)).SqlQuery("SELECT * FROM dbo.Posts WHERE Author = @p0", userSuppliedAuthor); 或者，您还可以构造一个 DbParameter 并将它提供给 SqlQuery。 这允许您在 SQL 查询字符串中使用命名参数。 context.Set(typeof(Blog)).SqlQuery("SELECT * FROM dbo.Posts WHERE Author = @author", new SqlParameter("@author", userSuppliedAuthor));
+            </summary>
+            <param name="trackEnabled">是否跟踪返回实体</param>
+            <param name="sql">SQL 查询字符串。</param>
+            <param name="parameters">要应用于 SQL 查询字符串的参数。 如果使用输出参数，则它们的值在完全读取结果之前不可用。 这是由于 DbDataReader 的基础行为而导致的，有关详细信息，请参见 http://go.microsoft.com/fwlink/?LinkID=398589。</param>
+            <returns></returns>
+        </member>
+        <member name="M:Infrastructure.Core.IRepository`2.InsertAsync(`0)">
+            <summary>
+            异步插入实体
+            </summary>
+            <param name="entity">实体对象</param>
+            <returns>操作影响的行数</returns>
+        </member>
+        <member name="M:Infrastructure.Core.IRepository`2.InsertAsync(System.Collections.Generic.IEnumerable{`0})">
+            <summary>
+            异步批量插入实体
+            </summary>
+            <param name="entities">实体对象集合</param>
+            <returns>操作影响的行数</returns>
+        </member>
+        <member name="M:Infrastructure.Core.IRepository`2.DeleteAsync(`0)">
+            <summary>
+            异步删除实体
+            </summary>
+            <param name="entity">实体对象</param>
+            <returns>操作影响的行数</returns>
+        </member>
+        <member name="M:Infrastructure.Core.IRepository`2.DeleteAsync(`1)">
+            <summary>
+            异步删除指定编号的实体
+            </summary>
+            <param name="key">实体编号</param>
+            <returns>操作影响的行数</returns>
+        </member>
+        <member name="M:Infrastructure.Core.IRepository`2.DeleteAsync(System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}})">
+            <summary>
+            异步删除所有符合特定条件的实体
+            </summary>
+            <param name="predicate">查询条件谓语表达式</param>
+            <returns>操作影响的行数</returns>
+        </member>
+        <member name="M:Infrastructure.Core.IRepository`2.DeleteAsync(System.Collections.Generic.IEnumerable{`0})">
+            <summary>
+            异步批量删除删除实体
+            </summary>
+            <param name="entities">实体对象集合</param>
+            <returns>操作影响的行数</returns>
+        </member>
+        <member name="M:Infrastructure.Core.IRepository`2.UpdateAsync(`0)">
+            <summary>
+            异步更新实体对象
+            </summary>
+            <param name="entity">更新后的实体对象</param>
+            <returns>操作影响的行数</returns>
+        </member>
+        <member name="M:Infrastructure.Core.IRepository`2.CheckExistsAsync(System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}},`1)">
+            <summary>
+            异步检查实体是否存在
+            </summary>
+            <param name="predicate">查询条件谓语表达式</param>
+            <param name="id">编辑的实体标识</param>
+            <returns>是否存在</returns>
+        </member>
+        <member name="M:Infrastructure.Core.IRepository`2.GetByKeyAsync(`1)">
+            <summary>
+            异步查找指定主键的实体
+            </summary>
+            <param name="key">实体主键</param>
+            <returns>符合主键的实体，不存在时返回null</returns>
+        </member>
+        <member name="P:Infrastructure.Core.IRepository`2.UnitOfWork">
+            <summary>
+            获取 当前单元操作对象
+            </summary>
+        </member>
+        <member name="P:Infrastructure.Core.IRepository`2.Entities">
+            <summary>
+            获取 当前实体类型的查询数据集
+            </summary>
+        </member>
+        <member name="P:Infrastructure.Core.IRepository`2.LoginUserID">
+            <summary>
+            当前用户
+            </summary>
+        </member>
+        <member name="T:Infrastructure.Core.IUnitOfWork">
+            <summary>
+            业务单元操作接口
+            </summary>
+        </member>
+        <member name="M:Infrastructure.Core.IUnitOfWork.ExecuteSqlCommand(Infrastructure.Core.TransactionalBehavior,System.String,System.Object[])">
+            <summary>
+            对数据库执行给定的 DDL/DML 命令。 
+            与接受 SQL 的任何 API 一样，对任何用户输入进行参数化以便避免 SQL 注入攻击是十分重要的。 您可以在 SQL 查询字符串中包含参数占位符，然后将参数值作为附加参数提供。 
+            您提供的任何参数值都将自动转换为 DbParameter。 unitOfWork.ExecuteSqlCommand("UPDATE dbo.Posts SET Rating = 5 WHERE Author = @p0", userSuppliedAuthor); 
+            或者，您还可以构造一个 DbParameter 并将它提供给 SqlQuery。 这允许您在 SQL 查询字符串中使用命名参数。 unitOfWork.ExecuteSqlCommand("UPDATE dbo.Posts SET Rating = 5 WHERE Author = @author", new SqlParameter("@author", userSuppliedAuthor));
+            </summary>
+            <param name="transactionalBehavior">对于此命令控制事务的创建。</param>
+            <param name="sql">命令字符串。</param>
+            <param name="parameters">要应用于命令字符串的参数。</param>
+            <returns>执行命令后由数据库返回的结果。</returns>
+        </member>
+        <member name="M:Infrastructure.Core.IUnitOfWork.SqlQuery``1(System.String,System.Object[])">
+            <summary>
+            创建一个原始 SQL 查询，该查询将返回给定泛型类型的元素。 类型可以是包含与从查询返回的列名匹配的属性的任何类型，也可以是简单的基元类型。 该类型不必是实体类型。
+             即使返回对象的类型是实体类型，上下文也决不会跟踪此查询的结果。 使用 SqlQuery(String, Object[]) 方法可返回上下文跟踪的实体。 
+            与接受 SQL 的任何 API 一样，对任何用户输入进行参数化以便避免 SQL 注入攻击是十分重要的。 您可以在 SQL 查询字符串中包含参数占位符，然后将参数值作为附加参数提供。 
+            您提供的任何参数值都将自动转换为 DbParameter。 unitOfWork.SqlQuery&lt;Post&gt;("SELECT * FROM dbo.Posts WHERE Author = @p0", userSuppliedAuthor); 
+            或者，您还可以构造一个 DbParameter 并将它提供给 SqlQuery。 这允许您在 SQL 查询字符串中使用命名参数。 unitOfWork.SqlQuery&lt;Post&gt;("SELECT * FROM dbo.Posts WHERE Author = @author", new SqlParameter("@author", userSuppliedAuthor));
+            </summary>
+            <typeparam name="TElement">查询所返回对象的类型。</typeparam>
+            <param name="sql">SQL 查询字符串。</param>
+            <param name="parameters">要应用于 SQL 查询字符串的参数。 如果使用输出参数，则它们的值在完全读取结果之前不可用。 这是由于 DbDataReader 的基础行为而导致的，有关详细信息，请参见 http://go.microsoft.com/fwlink/?LinkID=398589。</param>
+            <returns></returns>
+        </member>
+        <member name="M:Infrastructure.Core.IUnitOfWork.SqlQuery(System.Type,System.String,System.Object[])">
+            <summary>
+            创建一个原始 SQL 查询，该查询将返回给定类型的元素。 类型可以是包含与从查询返回的列名匹配的属性的任何类型，也可以是简单的基元类型。 该类型不必是实体类型。 即使返回对象的类型是实体类型，上下文也决不会跟踪此查询的结果。 使用 SqlQuery(String, Object[]) 方法可返回上下文跟踪的实体。 与接受 SQL 的任何 API 一样，对任何用户输入进行参数化以便避免 SQL 注入攻击是十分重要的。 您可以在 SQL 查询字符串中包含参数占位符，然后将参数值作为附加参数提供。 您提供的任何参数值都将自动转换为 DbParameter。 context.Database.SqlQuery(typeof(Post), "SELECT * FROM dbo.Posts WHERE Author = @p0", userSuppliedAuthor); 或者，您还可以构造一个 DbParameter 并将它提供给 SqlQuery。 这允许您在 SQL 查询字符串中使用命名参数。 context.Database.SqlQuery(typeof(Post), "SELECT * FROM dbo.Posts WHERE Author = @author", new SqlParameter("@author", userSuppliedAuthor));
+            </summary>
+            <param name="elementType">查询所返回对象的类型。</param>
+            <param name="sql">SQL 查询字符串。</param>
+            <param name="parameters">要应用于 SQL 查询字符串的参数。 如果使用输出参数，则它们的值在完全读取结果之前不可用。 这是由于 DbDataReader 的基础行为而导致的，有关详细信息，请参见 http://go.microsoft.com/fwlink/?LinkID=398589。</param>
+            <returns></returns>
+        </member>
+        <member name="M:Infrastructure.Core.IUnitOfWork.SaveChanges">
+            <summary>
+            提交当前单元操作的更改。
+            </summary>
+            <returns>操作影响的行数</returns>
+        </member>
+        <member name="M:Infrastructure.Core.IUnitOfWork.ExecuteSqlCommandAsync(Infrastructure.Core.TransactionalBehavior,System.String,System.Object[])">
+            <summary>
+            对数据库执行给定的 DDL/DML 命令。 
+            与接受 SQL 的任何 API 一样，对任何用户输入进行参数化以便避免 SQL 注入攻击是十分重要的。 您可以在 SQL 查询字符串中包含参数占位符，然后将参数值作为附加参数提供。 
+            您提供的任何参数值都将自动转换为 DbParameter。 unitOfWork.ExecuteSqlCommand("UPDATE dbo.Posts SET Rating = 5 WHERE Author = @p0", userSuppliedAuthor); 
+            或者，您还可以构造一个 DbParameter 并将它提供给 SqlQuery。 这允许您在 SQL 查询字符串中使用命名参数。 unitOfWork.ExecuteSqlCommand("UPDATE dbo.Posts SET Rating = 5 WHERE Author = @author", new SqlParameter("@author", userSuppliedAuthor));
+            </summary>
+            <param name="transactionalBehavior">对于此命令控制事务的创建。</param>
+            <param name="sql">命令字符串。</param>
+            <param name="paramters">要应用于命令字符串的参数。</param>
+            <returns>执行命令后由数据库返回的结果。</returns>
+        </member>
+        <member name="M:Infrastructure.Core.IUnitOfWork.SaveChangesAsync">
+            <summary>
+            异步提交当前单元操作的更改。
+            </summary>
+            <returns>操作影响的行数</returns>
+        </member>
+        <member name="P:Infrastructure.Core.IUnitOfWork.TransactionEnabled">
+            <summary>
+            获取或设置 是否开启事务提交
+            </summary>
+        </member>
+        <member name="T:Infrastructure.Core.TransactionalBehavior">
+            <summary>
+            在执行数据库命令或查询期间控制事务创建行为。
+            </summary>
+        </member>
+        <member name="F:Infrastructure.Core.TransactionalBehavior.DoNotEnsureTransaction">
+            <summary>
+            如果存在现有事务，则使用它，否则在没有事务的情况下执行命令或查询。
+            </summary>
+        </member>
+        <member name="F:Infrastructure.Core.TransactionalBehavior.EnsureTransaction">
+            <summary>
+            如果不存在任何事务，则使用新事务进行操作。
+            </summary>
+        </member>
+        <member name="T:Infrastructure.Core.Events.EventsManager">
+            <summary>
+            事件管理器
+            </summary>
+        </member>
+        <member name="M:Infrastructure.Core.Events.EventsManager.InitHttpApplicationEvents(System.Object,Infrastructure.Core.Events.ApplicationEvents)">
+            <summary>
+            初始化Http全局事件
+            </summary>
+            <param name="sender"></param>
+            <param name="events"></param>
+        </member>
+        <member name="E:Infrastructure.Core.Events.EventsManager.OnApplication_PreInitialize">
+            <summary>
+            预初始化
+            </summary>
+        </member>
+        <member name="E:Infrastructure.Core.Events.EventsManager.OnApplication_InitializeComplete">
+            <summary>
+            应用程序类初始化完成事件
+            </summary>
+        </member>
+        <member name="E:Infrastructure.Core.Events.EventsManager.BeginRequest">
+            <summary>
+            开始请求事件
+            </summary>
+        </member>
+        <member name="E:Infrastructure.Core.Events.EventsManager.EndRequest">
+            <summary>
+            请求结束事件
+            </summary>
+        </member>
+        <member name="E:Infrastructure.Core.Events.EventsManager.Error">
+            <summary>
+            错误事件
+            </summary>
+        </member>
+        <member name="E:Infrastructure.Core.Events.EventsManager.PostResolveRequestCache">
+            <summary>
+            在 ASP.NET 跳过当前事件处理程序的执行并允许缓存模块满足来自缓存的请求时发生
+            </summary>
+        </member>
+        <member name="E:Infrastructure.Core.Events.EventsManager.OnResourceMin_PreLoad">
+            <summary>
+            资源压缩预加载
+            </summary>
+        </member>
+        <member name="T:Infrastructure.Core.GlobalApplicationObject">
+            <summary>
+            全局应用程序对象
+            </summary>
+        </member>
+        <member name="P:Infrastructure.Core.GlobalApplicationObject.Current">
+            <summary>
+            当前全局上下文对象
+            </summary>
+        </member>
+        <member name="P:Infrastructure.Core.GlobalApplicationObject.ApplicationContext">
+            <summary>
+            应用程序上下文对象
+            </summary>
+        </member>
+        <member name="P:Infrastructure.Core.GlobalApplicationObject.ConnectionStringName">
+            <summary>
+            连接字符串
+            </summary>
+        </member>
+        <member name="P:Infrastructure.Core.GlobalApplicationObject.EventsManager">
+            <summary>
+            事件管理器
+            </summary>
+        </member>
+        <member name="P:Infrastructure.Core.GlobalApplicationObject.WatchPanel">
+            <summary>
+            监控面板
+            </summary>
+        </member>
+        <member name="T:Infrastructure.Core.IUnitOfWorkDependency">
+            <summary>
+            Base interface for services that may *only* be instantiated in a unit of work.
+            This interface is used to guarantee they are not accidentally referenced by a singleton dependency.
+            </summary>
+        </member>
+        <member name="T:Infrastructure.Core.Infrastructure.AppDomainTypeFinder">
+            <summary>
+            A class that finds types needed by Nop by looping assemblies in the 
+            currently executing AppDomain. Only assemblies whose names matches
+            certain patterns are investigated and an optional list of assemblies
+            referenced by <see cref="P:Infrastructure.Core.Infrastructure.AppDomainTypeFinder.AssemblyNames"/> are always investigated.
+            </summary>
+        </member>
+        <member name="T:Infrastructure.Core.Infrastructure.ITypeFinder">
+            <summary>
+            Classes implementing this interface provide information about types 
+            to various services in the Nop engine.
+            </summary>
+        </member>
+        <member name="M:Infrastructure.Core.Infrastructure.AppDomainTypeFinder.GetAssemblies">
+            <summary>Gets the assemblies related to the current implementation.</summary>
+            <returns>A list of assemblies that should be loaded by the Nop factory.</returns>
+        </member>
+        <member name="M:Infrastructure.Core.Infrastructure.AppDomainTypeFinder.AddAssembliesInAppDomain(System.Collections.Generic.List{System.String},System.Collections.Generic.List{System.Reflection.Assembly})">
+            <summary>
+            Iterates all assemblies in the AppDomain and if it's name matches the configured patterns add it to our list.
+            </summary>
+            <param name="addedAssemblyNames"></param>
+            <param name="assemblies"></param>
+        </member>
+        <member name="M:Infrastructure.Core.Infrastructure.AppDomainTypeFinder.AddConfiguredAssemblies(System.Collections.Generic.List{System.String},System.Collections.Generic.List{System.Reflection.Assembly})">
+            <summary>
+            Adds specificly configured assemblies.
+            </summary>
+            <param name="addedAssemblyNames"></param>
+            <param name="assemblies"></param>
+        </member>
+        <member name="M:Infrastructure.Core.Infrastructure.AppDomainTypeFinder.Matches(System.String)">
+            <summary>
+            Check if a dll is one of the shipped dlls that we know don't need to be investigated.
+            </summary>
+            <param name="assemblyFullName">
+            The name of the assembly to check.
+            </param>
+            <returns>
+            True if the assembly should be loaded into Nop.
+            </returns>
+        </member>
+        <member name="M:Infrastructure.Core.Infrastructure.AppDomainTypeFinder.Matches(System.String,System.String)">
+            <summary>
+            Check if a dll is one of the shipped dlls that we know don't need to be investigated.
+            </summary>
+            <param name="assemblyFullName">
+            The assembly name to match.
+            </param>
+            <param name="pattern">
+            The regular expression pattern to match against the assembly name.
+            </param>
+            <returns>
+            True if the pattern matches the assembly name.
+            </returns>
+        </member>
+        <member name="M:Infrastructure.Core.Infrastructure.AppDomainTypeFinder.LoadMatchingAssemblies(System.String)">
+            <summary>
+            Makes sure matching assemblies in the supplied folder are loaded in the app domain.
+            </summary>
+            <param name="directoryPath">
+            The physical path to a directory containing dlls to load in the app domain.
+            </param>
+        </member>
+        <member name="M:Infrastructure.Core.Infrastructure.AppDomainTypeFinder.DoesTypeImplementOpenGeneric(System.Type,System.Type)">
+            <summary>
+            Does type implement generic?
+            </summary>
+            <param name="type"></param>
+            <param name="openGeneric"></param>
+            <returns></returns>
+        </member>
+        <member name="P:Infrastructure.Core.Infrastructure.AppDomainTypeFinder.App">
+            <summary>The app domain to look for types in.</summary>
+        </member>
+        <member name="P:Infrastructure.Core.Infrastructure.AppDomainTypeFinder.LoadAppDomainAssemblies">
+            <summary>Gets or sets wether Nop should iterate assemblies in the app domain when loading Nop types. Loading patterns are applied when loading these assemblies.</summary>
+        </member>
+        <member name="P:Infrastructure.Core.Infrastructure.AppDomainTypeFinder.AssemblyNames">
+            <summary>Gets or sets assemblies loaded a startup in addition to those loaded in the AppDomain.</summary>
+        </member>
+        <member name="P:Infrastructure.Core.Infrastructure.AppDomainTypeFinder.AssemblySkipLoadingPattern">
+            <summary>Gets the pattern for dlls that we know don't need to be investigated.</summary>
+        </member>
+        <member name="P:Infrastructure.Core.Infrastructure.AppDomainTypeFinder.AssemblyRestrictToLoadingPattern">
+            <summary>Gets or sets the pattern for dll that will be investigated. For ease of use this defaults to match all but to increase performance you might want to configure a pattern that includes assemblies and your own.</summary>
+            <remarks>If you change this so that Nop assemblies arn't investigated (e.g. by not including something like "^Nop|..." you may break core functionality.</remarks>
+        </member>
+        <member name="T:Infrastructure.Core.Infrastructure.EngineContext">
+            <summary>
+            Provides access to the singleton instance of the Nop engine.
+            </summary>
+        </member>
+        <member name="M:Infrastructure.Core.Infrastructure.EngineContext.CreateEngineInstance(Infrastructure.Core.Infrastructure.WebCoreConfig)">
+            <summary>
+            Creates a factory instance and adds a http application injecting facility.
+            </summary>
+            <param name="config">Config</param>
+            <returns>New engine instance</returns>
+        </member>
+        <member name="M:Infrastructure.Core.Infrastructure.EngineContext.Initialize(System.Boolean)">
+            <summary>
+            Initializes a static instance of the Nop factory.
+            </summary>
+            <param name="forceRecreate">Creates a new factory instance even though the factory has been previously initialized.</param>
+        </member>
+        <member name="M:Infrastructure.Core.Infrastructure.EngineContext.Replace(Infrastructure.Core.Infrastructure.IEngine)">
+            <summary>
+            Sets the static engine instance to the supplied engine. Use this method to supply your own engine implementation.
+            </summary>
+            <param name="engine">The engine to use.</param>
+            <remarks>Only use this method if you know what you're doing.</remarks>
+        </member>
+        <member name="P:Infrastructure.Core.Infrastructure.EngineContext.Current">
+            <summary>
+            Gets the singleton Nop engine used to access Nop services.
+            </summary>
+        </member>
+        <member name="T:Infrastructure.Core.Infrastructure.IEngine">
+            <summary>
+            Classes implementing this interface can serve as a portal for the 
+            various services composing the Nop engine. Edit functionality, modules
+            and implementations access most Nop functionality through this 
+            interface.
+            </summary>
+        </member>
+        <member name="M:Infrastructure.Core.Infrastructure.IEngine.Initialize(Infrastructure.Core.Infrastructure.WebCoreConfig)">
+            <summary>
+            Initialize components and plugins in the nop environment.
+            </summary>
+            <param name="config">Config</param>
+        </member>
+        <member name="M:Infrastructure.Core.Infrastructure.IEngine.Resolve``1">
+            <summary>
+            Resolve dependency
+            </summary>
+            <typeparam name="T">T</typeparam>
+            <returns></returns>
+        </member>
+        <member name="M:Infrastructure.Core.Infrastructure.IEngine.Resolve(System.Type)">
+            <summary>
+             Resolve dependency
+            </summary>
+            <param name="type">Type</param>
+            <returns></returns>
+        </member>
+        <member name="M:Infrastructure.Core.Infrastructure.IEngine.ResolveAll``1">
+            <summary>
+            Resolve dependencies
+            </summary>
+            <typeparam name="T">T</typeparam>
+            <returns></returns>
+        </member>
+        <member name="P:Infrastructure.Core.Infrastructure.IEngine.ContainerManager">
+            <summary>
+            Container manager
+            </summary>
+        </member>
+        <member name="T:Infrastructure.Core.Infrastructure.IStartupTask">
+            <summary>
+            Interface which should be implemented by tasks run on startup
+            </summary>
+        </member>
+        <member name="M:Infrastructure.Core.Infrastructure.IStartupTask.Execute">
+            <summary>
+            Execute task
+            </summary>
+        </member>
+        <member name="P:Infrastructure.Core.Infrastructure.IStartupTask.Order">
+            <summary>
+            Order
+            </summary>
+        </member>
+        <member name="T:Infrastructure.Core.Infrastructure.Singleton`1">
+            <summary>
+            A statically compiled "singleton" used to store objects throughout the 
+            lifetime of the app domain. Not so much singleton in the pattern's 
+            sense of the word as a standardized way to store single instances.
+            </summary>
+            <typeparam name="T">The type of object to store.</typeparam>
+            <remarks>Access to the instance is not synchrnoized.</remarks>
+        </member>
+        <member name="T:Infrastructure.Core.Infrastructure.Singleton">
+            <summary>
+            Provides access to all "singletons" stored by <see cref="T:Infrastructure.Core.Infrastructure.Singleton`1"/>.
+            </summary>
+        </member>
+        <member name="P:Infrastructure.Core.Infrastructure.Singleton.AllSingletons">
+            <summary>Dictionary of type to singleton instances.</summary>
+        </member>
+        <member name="P:Infrastructure.Core.Infrastructure.Singleton`1.Instance">
+            <summary>The singleton instance for the specified type T. Only one instance (at the time) of this object for each type of T.</summary>
+        </member>
+        <member name="T:Infrastructure.Core.Infrastructure.SingletonList`1">
+            <summary>
+            Provides a singleton list for a certain type.
+            </summary>
+            <typeparam name="T">The type of list to store.</typeparam>
+        </member>
+        <member name="P:Infrastructure.Core.Infrastructure.SingletonList`1.Instance">
+            <summary>The singleton instance for the specified type T. Only one instance (at the time) of this list for each type of T.</summary>
+        </member>
+        <member name="T:Infrastructure.Core.Infrastructure.SingletonDictionary`2">
+            <summary>
+            Provides a singleton dictionary for a certain key and vlaue type.
+            </summary>
+            <typeparam name="TKey">The type of key.</typeparam>
+            <typeparam name="TValue">The type of value.</typeparam>
+        </member>
+        <member name="P:Infrastructure.Core.Infrastructure.SingletonDictionary`2.Instance">
+            <summary>The singleton instance for the specified type T. Only one instance (at the time) of this dictionary for each type of T.</summary>
+        </member>
+        <member name="T:Infrastructure.Core.Infrastructure.WebAppTypeFinder">
+            <summary>
+            Provides information about types in the current web application. 
+            Optionally this class can look at all assemblies in the bin folder.
+            </summary>
+        </member>
+        <member name="M:Infrastructure.Core.Infrastructure.WebAppTypeFinder.GetBinDirectory">
+            <summary>
+            Gets a physical disk path of \Bin directory
+            </summary>
+            <returns>The physical path. E.g. "c:\inetpub\wwwroot\bin"</returns>
+        </member>
+        <member name="P:Infrastructure.Core.Infrastructure.WebAppTypeFinder.EnsureBinFolderAssembliesLoaded">
+            <summary>
+            Gets or sets wether assemblies in the bin folder of the web application should be specificly checked for beeing loaded on application load. This is need in situations where plugins need to be loaded in the AppDomain after the application been reloaded.
+            </summary>
+        </member>
+        <member name="T:Infrastructure.Core.Infrastructure.WebCoreConfig">
+            <summary>
+            Represents a WebCoreConfig
+            </summary>
+        </member>
+        <member name="M:Infrastructure.Core.Infrastructure.WebCoreConfig.Create(System.Object,System.Object,System.Xml.XmlNode)">
+            <summary>
+            Creates a configuration section handler.
+            </summary>
+            <param name="parent">Parent object.</param>
+            <param name="configContext">Configuration context object.</param>
+            <param name="section">Section XML node.</param>
+            <returns>The created section handler object.</returns>
+        </member>
+        <member name="P:Infrastructure.Core.Infrastructure.WebCoreConfig.DynamicDiscovery">
+            <summary>
+            In addition to configured assemblies examine and load assemblies in the bin directory.
+            </summary>
+        </member>
+        <member name="P:Infrastructure.Core.Infrastructure.WebCoreConfig.EngineType">
+            <summary>
+            A custom <see cref="T:Infrastructure.Core.Infrastructure.IEngine"/> to manage the application instead of the default.
+            </summary>
+        </member>
+        <member name="P:Infrastructure.Core.Infrastructure.WebCoreConfig.ThemeBasePath">
+            <summary>
+            Specifices where the themes will be stored (~/Themes/)
+            </summary>
+        </member>
+        <member name="P:Infrastructure.Core.Infrastructure.WebCoreConfig.IgnoreStartupTasks">
+            <summary>
+            Indicates whether we should ignore startup tasks
+            </summary>
+        </member>
+        <member name="P:Infrastructure.Core.Infrastructure.WebCoreConfig.UserAgentStringsPath">
+            <summary>
+            Path to database with user agent strings
+            </summary>
+        </member>
+        <member name="T:Infrastructure.Core.Infrastructure.WebEngine">
+            <summary>
+            Engine
+            </summary>
+        </member>
+        <member name="M:Infrastructure.Core.Infrastructure.WebEngine.RunStartupTasks">
+            <summary>
+            Run startup tasks
+            </summary>
+        </member>
+        <member name="M:Infrastructure.Core.Infrastructure.WebEngine.RegisterDependencies(Infrastructure.Core.Infrastructure.WebCoreConfig)">
+            <summary>
+            Register dependencies
+            </summary>
+            <param name="config">Config</param>
+        </member>
+        <member name="M:Infrastructure.Core.Infrastructure.WebEngine.Initialize(Infrastructure.Core.Infrastructure.WebCoreConfig)">
+            <summary>
+            Initialize components and plugins in the nop environment.
+            </summary>
+            <param name="config">Config</param>
+        </member>
+        <member name="M:Infrastructure.Core.Infrastructure.WebEngine.Resolve``1">
+            <summary>
+            Resolve dependency
+            </summary>
+            <typeparam name="T">T</typeparam>
+            <returns></returns>
+        </member>
+        <member name="M:Infrastructure.Core.Infrastructure.WebEngine.Resolve(System.Type)">
+            <summary>
+             Resolve dependency
+            </summary>
+            <param name="type">Type</param>
+            <returns></returns>
+        </member>
+        <member name="M:Infrastructure.Core.Infrastructure.WebEngine.ResolveAll``1">
+            <summary>
+            Resolve dependencies
+            </summary>
+            <typeparam name="T">T</typeparam>
+            <returns></returns>
+        </member>
+        <member name="P:Infrastructure.Core.Infrastructure.WebEngine.ContainerManager">
+            <summary>
+            Container manager
+            </summary>
+        </member>
+        <member name="T:Infrastructure.Core.IWebHelper">
+            <summary>
+            Represents a common helper
+            </summary>
+        </member>
+        <member name="M:Infrastructure.Core.IWebHelper.GetUrlReferrer">
+            <summary>
+            Get URL referrer
+            </summary>
+            <returns>URL referrer</returns>
+        </member>
+        <member name="M:Infrastructure.Core.IWebHelper.GetCurrentIpAddress">
+            <summary>
+            Get context IP address
+            </summary>
+            <returns>URL referrer</returns>
+        </member>
+        <member name="M:Infrastructure.Core.IWebHelper.GetThisPageUrl(System.Boolean)">
+            <summary>
+            Gets this page name
+            </summary>
+            <param name="includeQueryString">Value indicating whether to include query strings</param>
+            <returns>Page name</returns>
+        </member>
+        <member name="M:Infrastructure.Core.IWebHelper.GetThisPageUrl(System.Boolean,System.Boolean)">
+            <summary>
+            Gets this page name
+            </summary>
+            <param name="includeQueryString">Value indicating whether to include query strings</param>
+            <param name="useSsl">Value indicating whether to get SSL protected page</param>
+            <returns>Page name</returns>
+        </member>
+        <member name="M:Infrastructure.Core.IWebHelper.IsCurrentConnectionSecured">
+            <summary>
+            Gets a value indicating whether current connection is secured
+            </summary>
+            <returns>true - secured, false - not secured</returns>
+        </member>
+        <member name="M:Infrastructure.Core.IWebHelper.ServerVariables(System.String)">
+            <summary>
+            Gets server variable by name
+            </summary>
+            <param name="name">Name</param>
+            <returns>Server variable</returns>
+        </member>
+        <member name="M:Infrastructure.Core.IWebHelper.IsStaticResource(System.Web.HttpRequest)">
+            <summary>
+            Returns true if the requested resource is one of the typical resources that needn't be processed by the cms engine.
+            </summary>
+            <param name="request">HTTP Request</param>
+            <returns>True if the request targets a static resource file.</returns>
+            <remarks>
+            These are the file extensions considered to be static resources:
+            .css
+            .gif
+            .png 
+            .jpg
+            .jpeg
+            .js
+            .axd
+            .ashx
+            </remarks>
+        </member>
+        <member name="M:Infrastructure.Core.IWebHelper.MapPath(System.String)">
+            <summary>
+            Maps a virtual path to a physical disk path.
+            </summary>
+            <param name="path">The path to map. E.g. "~/bin"</param>
+            <returns>The physical path. E.g. "c:\inetpub\wwwroot\bin"</returns>
+        </member>
+        <member name="M:Infrastructure.Core.IWebHelper.ModifyQueryString(System.String,System.String,System.String)">
+            <summary>
+            Modifies query string
+            </summary>
+            <param name="url">Url to modify</param>
+            <param name="queryStringModification">Query string modification</param>
+            <param name="anchor">Anchor</param>
+            <returns>New url</returns>
+        </member>
+        <member name="M:Infrastructure.Core.IWebHelper.RemoveQueryString(System.String,System.String)">
+            <summary>
+            Remove query string from url
+            </summary>
+            <param name="url">Url to modify</param>
+            <param name="queryString">Query string to remove</param>
+            <returns>New url</returns>
+        </member>
+        <member name="M:Infrastructure.Core.IWebHelper.QueryString``1(System.String)">
+            <summary>
+            Gets query string value by name
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="name">Parameter name</param>
+            <returns>Query string value</returns>
+        </member>
+        <member name="M:Infrastructure.Core.IWebHelper.RestartAppDomain(System.Boolean,System.String)">
+            <summary>
+            Restart application domain
+            </summary>
+            <param name="makeRedirect">A value indicating whether we should made redirection after restart</param>
+            <param name="redirectUrl">Redirect URL; empty string if you want to redirect to the current page URL</param>
+        </member>
+        <member name="P:Infrastructure.Core.IWebHelper.IsRequestBeingRedirected">
+            <summary>
+            Gets a value that indicates whether the client is being redirected to a new location
+            </summary>
+        </member>
+        <member name="P:Infrastructure.Core.IWebHelper.IsPostBeingDone">
+            <summary>
+            Gets or sets a value that indicates whether the client is being redirected to a new location using POST
+            </summary>
+        </member>
+        <member name="T:Infrastructure.Core.IWorkContext">
+            <summary>
+            Work context
+            </summary>
+        </member>
+        <member name="P:Infrastructure.Core.IWorkContext.WorkingLanguage">
+            <summary>
+            Get or set current user working language
+            </summary>
+        </member>
+        <member name="P:Infrastructure.Core.IWorkContext.IsAdmin">
+            <summary>
+            Get or set value indicating whether we're in admin area
+            </summary>
+        </member>
+        <member name="T:Infrastructure.Core.Logging.DataLog">
+            <summary>
+            数据日志信息类
+            </summary>
+        </member>
+        <member name="M:Infrastructure.Core.Logging.DataLog.#ctor">
+            <summary>
+            初始化一个<see cref="T:Infrastructure.Core.Logging.DataLog"/>类型的新实例
+            </summary>
+        </member>
+        <member name="P:Infrastructure.Core.Logging.DataLog.EntityName">
+            <summary>
+            获取或设置 实体名称
+            </summary>
+        </member>
+        <member name="P:Infrastructure.Core.Logging.DataLog.Operator">
+            <summary>
+            获取 操作人
+            </summary>
+        </member>
+        <member name="P:Infrastructure.Core.Logging.DataLog.OperateDate">
+            <summary>
+            获取或设置 操作时间
+            </summary>
+        </member>
+        <member name="T:Infrastructure.Core.Logging.OperatingType">
+            <summary>
+            实体数据日志操作类型
+            </summary>
+        </member>
+        <member name="F:Infrastructure.Core.Logging.OperatingType.Query">
+            <summary>
+            查询
+            </summary>
+        </member>
+        <member name="F:Infrastructure.Core.Logging.OperatingType.Insert">
+            <summary>
+            插入
+            </summary>
+        </member>
+        <member name="F:Infrastructure.Core.Logging.OperatingType.Update">
+            <summary>
+            更新
+            </summary>
+        </member>
+        <member name="F:Infrastructure.Core.Logging.OperatingType.Delete">
+            <summary>
+            删除
+            </summary>
+        </member>
+        <member name="T:Infrastructure.Core.Logging.DataLogItem">
+            <summary>
+            实体操作日志明细
+            </summary>
+        </member>
+        <member name="P:Infrastructure.Core.Logging.DataLogItem.Field">
+            <summary>
+            获取或设置 字段
+            </summary>
+        </member>
+        <member name="P:Infrastructure.Core.Logging.DataLogItem.OriginalValue">
+            <summary>
+            获取或设置 旧值
+            </summary>
+        </member>
+        <member name="P:Infrastructure.Core.Logging.DataLogItem.NewValue">
+            <summary>
+            获取或设置 新值
+            </summary>
+        </member>
+        <member name="T:Infrastructure.Core.Logging.ILog">
+            <summary>
+            表示日志实例的接口
+            </summary>
+        </member>
+        <member name="T:Infrastructure.Core.Logging.ILogger">
+            <summary>
+            定义日志记录行为
+            </summary>
+        </member>
+        <member name="M:Infrastructure.Core.Logging.ILogger.Trace``1(``0)">
+            <summary>
+            写入<see cref="F:Infrastructure.Core.Logging.LogLevel.Trace"/>日志消息
+            </summary>
+            <param name="message">日志消息</param>
+        </member>
+        <member name="M:Infrastructure.Core.Logging.ILogger.Trace(System.String,System.Object[])">
+            <summary>
+            写入<see cref="F:Infrastructure.Core.Logging.LogLevel.Trace"/>格式化日志消息
+            </summary>
+            <param name="format">日志消息格式</param>
+            <param name="args">格式化参数</param>
+        </member>
+        <member name="M:Infrastructure.Core.Logging.ILogger.Debug``1(``0)">
+            <summary>
+            写入<see cref="F:Infrastructure.Core.Logging.LogLevel.Debug"/>日志消息
+            </summary>
+            <param name="message">日志消息</param>
+        </member>
+        <member name="M:Infrastructure.Core.Logging.ILogger.Debug(System.String,System.Object[])">
+            <summary>
+            写入<see cref="F:Infrastructure.Core.Logging.LogLevel.Debug"/>格式化日志消息
+            </summary>
+            <param name="format">日志消息格式</param>
+            <param name="args">格式化参数</param>
+        </member>
+        <member name="M:Infrastructure.Core.Logging.ILogger.Info``1(``0)">
+            <summary>
+            写入<see cref="F:Infrastructure.Core.Logging.LogLevel.Info"/>日志消息
+            </summary>
+            <param name="message">日志消息</param>
+        </member>
+        <member name="M:Infrastructure.Core.Logging.ILogger.Info(System.String,System.Object[])">
+            <summary>
+            写入<see cref="F:Infrastructure.Core.Logging.LogLevel.Info"/>格式化日志消息
+            </summary>
+            <param name="format">日志消息格式</param>
+            <param name="args">格式化参数</param>
+        </member>
+        <member name="M:Infrastructure.Core.Logging.ILogger.Warn``1(``0)">
+            <summary>
+            写入<see cref="F:Infrastructure.Core.Logging.LogLevel.Warn"/>日志消息
+            </summary>
+            <param name="message">日志消息</param>
+        </member>
+        <member name="M:Infrastructure.Core.Logging.ILogger.Warn(System.String,System.Object[])">
+            <summary>
+            写入<see cref="F:Infrastructure.Core.Logging.LogLevel.Warn"/>格式化日志消息
+            </summary>
+            <param name="format">日志消息格式</param>
+            <param name="args">格式化参数</param>
+        </member>
+        <member name="M:Infrastructure.Core.Logging.ILogger.Error``1(``0)">
+            <summary>
+            写入<see cref="F:Infrastructure.Core.Logging.LogLevel.Error"/>日志消息
+            </summary>
+            <param name="message">日志消息</param>
+        </member>
+        <member name="M:Infrastructure.Core.Logging.ILogger.Error(System.String,System.Object[])">
+            <summary>
+            写入<see cref="F:Infrastructure.Core.Logging.LogLevel.Error"/>格式化日志消息
+            </summary>
+            <param name="format">日志消息格式</param>
+            <param name="args">格式化参数</param>
+        </member>
+        <member name="M:Infrastructure.Core.Logging.ILogger.Error``1(System.Exception,``0)">
+            <summary>
+            写入<see cref="F:Infrastructure.Core.Logging.LogLevel.Error"/>日志消息，并记录异常
+            </summary>
+            <param name="message">日志消息</param>
+            <param name="exception">异常</param>
+        </member>
+        <member name="M:Infrastructure.Core.Logging.ILogger.Error(System.Exception,System.String,System.Object[])">
+            <summary>
+            写入<see cref="F:Infrastructure.Core.Logging.LogLevel.Error"/>格式化日志消息，并记录异常
+            </summary>
+            <param name="format">日志消息格式</param>
+            <param name="exception">异常</param>
+            <param name="args">格式化参数</param>
+        </member>
+        <member name="M:Infrastructure.Core.Logging.ILogger.Fatal``1(``0)">
+            <summary>
+            写入<see cref="F:Infrastructure.Core.Logging.LogLevel.Fatal"/>日志消息
+            </summary>
+            <param name="message">日志消息</param>
+        </member>
+        <member name="M:Infrastructure.Core.Logging.ILogger.Fatal(System.String,System.Object[])">
+            <summary>
+            写入<see cref="F:Infrastructure.Core.Logging.LogLevel.Fatal"/>格式化日志消息
+            </summary>
+            <param name="format">日志消息格式</param>
+            <param name="args">格式化参数</param>
+        </member>
+        <member name="M:Infrastructure.Core.Logging.ILogger.Fatal``1(System.Exception,``0)">
+            <summary>
+            写入<see cref="F:Infrastructure.Core.Logging.LogLevel.Fatal"/>日志消息，并记录异常
+            </summary>
+            <param name="message">日志消息</param>
+            <param name="exception">异常</param>
+        </member>
+        <member name="M:Infrastructure.Core.Logging.ILogger.Fatal(System.Exception,System.String,System.Object[])">
+            <summary>
+            写入<see cref="F:Infrastructure.Core.Logging.LogLevel.Fatal"/>格式化日志消息，并记录异常
+            </summary>
+            <param name="format">日志消息格式</param>
+            <param name="exception">异常</param>
+            <param name="args">格式化参数</param>
+        </member>
+        <member name="P:Infrastructure.Core.Logging.ILog.IsTraceEnabled">
+            <summary>
+            获取 是否允许<see cref="F:Infrastructure.Core.Logging.LogLevel.Trace"/>级别的日志
+            </summary>
+        </member>
+        <member name="P:Infrastructure.Core.Logging.ILog.IsDebugEnabled">
+            <summary>
+            获取 是否允许<see cref="F:Infrastructure.Core.Logging.LogLevel.Debug"/>级别的日志
+            </summary>
+        </member>
+        <member name="P:Infrastructure.Core.Logging.ILog.IsInfoEnabled">
+            <summary>
+            获取 是否允许<see cref="F:Infrastructure.Core.Logging.LogLevel.Info"/>级别的日志
+            </summary>
+        </member>
+        <member name="P:Infrastructure.Core.Logging.ILog.IsWarnEnabled">
+            <summary>
+            获取 是否允许<see cref="F:Infrastructure.Core.Logging.LogLevel.Warn"/>级别的日志
+            </summary>
+        </member>
+        <member name="P:Infrastructure.Core.Logging.ILog.IsErrorEnabled">
+            <summary>
+            获取 是否允许<see cref="F:Infrastructure.Core.Logging.LogLevel.Error"/>级别的日志
+            </summary>
+        </member>
+        <member name="P:Infrastructure.Core.Logging.ILog.IsFatalEnabled">
+            <summary>
+            获取 是否允许<see cref="F:Infrastructure.Core.Logging.LogLevel.Fatal"/>级别的日志
+            </summary>
+        </member>
+        <member name="T:Infrastructure.Core.Logging.ILoggerAdapter">
+            <summary>
+            定义日志输出适配器的方法
+            </summary>
+        </member>
+        <member name="M:Infrastructure.Core.Logging.ILoggerAdapter.GetLogger(System.Type)">
+            <summary>
+            由指定类型获取<see cref="T:Infrastructure.Core.Logging.ILog"/>日志实例
+            </summary>
+            <param name="type">指定类型</param>
+            <returns></returns>
+        </member>
+        <member name="M:Infrastructure.Core.Logging.ILoggerAdapter.GetLogger(System.String)">
+            <summary>
+            由指定名称获取<see cref="T:Infrastructure.Core.Logging.ILog"/>日志实例
+            </summary>
+            <param name="name">指定名称</param>
+            <returns></returns>
+        </member>
+        <member name="T:Infrastructure.Core.Logging.LogBase">
+            <summary>
+            日志输出者适配基类，用于定义日志输出的处理业务
+            </summary>
+        </member>
+        <member name="M:Infrastructure.Core.Logging.LogBase.Write(Infrastructure.Core.Logging.LogLevel,System.Object,System.Exception)">
+            <summary>
+            获取日志输出处理委托实例
+            </summary>
+            <param name="level">日志输出级别</param>
+            <param name="message">日志消息</param>
+            <param name="exception">日志异常</param>
+        </member>
+        <member name="M:Infrastructure.Core.Logging.LogBase.Trace``1(``0)">
+            <summary>
+            写入<see cref="F:Infrastructure.Core.Logging.LogLevel.Trace"/>日志消息
+            </summary>
+            <param name="message">日志消息</param>
+        </member>
+        <member name="M:Infrastructure.Core.Logging.LogBase.Trace(System.String,System.Object[])">
+            <summary>
+            写入<see cref="F:Infrastructure.Core.Logging.LogLevel.Trace"/>格式化日志消息
+            </summary>
+            <param name="format">日志消息格式</param>
+            <param name="args">格式化参数</param>
+        </member>
+        <member name="M:Infrastructure.Core.Logging.LogBase.Debug``1(``0)">
+            <summary>
+            写入<see cref="F:Infrastructure.Core.Logging.LogLevel.Debug"/>日志消息
+            </summary>
+            <param name="message">日志消息</param>
+        </member>
+        <member name="M:Infrastructure.Core.Logging.LogBase.Debug(System.String,System.Object[])">
+            <summary>
+            写入<see cref="F:Infrastructure.Core.Logging.LogLevel.Debug"/>格式化日志消息
+            </summary>
+            <param name="format">日志消息格式</param>
+            <param name="args">格式化参数</param>
+        </member>
+        <member name="M:Infrastructure.Core.Logging.LogBase.Info``1(``0)">
+            <summary>
+            写入<see cref="F:Infrastructure.Core.Logging.LogLevel.Info"/>日志消息
+            </summary>
+            <param name="message">日志消息</param>
+        </member>
+        <member name="M:Infrastructure.Core.Logging.LogBase.Info(System.String,System.Object[])">
+            <summary>
+            写入<see cref="F:Infrastructure.Core.Logging.LogLevel.Info"/>格式化日志消息
+            </summary>
+            <param name="format">日志消息格式</param>
+            <param name="args">格式化参数</param>
+        </member>
+        <member name="M:Infrastructure.Core.Logging.LogBase.Warn``1(``0)">
+            <summary>
+            写入<see cref="F:Infrastructure.Core.Logging.LogLevel.Warn"/>日志消息
+            </summary>
+            <param name="message">日志消息</param>
+        </member>
+        <member name="M:Infrastructure.Core.Logging.LogBase.Warn(System.String,System.Object[])">
+            <summary>
+            写入<see cref="F:Infrastructure.Core.Logging.LogLevel.Warn"/>格式化日志消息
+            </summary>
+            <param name="format">日志消息格式</param>
+            <param name="args">格式化参数</param>
+        </member>
+        <member name="M:Infrastructure.Core.Logging.LogBase.Error``1(``0)">
+            <summary>
+            写入<see cref="F:Infrastructure.Core.Logging.LogLevel.Error"/>日志消息
+            </summary>
+            <param name="message">日志消息</param>
+        </member>
+        <member name="M:Infrastructure.Core.Logging.LogBase.Error(System.String,System.Object[])">
+            <summary>
+            写入<see cref="F:Infrastructure.Core.Logging.LogLevel.Error"/>格式化日志消息
+            </summary>
+            <param name="format">日志消息格式</param>
+            <param name="args">格式化参数</param>
+        </member>
+        <member name="M:Infrastructure.Core.Logging.LogBase.Error``1(System.Exception,``0)">
+            <summary>
+            写入<see cref="F:Infrastructure.Core.Logging.LogLevel.Error"/>日志消息，并记录异常
+            </summary>
+            <param name="message">日志消息</param>
+            <param name="exception">异常</param>
+        </member>
+        <member name="M:Infrastructure.Core.Logging.LogBase.Error(System.Exception,System.String,System.Object[])">
+            <summary>
+            写入<see cref="F:Infrastructure.Core.Logging.LogLevel.Error"/>格式化日志消息，并记录异常
+            </summary>
+            <param name="format">日志消息格式</param>
+            <param name="exception">异常</param>
+            <param name="args">格式化参数</param>
+        </member>
+        <member name="M:Infrastructure.Core.Logging.LogBase.Fatal``1(``0)">
+            <summary>
+            写入<see cref="F:Infrastructure.Core.Logging.LogLevel.Fatal"/>日志消息
+            </summary>
+            <param name="message">日志消息</param>
+        </member>
+        <member name="M:Infrastructure.Core.Logging.LogBase.Fatal(System.String,System.Object[])">
+            <summary>
+            写入<see cref="F:Infrastructure.Core.Logging.LogLevel.Fatal"/>格式化日志消息
+            </summary>
+            <param name="format">日志消息格式</param>
+            <param name="args">格式化参数</param>
+        </member>
+        <member name="M:Infrastructure.Core.Logging.LogBase.Fatal``1(System.Exception,``0)">
+            <summary>
+            写入<see cref="F:Infrastructure.Core.Logging.LogLevel.Fatal"/>日志消息，并记录异常
+            </summary>
+            <param name="message">日志消息</param>
+            <param name="exception">异常</param>
+        </member>
+        <member name="M:Infrastructure.Core.Logging.LogBase.Fatal(System.Exception,System.String,System.Object[])">
+            <summary>
+            写入<see cref="F:Infrastructure.Core.Logging.LogLevel.Fatal"/>格式化日志消息，并记录异常
+            </summary>
+            <param name="format">日志消息格式</param>
+            <param name="exception">异常</param>
+            <param name="args">格式化参数</param>
+        </member>
+        <member name="P:Infrastructure.Core.Logging.LogBase.IsTraceEnabled">
+            <summary>
+            获取 是否允许输出<see cref="F:Infrastructure.Core.Logging.LogLevel.Trace"/>级别的日志
+            </summary>
+        </member>
+        <member name="P:Infrastructure.Core.Logging.LogBase.IsDebugEnabled">
+            <summary>
+            获取 是否允许输出<see cref="F:Infrastructure.Core.Logging.LogLevel.Debug"/>级别的日志
+            </summary>
+        </member>
+        <member name="P:Infrastructure.Core.Logging.LogBase.IsInfoEnabled">
+            <summary>
+            获取 是否允许输出<see cref="F:Infrastructure.Core.Logging.LogLevel.Info"/>级别的日志
+            </summary>
+        </member>
+        <member name="P:Infrastructure.Core.Logging.LogBase.IsWarnEnabled">
+            <summary>
+            获取 是否允许输出<see cref="F:Infrastructure.Core.Logging.LogLevel.Warn"/>级别的日志
+            </summary>
+        </member>
+        <member name="P:Infrastructure.Core.Logging.LogBase.IsErrorEnabled">
+            <summary>
+            获取 是否允许输出<see cref="F:Infrastructure.Core.Logging.LogLevel.Error"/>级别的日志
+            </summary>
+        </member>
+        <member name="P:Infrastructure.Core.Logging.LogBase.IsFatalEnabled">
+            <summary>
+            获取 是否允许输出<see cref="F:Infrastructure.Core.Logging.LogLevel.Fatal"/>级别的日志
+            </summary>
+        </member>
+        <member name="T:Infrastructure.Core.Logging.Logger">
+            <summary>
+            日志记录者，日志记录输入端
+            </summary>
+        </member>
+        <member name="M:Infrastructure.Core.Logging.Logger.Trace``1(``0)">
+            <summary>
+            写入<see cref="F:Infrastructure.Core.Logging.LogLevel.Trace"/>日志消息
+            </summary>
+            <param name="message">日志消息</param>
+        </member>
+        <member name="M:Infrastructure.Core.Logging.Logger.Trace(System.String,System.Object[])">
+            <summary>
+            写入<see cref="F:Infrastructure.Core.Logging.LogLevel.Trace"/>格式化日志消息
+            </summary>
+            <param name="format">日志消息格式</param>
+            <param name="args">格式化参数</param>
+        </member>
+        <member name="M:Infrastructure.Core.Logging.Logger.Debug``1(``0)">
+            <summary>
+            写入<see cref="F:Infrastructure.Core.Logging.LogLevel.Debug"/>日志消息
+            </summary>
+            <param name="message">日志消息</param>
+        </member>
+        <member name="M:Infrastructure.Core.Logging.Logger.Debug(System.String,System.Object[])">
+            <summary>
+            写入<see cref="F:Infrastructure.Core.Logging.LogLevel.Debug"/>格式化日志消息
+            </summary>
+            <param name="format">日志消息格式</param>
+            <param name="args">格式化参数</param>
+        </member>
+        <member name="M:Infrastructure.Core.Logging.Logger.Info``1(``0)">
+            <summary>
+            写入<see cref="F:Infrastructure.Core.Logging.LogLevel.Info"/>日志消息
+            </summary>
+            <param name="message">日志消息</param>
+        </member>
+        <member name="M:Infrastructure.Core.Logging.Logger.Info(System.String,System.Object[])">
+            <summary>
+            写入<see cref="F:Infrastructure.Core.Logging.LogLevel.Info"/>格式化日志消息
+            </summary>
+            <param name="format">日志消息格式</param>
+            <param name="args">格式化参数</param>
+        </member>
+        <member name="M:Infrastructure.Core.Logging.Logger.Warn``1(``0)">
+            <summary>
+            写入<see cref="F:Infrastructure.Core.Logging.LogLevel.Warn"/>日志消息
+            </summary>
+            <param name="message">日志消息</param>
+        </member>
+        <member name="M:Infrastructure.Core.Logging.Logger.Warn(System.String,System.Object[])">
+            <summary>
+            写入<see cref="F:Infrastructure.Core.Logging.LogLevel.Warn"/>格式化日志消息
+            </summary>
+            <param name="format">日志消息格式</param>
+            <param name="args">格式化参数</param>
+        </member>
+        <member name="M:Infrastructure.Core.Logging.Logger.Error``1(``0)">
+            <summary>
+            写入<see cref="F:Infrastructure.Core.Logging.LogLevel.Error"/>日志消息
+            </summary>
+            <param name="message">日志消息</param>
+        </member>
+        <member name="M:Infrastructure.Core.Logging.Logger.Error(System.String,System.Object[])">
+            <summary>
+            写入<see cref="F:Infrastructure.Core.Logging.LogLevel.Error"/>格式化日志消息
+            </summary>
+            <param name="format">日志消息格式</param>
+            <param name="args">格式化参数</param>
+        </member>
+        <member name="M:Infrastructure.Core.Logging.Logger.Error``1(System.Exception,``0)">
+            <summary>
+            写入<see cref="F:Infrastructure.Core.Logging.LogLevel.Error"/>日志消息，并记录异常
+            </summary>
+            <param name="message">日志消息</param>
+            <param name="exception">异常</param>
+        </member>
+        <member name="M:Infrastructure.Core.Logging.Logger.Error(System.Exception,System.String,System.Object[])">
+            <summary>
+            写入<see cref="F:Infrastructure.Core.Logging.LogLevel.Error"/>格式化日志消息，并记录异常
+            </summary>
+            <param name="format">日志消息格式</param>
+            <param name="exception">异常</param>
+            <param name="args">格式化参数</param>
+        </member>
+        <member name="M:Infrastructure.Core.Logging.Logger.Fatal``1(``0)">
+            <summary>
+            写入<see cref="F:Infrastructure.Core.Logging.LogLevel.Fatal"/>日志消息
+            </summary>
+            <param name="message">日志消息</param>
+        </member>
+        <member name="M:Infrastructure.Core.Logging.Logger.Fatal(System.String,System.Object[])">
+            <summary>
+            写入<see cref="F:Infrastructure.Core.Logging.LogLevel.Fatal"/>格式化日志消息
+            </summary>
+            <param name="format">日志消息格式</param>
+            <param name="args">格式化参数</param>
+        </member>
+        <member name="M:Infrastructure.Core.Logging.Logger.Fatal``1(System.Exception,``0)">
+            <summary>
+            写入<see cref="F:Infrastructure.Core.Logging.LogLevel.Fatal"/>日志消息，并记录异常
+            </summary>
+            <param name="message">日志消息</param>
+            <param name="exception">异常</param>
+        </member>
+        <member name="M:Infrastructure.Core.Logging.Logger.Fatal(System.Exception,System.String,System.Object[])">
+            <summary>
+            写入<see cref="F:Infrastructure.Core.Logging.LogLevel.Fatal"/>格式化日志消息，并记录异常
+            </summary>
+            <param name="format">日志消息格式</param>
+            <param name="exception">异常</param>
+            <param name="args">格式化参数</param>
+        </member>
+        <member name="P:Infrastructure.Core.Logging.Logger.EntryLevel">
+            <summary>
+            获取或设置 日志级别的入口控制，级别决定是否执行相应级别的日志记录功能
+            </summary>
+        </member>
+        <member name="T:Infrastructure.Core.Logging.LoggerAdapterBase">
+            <summary>
+            按名称缓存的日志实现适配器基类，用于创建并管理指定类型的日志实例
+            </summary>
+        </member>
+        <member name="M:Infrastructure.Core.Logging.LoggerAdapterBase.#ctor">
+            <summary>
+            初始化一个<see cref="T:Infrastructure.Core.Logging.LoggerAdapterBase"/>类型的新实例
+            </summary>
+        </member>
+        <member name="M:Infrastructure.Core.Logging.LoggerAdapterBase.GetLogger(System.Type)">
+            <summary>
+            由指定类型获取<see cref="T:Infrastructure.Core.Logging.ILog"/>日志实例
+            </summary>
+            <param name="type">指定类型</param>
+            <returns></returns>
+        </member>
+        <member name="M:Infrastructure.Core.Logging.LoggerAdapterBase.GetLogger(System.String)">
+            <summary>
+            由指定名称获取<see cref="T:Infrastructure.Core.Logging.ILog"/>日志实例
+            </summary>
+            <param name="name">指定名称</param>
+            <returns></returns>
+        </member>
+        <member name="M:Infrastructure.Core.Logging.LoggerAdapterBase.CreateLogger(System.String)">
+            <summary>
+            创建指定名称的缓存实例
+            </summary>
+            <param name="name">指定名称</param>
+            <returns></returns>
+        </member>
+        <member name="M:Infrastructure.Core.Logging.LoggerAdapterBase.ClearLoggerCache">
+            <summary>
+            清除缓存中的日志实例
+            </summary>
+        </member>
+        <member name="T:Infrastructure.Core.Logging.LogLevel">
+            <summary>
+            表示日志输出级别的枚举
+            </summary>
+        </member>
+        <member name="F:Infrastructure.Core.Logging.LogLevel.All">
+            <summary>
+            输出所有级别的日志
+            </summary>
+        </member>
+        <member name="F:Infrastructure.Core.Logging.LogLevel.Trace">
+            <summary>
+            表示跟踪的日志级别
+            </summary>
+        </member>
+        <member name="F:Infrastructure.Core.Logging.LogLevel.Debug">
+            <summary>
+            表示调试的日志级别
+            </summary>
+        </member>
+        <member name="F:Infrastructure.Core.Logging.LogLevel.Info">
+            <summary>
+            表示消息的日志级别
+            </summary>
+        </member>
+        <member name="F:Infrastructure.Core.Logging.LogLevel.Warn">
+            <summary>
+            表示警告的日志级别
+            </summary>
+        </member>
+        <member name="F:Infrastructure.Core.Logging.LogLevel.Error">
+            <summary>
+            表示错误的日志级别
+            </summary>
+        </member>
+        <member name="F:Infrastructure.Core.Logging.LogLevel.Fatal">
+            <summary>
+            表示严重错误的日志级别
+            </summary>
+        </member>
+        <member name="F:Infrastructure.Core.Logging.LogLevel.Off">
+            <summary>
+            关闭所有日志，不输出日志
+            </summary>
+        </member>
+        <member name="T:Infrastructure.Core.Logging.LogManager">
+            <summary>
+            日志管理器
+            </summary>
+        </member>
+        <member name="M:Infrastructure.Core.Logging.LogManager.AddLoggerAdapter(Infrastructure.Core.Logging.ILoggerAdapter)">
+            <summary>
+            添加日志适配器
+            </summary>
+        </member>
+        <member name="M:Infrastructure.Core.Logging.LogManager.RemoveLoggerAdapter(Infrastructure.Core.Logging.ILoggerAdapter)">
+            <summary>
+            移除日志适配器
+            </summary>
+        </member>
+        <member name="M:Infrastructure.Core.Logging.LogManager.GetLogger(System.String)">
+            <summary>
+            获取日志记录者实例
+            </summary>
+        </member>
+        <member name="M:Infrastructure.Core.Logging.LogManager.GetLogger(System.Type)">
+            <summary>
+            获取指定类型的日志记录实例
+            </summary>
+        </member>
+        <member name="P:Infrastructure.Core.Logging.LogManager.Adapters">
+            <summary>
+            获取 日志适配器集合
+            </summary>
+        </member>
+        <member name="T:Infrastructure.Core.InnocellenceException">
+            <summary>
+            Innocellence异常类
+            </summary>
+        </member>
+        <member name="M:Infrastructure.Core.InnocellenceException.#ctor(System.String)">
+            <summary>
+            Innocellence.NET框架异常
+            </summary>
+            <param name="message">异常消息以及关键字（建议不要添加特殊字符）</param>
+        </member>
+        <member name="P:Infrastructure.Core.InnocellenceException.KeyWord">
+            <summary>
+            异常关键字，便于查找问题
+            </summary>
+        </member>
+        <member name="P:Infrastructure.Core.InnocellenceException.HelpLink">
+            <summary>
+            帮助链接
+            </summary>
+        </member>
+        <member name="T:Infrastructure.Core.Paths.SitePaths">
+            <summary>
+            站点路径
+            </summary>
+        </member>
+        <member name="F:Infrastructure.Core.Paths.SitePaths.PLUSDIR">
+            <summary>
+            插件目录名称
+            </summary>
+        </member>
+        <member name="F:Infrastructure.Core.Paths.SitePaths.CACHEDIR">
+            <summary>
+            缓存目录名称
+            </summary>
+        </member>
+        <member name="F:Infrastructure.Core.Paths.SitePaths.CACHERESOURCEDIR">
+            <summary>
+            缓存资源目录
+            </summary>
+        </member>
+        <member name="F:Infrastructure.Core.Paths.SitePaths.PLUSFILESDIR">
+            <summary>
+            插件目录
+            </summary>
+        </member>
+        <member name="F:Infrastructure.Core.Paths.SitePaths.PLUSSHADOWCOPYDIR">
+            <summary>
+            插件影射目录
+            </summary>
+        </member>
+        <member name="P:Infrastructure.Core.Paths.SitePaths.SiteRootDirPath">
+            <summary>
+            站点根目录路径
+            </summary>
+        </member>
+        <member name="P:Infrastructure.Core.Paths.SitePaths.CacheDirPath">
+            <summary>
+            缓存目录
+            </summary>
+        </member>
+        <member name="P:Infrastructure.Core.Paths.SitePaths.PlusDirPath">
+            <summary>
+            插件目录路径
+            </summary>
+        </member>
+        <member name="P:Infrastructure.Core.Paths.SitePaths.CacheResourceDirPath">
+            <summary>
+            缓存资源目录
+            </summary>
+        </member>
+        <member name="P:Infrastructure.Core.Paths.SitePaths.PlusFilesDirPath">
+            <summary>
+            插件缓存目录路径
+            </summary>
+        </member>
+        <member name="P:Infrastructure.Core.Paths.SitePaths.PlusShadowCopyDirPath">
+            <summary>
+            插件影像复制目录路径
+            </summary>
+        </member>
+        <member name="P:Infrastructure.Core.Paths.SitePaths.SiteConfigDirPath">
+            <summary>
+            站点配置文件目录路径
+            </summary>
+        </member>
+        <member name="P:Infrastructure.Core.Paths.SitePaths.SiteRootBinDirPath">
+            <summary>
+            获取网站Bin目录
+            </summary>
+        </member>
+        <member name="T:Infrastructure.Core.Performance.WatchPanel.WatchMessage">
+            <summary>
+            监控消息
+            </summary>
+        </member>
+        <member name="P:Infrastructure.Core.Performance.WatchPanel.WatchMessage.Message">
+            <summary>
+            消息内容
+            </summary>
+        </member>
+        <member name="P:Infrastructure.Core.Performance.WatchPanel.WatchMessage.UpdateTime">
+            <summary>
+            更新时间
+            </summary>
+        </member>
+        <member name="T:Infrastructure.Core.Performance.WatchPanel.WatchPanel">
+            <summary>
+            监控面板
+            </summary>
+        </member>
+        <member name="M:Infrastructure.Core.Performance.WatchPanel.WatchPanel.ExecuteTabAddEvent(Infrastructure.Core.Performance.WatchPanel.WatchTab)">
+            <summary>
+            执行选项卡添加事件
+            </summary>
+            <param name="sender"></param>
+        </member>
+        <member name="M:Infrastructure.Core.Performance.WatchPanel.WatchPanel.ExecuteMessageAddEvent(Infrastructure.Core.Performance.WatchPanel.WatchMessage)">
+            <summary>
+            执行消息添加事件
+            </summary>
+            <param name="sender"></param>
+        </member>
+        <member name="M:Infrastructure.Core.Performance.WatchPanel.WatchPanel.AddTabAsync(System.String)">
+            <summary>
+            添加监控面板
+            </summary>
+            <param name="tabName"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Infrastructure.Core.Performance.WatchPanel.WatchPanel.Find(System.String)">
+            <summary>
+            获取当前控制面板
+            </summary>
+            <param name="tabName"></param>
+            <returns></returns>
+        </member>
+        <member name="P:Infrastructure.Core.Performance.WatchPanel.WatchPanel.WatchTabs">
+            <summary>
+            监控tab
+            </summary>
+        </member>
+        <member name="E:Infrastructure.Core.Performance.WatchPanel.WatchPanel.OnTabAdd">
+            <summary>
+            选项卡添加事件
+            </summary>
+        </member>
+        <member name="E:Infrastructure.Core.Performance.WatchPanel.WatchPanel.OnMessageAdd">
+            <summary>
+            消息事件
+            </summary>
+        </member>
+        <member name="T:Infrastructure.Core.Performance.WatchPanel.WatchTab">
+            <summary>
+            监控选项卡
+            </summary>
+        </member>
+        <member name="F:Infrastructure.Core.Performance.WatchPanel.WatchTab.limitCount">
+            <summary>
+            限制数。0为不限制
+            </summary>
+        </member>
+        <member name="M:Infrastructure.Core.Performance.WatchPanel.WatchTab.AddMessage(System.String)">
+            <summary>
+            添加消息
+            </summary>
+            <param name="message">消息内容</param>
+        </member>
+        <member name="P:Infrastructure.Core.Performance.WatchPanel.WatchTab.TabName">
+            <summary>
+            Tab名称
+            </summary>
+        </member>
+        <member name="P:Infrastructure.Core.Performance.WatchPanel.WatchTab.Head">
+            <summary>
+            顶部内容
+            </summary>
+        </member>
+        <member name="P:Infrastructure.Core.Performance.WatchPanel.WatchTab.Foot">
+            <summary>
+            底部内容
+            </summary>
+        </member>
+        <member name="P:Infrastructure.Core.Performance.WatchPanel.WatchTab.Messages">
+            <summary>
+            Tab显示内容
+            </summary>
+        </member>
+        <member name="P:Infrastructure.Core.Performance.WatchPanel.WatchTab.LimitCount">
+            <summary>
+            消息限制数
+            </summary>
+        </member>
+        <member name="T:Infrastructure.Core.Performance.Watch.CodeWatch">
+            <summary>
+            代码执行时间监控
+            </summary>
+        </member>
+        <member name="F:Infrastructure.Core.Performance.Watch.CodeWatch.logger">
+            <summary>
+            应用程序日志类
+            </summary>
+        </member>
+        <member name="F:Infrastructure.Core.Performance.Watch.CodeWatch.profiler">
+            <summary>
+            集成MiniProfiler，以监控站点性能
+            </summary>
+        </member>
+        <member name="M:Infrastructure.Core.Performance.Watch.CodeWatch.#ctor(System.String,System.Int32)">
+            <summary>
+            初始化代码性能监视器
+            </summary>
+            <param name="tag">标记</param>
+            <param name="warnThreshold">提醒阀值（毫秒）</param>
+        </member>
+        <member name="M:Infrastructure.Core.Performance.Watch.CodeWatch.#ctor(System.String,System.Int32,System.Action{System.String,Infrastructure.Core.Logging.ILogger,System.Nullable{System.Int32},System.Int64})">
+            <summary>
+            初始化代码性能监视器
+            </summary>
+            <param name="tag">标记</param>
+            <param name="warnThreshold">提醒阀值（毫秒）</param>
+            <param name="action">超过阀值后的操作</param>
+        </member>
+        <member name="M:Infrastructure.Core.Performance.Watch.CodeWatch.GetCurrentElapsedMilliseconds">
+            <summary>
+            获取当前执行毫秒数
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:Infrastructure.Core.Plugins.IPlugin">
+            <summary>
+            Interface denoting plug-in attributes that are displayed throughout 
+            the editing interface.
+            </summary>
+        </member>
+        <member name="M:Infrastructure.Core.Plugins.IPlugin.Install">
+            <summary>
+            Install plugin
+            </summary>
+        </member>
+        <member name="M:Infrastructure.Core.Plugins.IPlugin.Uninstall">
+            <summary>
+            Uninstall plugin
+            </summary>
+        </member>
+        <member name="P:Infrastructure.Core.Plugins.IPlugin.PluginDescriptor">
+            <summary>
+            Gets or sets the plugin descriptor
+            </summary>
+        </member>
+        <member name="M:Infrastructure.Core.Plugins.BasePlugin.Install">
+            <summary>
+            Install plugin
+            </summary>
+        </member>
+        <member name="M:Infrastructure.Core.Plugins.BasePlugin.Uninstall">
+            <summary>
+            Uninstall plugin
+            </summary>
+        </member>
+        <member name="P:Infrastructure.Core.Plugins.BasePlugin.PluginDescriptor">
+            <summary>
+            Gets or sets the plugin descriptor
+            </summary>
+        </member>
+        <member name="T:Infrastructure.Core.Plugins.IOfficialFeedManager">
+            <summary>
+            Official feed manager (official plugins from www.nopCommerce.com site)
+            </summary>
+        </member>
+        <member name="M:Infrastructure.Core.Plugins.IOfficialFeedManager.GetCategories">
+            <summary>
+            Get categories
+            </summary>
+            <returns>Result</returns>
+        </member>
+        <member name="M:Infrastructure.Core.Plugins.IOfficialFeedManager.GetVersions">
+            <summary>
+            Get versions
+            </summary>
+            <returns>Result</returns>
+        </member>
+        <member name="M:Infrastructure.Core.Plugins.IOfficialFeedManager.GetAllPlugins(System.Int32,System.Int32,System.Int32,System.String,System.Int32,System.Int32)">
+            <summary>
+            Get all plugins
+            </summary>
+            <param name="categoryId">Category identifier</param>
+            <param name="versionId">Version identifier</param>
+            <param name="price">Price; 0 - all, 10 - free, 20 - paid</param>
+            <param name="searchTerm">Search term</param>
+            <param name="pageIndex">Page index</param>
+            <param name="pageSize">Page size</param>
+            <returns>Plugins</returns>
+        </member>
+        <member name="T:Infrastructure.Core.Plugins.IPluginFinder">
+            <summary>
+            Plugin finder
+            </summary>
+        </member>
+        <member name="M:Infrastructure.Core.Plugins.IPluginFinder.AuthenticateStore(Infrastructure.Core.Plugins.PluginDescriptor,System.Int32)">
+            <summary>
+            Check whether the plugin is available in a certain store
+            </summary>
+            <param name="pluginDescriptor">Plugin descriptor to check</param>
+            <param name="storeId">Store identifier to check</param>
+            <returns>true - available; false - no</returns>
+        </member>
+        <member name="M:Infrastructure.Core.Plugins.IPluginFinder.GetPluginGroups">
+            <summary>
+            Gets plugin groups
+            </summary>
+            <returns>Plugins groups</returns>
+        </member>
+        <member name="M:Infrastructure.Core.Plugins.IPluginFinder.GetPlugins``1(Infrastructure.Core.Plugins.LoadPluginsMode,System.Int32,System.String)">
+            <summary>
+            Gets plugins
+            </summary>
+            <typeparam name="T">The type of plugins to get.</typeparam>
+            <param name="loadMode">Load plugins mode</param>
+            <param name="storeId">Load records allowed only in a specified store; pass 0 to load all records</param>
+            <param name="group">Filter by plugin group; pass null to load all records</param>
+            <returns>Plugins</returns>
+        </member>
+        <member name="M:Infrastructure.Core.Plugins.IPluginFinder.GetPluginDescriptors(Infrastructure.Core.Plugins.LoadPluginsMode,System.Int32,System.String)">
+            <summary>
+            Get plugin descriptors
+            </summary>
+            <param name="loadMode">Load plugins mode</param>
+            <param name="storeId">Load records allowed only in a specified store; pass 0 to load all records</param>
+            <param name="group">Filter by plugin group; pass null to load all records</param>
+            <returns>Plugin descriptors</returns>
+        </member>
+        <member name="M:Infrastructure.Core.Plugins.IPluginFinder.GetPluginDescriptors``1(Infrastructure.Core.Plugins.LoadPluginsMode,System.Int32,System.String)">
+            <summary>
+            Get plugin descriptors
+            </summary>
+            <typeparam name="T">The type of plugin to get.</typeparam>
+            <param name="loadMode">Load plugins mode</param>
+            <param name="storeId">Load records allowed only in a specified store; pass 0 to load all records</param>
+            <param name="group">Filter by plugin group; pass null to load all records</param>
+            <returns>Plugin descriptors</returns>
+        </member>
+        <member name="M:Infrastructure.Core.Plugins.IPluginFinder.GetPluginDescriptorBySystemName(System.String,Infrastructure.Core.Plugins.LoadPluginsMode)">
+            <summary>
+            Get a plugin descriptor by its system name
+            </summary>
+            <param name="systemName">Plugin system name</param>
+            <param name="loadMode">Load plugins mode</param>
+            <returns>>Plugin descriptor</returns>
+        </member>
+        <member name="M:Infrastructure.Core.Plugins.IPluginFinder.GetPluginDescriptorBySystemName``1(System.String,Infrastructure.Core.Plugins.LoadPluginsMode)">
+            <summary>
+            Get a plugin descriptor by its system name
+            </summary>
+            <typeparam name="T">The type of plugin to get.</typeparam>
+            <param name="systemName">Plugin system name</param>
+            <param name="loadMode">Load plugins mode</param>
+            <returns>>Plugin descriptor</returns>
+        </member>
+        <member name="M:Infrastructure.Core.Plugins.IPluginFinder.ReloadPlugins">
+            <summary>
+            Reload plugins
+            </summary>
+        </member>
+        <member name="T:Infrastructure.Core.Plugins.LoadPluginsMode">
+            <summary>
+            Represents a mode to load plugins
+            </summary>
+        </member>
+        <!-- Badly formed XML comment ignored for member "F:Infrastructure.Core.Plugins.LoadPluginsMode.All" -->
+        <member name="F:Infrastructure.Core.Plugins.LoadPluginsMode.InstalledOnly">
+            <summary>
+            Installed only
+            </summary>
+        </member>
+        <member name="F:Infrastructure.Core.Plugins.LoadPluginsMode.NotInstalledOnly">
+            <summary>
+            Not installed only
+            </summary>
+        </member>
+        <member name="T:Infrastructure.Core.Plugins.OfficialFeedManager">
+            <summary>
+            Official feed manager (official plugins from www.nopCommerce.com site)
+            </summary>
+        </member>
+        <member name="M:Infrastructure.Core.Plugins.OfficialFeedManager.GetCategories">
+            <summary>
+            Get categories
+            </summary>
+            <returns>Result</returns>
+        </member>
+        <member name="M:Infrastructure.Core.Plugins.OfficialFeedManager.GetVersions">
+            <summary>
+            Get versions
+            </summary>
+            <returns>Result</returns>
+        </member>
+        <member name="M:Infrastructure.Core.Plugins.OfficialFeedManager.GetAllPlugins(System.Int32,System.Int32,System.Int32,System.String,System.Int32,System.Int32)">
+            <summary>
+            Get all plugins
+            </summary>
+            <param name="categoryId">Category identifier</param>
+            <param name="versionId">Version identifier</param>
+            <param name="price">Price; 0 - all, 10 - free, 20 - paid</param>
+            <param name="searchTerm">Search term</param>
+            <param name="pageIndex">Page index</param>
+            <param name="pageSize">Page size</param>
+            <returns>Plugins</returns>
+        </member>
+        <member name="M:Infrastructure.Core.Plugins.PluginDescriptor.#ctor">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Infrastructure.Core.Plugins.PluginDescriptor.#ctor(System.Reflection.Assembly,System.IO.FileInfo,System.Type)">
+            <summary>
+            
+            </summary>
+            <param name="referencedAssembly"></param>
+            <param name="originalAssemblyFile"></param>
+            <param name="pluginType"></param>
+        </member>
+        <member name="P:Infrastructure.Core.Plugins.PluginDescriptor.PluginFileName">
+            <summary>
+            Plugin type
+            </summary>
+        </member>
+        <member name="P:Infrastructure.Core.Plugins.PluginDescriptor.PluginPath">
+            <summary>
+            PluginPath
+            </summary>
+        </member>
+        <member name="P:Infrastructure.Core.Plugins.PluginDescriptor.PluginType">
+            <summary>
+            Plugin type
+            </summary>
+        </member>
+        <member name="P:Infrastructure.Core.Plugins.PluginDescriptor.Group">
+            <summary>
+            Gets or sets the plugin group
+            </summary>
+        </member>
+        <member name="P:Infrastructure.Core.Plugins.PluginDescriptor.FriendlyName">
+            <summary>
+            Gets or sets the friendly name
+            </summary>
+        </member>
+        <member name="P:Infrastructure.Core.Plugins.PluginDescriptor.SystemName">
+            <summary>
+            Gets or sets the system name
+            </summary>
+        </member>
+        <member name="P:Infrastructure.Core.Plugins.PluginDescriptor.Version">
+            <summary>
+            Gets or sets the version
+            </summary>
+        </member>
+        <member name="P:Infrastructure.Core.Plugins.PluginDescriptor.SupportedVersions">
+            <summary>
+            Gets or sets the supported versions of nopCommerce
+            </summary>
+        </member>
+        <member name="P:Infrastructure.Core.Plugins.PluginDescriptor.Author">
+            <summary>
+            Gets or sets the author
+            </summary>
+        </member>
+        <member name="P:Infrastructure.Core.Plugins.PluginDescriptor.DisplayOrder">
+            <summary>
+            Gets or sets the display order
+            </summary>
+        </member>
+        <member name="P:Infrastructure.Core.Plugins.PluginDescriptor.LimitedToStores">
+            <summary>
+            Gets or sets the list of store identifiers in which this plugin is available. If empty, then this plugin is available in all stores
+            </summary>
+        </member>
+        <member name="P:Infrastructure.Core.Plugins.PluginDescriptor.Installed">
+            <summary>
+            Gets or sets the value indicating whether plugin is installed
+            </summary>
+        </member>
+        <member name="P:Infrastructure.Core.Plugins.PluginDescriptor.IsEnabled">
+            <summary>
+            mark if this plugin is installed successfully
+            </summary>
+        </member>
+        <member name="P:Infrastructure.Core.Plugins.PluginDescriptor.RuntimeInformation">
+            <summary>
+            some information during runtime.
+            </summary>
+        </member>
+        <member name="P:Infrastructure.Core.Plugins.PluginDescriptor.NeedInstalled">
+            <summary>
+            neet to install. insatll flag = -1
+            </summary>
+        </member>
+        <member name="P:Infrastructure.Core.Plugins.PluginDescriptor.InstallFrom">
+            <summary>
+            the path of the install temp file
+            </summary>
+        </member>
+        <member name="T:Infrastructure.Core.Plugins.PluginFileParser">
+            <summary>
+            Plugin files parser
+            </summary>
+        </member>
+        <member name="T:Infrastructure.Core.Plugins.PluginFinder">
+            <summary>
+            Plugin finder
+            </summary>
+        </member>
+        <member name="M:Infrastructure.Core.Plugins.PluginFinder.EnsurePluginsAreLoaded">
+            <summary>
+            Ensure plugins are loaded
+            </summary>
+        </member>
+        <member name="M:Infrastructure.Core.Plugins.PluginFinder.CheckLoadMode(Infrastructure.Core.Plugins.PluginDescriptor,Infrastructure.Core.Plugins.LoadPluginsMode)">
+            <summary>
+            Check whether the plugin is available in a certain store
+            </summary>
+            <param name="pluginDescriptor">Plugin descriptor to check</param>
+            <param name="loadMode">Load plugins mode</param>
+            <returns>true - available; false - no</returns>
+        </member>
+        <member name="M:Infrastructure.Core.Plugins.PluginFinder.CheckGroup(Infrastructure.Core.Plugins.PluginDescriptor,System.String)">
+            <summary>
+            Check whether the plugin is in a certain group
+            </summary>
+            <param name="pluginDescriptor">Plugin descriptor to check</param>
+            <param name="group">Group</param>
+            <returns>true - available; false - no</returns>
+        </member>
+        <member name="M:Infrastructure.Core.Plugins.PluginFinder.AuthenticateStore(Infrastructure.Core.Plugins.PluginDescriptor,System.Int32)">
+            <summary>
+            Check whether the plugin is available in a certain store
+            </summary>
+            <param name="pluginDescriptor">Plugin descriptor to check</param>
+            <param name="storeId">Store identifier to check</param>
+            <returns>true - available; false - no</returns>
+        </member>
+        <member name="M:Infrastructure.Core.Plugins.PluginFinder.GetPluginGroups">
+            <summary>
+            Gets plugin groups
+            </summary>
+            <returns>Plugins groups</returns>
+        </member>
+        <member name="M:Infrastructure.Core.Plugins.PluginFinder.GetPlugins``1(Infrastructure.Core.Plugins.LoadPluginsMode,System.Int32,System.String)">
+            <summary>
+            Gets plugins
+            </summary>
+            <typeparam name="T">The type of plugins to get.</typeparam>
+            <param name="loadMode">Load plugins mode</param>
+            <param name="storeId">Load records allowed only in a specified store; pass 0 to load all records</param>
+            <param name="group">Filter by plugin group; pass null to load all records</param>
+            <returns>Plugins</returns>
+        </member>
+        <member name="M:Infrastructure.Core.Plugins.PluginFinder.GetPluginDescriptors(Infrastructure.Core.Plugins.LoadPluginsMode,System.Int32,System.String)">
+            <summary>
+            Get plugin descriptors
+            </summary>
+            <param name="loadMode">Load plugins mode</param>
+            <param name="storeId">Load records allowed only in a specified store; pass 0 to load all records</param>
+            <param name="group">Filter by plugin group; pass null to load all records</param>
+            <returns>Plugin descriptors</returns>
+        </member>
+        <member name="M:Infrastructure.Core.Plugins.PluginFinder.GetPluginDescriptors``1(Infrastructure.Core.Plugins.LoadPluginsMode,System.Int32,System.String)">
+            <summary>
+            Get plugin descriptors
+            </summary>
+            <typeparam name="T">The type of plugin to get.</typeparam>
+            <param name="loadMode">Load plugins mode</param>
+            <param name="storeId">Load records allowed only in a specified store; pass 0 to load all records</param>
+            <param name="group">Filter by plugin group; pass null to load all records</param>
+            <returns>Plugin descriptors</returns>
+        </member>
+        <member name="M:Infrastructure.Core.Plugins.PluginFinder.GetPluginDescriptorBySystemName(System.String,Infrastructure.Core.Plugins.LoadPluginsMode)">
+            <summary>
+            Get a plugin descriptor by its system name
+            </summary>
+            <param name="systemName">Plugin system name</param>
+            <param name="loadMode">Load plugins mode</param>
+            <returns>>Plugin descriptor</returns>
+        </member>
+        <member name="M:Infrastructure.Core.Plugins.PluginFinder.GetPluginDescriptorBySystemName``1(System.String,Infrastructure.Core.Plugins.LoadPluginsMode)">
+            <summary>
+            Get a plugin descriptor by its system name
+            </summary>
+            <typeparam name="T">The type of plugin to get.</typeparam>
+            <param name="systemName">Plugin system name</param>
+            <param name="loadMode">Load plugins mode</param>
+            <returns>>Plugin descriptor</returns>
+        </member>
+        <member name="M:Infrastructure.Core.Plugins.PluginFinder.ReloadPlugins">
+            <summary>
+            Reload plugins
+            </summary>
+        </member>
+        <member name="T:Infrastructure.Core.Plugins.PluginManager">
+            <summary>
+            Sets the application up for the plugin referencing
+            </summary>
+        </member>
+        <member name="M:Infrastructure.Core.Plugins.PluginManager.Initialize">
+            <summary>
+            Initialize
+            </summary>
+        </member>
+        <member name="M:Infrastructure.Core.Plugins.PluginManager.SavePlugins(Infrastructure.Core.Plugins.PluginDescriptor)">
+            <summary>
+            SavePlugins
+            </summary>
+            <param name="pluginDescriptor"></param>
+        </member>
+        <member name="M:Infrastructure.Core.Plugins.PluginManager.SetPluginInstalled(System.IO.FileInfo,Infrastructure.Core.Plugins.PluginDescriptor,System.IO.FileInfo[],System.Collections.Generic.IEnumerable{System.Collections.Generic.KeyValuePair{System.IO.FileInfo,Infrastructure.Core.Plugins.PluginDescriptor}})">
+            <summary>
+            SetPluginInstalled
+            </summary>
+            <param name="descriptionFile"></param>
+            <param name="pluginDescriptor"></param>
+            <param name="binFiles"></param>
+        </member>
+        <member name="M:Infrastructure.Core.Plugins.PluginManager.ExcuteAllInstallEvent">
+            <summary>
+            ExcuteAllInstallEvent
+            </summary>
+        </member>
+        <member name="M:Infrastructure.Core.Plugins.PluginManager.MarkPluginInstallEvent(Infrastructure.Core.Plugins.PluginDescriptor)">
+            <summary>
+            
+            </summary>
+            <param name="pluginDescriptor"></param>
+        </member>
+        <member name="M:Infrastructure.Core.Plugins.PluginManager.MarkPluginAsInstalled(System.String)">
+            <summary>
+            Mark plugin as installed
+            </summary>
+            <param name="systemName">Plugin system name</param>
+        </member>
+        <member name="M:Infrastructure.Core.Plugins.PluginManager.MarkPluginAsUninstalled(System.String)">
+            <summary>
+            Mark plugin as uninstalled
+            </summary>
+            <param name="systemName">Plugin system name</param>
+        </member>
+        <member name="M:Infrastructure.Core.Plugins.PluginManager.MarkAllPluginsAsUninstalled">
+            <summary>
+            Mark plugin as uninstalled
+            </summary>
+        </member>
+        <member name="M:Infrastructure.Core.Plugins.PluginManager.GetDescriptionFilesAndDescriptors(System.IO.DirectoryInfo)">
+            <summary>
+            Get description files
+            </summary>
+            <param name="pluginFolder">Plugin direcotry info</param>
+            <returns>Original and parsed description files</returns>
+        </member>
+        <member name="M:Infrastructure.Core.Plugins.PluginManager.IsAlreadyLoaded(System.IO.FileInfo,System.Reflection.Assembly@)">
+            <summary>
+            Indicates whether assembly file is already loaded
+            </summary>
+            <param name="fileInfo">File info</param>
+            <returns>Result</returns>
+        </member>
+        <member name="M:Infrastructure.Core.Plugins.PluginManager.PerformFileDeploy(System.IO.FileInfo)">
+            <summary>
+            Perform file deply
+            </summary>
+            <param name="plug">Plugin file info</param>
+            <returns>Assembly</returns>
+        </member>
+        <member name="M:Infrastructure.Core.Plugins.PluginManager.InitializeFullTrust(System.IO.FileInfo,System.IO.DirectoryInfo)">
+            <summary>
+            Used to initialize plugins when running in Full Trust
+            </summary>
+            <param name="plug"></param>
+            <param name="shadowCopyPlugFolder"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Infrastructure.Core.Plugins.PluginManager.InitializeMediumTrust(System.IO.FileInfo,System.IO.DirectoryInfo)">
+            <summary>
+            Used to initialize plugins when running in Medium Trust
+            </summary>
+            <param name="plug"></param>
+            <param name="shadowCopyPlugFolder"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Infrastructure.Core.Plugins.PluginManager.IsPackagePluginFolder(System.IO.DirectoryInfo)">
+            <summary>
+            Determines if the folder is a bin plugin folder for a package
+            </summary>
+            <param name="folder"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Infrastructure.Core.Plugins.PluginManager.GetInstalledPluginsFilePath">
+            <summary>
+            Gets the full path of InstalledPlugins.txt file
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="P:Infrastructure.Core.Plugins.PluginManager.ReferencedPlugins">
+            <summary>
+            Returns a collection of all referenced plugin assemblies that have been shadow copied
+            </summary>
+        </member>
+        <member name="P:Infrastructure.Core.Plugins.PluginManager.IncompatiblePlugins">
+            <summary>
+            Returns a collection of all plugin which are not compatible with the current version
+            </summary>
+        </member>
+        <member name="T:Infrastructure.Core.Properties.Resources">
+            <summary>
+              一个强类型的资源类，用于查找本地化的字符串等。
+            </summary>
+        </member>
+        <member name="P:Infrastructure.Core.Properties.Resources.ResourceManager">
+            <summary>
+              返回此类使用的缓存的 ResourceManager 实例。
+            </summary>
+        </member>
+        <member name="P:Infrastructure.Core.Properties.Resources.Culture">
+            <summary>
+              使用此强类型资源类，为所有资源查找
+              重写当前线程的 CurrentUICulture 属性。
+            </summary>
+        </member>
+        <member name="P:Infrastructure.Core.Properties.Resources.Caching_CacheNotInitialized">
+            <summary>
+              查找类似 缓存功能尚未初始化，未找到可用的 ICacheProvider 实现。 的本地化字符串。
+            </summary>
+        </member>
+        <member name="T:Infrastructure.Core.Services.IClock">
+            <summary>
+            Provides the current Utc <see cref="T:System.DateTime"/>, and time related method for cache management.
+            This service should be used whenever the current date and time are needed, instead of <seealso cref="T:System.DateTime"/> directly.
+            It also makes implementations more testable, as time can be mocked.
+            </summary>
+        </member>
+        <member name="M:Infrastructure.Core.Services.IClock.When(System.TimeSpan)">
+            <summary>
+            Provides a <see cref="T:Infrastructure.Core.Caching.IVolatileToken"/> instance which can be used to cache some information for a 
+            specific duration.
+            </summary>
+            <param name="duration">The duration that the token must be valid.</param>
+            <example>
+            This sample shows how to use the <see cref="M:Infrastructure.Core.Services.IClock.When(System.TimeSpan)"/> method by returning the result of
+            a method named LoadVotes(), which is computed every 10 minutes only.
+            <code>
+            _cacheManager.Get("votes",
+                ctx =&gt; {
+                    ctx.Monitor(_clock.When(TimeSpan.FromMinutes(10)));
+                    return LoadVotes();
+            });
+            </code>
+            </example>
+        </member>
+        <member name="M:Infrastructure.Core.Services.IClock.WhenUtc(System.DateTime)">
+            <summary>
+            Provides a <see cref="T:Infrastructure.Core.Caching.IVolatileToken"/> instance which can be used to cache some 
+            until a specific date and time.
+            </summary>
+            <param name="absoluteUtc">The date and time that the token must be valid until.</param>
+            <example>
+            This sample shows how to use the <see cref="M:Infrastructure.Core.Services.IClock.WhenUtc(System.DateTime)"/> method by returning the result of
+            a method named LoadVotes(), which is computed once, and no more until the end of the year.
+            <code>
+            var endOfYear = _clock.UtcNow;
+            endOfYear.Month = 12;
+            endOfYear.Day = 31;
+            
+            _cacheManager.Get("votes",
+                ctx =&gt; {
+                    ctx.Monitor(_clock.WhenUtc(endOfYear));
+                    return LoadVotes();
+            });
+            </code>
+            </example>
+        </member>
+        <member name="P:Infrastructure.Core.Services.IClock.UtcNow">
+            <summary>
+            Gets the current <see cref="T:System.DateTime"/> of the system, expressed in Utc
+            </summary>
+        </member>
+        <member name="T:Infrastructure.Core.T4.DataTable.T4DataTableAttribute">
+            <summary>
+            数据列表
+            </summary>
+        </member>
+        <member name="P:Infrastructure.Core.T4.DataTable.T4DataTableAttribute.Title">
+            <summary>
+            表格标题
+            </summary>
+        </member>
+        <member name="P:Infrastructure.Core.T4.DataTable.T4DataTableAttribute.Description">
+            <summary>
+            表格描述
+            </summary>
+        </member>
+        <member name="T:Infrastructure.Core.T4.IgnoreParts">
+            <summary>
+            忽略部分
+            </summary>
+        </member>
+        <member name="F:Infrastructure.Core.T4.IgnoreParts.All">
+            <summary>
+            所有
+            </summary>
+        </member>
+        <member name="F:Infrastructure.Core.T4.IgnoreParts.Form">
+            <summary>
+            表单
+            </summary>
+        </member>
+        <member name="F:Infrastructure.Core.T4.IgnoreParts.Grid">
+            <summary>
+            表格
+            </summary>
+        </member>
+        <member name="T:Infrastructure.Core.T4.ReadOnlyTypes">
+            <summary>
+            只读类型
+            </summary>
+        </member>
+        <member name="F:Infrastructure.Core.T4.ReadOnlyTypes.All">
+            <summary>
+            所有字段均只读
+            </summary>
+        </member>
+        <member name="F:Infrastructure.Core.T4.ReadOnlyTypes.Add">
+            <summary>
+            添加时只读
+            </summary>
+        </member>
+        <member name="F:Infrastructure.Core.T4.ReadOnlyTypes.Edit">
+            <summary>
+            编辑时只读
+            </summary>
+        </member>
+        <member name="T:Infrastructure.Core.T4.T4FormGroupAttribute">
+            <summary>
+            T4表单控件组
+            注意：如果需要生成组，则首先需要在相关类添加此特效以表示启用组生成，然后在相关属性上添加此特效以标注此属性的分组
+            </summary>
+        </member>
+        <member name="P:Infrastructure.Core.T4.T4FormGroupAttribute.GroupName">
+            <summary>
+            组名
+            </summary>
+        </member>
+        <member name="P:Infrastructure.Core.T4.T4FormGroupAttribute.AllowCollapse">
+            <summary>
+            允许折叠
+            </summary>
+        </member>
+        <member name="T:Infrastructure.Core.T4.T4GenerationIgnoreAttribute">
+            <summary>
+            T4生成忽略【类或属性】
+            </summary>
+        </member>
+        <member name="M:Infrastructure.Core.T4.T4GenerationIgnoreAttribute.#ctor">
+            <summary>
+            使用默认的构造函数表示此类或此属性在生成时忽略
+            </summary>
+        </member>
+        <member name="M:Infrastructure.Core.T4.T4GenerationIgnoreAttribute.#ctor(Infrastructure.Core.T4.IgnoreParts)">
+            <summary>
+            
+            </summary>
+            <param name="ignorePart"></param>
+        </member>
+        <member name="T:Infrastructure.Core.T4.T4ODataGridAttribute">
+            <summary>
+            ODataGrid生成特性
+            </summary>
+        </member>
+        <member name="T:Infrastructure.Core.T4.T4OnlyVerificationAttribute">
+            <summary>
+            T4生成唯一验证代码【属性】
+            </summary>
+        </member>
+        <member name="M:Infrastructure.Core.T4.T4OnlyVerificationAttribute.#ctor">
+            <summary>
+            使用默认的构造函数表示此属性生成唯一验证代码
+            </summary>
+        </member>
+        <member name="M:Infrastructure.Core.T4.T4OnlyVerificationAttribute.#ctor(System.Boolean)">
+            <summary>
+            使用默认的构造函数表示此属性生成唯一验证代码
+            </summary>
+        </member>
+        <member name="P:Infrastructure.Core.T4.T4OnlyVerificationAttribute.IgnoreDeletedData">
+            <summary>
+            忽略已删除数据
+            </summary>
+        </member>
+        <member name="T:Infrastructure.Core.T4.T4ReadOnlyFieldAttribute">
+            <summary>
+            T4字段生成只读特性
+            </summary>
+        </member>
+        <member name="T:Infrastructure.Core.T4.T4SelectAttribute">
+            <summary>
+            下拉列表生成特性
+            </summary>
+        </member>
+        <member name="P:Infrastructure.Core.T4.T4SelectAttribute.DataUrl">
+            <summary>
+            JSONUrl
+            </summary>
+        </member>
+        <member name="P:Infrastructure.Core.T4.T4SelectAttribute.DisplayField">
+            <summary>
+            显示字段名
+            </summary>
+        </member>
+        <member name="P:Infrastructure.Core.T4.T4SelectAttribute.ValueField">
+            <summary>
+            值字段名
+            </summary>
+        </member>
+        <member name="P:Infrastructure.Core.T4.T4SelectAttribute.Root">
+            <summary>
+            根属性
+            </summary>
+        </member>
+        <member name="T:Infrastructure.Core.WorkContextBase">
+            <summary>
+            Web上下文对象
+            </summary>
+        </member>
+        <member name="M:Infrastructure.Core.WorkContextBase.TryResolve``1(``0@)">
+            <summary>
+            Tries to resolve a registered dependency type
+            </summary>
+            <typeparam name="T">The type of the dependency</typeparam>
+            <param name="service">An instance of the dependency if it could be resolved</param>
+            <returns>True if the dependency could be resolved, false otherwise</returns>
+        </member>
+        <member name="M:Infrastructure.Core.WorkContextBase.GetRouteValue(System.String)">
+            <summary>
+            获取指定名称的路由地址参数的值
+            </summary>
+            <param name="key">名称</param>
+            <returns></returns>
+        </member>
+        <member name="P:Infrastructure.Core.WorkContextBase.RouteValues">
+            <summary>
+            获取当前请求附带的路由参数的集合
+            </summary>
+        </member>
+        <member name="P:Infrastructure.Core.WorkContextBase.HttpContext">
+            <summary>
+            当前Http上下文对象
+            </summary>
+        </member>
+        <member name="P:Infrastructure.Core.WorkContextBase.Layout">
+            <summary>
+            The Layout shape corresponding to the work context
+            </summary>
+        </member>
+        <member name="P:Infrastructure.Core.WorkContextBase.CurrentUser">
+            <summary>
+            The user, if there is any corresponding to the work context
+            </summary>
+        </member>
+        <member name="P:Infrastructure.Core.WorkContextBase.CurrentTheme">
+            <summary>
+            The theme used in the work context
+            </summary>
+        </member>
+        <member name="P:Infrastructure.Core.WorkContextBase.CurrentCulture">
+            <summary>
+            Active culture of the work context
+            </summary>
+        </member>
+        <member name="P:Infrastructure.Core.WorkContextBase.CurrentCalendar">
+            <summary>
+            Active calendar of the work context
+            </summary>
+        </member>
+        <member name="P:Infrastructure.Core.WorkContextBase.IsAdmin">
+            <summary>
+            Time zone of the work context
+            </summary>
+        </member>
+        <member name="P:Infrastructure.Core.WorkContextBase.ApplicationContext">
+            <summary>
+            当前应用程序上下文对象
+            </summary>
+        </member>
+    </members>
+</doc>

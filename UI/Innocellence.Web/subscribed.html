@@ -1,0 +1,42 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <meta name="keyword" content="">
+    <meta name="description" content="">
+    <script src="https://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+    <title>关注成功</title>
+    <style>
+        img {
+            pointer-events: none;
+        }
+
+        a {
+            display: inline-block;
+        }
+
+        iframe {
+            border: none;
+        }
+
+            iframe.card_iframe {
+                position: relative;
+                z-index: 1000;
+            }
+    </style>
+    <link rel="stylesheet" type="text/css" href="style/subscribed.css">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+
+    <script>
+        document.addEventListener("WeixinJSBridgeReady", function () {
+            WeixinJSBridge.call("hideOptionMenu");
+        });
+
+
+    </script>
+
+</head>
+<body class="body_media_lock">
+</body>
+</html>

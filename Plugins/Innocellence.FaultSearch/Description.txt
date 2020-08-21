@@ -1,0 +1,12 @@
+Group: Discount requirements
+FriendlyName: FaultSearch
+SystemName: DLYB.FaultSearch
+Version: 1.0.20160815.01
+SupportedVersions: 2.00
+Author: summer.zhang
+DisplayOrder: 1
+FileName: DLYB.FaultSearch.dll
+Dependences: 
+Controllers: DLYB.FaultSearch.Controllers
+Install: 1
+InstallFrom: 

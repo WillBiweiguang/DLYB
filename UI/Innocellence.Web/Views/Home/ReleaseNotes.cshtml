@@ -1,0 +1,17 @@
+﻿@using Infrastructure.Web.Domain.Entity
+
+@{
+    ViewBag.Title = "About";
+}
+<h3>You are Accessing: @Request.Url.AbsoluteUri</h3>
+<h1>Release Notes</h1>
+
+<p>
+    @foreach (var rn in ViewBag.ReleaseNotes)
+    {
+        <h3>Version: @rn.Version - @rn.Name </h3>
+        <h5>Release Date: @rn.ReleaseDate.ToString("yyyy-MM-dd")</h5>
+        <h5>Change List:</h5>
+        <p>@Html.Raw(rn.Note)</p>
+    }
+</p>
