@@ -40,14 +40,5 @@ namespace Infrastructure.Web.Domain.Services
     /// </summary>
     public partial class DemoService : BaseService<Demo>, IDemoService
     {
-        public DemoService()
-        {            
-        }
-
-        public DemoService(IUnitOfWork dbContext)
-            : base(dbContext)
-        {
-         
-        }
     }
 }

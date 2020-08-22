@@ -22,8 +22,9 @@ namespace DLYB.Web
 
             var typeFinder = EngineContext.Current.Resolve<ITypeFinder>();
             var startUpTaskTypes = typeFinder.FindClassesOfType<IOWinAuthorizeProvider>();
-            foreach (var startUpTaskType in startUpTaskTypes)
-                ((IOWinAuthorizeProvider)Activator.CreateInstance(startUpTaskType)).ConfigureAuth(app);
+            //TODO 去掉SSO
+            //foreach (var startUpTaskType in startUpTaskTypes)
+            //    ((IOWinAuthorizeProvider)Activator.CreateInstance(startUpTaskType)).ConfigureAuth(app);
 
         }
 

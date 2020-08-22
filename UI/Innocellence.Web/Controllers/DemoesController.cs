@@ -27,7 +27,8 @@ namespace Innocellence.Web.Controllers
         // GET: Demoes
         public ActionResult Index()
         {
-            var list = _demoService.GetList<DemoView>(int.MaxValue, x=>x.Id > 0).ToList();
+            //var list = _demoService.GetList<DemoView>(int.MaxValue, x=>x.Id > 0).ToList();
+            var list = _demoService.Repository.Entities.ToList();
             return View(list);
         }
 
