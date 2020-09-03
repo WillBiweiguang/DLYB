@@ -39,8 +39,13 @@ namespace Infrastructure.Web.Domain.ModelsView
         [Display(Name = "密码")]
         public string Password { get; set; }
 
+        public string Captcha { get; set; }
+
         [Display(Name = "记住我?")]
         public bool RememberMe { get; set; }
+
+        //uuid
+        public string Uuid { get; set; }
     }
 
     public class RegisterViewModel

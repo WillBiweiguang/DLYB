@@ -223,6 +223,7 @@
     <Compile Include="Helpers\DateTimeSettings.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Helpers\HttpClientHelper.cs" />
     <Compile Include="Helpers\IDateTimeHelper.cs">
       <SubType>Code</SubType>
     </Compile>

@@ -36,6 +36,10 @@ namespace Infrastructure.Web.Domain.Entity
             //   Mapper.CreateMap<WechatUserView, WechatUser>();
             //   Mapper.CreateMap<ToolsView, Tools>();
             Mapper.CreateMap<DemoView, Demo>();
+            Mapper.CreateMap<AddressView, Address>();
+            Mapper.CreateMap<ProjectView, Project>();
+            Mapper.CreateMap<BeamInfoView, BeamInfo>();
+            Mapper.CreateMap<WeldingView, Welding>();
         }
 
     }

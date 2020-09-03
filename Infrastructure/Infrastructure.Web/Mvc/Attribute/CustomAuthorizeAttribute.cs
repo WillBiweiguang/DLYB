@@ -125,12 +125,12 @@ namespace Infrastructure.Web.MVC.Attribute
                 throw new InvalidOperationException("You cannot use [AdminAuthorize] attribute when a child action cache is active");
 
             
-
+            //TODO 暂时放弃基于角色的权限验证。使用的话，需要通过API获取角色和权限配置
             //if (!AdminFilter.IsApplied(filterContext.RequestContext) && !accessFrontEnd && !_authorizer.Authorize(StandardPermissions.AccessFrontEnd)) {
-            if ( !_authorizer.Authorize(filterContext, objLoginInfo))
-            {
-                UnauthRedirect(filterContext);
-            }
+            //if ( !_authorizer.Authorize(filterContext, objLoginInfo))
+            //{
+            //    UnauthRedirect(filterContext);
+            //}
         }
 
 

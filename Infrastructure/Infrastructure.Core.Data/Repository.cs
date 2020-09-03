@@ -686,6 +686,7 @@ namespace Infrastructure.Core.Data
                 {
                     object value = null;
                     if (pi.Name.ToLower() == "updateddate") { value = DateTime.Now; pi.SetValue(oSrc, value, null); }
+                    if (pi.Name.ToLower() == "createddate" || pi.Name.ToLower() == "createduserid") {  }
                     else if (pi.Name.ToLower() == "updateduserid")
                     {
 

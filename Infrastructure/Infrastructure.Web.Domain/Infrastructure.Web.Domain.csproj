@@ -185,16 +185,37 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Common\Consts.cs" />
     <Compile Include="Configuration\SysWechatConfigConfiguration.generated.cs" />
     <Compile Include="Configuration\CategoryConfiguration.generated.cs" />
     <Compile Include="Configuration\CommonConfiguration.generated.cs" />
     <Compile Include="Configuration\IdentityConfiguration.generated.cs" />
+    <Compile Include="Contracts\IWeldCategoryLabelingService.cs" />
+    <Compile Include="Contracts\IGrooveTypeService.cs" />
+    <Compile Include="Contracts\IThicknessService.cs" />
+    <Compile Include="Contracts\IHanJieLocationService.cs" />
+    <Compile Include="Contracts\IWeldLocationService.cs" />
+    <Compile Include="Contracts\IWeldGeometryService.cs" />
+    <Compile Include="Contracts\IWeldingService.cs" />
+    <Compile Include="Contracts\IProjectService.cs" />
+    <Compile Include="Contracts\IBeamInfoService.cs" />
+    <Compile Include="Contracts\IAddressService.cs" />
     <Compile Include="Contracts\IReleaseNoteService.cs" />
     <Compile Include="Contracts\ICategoryService.cs" />
     <Compile Include="Contracts\ICommonService.cs" />
     <Compile Include="Contracts\ILogsService.cs" />
     <Compile Include="Contracts\ISysUserService.cs" />
     <Compile Include="Model\CommonEntity\UploadMessage.cs" />
+    <Compile Include="Model\Entity\DLYB\WeldCategoryLabeling.cs" />
+    <Compile Include="Model\Entity\DLYB\GrooveType.cs" />
+    <Compile Include="Model\Entity\DLYB\Thickness.cs" />
+    <Compile Include="Model\Entity\DLYB\HanJieLocation.cs" />
+    <Compile Include="Model\Entity\DLYB\WeldLocation.cs" />
+    <Compile Include="Model\Entity\DLYB\WeldGeometry.cs" />
+    <Compile Include="Model\Entity\DLYB\Welding.cs" />
+    <Compile Include="Model\Entity\DLYB\Project.cs" />
+    <Compile Include="Model\Entity\DLYB\BeamInfo.cs" />
+    <Compile Include="Model\Entity\DLYB\Address.cs" />
     <Compile Include="Model\Entity\ReleaseNote.cs" />
     <Compile Include="Model\Entity\Category.cs" />
     <Compile Include="Model\Entity\Identity\SysMenu.cs" />
@@ -211,6 +232,16 @@
     <Compile Include="Model\ModelMap.cs" />
     <Compile Include="Model\ViewModel\AccountViewModels.cs" />
     <Compile Include="Model\ViewModel\CategoryView.cs" />
+    <Compile Include="Model\ViewModel\DLYB\WeldCategoryLabelingView.cs" />
+    <Compile Include="Model\ViewModel\DLYB\GrooveTypeView.cs" />
+    <Compile Include="Model\ViewModel\DLYB\ThicknessView.cs" />
+    <Compile Include="Model\ViewModel\DLYB\HanJieLocationView.cs" />
+    <Compile Include="Model\ViewModel\DLYB\WeldLocationView.cs" />
+    <Compile Include="Model\ViewModel\DLYB\WeldGeometryView.cs" />
+    <Compile Include="Model\ViewModel\DLYB\WeldingView.cs" />
+    <Compile Include="Model\ViewModel\DLYB\ProjectView.cs" />
+    <Compile Include="Model\ViewModel\DLYB\BeamInfoView.cs" />
+    <Compile Include="Model\ViewModel\DLYB\AddressView.cs" />
     <Compile Include="Model\ViewModel\LogsView.cs" />
     <Compile Include="Model\ViewModel\SysConfigView.cs" />
     <Compile Include="Model\ViewModel\SysMenuView.cs" />
@@ -224,6 +255,16 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Service\DLYB\WeldCategoryLabelingService.cs" />
+    <Compile Include="Service\DLYB\GrooveTypeService.cs" />
+    <Compile Include="Service\DLYB\ThicknessService.cs" />
+    <Compile Include="Service\DLYB\HanJieLocationService.cs" />
+    <Compile Include="Service\DLYB\WeldLocationService.cs" />
+    <Compile Include="Service\DLYB\WeldGeometryService.cs" />
+    <Compile Include="Service\DLYB\WeldingService.cs" />
+    <Compile Include="Service\DLYB\ProjectService.cs" />
+    <Compile Include="Service\DLYB\BeamInfoService.cs" />
+    <Compile Include="Service\DLYB\AddressService.cs" />
     <Compile Include="Service\DLYB\DemoService.cs" />
     <Compile Include="Service\ReleaseNotesService.cs" />
     <Compile Include="Service\CategoryService.cs" />
@@ -265,7 +306,9 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Service\DLYBAPI\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <Import Project="..\..\packages\AutoMapper.3.3.1\tools\AutoMapper.targets" Condition="Exists('..\..\packages\AutoMapper.3.3.1\tools\AutoMapper.targets')" />

@@ -86,49 +86,52 @@ namespace DLYB.Web.Controllers
         {
 
             ////得到用户登录的信息
-            //objLoginInfo = Session["UserInfo"] as SysUser;
+            objLoginInfo = Session["UserInfo"] as SysUser;
 
-         
-                ////windows登录,自动获取用户信息
-                //if (objLoginInfo == null && (Request.IsAuthenticated && (User.Identity !=null)))
-                //{
-                //    var windowsIdentity = User.Identity;
+            if (objLoginInfo == null)
+            {
+                filterContext.Result = Redirect("~/Account/Login");
+            }
+            ////windows登录,自动获取用户信息
+            //if (objLoginInfo == null && (Request.IsAuthenticated && (User.Identity !=null)))
+            //{
+            //    var windowsIdentity = User.Identity;
 
-                //    SysUserService objServ = new SysUserService();
-                //   var objUser= objServ.AutoLogin(windowsIdentity);
-                //   if (objUser != null)
-                //   {
-                //       objLoginInfo = objUser;
-                //       Session["UserInfo"] = objLoginInfo;
-                //   }
-                  
-                //}
+            //    SysUserService objServ = new SysUserService();
+            //   var objUser= objServ.AutoLogin(windowsIdentity);
+            //   if (objUser != null)
+            //   {
+            //       objLoginInfo = objUser;
+            //       Session["UserInfo"] = objLoginInfo;
+            //   }
 
-                //if (objLoginInfo == null) { 
-                //if (filterContext.RequestContext.HttpContext.Request.IsAjaxRequest())
-                //{
-                //    AjaxResult<int> result = new AjaxResult<int>();
-                //    result.Message = new JsonMessage((int)HttpStatusCode.Unauthorized, "Please login");
-                //    filterContext.Result = Json(result, JsonRequestBehavior.AllowGet);
+            //}
 
-                //}
-                //else
-                //{
-                //    //Redirect()
-                //    filterContext.Result =  Redirect("~/Account/Login");
-                //}
-                //}
-               // return;
-          
+            //if (objLoginInfo == null) { 
+            //if (filterContext.RequestContext.HttpContext.Request.IsAjaxRequest())
+            //{
+            //    AjaxResult<int> result = new AjaxResult<int>();
+            //    result.Message = new JsonMessage((int)HttpStatusCode.Unauthorized, "Please login");
+            //    filterContext.Result = Json(result, JsonRequestBehavior.AllowGet);
 
-           //if (objLoginInfo != null)
-           //{
-           //    _BaseService.Repository.LoginUserID = objLoginInfo.Id;
-           //    _BaseService.Repository.LoginUserName = objLoginInfo.LillyId;
-           //    SetLanguage("EN");
-           //}
+            //} 
+            //else
+            //{
+            //    //Redirect()
+            //    filterContext.Result =  Redirect("~/Account/Login");
+            //}
+            //}
+            // return;
 
-           // System.Threading.Thread.Sleep(5000);
+
+            //if (objLoginInfo != null)
+            //{
+            //    _BaseService.Repository.LoginUserID = objLoginInfo.Id;
+            //    _BaseService.Repository.LoginUserName = objLoginInfo.LillyId;
+            //    SetLanguage("EN");
+            //}
+
+            // System.Threading.Thread.Sleep(5000);
 
             //Logger log = Logger.GetLogger(filterContext.ActionDescriptor.ControllerDescriptor.ControllerType.FullName, CurrentUserInfo.USERREALNAME);
             //log.Debug(WEBUI.Common.LogHelper.GetActionInfo(filterContext));

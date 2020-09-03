@@ -5,7 +5,7 @@ using Infrastructure.Core;
 using System.ComponentModel.DataAnnotations.Schema;
 namespace Infrastructure.Web.Domain.Entity
 {
-	[Table("SysConfig")]
+	[Table("t_config")]
     public partial class SysConfigModel : EntityBase<int>
 	{
 	

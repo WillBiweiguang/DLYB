@@ -14,19 +14,23 @@ using Infrastructure.Web.Domain.ModelsView;
 using Infrastructure.Web.Domain.Contracts;
 using Infrastructure.Web.Domain.Service;
 using DLYB.CA.Contracts.Contracts;
+using DLYB.Web.Service;
 
 namespace Innocellence.Web.Controllers
 {
     //[Authorize]
     public class AccountController : ParentController<SysUser, SysUserView>
     {
-        public AccountController(ISysUserService userManager, IAuthenticationService authService, IOauthClientDataService clientDataService)
+        private readonly ILoginService _loginService;
+        public AccountController(ISysUserService userManager, IAuthenticationService authService, IOauthClientDataService clientDataService
+            ,ILoginService loginService)
             : base(userManager)
         {
             UserManager = userManager;
             //   UserAdmin = new UserManager<SysUser, int>(new UserStore());
             _authService = authService;
             _clientDataService = clientDataService;
+            _loginService = loginService;
         }
 
         private readonly IAuthenticationService _authService;
@@ -47,7 +51,7 @@ namespace Innocellence.Web.Controllers
             //{
             //    return Redirect("~/Course/index");
             //}
-
+            //验证是否已登录。
             System.Web.Configuration.AuthenticationSection section =
   (System.Web.Configuration.AuthenticationSection)System.Web.Configuration.WebConfigurationManager.GetSection("system.web/authentication");
 
@@ -55,36 +59,41 @@ namespace Innocellence.Web.Controllers
             ViewBag.Mode = section.Mode;
             // ViewBag.UserName = User.Identity.Name;
             ViewBag.ReturnUrl = returnUrl;
+            string uuid = Guid.NewGuid().ToString();
+            ViewBag.Uuid = uuid;
+            ViewBag.Captcha = _loginService.GetCaptcha(uuid);
             return View();
         }
+        //TODO 获取验证码
 
 
-        //
+        //TODO 暂不做验证码，稍后加入
         // POST: /Account/Login
         [HttpPost]
         [AllowAnonymous]
         //[ValidateAntiForgeryToken]
         public async Task<ActionResult> Login(LoginViewModel model, string returnUrl)
-        {
+        {            
             if (ModelState.IsValid)
             {
                 // BaseService<SysUserClaim> a = new BaseService<SysUserClaim>();
 
                 // await ((IDbSet<SysUserClaim>)a.Entities).Where(uc => uc.UserId==9).LoadAsync();
                 //a.Entities.ToList();
-                var user = UserManager.UserLoginAsync(model.UserName, model.Password);
-                if (user != null)
+                //var user = UserManager.UserLoginAsync(model.UserName, model.Password);
+                var result = _loginService.Login(model.UserName, model.Password);
+                if (result)
                 {
                     // await SignInAsync(user, model.RememberMe);
                     // return RedirectToLocal(returnUrl);
-
-                    await _authService.SignInAsync(user, model.RememberMe);
+                    var user = new SysUser { Id = 1, UserName = model.UserName };
+                    model.RememberMe = true;
+                    await _authService.SignInNoDB(user, model.RememberMe);
 
                     //登录日志
-                    BaseService<LogsModel> objServLogs = new BaseService<LogsModel>();
-                    objServLogs.Repository.Insert(new LogsModel() { LogCate = "AdminLogin", LogContent = "登录成功", CreatedUserName = model.UserName });
-
-
+                    //BaseService<LogsModel> objServLogs = new BaseService<LogsModel>();
+                    //objServLogs.Repository.Insert(new LogsModel() { LogCate = "AdminLogin", LogContent = "登录成功", CreatedUserName = model.UserName });
+                    
                     return Json(doJson(null, returnUrl), JsonRequestBehavior.AllowGet);
                 }
                 else
