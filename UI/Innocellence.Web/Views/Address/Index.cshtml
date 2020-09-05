@@ -32,7 +32,6 @@
                             <th>@T("厂址名称")</th>
                             <th>@T("创建人")</th>
                             <th>@T("更新日期")</th>
-                            <th>@T("备注")</th>
                             <th style="width:10%;">@T("操作")</th>
                         </tr>
                     </thead>
@@ -104,7 +103,7 @@
                 ],
                 "columnDefs": [
                     {
-                        "targets": 5,
+                        "targets": 4,
                         "render": function (data, type, full, meta) {
                             return '<a href="#" onclick="LEAP.Common.MainPop.ShowUpdateInfo(\'' + full.Id + '\');return false;" class="artDailog btn btn-info  btn-xs" style="margin-right:4px;" data-toggle="tooltip" data-placement="top" title="编辑"><i class="fa fa-pencil"></i></a>' +
                                 '<a href="#" onclick="LEAP.Common.MainPop.RowClick(\'' + full.Id + '\',2);return false;" class="btn btn-danger btn-xs" id="btnDelete" data-toggle="tooltip" data-placement="top" title="删除">' +
@@ -112,7 +111,9 @@
                         }
                     }],
                 fnDrawCallback: function () {
+
                     $('[data-toggle="tooltip"]').tooltip();
+                    $('#DataTables_Table_0_wrapper > .row:first-child').remove();
                 }
             }));
             //inital select2
