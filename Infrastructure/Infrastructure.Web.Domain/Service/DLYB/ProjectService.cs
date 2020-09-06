@@ -38,7 +38,7 @@ namespace Infrastructure.Web.Domain.Services
     /// <summary>
     /// 
     /// </summary>
-    public partial class ProjectService :  IProjectService
+    public partial class ProjectService :  BaseService<Project>, IProjectService
     {
     }
 }

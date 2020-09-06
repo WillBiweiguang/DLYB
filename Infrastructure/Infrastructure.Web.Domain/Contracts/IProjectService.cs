@@ -9,5 +9,5 @@ using Infrastructure.Web.Domain.ModelsView;
 
 namespace Infrastructure.Web.Domain.Contracts
 {
-    public interface IProjectService : IDependency { }
+    public interface IProjectService : IDependency, IBaseService<Project> { }
 }
