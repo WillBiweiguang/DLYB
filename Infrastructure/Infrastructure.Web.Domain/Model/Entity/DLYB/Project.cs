@@ -22,11 +22,13 @@ namespace Infrastructure.Web.Domain.Entity
         public string AffiliatedInstitution { get; set; }
 
         public string Status { get; set; }
-        public string create_by { get; set; }
+        public DateTime CreatedDate { get; set; }
 
-        public DateTime create_time { get; set; }
+        public int CreatedUserID { get; set; }
 
-        public DateTime? update_time { get; set; }
+        public DateTime? UpdatedDate { get; set; }
+
+        public int? UpdatedUserID { get; set; }
 
         public bool IsDeleted { get; set; }
 

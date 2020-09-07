@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Infrastructure.Web.Domain.ModelsView.ProjectView>
+﻿@model IEnumerable<Infrastructure.Web.Domain.ModelsView.WeldGeometryView>
 @section easyui_css{
     <link rel="stylesheet" href="~/Style/EasyUI/easyui.css" />
 }
@@ -11,8 +11,15 @@
 <div class="row">
     <div class="col-sm-12">
         <form class="form-inline" id="SearchForm">
-            <input type="hidden" name="DeptId" id="DeptId" />
-          
+            <div class="form-group">
+                <input class="form-control" type="text" id="search_condition" name="search_condition" placeholder="名称">
+                <a href="#" class="btn btn-sm" id="btnSearch" data-toggle="tooltip" data-placement="top" title="搜索条件"><i class="fa fa-search"></i></a>
+            </div>
+            <div class="form-group pull-right">
+                <a href="#" class="btn btn-success btn-sm" id="btnAdd" data-toggle="tooltip" data-placement="top" title="添加">
+                    <i class="fa fa-plus"></i>
+                </a>
+            </div>
         </form>
         <div class="clearfix"></div>
 
@@ -21,11 +28,11 @@
                 <table class="table table-bordered table-hover data-table">
                     <thead>
                         <tr>
-                            <th style="width:5%;text-align:center;">@T("ID")</th>
-                            <th>@T("项目名称")</th>
-                            <th>@T("项目类型")</th>
-                            <th>@T("所属机构")</th>
-                            <th>@T("状态")</th>
+                            <th style="width:5%;text-align:center;">@T("序号")</th>
+                            <th>@T("焊缝类型")</th>
+                            <th>@T("创建人")</th>
+                            <th>@T("更新日期")</th>
+                            
                             <th style="width:10%;">@T("操作")</th>
                         </tr>
                     </thead>
@@ -46,49 +53,13 @@
             <div class="modal-body">
                 <form action="Post" id="ff" method="get" class="form-horizontal" datasource="Get">
                     <input type="hidden" id="ID" name="ID" value="0" />
-
+                    @*<input type="hidden" id="CreatedDate" name="CreatedDate" data-bind="value: CreatedDate" validate="{required:false}" value="1970-01-01"/>
+                    <input type="hidden" id="CreatedUserID" name="CreatedUserID" data-bind="value: CreatedUserID" validate="{required:false}" value="0" />*@
                     <div class="form-group">
-                        <label class="col-sm-3 control-label">角色名称:</label>
+                        <label class="col-sm-3 control-label">焊缝类型:</label>
                         <div class="col-sm-9">
-                            <input type="text" name="Name" class="form-control" placeholder="角色名称" data-bind="value: Name"
+                            <input type="text" name="AddressName" class="form-control" placeholder="请输入" data-bind="value: AddressName"
                                    validate="{required:true}" />
-                        </div>
-                    </div>
-                </form>
-            </div>
-
-            <div class="modal-footer">
-                <button class="btn btn-sm" data-dismiss="modal">
-                    <i class="ace-icon fa fa-times"></i>
-                    取消
-                </button>
-
-                <button class="btn btn-sm btn-primary" data-action="save">
-                    <i class="ace-icon fa fa-check"></i>
-                    保存
-                </button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div id="ModalMenu" class="modal" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="blue bigger">请填写以下内容</h4>
-            </div>
-
-            <div class="modal-body">
-                <form action="SetMenu" id="ff" method="get" class="form-horizontal" datasource="Get">
-                    <input type="hidden" id="ID" name="ID" value="0" />
-                    <input type="hidden" id="RoleID" name="RoleID" value="" />
-                    <div class="form-group">
-                        <label class="col-sm-12 control-label" style="text-align:left">菜单名称:</label>
-                        <div class="col-sm-12">
-                            <input type="hidden" name="Menus" id="Menus" />
-                            <ul id="addtree"></ul>
                         </div>
                     </div>
                 </form>
@@ -111,8 +82,10 @@
 
 @section scripts_Foot
 {
+    <script src="~/Scripts/EasyUI/jquery.easyui.min.js"></script>
+    <script src="http://static.runoob.com/assets/jquery-validation-1.14.0/dist/localization/messages_zh.js"></script>
     <script type="text/javascript">
-        $('[data-toggle="tooltip"]').tooltip();
+        //$('[data-toggle="tooltip"]').tooltip();
         var popMenu;
         var IdCur;
 
@@ -125,15 +98,13 @@
                 "info": false,
                 "aoColumns": [
                     { "mData": 'Id' },
-                    { "mData": 'ProjectName' },
-                    { "mData": 'ProjectType' },
-                    { "mData": 'AffiliatedInstitution' },
-                    { "mData": 'Status' },
-                    { "mData": "Operation" }
+                    { "mData": 'WeldType' },
+                    { "mData": 'CreatedUserID' },
+                    { "mData": 'UpdatedDate' }
                 ],
                 "columnDefs": [
                     {
-                        "targets": 5,
+                        "targets": 4,
                         "render": function (data, type, full, meta) {
                             return '<a href="#" onclick="LEAP.Common.MainPop.ShowUpdateInfo(\'' + full.Id + '\');return false;" class="artDailog btn btn-info  btn-xs" style="margin-right:4px;" data-toggle="tooltip" data-placement="top" title="编辑"><i class="fa fa-pencil"></i></a>' +
                                 '<a href="#" onclick="LEAP.Common.MainPop.RowClick(\'' + full.Id + '\',2);return false;" class="btn btn-danger btn-xs" id="btnDelete" data-toggle="tooltip" data-placement="top" title="删除">' +
@@ -141,9 +112,7 @@
                         }
                     }],
                 fnDrawCallback: function () {
-
                     $('[data-toggle="tooltip"]').tooltip();
-
                 }
             }));
             //inital select2
@@ -151,3 +120,4 @@
         });
     </script>
 }
+

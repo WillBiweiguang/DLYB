@@ -14,8 +14,8 @@ namespace Infrastructure.Web.Domain.Entity
     public partial class WeldLocation : EntityBase<int>
     {
         public override int Id { get => base.Id; set => base.Id = value; }
-        [Column("Address_Name")]
-        public string AddressName { get; set; }
+        [Column("WeldLocationType")]
+        public string WeldLocationType { get; set; }
 
         public DateTime CreatedDate { get; set; }
 

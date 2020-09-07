@@ -10,7 +10,7 @@ namespace Infrastructure.Web.Domain.ModelsView
 	{	
 		public Int32 Id { get;set; }
 
-        public string AddressName { get; set; }
+        public string ThickType { get; set; }
 
         public DateTime CreatedDate { get; set; }
 
@@ -25,7 +25,7 @@ namespace Infrastructure.Web.Domain.ModelsView
         public IViewModel ConvertAPIModel(object obj) {
             var entity = (Thickness)obj;
             Id = entity.Id;
-            AddressName = entity.AddressName;
+            ThickType = entity.ThickType;
             CreatedDate = entity.CreatedDate;
             CreatedUserID = entity.CreatedUserID;
             UpdatedDate = entity.UpdatedDate;

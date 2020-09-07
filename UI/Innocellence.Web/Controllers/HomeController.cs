@@ -3,6 +3,7 @@ using Infrastructure.Web.Domain.Services;
 using System.IO;
 using System.Linq;
 using System.Web.Mvc;
+using Infrastructure.Web.Domain.Entity;
 
 namespace DLYB.Web.Controllers
 {
@@ -14,6 +15,12 @@ namespace DLYB.Web.Controllers
        // [SSOOWinAuthorize("SAML2", true)]
         public ActionResult Index()
         {
+            var objLoginInfo = Session["UserInfo"] as SysUser;
+
+            if (objLoginInfo == null)
+            {
+                return Redirect("~/Account/Login");
+            }
             // return  Redirect("~/Course/Index");
             return View();
         }

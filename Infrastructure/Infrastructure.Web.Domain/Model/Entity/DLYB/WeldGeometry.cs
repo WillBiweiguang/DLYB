@@ -14,8 +14,10 @@ namespace Infrastructure.Web.Domain.Entity
     public partial class WeldGeometry : EntityBase<int>
     {
         public override int Id { get => base.Id; set => base.Id = value; }
-        [Column("Address_Name")]
-        public string AddressName { get; set; }
+        [Column("Weld_Type")]
+        public string WeldType { get; set; }
+        [Column("Weld_image")]
+        public string WeldImage { get; set; }
 
         public DateTime CreatedDate { get; set; }
 
