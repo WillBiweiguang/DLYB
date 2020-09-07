@@ -28,7 +28,7 @@ namespace Innocellence.Web.Controllers
             _projectService = projectService;
         }
         // GET: Address
-        public ActionResult Index()
+        public override ActionResult Index()
         {
             //var list = _addressService.GetList<AddressView>(int.MaxValue, x => !x.IsDeleted).ToList();
                  

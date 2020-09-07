@@ -38,7 +38,7 @@ namespace Infrastructure.Web.Domain.Services
     /// <summary>
     /// 
     /// </summary>
-    public partial class GrooveTypeService : BaseService<GrooveType>, IGrooveTypeService
+    public partial class GrooveTypeService : BaseService<GrooveTypes>, IGrooveTypeService
     {
     }
 }

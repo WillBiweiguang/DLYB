@@ -207,7 +207,7 @@
     <Compile Include="Contracts\ISysUserService.cs" />
     <Compile Include="Model\CommonEntity\UploadMessage.cs" />
     <Compile Include="Model\Entity\DLYB\WeldCategoryLabeling.cs" />
-    <Compile Include="Model\Entity\DLYB\GrooveType.cs" />
+    <Compile Include="Model\Entity\DLYB\GrooveTypes.cs" />
     <Compile Include="Model\Entity\DLYB\Thickness.cs" />
     <Compile Include="Model\Entity\DLYB\HanJieLocation.cs" />
     <Compile Include="Model\Entity\DLYB\WeldLocation.cs" />

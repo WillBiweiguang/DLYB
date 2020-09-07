@@ -9,5 +9,5 @@ using Infrastructure.Web.Domain.ModelsView;
 
 namespace Infrastructure.Web.Domain.Contracts
 {
-    public interface IGrooveTypeService : IDependency, IBaseService<GrooveType> { }
+    public interface IGrooveTypeService : IDependency, IBaseService<GrooveTypes> { }
 }

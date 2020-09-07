@@ -244,6 +244,8 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\BeamInfoController.cs" />
+    <Compile Include="Controllers\GrooveTypeController.cs" />
     <Compile Include="Controllers\WeldingController.cs" />
     <Compile Include="Controllers\ProjectController.cs" />
     <Compile Include="Controllers\AddressController.cs" />
@@ -956,6 +958,7 @@
     <Content Include="Views\Address\Edit.cshtml" />
     <Content Include="Views\Address\Details.cshtml" />
     <Content Include="Views\Project\Index.cshtml" />
+    <Content Include="Views\BeamInfo\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Domain\Models\Common\" />
