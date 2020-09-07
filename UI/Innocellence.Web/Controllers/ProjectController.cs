@@ -28,7 +28,7 @@ namespace Innocellence.Web.Controllers
             _projectService = projectService;
         }
         // GET: Address
-        public ActionResult Index()
+        public override ActionResult Index()
         {
             //var list = _addressService.GetList<AddressView>(int.MaxValue, x => !x.IsDeleted).ToList();
                  
@@ -53,18 +53,18 @@ namespace Innocellence.Web.Controllers
             return this.GetPageResult(listEx, gridRequest);
         }
 
-        public override ActionResult GetList()
-        {
-            GridRequest gridRequest = new GridRequest(Request);
-            string strCondition = Request["search_condition"];
-            Expression<Func<Project, bool>> expression = FilterHelper.GetExpression<Project>(gridRequest.FilterGroup);
-            if (!string.IsNullOrEmpty(strCondition))
-            {
-                expression = expression.AndAlso<Project>(x => x.WeldLocationType.Contains(strCondition));
-            }
-            int rowCount = gridRequest.PageCondition.RowCount;
-            List<ProjectView> listEx = GetListEx(expression, gridRequest.PageCondition);
-            return this.GetPageResult(listEx, gridRequest);
-        }
+        //public override ActionResult GetList()
+        //{
+        //    GridRequest gridRequest = new GridRequest(Request);
+        //    string strCondition = Request["search_condition"];
+        //    Expression<Func<Project, bool>> expression = FilterHelper.GetExpression<Project>(gridRequest.FilterGroup);
+        //    if (!string.IsNullOrEmpty(strCondition))
+        //    {
+        //        expression = expression.AndAlso<Project>(x => x.WeldLocationType.Contains(strCondition));
+        //    }
+        //    int rowCount = gridRequest.PageCondition.RowCount;
+        //    List<ProjectView> listEx = GetListEx(expression, gridRequest.PageCondition);
+        //    return this.GetPageResult(listEx, gridRequest);
+        //}
     }
 }
