@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Infrastructure.Web.Domain.ModelsView.AddressView>
+﻿@model IEnumerable<Infrastructure.Web.Domain.ModelsView.ProjectView>
 @section easyui_css{
     <link rel="stylesheet" href="~/Style/EasyUI/easyui.css" />
 }
@@ -12,11 +12,7 @@
     <div class="col-sm-12">
         <form class="form-inline" id="SearchForm">
             <input type="hidden" name="DeptId" id="DeptId" />
-            <div class="form-group pull-right">
-                <a href="#" class="btn btn-success btn-sm" id="btnAdd" data-toggle="tooltip" data-placement="top" title="添加">
-                    <i class="fa fa-plus"></i>
-                </a>
-            </div>
+          
         </form>
         <div class="clearfix"></div>
 
@@ -26,21 +22,33 @@
                     <thead>
                         <tr>
                             <th style="width:5%;text-align:center;">@T("ID")</th>
-                            <th>@T("厂址")</th>
+                            <th>@T("项目名称")</th>
+                            <th>@T("项目类型")</th>
+                            <th>@T("所属机构")</th>
+                            <th>@T("状态")</th>
                             <th style="width:10%;">@T("操作")</th>
                         </tr>
                         @foreach (var item in Model)
                         {
-                            <tr>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.AddressName)
-                                </td>
-                                <td>
-                                    @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
-                                    @Html.ActionLink("Details", "Details", new { id = item.Id }) |
-                                    @Html.ActionLink("Delete", "Delete", new { id = item.Id })
-                                </td>
-                            </tr>
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.ProjectName)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.ProjectType)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.AffiliatedInstitution)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Status)
+                            </td>
+                            <td>
+                                @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
+                                @Html.ActionLink("Details", "Details", new { id = item.Id }) |
+                                @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+                            </td>
+                        </tr>
                         }
                     </thead>
                 </table>
@@ -139,10 +147,10 @@
                 "info": false,
                 "aoColumns": [
                     { "mData": 'Id' },
-                    { "mData": 'UserName' },
-                    { "mData": 'LillyId' },
-                    { "mData": 'UserTrueName' },
-                    { "mData": 'Email' },
+                    { "mData": 'ProjectName' },
+                    { "mData": 'ProjectType' },
+                    { "mData": 'AffiliatedInstitution' },
+                    { "mData": 'Status' },
                     { "mData": "Operation" }
                 ],
                 "columnDefs": [

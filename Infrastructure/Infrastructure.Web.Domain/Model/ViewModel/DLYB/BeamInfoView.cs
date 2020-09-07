@@ -11,17 +11,10 @@ namespace Infrastructure.Web.Domain.ModelsView
 		public Int32 Id { get;set; }
 
         public int ProjectId { get; set; }
-        
-        public string BeamSectionName { get; set; }
-        
-        public string FigureNumber { get; set; }
-        
-        public string BeamLength { get; set; }
-        
-        public string BeamWidth { get; set; }
-        
-        public string BeamThick { get; set; }
-
+        public string PdfFile { get; set; }
+        public string DwgFile { get; set; }
+        public string TheModel { get; set; }
+        public string Status { get; set; }
         public DateTime CreatedDate { get; set; }
 
         public int CreatedUserID { get; set; }
@@ -37,11 +30,10 @@ namespace Infrastructure.Web.Domain.ModelsView
             var entity = (BeamInfo)obj;
             Id = entity.Id;
             ProjectId = entity.ProjectId;
-            BeamSectionName = entity.BeamSectionName;
-            FigureNumber = entity.FigureNumber;
-            BeamLength = entity.BeamLength;
-            BeamWidth = entity.BeamWidth;
-            BeamThick = entity.BeamThick;
+            PdfFile = entity.PdfFile;
+            DwgFile = entity.DwgFile;
+            TheModel = entity.TheModel;
+            Status = entity.Status;
             CreatedDate = entity.CreatedDate;
             CreatedUserID = entity.CreatedUserID;
             UpdatedDate = entity.UpdatedDate;

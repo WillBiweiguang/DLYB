@@ -8,52 +8,33 @@ namespace Infrastructure.Web.Domain.ModelsView
 {
     public partial class ProjectView : IViewModel
 	{	
-		public string Id { get;set; }
+		public int Id { get;set; }
+        public string ProjectName { get; set; }
 
-        public string Name { get; set; }
+        public int? ProjectType { get; set; }
 
-        public int? type { get; set; }
+        public string AffiliatedInstitution { get; set; }
 
-        public string img_url { get; set; }
-
-        public int? audit_state { get; set; }
-
-        public int? bridge_type_id { get; set; }
-
-        public string design_institute_id { get; set; }
-
-        public string descript { get; set; }
-
+        public string Status { get; set; }
         public string create_by { get; set; }
-
-        public string dept_id { get; set; }
-
-        public string dept_name { get; set; }
-
-        public int? progress_state { get; set; }
 
         public DateTime create_time { get; set; }
 
         public DateTime? update_time { get; set; }
 
-        public int? state { get; set; }
+        public bool IsDeleted { get; set; }
 
         public IViewModel ConvertAPIModel(object obj) {
             var entity = (Project)obj;
             Id = entity.Id;
-            Name = entity.Name;
-            type = entity.type;
-            audit_state = entity.audit_state;
-            bridge_type_id = entity.bridge_type_id;
-            design_institute_id = entity.design_institute_id;
-            descript = entity.descript;
+            ProjectName = entity.ProjectName;
+            ProjectType = entity.ProjectType;
+            AffiliatedInstitution = entity.AffiliatedInstitution;
+            Status = entity.Status;
             create_by = entity.create_by;
-            dept_id = entity.dept_id;
-            dept_name = entity.dept_name;
-            progress_state = entity.progress_state;
             create_time = entity.create_time;
             update_time = entity.update_time;
-            state = entity.state;
+            IsDeleted = entity.IsDeleted;
             return this;
         }
 	}

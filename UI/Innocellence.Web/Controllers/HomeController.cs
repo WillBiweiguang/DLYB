@@ -1,6 +1,5 @@
 ﻿using Infrastructure.Web.Domain.Contracts;
 using Infrastructure.Web.Domain.Services;
-using DLYB.Authentication.Attribute;
 using System.IO;
 using System.Linq;
 using System.Web.Mvc;

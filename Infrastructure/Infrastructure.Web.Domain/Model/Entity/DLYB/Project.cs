@@ -10,36 +10,25 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Infrastructure.Web.Domain.Entity
 {
-    [Table("project_info")]
-    public partial class Project : EntityBase<string>
+    [Table("t_ProjectInfo")]
+    public partial class Project : EntityBase<int>
     {
-        [Column("Address_Name")]
-        public string Name { get; set; }
+        public override int Id { get => base.Id; set => base.Id = value; }
+       
+        public string ProjectName { get; set; }
 
-        public int? type { get; set; }
+        public int? ProjectType { get; set; }
 
-        public string img_url { get; set; }
+        public string AffiliatedInstitution { get; set; }
 
-        public int? audit_state { get; set; }
-
-        public int? bridge_type_id { get; set; }
-
-        public string design_institute_id { get; set; }
-
-        public string descript { get; set; }
-
+        public string Status { get; set; }
         public string create_by { get; set; }
-
-        public string dept_id { get; set; }
-
-        public string dept_name { get; set; }
-
-        public int? progress_state { get; set; }
 
         public DateTime create_time { get; set; }
 
         public DateTime? update_time { get; set; }
 
-        public int? state { get; set; }
+        public bool IsDeleted { get; set; }
+
     }
 }

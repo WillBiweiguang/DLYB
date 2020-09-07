@@ -12,13 +12,18 @@ using Innocellence.Web.Models;
 using Infrastructure.Core.Data;
 using Infrastructure.Web.Domain.Contracts;
 using Infrastructure.Web.Domain.ModelsView;
+using Infrastructure.Web.UI;
+using Infrastructure.Utility.Filter;
+using System.Linq.Expressions;
+using DLYB.Web.Controllers;
 
 namespace Innocellence.Web.Controllers
 {
-    public class ProjectController : Controller
+    public class ProjectController : BaseController<Project, ProjectView>
     {
         private readonly IProjectService _projectService;
-        public ProjectController(IProjectService projectService)
+
+        public ProjectController(IProjectService projectService) : base(projectService)
         {
             _projectService = projectService;
         }
@@ -30,22 +35,22 @@ namespace Innocellence.Web.Controllers
             return View();
         }
 
-        public ActionResult Create()
+        public override ActionResult GetList()
         {
-            return PartialView();
-        }
-
-        public ActionResult Edit(int id)
-        {
-            //var addr = _addressService.GetList<AddressView>(1, x => !x.IsDeleted).FirstOrDefault();
-            return View();
-        }
-
-        [HttpPost]
-        public JsonResult Update(AddressView view)
-        {
-            //_addressService.UpdateView(view);
-            return Json(new { result = "success" });
+            GridRequest gridRequest = new GridRequest(Request);
+            string strCondition = Request["search_condition"];
+            Expression<Func<Project, bool>> expression = FilterHelper.GetExpression<Project>(gridRequest.FilterGroup);
+            if (!string.IsNullOrEmpty(strCondition))
+            {
+                expression = expression.AndAlso<Project>(x => x.ProjectName.Contains(strCondition) && x.IsDeleted != true);
+            }
+            else
+            {
+                expression = expression.AndAlso<Project>(x => x.IsDeleted != true);
+            }
+            int rowCount = gridRequest.PageCondition.RowCount;
+            List<ProjectView> listEx = GetListEx(expression, gridRequest.PageCondition);
+            return this.GetPageResult(listEx, gridRequest);
         }
 
         public override ActionResult GetList()

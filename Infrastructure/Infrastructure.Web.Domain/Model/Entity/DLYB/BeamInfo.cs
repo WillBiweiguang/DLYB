@@ -10,22 +10,16 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Infrastructure.Web.Domain.Entity
 {
-    [Table("t_beaminfo")]
+    [Table("t_BeamInfo")]
     public partial class BeamInfo : EntityBase<int>
     {
         public override int Id { get => base.Id; set => base.Id = value; }
         [Column("Project_Id")]
         public int ProjectId { get; set; }
-        [Column("BeamSection_Name")]
-        public string BeamSectionName { get; set; }
-        [Column("Figure_Number")]
-        public string FigureNumber { get; set; }
-        [Column("Beam_Length")]
-        public string BeamLength { get; set; }
-        [Column("Beam_Width")]
-        public string BeamWidth { get; set; }
-        [Column("Beam_Thick")]
-        public string BeamThick { get; set; }
+        public string PdfFile { get; set; }
+        public string DwgFile { get; set; }
+        public string TheModel { get; set; }
+        public string Status { get; set; }
 
         public DateTime CreatedDate { get; set; }
 

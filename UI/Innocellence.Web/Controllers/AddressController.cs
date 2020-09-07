@@ -41,7 +41,11 @@ namespace DLYB.Web.Controllers
             Expression<Func<Address, bool>> expression = FilterHelper.GetExpression<Address>(gridRequest.FilterGroup);
             if (!string.IsNullOrEmpty(strCondition))
             {
-                expression = expression.AndAlso<Address>(x => x.AddressName.Contains(strCondition));
+                expression = expression.AndAlso<Address>(x => x.AddressName.Contains(strCondition) && x.IsDeleted != true);
+            }
+            else
+            {
+                expression = expression.AndAlso<Address>(x => x.IsDeleted != true);
             }
             int rowCount = gridRequest.PageCondition.RowCount;
             List<AddressView> listEx = GetListEx(expression, gridRequest.PageCondition);
