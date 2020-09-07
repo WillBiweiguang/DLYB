@@ -14,8 +14,8 @@ namespace Infrastructure.Web.Domain.Entity
     public partial class HanJieLocation : EntityBase<int>
     {
         public override int Id { get => base.Id; set => base.Id = value; }
-        [Column("Address_Name")]
-        public string AddressName { get; set; }
+        [Column("HanJieType")]
+        public string HanJieType { get; set; }
 
         public DateTime CreatedDate { get; set; }
 

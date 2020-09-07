@@ -10,7 +10,9 @@ namespace Infrastructure.Web.Domain.ModelsView
 	{	
 		public Int32 Id { get;set; }
 
-        public string AddressName { get; set; }
+        public string WeldType { get; set; }
+
+        public string WeldImage { get; set; }
 
         public DateTime CreatedDate { get; set; }
 
@@ -25,7 +27,8 @@ namespace Infrastructure.Web.Domain.ModelsView
         public IViewModel ConvertAPIModel(object obj) {
             var entity = (WeldGeometry)obj;
             Id = entity.Id;
-            AddressName = entity.AddressName;
+            WeldType = entity.WeldType;
+            WeldImage = entity.WeldImage;
             CreatedDate = entity.CreatedDate;
             CreatedUserID = entity.CreatedUserID;
             UpdatedDate = entity.UpdatedDate;

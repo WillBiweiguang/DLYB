@@ -80,10 +80,12 @@ namespace Infrastructure.Web.MVC.Attribute
             {
                 return;
             }
-
+            //不适用Windows登录，登录过期，跳到登录页面
             //windows登录,自动获取用户信息
             if (objLoginInfo == null && (filterContext.HttpContext.Request.IsAuthenticated && (filterContext.HttpContext.User.Identity != null)))
             {
+                filterContext.Result = new RedirectResult("~/Account/Login");
+                return;
                 var windowsIdentity = filterContext.HttpContext.User.Identity;
                 var objUser = _authorizer.GetUser(windowsIdentity);
                 if (objUser != null)

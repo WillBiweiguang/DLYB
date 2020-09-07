@@ -47,5 +47,19 @@ namespace Innocellence.Web.Controllers
             //_addressService.UpdateView(view);
             return Json(new { result = "success" });
         }
+
+        public override ActionResult GetList()
+        {
+            GridRequest gridRequest = new GridRequest(Request);
+            string strCondition = Request["search_condition"];
+            Expression<Func<Project, bool>> expression = FilterHelper.GetExpression<Project>(gridRequest.FilterGroup);
+            if (!string.IsNullOrEmpty(strCondition))
+            {
+                expression = expression.AndAlso<Project>(x => x.WeldLocationType.Contains(strCondition));
+            }
+            int rowCount = gridRequest.PageCondition.RowCount;
+            List<ProjectView> listEx = GetListEx(expression, gridRequest.PageCondition);
+            return this.GetPageResult(listEx, gridRequest);
+        }
     }
 }
