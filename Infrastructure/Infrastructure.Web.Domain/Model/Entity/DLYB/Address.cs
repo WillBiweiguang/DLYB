@@ -17,9 +17,9 @@ namespace Infrastructure.Web.Domain.Entity
         [Column("Address_Name")]
         public string AddressName { get; set; }
 
-        public DateTime CreatedDate { get; set; }
+        public DateTime? CreatedDate { get; set; }
 
-        public int CreatedUserID { get; set; }
+        public int? CreatedUserID { get; set; }
 
         public DateTime? UpdatedDate { get; set; }
 

@@ -23,9 +23,9 @@ namespace Infrastructure.Web.Domain.Entity
         [Column("Welding_Unit")]
         public string WeldingUnit { get; set; }
 
-        public DateTime CreatedDate { get; set; }
+        public DateTime? CreatedDate { get; set; }
 
-        public int CreatedUserID { get; set; }
+        public int? CreatedUserID { get; set; }
 
         public DateTime? UpdatedDate { get; set; }
 

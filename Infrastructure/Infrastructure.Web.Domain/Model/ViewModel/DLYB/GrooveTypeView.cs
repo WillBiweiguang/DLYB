@@ -21,9 +21,9 @@ namespace Infrastructure.Web.Domain.ModelsView
         public string GrooveAngleA2 { get; set; }
         public string GrooveArcR1 { get; set; }
         public string GrooveArcR2 { get; set; }
-        public DateTime CreatedDate { get; set; }
+        public DateTime? CreatedDate { get; set; }
 
-        public int CreatedUserID { get; set; }
+        public int? CreatedUserID { get; set; }
 
         public DateTime? UpdatedDate { get; set; }
 

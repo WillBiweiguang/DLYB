@@ -18,9 +18,9 @@ namespace Infrastructure.Web.Domain.ModelsView
         
         public string WeldingUnit { get; set; }
 
-        public DateTime CreatedDate { get; set; }
+        public DateTime? CreatedDate { get; set; }
 
-        public int CreatedUserID { get; set; }
+        public int? CreatedUserID { get; set; }
 
         public DateTime? UpdatedDate { get; set; }
 

@@ -8,17 +8,17 @@ namespace Infrastructure.Web.Domain.ModelsView
 {
     public partial class ProjectView : IViewModel
 	{	
-		public int Id { get;set; }
+		public Int32 Id { get;set; }
         public string ProjectName { get; set; }
 
-        public int? ProjectType { get; set; }
+        public string ProjectType { get; set; }
 
         public string AffiliatedInstitution { get; set; }
 
         public string Status { get; set; }
-        public DateTime CreatedDate { get; set; }
+        public DateTime? CreatedDate { get; set; }
 
-        public int CreatedUserID { get; set; }
+        public int? CreatedUserID { get; set; }
 
         public DateTime? UpdatedDate { get; set; }
 

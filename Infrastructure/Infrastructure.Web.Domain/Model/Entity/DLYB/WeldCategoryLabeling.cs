@@ -28,9 +28,9 @@ namespace Infrastructure.Web.Domain.Entity
         public string WeldingNumber { get; set; }
         public double Quantity { get; set; }
         public double Length { get; set; }
-        public DateTime CreatedDate { get; set; }
+        public DateTime? CreatedDate { get; set; }
 
-        public int CreatedUserID { get; set; }
+        public int? CreatedUserID { get; set; }
 
         public DateTime? UpdatedDate { get; set; }
 

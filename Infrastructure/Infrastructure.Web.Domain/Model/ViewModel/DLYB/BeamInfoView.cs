@@ -13,11 +13,12 @@ namespace Infrastructure.Web.Domain.ModelsView
         public int ProjectId { get; set; }
         public string PdfFile { get; set; }
         public string DwgFile { get; set; }
+        public int PageNumber { get; set; }
         public string TheModel { get; set; }
         public string Status { get; set; }
-        public DateTime CreatedDate { get; set; }
+        public DateTime? CreatedDate { get; set; }
 
-        public int CreatedUserID { get; set; }
+        public int? CreatedUserID { get; set; }
 
         public DateTime? UpdatedDate { get; set; }
 

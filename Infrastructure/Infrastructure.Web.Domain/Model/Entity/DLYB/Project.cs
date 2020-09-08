@@ -17,14 +17,14 @@ namespace Infrastructure.Web.Domain.Entity
        
         public string ProjectName { get; set; }
 
-        public int? ProjectType { get; set; }
+        public string ProjectType { get; set; }
 
         public string AffiliatedInstitution { get; set; }
 
         public string Status { get; set; }
-        public DateTime CreatedDate { get; set; }
+        public DateTime? CreatedDate { get; set; }
 
-        public int CreatedUserID { get; set; }
+        public int? CreatedUserID { get; set; }
 
         public DateTime? UpdatedDate { get; set; }
 
