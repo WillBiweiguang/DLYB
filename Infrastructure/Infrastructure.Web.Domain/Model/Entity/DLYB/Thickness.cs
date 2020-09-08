@@ -10,7 +10,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Infrastructure.Web.Domain.Entity
 {
-    [Table("t_Thickness")]
+    [Table("t_thickness")]
     public partial class Thickness : EntityBase<int>
     {
         public override int Id { get => base.Id; set => base.Id = value; }

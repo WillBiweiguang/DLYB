@@ -10,7 +10,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Infrastructure.Web.Domain.Entity
 {
-    [Table("t_WeldGeometry")]
+    [Table("t_weldgeometry")]
     public partial class WeldGeometry : EntityBase<int>
     {
         public override int Id { get => base.Id; set => base.Id = value; }

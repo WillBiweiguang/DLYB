@@ -139,7 +139,6 @@
   <ItemGroup>
     <Compile Include="Configuration\FaultSearchEntity.Configuration.cs" />
     <Compile Include="Controllers\AdminBaseController.cs" />
-    <Compile Include="Controllers\WeldCategoryController.cs" />
     <Compile Include="Controllers\CommonController.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RouteProvider.cs" />
@@ -228,6 +227,7 @@
     <None Include="Properties\PublishProfiles\Innocellence.FaultSearch.pubxml" />
     <Content Include="Views\Home\index.cshtml" />
     <Content Include="Views\WeldCategory\ieTest.cshtml" />
+    <Content Include="Views\WeldCategory\index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <COMReference Include="CommunicatorAPI">

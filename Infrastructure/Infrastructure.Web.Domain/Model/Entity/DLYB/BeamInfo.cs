@@ -14,7 +14,6 @@ namespace Infrastructure.Web.Domain.Entity
     public partial class BeamInfo : EntityBase<int>
     {
         public override int Id { get => base.Id; set => base.Id = value; }
-        [Column("Project_Id")]
         public int ProjectId { get; set; }
         public string PdfFile { get; set; }
         public string DwgFile { get; set; }

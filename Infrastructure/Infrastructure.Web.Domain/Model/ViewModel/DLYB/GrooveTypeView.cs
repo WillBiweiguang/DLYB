@@ -11,7 +11,16 @@ namespace Infrastructure.Web.Domain.ModelsView
 		public Int32 Id { get;set; }
 
         public string GrooveType { get; set; }
-
+        public string WeldGeometry { get; set; }
+        public string Thickness { get; set; }
+        public string WorksThicknessH1 { get; set; }
+        public string WorksThicknessH2 { get; set; }
+        public string GrooveClearance { get; set; }
+        public string BluntThickness { get; set; }
+        public string GrooveAngleA1 { get; set; }
+        public string GrooveAngleA2 { get; set; }
+        public string GrooveArcR1 { get; set; }
+        public string GrooveArcR2 { get; set; }
         public DateTime CreatedDate { get; set; }
 
         public int CreatedUserID { get; set; }
@@ -26,6 +35,17 @@ namespace Infrastructure.Web.Domain.ModelsView
             var entity = (GrooveTypes)obj;
             Id = entity.Id;
             GrooveType = entity.GrooveType;
+            WeldGeometry = entity.WeldGeometry;
+            GrooveType = entity.GrooveType;
+            Thickness = entity.Thickness;
+            WorksThicknessH1 = entity.WorksThicknessH1;
+            WorksThicknessH2 = entity.WorksThicknessH2;
+            GrooveClearance = entity.GrooveClearance;
+            BluntThickness = entity.BluntThickness;
+            GrooveAngleA1 = entity.GrooveAngleA1;
+            GrooveAngleA2 = entity.GrooveAngleA2;
+            GrooveArcR1 = entity.GrooveArcR1;
+            GrooveArcR2 = entity.GrooveArcR2;
             CreatedDate = entity.CreatedDate;
             CreatedUserID = entity.CreatedUserID;
             UpdatedDate = entity.UpdatedDate;

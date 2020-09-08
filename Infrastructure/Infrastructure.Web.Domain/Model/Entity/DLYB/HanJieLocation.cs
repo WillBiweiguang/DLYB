@@ -10,7 +10,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Infrastructure.Web.Domain.Entity
 {
-    [Table("t_HanJieLocation")]
+    [Table("t_hanjielocation")]
     public partial class HanJieLocation : EntityBase<int>
     {
         public override int Id { get => base.Id; set => base.Id = value; }
