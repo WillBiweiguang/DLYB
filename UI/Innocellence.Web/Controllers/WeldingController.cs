@@ -39,7 +39,11 @@ namespace DLYB.Web.Controllers
             Expression<Func<Welding, bool>> expression = FilterHelper.GetExpression<Welding>(gridRequest.FilterGroup);
             if (!string.IsNullOrEmpty(strCondition))
             {
-                expression = expression.AndAlso<Welding>(x => x.WeldingType.Contains(strCondition));
+                expression = expression.AndAlso<Welding>(x => x.WeldingType.Contains(strCondition) && x.IsDeleted != true);
+            }
+            else
+            {
+                expression = expression.AndAlso<Welding>(x => x.IsDeleted != true);
             }
             int rowCount = gridRequest.PageCondition.RowCount;
             List<WeldingView> listEx = GetListEx(expression, gridRequest.PageCondition);

@@ -41,7 +41,11 @@ namespace DLYB.Web.Controllers
             Expression<Func<Thickness, bool>> expression = FilterHelper.GetExpression<Thickness>(gridRequest.FilterGroup);
             if (!string.IsNullOrEmpty(strCondition))
             {
-                expression = expression.AndAlso<Thickness>(x => x.ThickType.Contains(strCondition));
+                expression = expression.AndAlso<Thickness>(x => x.ThickType.Contains(strCondition) && x.IsDeleted != true);
+            }
+            else
+            {
+                expression = expression.AndAlso<Thickness>(x => x.IsDeleted != true);
             }
             int rowCount = gridRequest.PageCondition.RowCount;
             List<ThicknessView> listEx = GetListEx(expression, gridRequest.PageCondition);

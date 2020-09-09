@@ -41,7 +41,11 @@ namespace DLYB.Web.Controllers
             Expression<Func<WeldGeometry, bool>> expression = FilterHelper.GetExpression<WeldGeometry>(gridRequest.FilterGroup);
             if (!string.IsNullOrEmpty(strCondition))
             {
-                expression = expression.AndAlso<WeldGeometry>(x => x.WeldType.Contains(strCondition));
+                expression = expression.AndAlso<WeldGeometry>(x => x.WeldType.Contains(strCondition)&& x.IsDeleted != true);
+            }
+            else
+            {
+                expression = expression.AndAlso<WeldGeometry>(x => x.IsDeleted != true);
             }
             int rowCount = gridRequest.PageCondition.RowCount;
             List<WeldGeometryView> listEx = GetListEx(expression, gridRequest.PageCondition);

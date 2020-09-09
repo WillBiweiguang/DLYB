@@ -40,6 +40,12 @@ namespace Infrastructure.Web.Domain.Entity
             Mapper.CreateMap<ProjectView, Project>();
             Mapper.CreateMap<BeamInfoView, BeamInfo>();
             Mapper.CreateMap<WeldingView, Welding>();
+            Mapper.CreateMap<WeldGeometryView, WeldGeometry>();
+            Mapper.CreateMap<WeldLocationView, WeldLocation>();
+            Mapper.CreateMap<WeldCategoryLabelingView, WeldCategoryLabeling>();
+            Mapper.CreateMap<ThicknessView, Thickness>();
+            Mapper.CreateMap<HanJieLocationView, HanJieLocation>();
+            Mapper.CreateMap<GrooveTypeView, GrooveTypes>();
         }
 
     }

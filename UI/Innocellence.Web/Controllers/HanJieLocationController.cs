@@ -41,7 +41,11 @@ namespace DLYB.Web.Controllers
             Expression<Func<HanJieLocation, bool>> expression = FilterHelper.GetExpression<HanJieLocation>(gridRequest.FilterGroup);
             if (!string.IsNullOrEmpty(strCondition))
             {
-                expression = expression.AndAlso<HanJieLocation>(x => x.HanJieType.Contains(strCondition));
+                expression = expression.AndAlso<HanJieLocation>(x => x.HanJieType.Contains(strCondition) && x.IsDeleted != true);
+            }
+            else
+            {
+                expression = expression.AndAlso<HanJieLocation>(x => x.IsDeleted != true);
             }
             int rowCount = gridRequest.PageCondition.RowCount;
             List<HanJieLocationView> listEx = GetListEx(expression, gridRequest.PageCondition);

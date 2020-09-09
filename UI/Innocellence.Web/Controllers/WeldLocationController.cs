@@ -41,7 +41,11 @@ namespace DLYB.Web.Controllers
             Expression<Func<WeldLocation, bool>> expression = FilterHelper.GetExpression<WeldLocation>(gridRequest.FilterGroup);
             if (!string.IsNullOrEmpty(strCondition))
             {
-                expression = expression.AndAlso<WeldLocation>(x => x.WeldLocationType.Contains(strCondition));
+                expression = expression.AndAlso<WeldLocation>(x => x.WeldLocationType.Contains(strCondition) && x.IsDeleted != true);
+            }
+            else
+            {
+                expression = expression.AndAlso<WeldLocation>(x => x.IsDeleted != true);
             }
             int rowCount = gridRequest.PageCondition.RowCount;
             List<WeldLocationView> listEx = GetListEx(expression, gridRequest.PageCondition);

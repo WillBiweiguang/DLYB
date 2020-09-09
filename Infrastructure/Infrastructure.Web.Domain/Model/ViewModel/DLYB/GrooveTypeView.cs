@@ -7,8 +7,8 @@ using Infrastructure.Web.Domain.Entity;
 namespace Infrastructure.Web.Domain.ModelsView
 {
     public partial class GrooveTypeView : IViewModel
-	{	
-		public Int32 Id { get;set; }
+    {
+        public Int32 Id { get; set; }
 
         public string GrooveType { get; set; }
         public string WeldGeometry { get; set; }
@@ -21,6 +21,7 @@ namespace Infrastructure.Web.Domain.ModelsView
         public string GrooveAngleA2 { get; set; }
         public string GrooveArcR1 { get; set; }
         public string GrooveArcR2 { get; set; }
+        public string PreviewImage { get; set; }
         public DateTime? CreatedDate { get; set; }
 
         public int? CreatedUserID { get; set; }
@@ -30,8 +31,9 @@ namespace Infrastructure.Web.Domain.ModelsView
         public int? UpdatedUserID { get; set; }
 
         public bool IsDeleted { get; set; }
-        
-        public IViewModel ConvertAPIModel(object obj) {
+
+        public IViewModel ConvertAPIModel(object obj)
+        {
             var entity = (GrooveTypes)obj;
             Id = entity.Id;
             GrooveType = entity.GrooveType;
@@ -46,6 +48,7 @@ namespace Infrastructure.Web.Domain.ModelsView
             GrooveAngleA2 = entity.GrooveAngleA2;
             GrooveArcR1 = entity.GrooveArcR1;
             GrooveArcR2 = entity.GrooveArcR2;
+            PreviewImage = entity.PreviewImage;
             CreatedDate = entity.CreatedDate;
             CreatedUserID = entity.CreatedUserID;
             UpdatedDate = entity.UpdatedDate;
@@ -53,5 +56,5 @@ namespace Infrastructure.Web.Domain.ModelsView
             IsDeleted = entity.IsDeleted;
             return this;
         }
-	}
+    }
 }
