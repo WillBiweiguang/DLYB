@@ -1,0 +1,217 @@
+﻿@model IEnumerable<Infrastructure.Web.Domain.ModelsView.GrooveTypeView>
+@section easyui_css{
+    <link rel="stylesheet" href="~/Style/EasyUI/easyui.css" />
+}
+<style>
+    .datagrid-mask-msg {
+        height: 36px !important;
+    }
+</style>
+<!--Action boxes-->
+<div class="row">
+    <div class="col-sm-12">
+        <form class="form-inline" id="SearchForm">
+            <div class="form-group">
+                <input class="form-control" type="text" id="search_condition" name="search_condition" placeholder="名称">
+                <a href="#" class="btn btn-sm" id="btnSearch" data-toggle="tooltip" data-placement="top" title="搜索条件"><i class="fa fa-search"></i></a>
+            </div>
+            <div class="form-group pull-right">
+                <a href="#" class="btn btn-success btn-sm" id="btnAdd" data-toggle="tooltip" data-placement="top" title="添加">
+                    <i class="fa fa-plus"></i>
+                </a>
+            </div>
+        </form>
+        <div class="clearfix"></div>
+
+        <div class="widget-box">
+            <div class="widget-content nopadding">
+                <table class="table table-bordered table-hover data-table">
+                    <thead>
+                        <tr>
+                            <th style="width:5%;text-align:center;">@T("序号")</th>
+                            <th>@T("接口形式")</th>
+                            <th>@T("焊缝类型")</th>
+                            <th>@T("板厚(mm)")</th>
+                            <th>@T("工件厚度h1")</th>
+                            <th>@T("工件厚度h2")</th>
+                            <th>@T("坡口间隙b")</th>
+                            <th>@T("钝边厚度p")</th>
+                            <th>@T("坡口角度a1")</th>
+                            <th>@T("坡口角度a2")</th>
+                            <th>@T("坡口圆弧r1")</th>
+                            <th>@T("坡口圆弧r2")</th>
+                            <th>@T("图片预览")</th>
+                            <th style="width:10%;">@T("操作")</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="ModalTable" class="modal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="blue bigger">请填写以下内容</h4>
+            </div>
+
+            <div class="modal-body">
+                <form action="Post" id="ff" method="get" class="form-horizontal" datasource="Get">
+                    <input type="hidden" id="ID" name="ID" value="0" />
+                    @*<input type="hidden" id="CreatedDate" name="CreatedDate" data-bind="value: CreatedDate" validate="{required:false}" value="1970-01-01"/>
+        <input type="hidden" id="CreatedUserID" name="CreatedUserID" data-bind="value: CreatedUserID" validate="{required:false}" value="0" />*@
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">接口形式:</label>
+                        <div class="col-sm-9">
+                            <input type="text" name="GrooveType" class="form-control" placeholder="请输入" data-bind="value: GrooveType"
+                                   validate="{required:true}" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">焊缝类型:</label>
+                        <div class="col-sm-9">
+                            <input type="text" name="WeldGeometry" class="form-control" placeholder="请输入" data-bind="value: WeldGeometry"
+                                   validate="{required:true}" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">板厚:</label>
+                        <div class="col-sm-9">
+                            <input type="text" name="Thickness" class="form-control" placeholder="请输入" data-bind="value: Thickness"
+                                   validate="{required:true}" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">工件厚度h1:</label>
+                        <div class="col-sm-9">
+                            <input type="text" name="WorksThicknessH1" class="form-control" placeholder="请输入" data-bind="value: WorksThicknessH1"
+                                   validate="{required:true}" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">工件厚度h2:</label>
+                        <div class="col-sm-9">
+                            <input type="text" name="WorksThicknessH2" class="form-control" placeholder="请输入" data-bind="value: WorksThicknessH2"
+                                   validate="{required:true}" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">坡口间隙b:</label>
+                        <div class="col-sm-9">
+                            <input type="text" name="GrooveClearance" class="form-control" placeholder="请输入" data-bind="value: GrooveClearance"
+                                   validate="{required:true}" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">钝边厚度p:</label>
+                        <div class="col-sm-9">
+                            <input type="text" name="BluntThickness" class="form-control" placeholder="请输入" data-bind="value: BluntThickness"
+                                   validate="{required:true}" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">坡口角度a1:</label>
+                        <div class="col-sm-9">
+                            <input type="text" name="GrooveAngleA1" class="form-control" placeholder="请输入" data-bind="value: GrooveAngleA1"
+                                   validate="{required:true}" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">坡口角度a2:</label>
+                        <div class="col-sm-9">
+                            <input type="text" name="GrooveAngleA2" class="form-control" placeholder="请输入" data-bind="value: GrooveAngleA2"
+                                   validate="{required:true}" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">坡口圆弧r1:</label>
+                        <div class="col-sm-9">
+                            <input type="text" name="GrooveArcR1" class="form-control" placeholder="请输入" data-bind="value: GrooveArcR1"
+                                   validate="{required:true}" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">坡口圆弧r2:</label>
+                        <div class="col-sm-9">
+                            <input type="text" name="GrooveArcR2" class="form-control" placeholder="请输入" data-bind="value: GrooveArcR2"
+                                   validate="{required:true}" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">图片预览:</label>
+                        <div class="col-sm-9">
+                            <input type="text" name="PreviewImage" class="form-control" placeholder="请输入" data-bind="value: PreviewImage"
+                                   validate="{required:true}" />
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-sm" data-dismiss="modal">
+                    <i class="ace-icon fa fa-times"></i>
+                    取消
+                </button>
+
+                <button class="btn btn-sm btn-primary" data-action="save">
+                    <i class="ace-icon fa fa-check"></i>
+                    保存
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts_Foot
+{
+    <script src="~/Scripts/EasyUI/jquery.easyui.min.js"></script>
+    <script src="http://static.runoob.com/assets/jquery-validation-1.14.0/dist/localization/messages_zh.js"></script>
+    <script type="text/javascript">
+        //$('[data-toggle="tooltip"]').tooltip();
+        var popMenu;
+        var IdCur;
+
+        $(document).ready(function () {
+            LEAP.Common.MainPop.options.dataTable = $('.data-table').dataTable(jQuery.extend(true, datatableSetting, {
+                "ajax": {
+                    "url": "GetList"
+                },
+                "paging": true,
+                "info": false,
+                "aoColumns": [
+                    { "mData": 'Id' },
+                    { "mData": 'GrooveType' },
+                    { "mData": 'WeldGeometry' },
+                    { "mData": 'Thickness' },
+                    { "mData": 'WorksThicknessH1' },
+                    { "mData": 'WorksThicknessH2' },
+                    { "mData": 'GrooveClearance' },
+                    { "mData": 'BluntThickness' },
+                    { "mData": 'GrooveAngleA1' },
+                    { "mData": 'GrooveAngleA2' },
+                    { "mData": 'GrooveArcR1' },
+                    { "mData": 'GrooveArcR2' },
+                    { "mData": 'PreviewImage' },
+                ],
+                "columnDefs": [
+                    {
+                        "targets": 13,
+                        "render": function (data, type, full, meta) {
+                            return '<a href="#" onclick="LEAP.Common.MainPop.ShowUpdateInfo(\'' + full.Id + '\');return false;" class="artDailog btn btn-info  btn-xs" style="margin-right:4px;" data-toggle="tooltip" data-placement="top" title="编辑"><i class="fa fa-pencil"></i></a>' +
+                                '<a href="#" onclick="LEAP.Common.MainPop.RowClick(\'' + full.Id + '\',2);return false;" class="btn btn-danger btn-xs" id="btnDelete" data-toggle="tooltip" data-placement="top" title="删除">' +
+                                '<i class="fa fa-trash-o"></i></a>';
+                        }
+                    }],
+                fnDrawCallback: function () {
+                    $('[data-toggle="tooltip"]').tooltip();
+                }
+            }));
+            //inital select2
+            $('.select2').css("width", "362px").select2({ allowClear: true });
+        });
+    </script>
+}
+

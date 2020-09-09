@@ -1,0 +1,113 @@
+﻿@model IEnumerable<Infrastructure.Web.Domain.ModelsView.BeamInfoView>
+@section easyui_css{
+    <link rel="stylesheet" href="~/Style/EasyUI/easyui.css" />
+}
+<style>
+    .datagrid-mask-msg {
+        height: 36px !important;
+    }
+</style>
+<!--Action boxes-->
+<div class="row">
+    <div class="col-sm-12">
+        <form class="form-inline" id="SearchForm">
+            <div>
+                <input type="text" name="UploadFile" id="UploadFile" />
+                <button type="button" id="btnSelect" class="btn btn-success btn-sm" data-toggle="tooltip" data-placement="top" title="选择文件">选择文件</button>
+
+                <div style="float:right">
+                    <button type="button" id="btnDeleteAll" class="btn btn-success btn-sm" data-toggle="tooltip" data-placement="top" title="批量删除">批量删除</button>
+                    <button type="button" id="btnFileAnalysis" class="btn btn-success btn-sm" data-toggle="tooltip" data-placement="top" title="归档分析">归档分析</button>
+                    <button type="button" id="btnDownloadDWG" class="btn btn-success btn-sm" data-toggle="tooltip" data-placement="top" title="DWG下载">DWG下载</button>
+                </div>
+            </div>
+        </form>
+        <div class="clearfix"></div>
+
+        <div class="widget-box">
+            <div class="widget-content nopadding">
+                <table class="table table-bordered table-hover data-table">
+                    <thead>
+                        <tr>
+                            <th style="width:5%;text-align:center;">@T("ID")</th>
+                            <th>@T("名称")</th>
+                            <th>@T("页数")</th>
+                            <th>@T("上传进度")</th>
+                            <th>@T("上传状态")</th>
+                            <th style="width:10%;">@T("操作")</th>
+                        </tr>
+                        @if (Model != null)
+                        {
+
+                            foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.PdfFile)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.PageNumber)
+                                    </td>
+
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Status)
+                                    </td>
+                                    <td>
+                                        @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
+                                        @Html.ActionLink("Details", "Details", new { id = item.Id }) |
+                                        @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+                                    </td>
+                                </tr>
+                            }
+
+                        }
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+@section scripts_Foot
+{
+    <script type="text/javascript">
+        $('[data-toggle="tooltip"]').tooltip();
+        var popMenu;
+        var IdCur;
+
+        $(document).ready(function () {
+            LEAP.Common.MainPop.options.dataTable = $('.data-table').dataTable(jQuery.extend(true, datatableSetting, {
+                "ajax": {
+                    "url": "GetList"
+                },
+                "paging": true,
+                "info": false,
+                "aoColumns": [
+                    { "mData": 'Id' },
+                    { "mData": 'PdfFile' },
+                    { "mData": 'TheModel' },
+                    { "mData": 'Status' },
+                    { "mData": "Operation" }
+                ],
+                "columnDefs": [
+                    {
+                        "targets": 4,
+                        "render": function (data, type, full, meta) {
+                            return '<a href="#" onclick="LEAP.Common.MainPop.ShowUpdateInfo(\'' + full.Id + '\');return false;" class="artDailog btn btn-info  btn-xs" style="margin-right:4px;" data-toggle="tooltip" data-placement="top" title="编辑"><i class="fa fa-pencil"></i></a>' +
+                                '<a href="#" onclick="LEAP.Common.MainPop.RowClick(\'' + full.Id + '\',2);return false;" class="btn btn-danger btn-xs" id="btnDelete" data-toggle="tooltip" data-placement="top" title="删除">' +
+                                '<i class="fa fa-trash-o"></i></a>';
+                        }
+                    }],
+                fnDrawCallback: function () {
+
+                    $('[data-toggle="tooltip"]').tooltip();
+
+                }
+            }));
+            //inital select2
+            $('.select2').css("width", "362px").select2({ allowClear: true });
+        });
+    </script>
+}
