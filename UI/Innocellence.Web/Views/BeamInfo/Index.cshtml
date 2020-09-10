@@ -15,11 +15,11 @@
                 <input type="text" name="UploadFile" id="UploadFile" />
                 <button type="button" id="btnSelect" class="btn btn-primary btn-sm" data-toggle="tooltip" data-placement="top" title="选择文件">选择文件</button>
 
-                <div style="float:right">
+                @*<div style="float:right">
                     <button type="button" id="btnDeleteAll" class="btn btn-primary btn-sm" data-toggle="tooltip" data-placement="top" title="批量删除">批量删除</button>
                     <button type="button" id="btnFileAnalysis" class="btn btn-primary btn-sm" data-toggle="tooltip" data-placement="top" title="归档分析">归档分析</button>
                     <button type="button" id="btnDownloadDWG" class="btn btn-primary btn-sm" data-toggle="tooltip" data-placement="top" title="DWG下载">DWG下载</button>
-                </div>
+                </div>*@
             </div>
         </form>
         <div class="clearfix"></div>
@@ -31,7 +31,6 @@
                         <tr>
                             <th style="width:5%;text-align:center;">@T("ID")</th>
                             <th>@T("名称")</th>
-                            <th>@T("DWG")</th>
                             <th>@T("上传进度")</th>
                             <th>@T("上传状态")</th>
                             <th style="width:10%;">@T("操作")</th>
@@ -86,14 +85,13 @@
                 "info": false,
                 "aoColumns": [
                     { "mData": 'Id' },
-                    { "mData": 'PdfFile' },
                     { "mData": 'DwgFile' },
                     { "mData": 'TheModel' },
                     { "mData": 'Status' }
                 ],
                 "columnDefs": [
                     {
-                        "targets": 5,
+                        "targets": 4,
                         "render": function (data, type, full, meta) {
                             return '<a href="#" onclick="LEAP.Common.MainPop.ShowUpdateInfo(\'' + full.Id + '\');return false;" class="artDailog btn btn-info  btn-xs" style="margin-right:4px;" data-toggle="tooltip" data-placement="top" title="编辑"><i class="fa fa-pencil"></i></a>' +
                                 '<a href="#" onclick="LEAP.Common.MainPop.RowClick(\'' + full.Id + '\',2);return false;" class="btn btn-danger btn-xs" id="btnDelete" data-toggle="tooltip" data-placement="top" title="删除">' +
