@@ -25,7 +25,10 @@ namespace Innocellence.FaultSearch.Controllers
             ViewBag.weldCategorys = _weldCategoryService.Repository.Entities.Where(a => !a.IsDeleted).ToList();
             return View();
         }
-
+        public ActionResult cadwelding()
+        {
+            return View();
+        }
 
         public override ActionResult GetList()
         {

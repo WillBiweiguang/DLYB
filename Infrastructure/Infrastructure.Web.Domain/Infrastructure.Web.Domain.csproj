@@ -194,6 +194,7 @@
     <Compile Include="Contracts\IGrooveTypeService.cs" />
     <Compile Include="Contracts\IThicknessService.cs" />
     <Compile Include="Contracts\IHanJieLocationService.cs" />
+    <Compile Include="Contracts\ITaskListService.cs" />
     <Compile Include="Contracts\IWeldLocationService.cs" />
     <Compile Include="Contracts\IWeldGeometryService.cs" />
     <Compile Include="Contracts\IWeldingService.cs" />
@@ -210,6 +211,7 @@
     <Compile Include="Model\Entity\DLYB\GrooveTypes.cs" />
     <Compile Include="Model\Entity\DLYB\Thickness.cs" />
     <Compile Include="Model\Entity\DLYB\HanJieLocation.cs" />
+    <Compile Include="Model\Entity\DLYB\TaskList.cs" />
     <Compile Include="Model\Entity\DLYB\WeldLocation.cs" />
     <Compile Include="Model\Entity\DLYB\WeldGeometry.cs" />
     <Compile Include="Model\Entity\DLYB\Welding.cs" />
@@ -236,6 +238,7 @@
     <Compile Include="Model\ViewModel\DLYB\GrooveTypeView.cs" />
     <Compile Include="Model\ViewModel\DLYB\ThicknessView.cs" />
     <Compile Include="Model\ViewModel\DLYB\HanJieLocationView.cs" />
+    <Compile Include="Model\ViewModel\DLYB\TaskListView.cs" />
     <Compile Include="Model\ViewModel\DLYB\WeldLocationView.cs" />
     <Compile Include="Model\ViewModel\DLYB\WeldGeometryView.cs" />
     <Compile Include="Model\ViewModel\DLYB\WeldingView.cs" />
@@ -259,6 +262,7 @@
     <Compile Include="Service\DLYB\GrooveTypeService.cs" />
     <Compile Include="Service\DLYB\ThicknessService.cs" />
     <Compile Include="Service\DLYB\HanJieLocationService.cs" />
+    <Compile Include="Service\DLYB\TaskListService.cs" />
     <Compile Include="Service\DLYB\WeldLocationService.cs" />
     <Compile Include="Service\DLYB\WeldGeometryService.cs" />
     <Compile Include="Service\DLYB\WeldingService.cs" />
