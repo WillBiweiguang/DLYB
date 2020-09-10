@@ -244,6 +244,7 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\CategoryStatController.cs" />
     <Compile Include="Controllers\BeamInfoController.cs" />
     <Compile Include="Controllers\GrooveTypeController.cs" />
     <Compile Include="Controllers\HanJieLocationController.cs" />
@@ -930,6 +931,7 @@
     <Content Include="Style\video-js.css" />
     <Content Include="subscribed.html" />
     <Content Include="500.html" />
+    <Content Include="Views\CategoryStat\Index.cshtml" />
     <None Include="Views\WeldCategory\cadwelding.cshtml" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
