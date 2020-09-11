@@ -386,6 +386,8 @@
     <Content Include="Scripts\jquery.loadTemplate-1.4.4.js" />
     <Content Include="Scripts\jquery.loadTemplate-1.4.4.min.js" />
     <Content Include="Scripts\jquery.SuperSlide.2.1.js" />
+    <Content Include="Scripts\mxcustom.js" />
+    <Content Include="Scripts\mxocx.js" />
     <Content Include="Scripts\plugins\list.js" />
     <Content Include="releasenotes.txt" />
     <Content Include="Scripts\ace-elements.js" />

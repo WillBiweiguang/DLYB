@@ -16,13 +16,14 @@ using Infrastructure.Web.UI;
 using Infrastructure.Utility.Filter;
 using System.Linq.Expressions;
 using DLYB.Web.Controllers;
+using Infrastructure.Web.Domain.Services;
 
 namespace Innocellence.Web.Controllers
 {
     public class ProjectController : BaseController<Project, ProjectView>
     {
         private readonly IProjectService _projectService;
-
+        private readonly IHistoricalCostService _objHistoricalCostService = new HistoricalCostService();
         public ProjectController(IProjectService projectService) : base(projectService)
         {
             _projectService = projectService;
@@ -30,7 +31,7 @@ namespace Innocellence.Web.Controllers
         // GET: Address
         public override ActionResult Index()
         {
-            //var list = _addressService.GetList<AddressView>(int.MaxValue, x => !x.IsDeleted).ToList();
+            ViewBag.list= _objHistoricalCostService.GetList<HistoricalCostView>(int.MaxValue, x => !x.IsDeleted).ToList();
                  
             return View();
         }
