@@ -6,6 +6,7 @@
     .datagrid-mask-msg {
         height: 36px !important;
     }
+
 </style>
 <!--Action boxes-->
 <div class="row">
@@ -36,8 +37,8 @@
                             <th>@T("焊缝位置")</th>
                             <th>@T("板厚(mm)")</th>
                             <th>@T("坡口形式")</th>
-                            <th>@T("焊缝截面积(mm2)")</th>
-                            <th>@T("焊材型号")</th>                  
+                            <th>@T("焊缝截面积") (mm<sup>2</sup>)</th>
+                            <th>@T("焊材型号")</th>
                             <th style="width:10%;">@T("操作")</th>
                         </tr>
                     </thead>
@@ -62,31 +63,43 @@
                     @*<input type="hidden" id="CreatedDate" name="CreatedDate" data-bind="value: CreatedDate" validate="{required:false}" value="1970-01-01"/>
         <input type="hidden" id="CreatedUserID" name="CreatedUserID" data-bind="value: CreatedUserID" validate="{required:false}" value="0" />*@
                     <div class="form-group">
-                        <label class="col-sm-3 control-label">厂址:</label>
+                        <label class="col-sm-3 control-label">项目:</label>
                         <div class="col-sm-9">
-                            <input type="text" name="GrooveType" class="form-control" placeholder="请输入" data-bind="value: GrooveType"
-                                   validate="{required:true}" />
+                            <select class="chosen-select form-control" id="ProjectName" name="ProjectName" style="display:none" data-bind="value: ProjectName" validate="{required:true}"></select>
+                            @*<input type="text" name="GrooveType" class="form-control" placeholder="请输入" data-bind="value: ProjectName"
+                validate="{required:true}" />*@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="col-sm-3 control-label">焊接位置:</label>
+                        <label class="col-sm-3 control-label">厂址:</label>
                         <div class="col-sm-9">
-                            <input type="text" name="WeldGeometry" class="form-control" placeholder="请输入" data-bind="value: WeldGeometry"
-                                   validate="{required:true}" />
+                            <select class="form-control" id="AddressName" name="AddressName" style="" data-bind="value: AddressName" validate="{required:true}" data-geturl="/Project/GetDropdownList"></select>
+                            @*<input type="text" name="GrooveType" class="form-control" placeholder="请输入" data-bind="value: AddressName"
+                validate="{required:true}" />*@
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="col-sm-3 control-label">焊缝类型:</label>
                         <div class="col-sm-9">
-                            <input type="text" name="Thickness" class="form-control" placeholder="请输入" data-bind="value: Thickness"
-                                   validate="{required:true}" />
+                            <select class="form-control" id="WeldType" name="WeldType" style="" data-bind="value: WeldType" validate="{required:true}" data-geturl="/WeldGeometry/GetDropdownList"></select>
+                            @*<input type="text" name="Thickness" class="form-control" placeholder="请输入" data-bind="value: Thickness"
+                validate="{required:true}" />*@
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="col-sm-3 control-label">焊缝位置:</label>
                         <div class="col-sm-9">
-                            <input type="text" name="WorksThicknessH1" class="form-control" placeholder="请输入" data-bind="value: WorksThicknessH1"
-                                   validate="{required:true}" />
+                            <select class="form-control" id="WeldLocationType" name="WeldLocationType" style="" data-bind="value: WeldLocationType" validate="{required:true}" data-geturl="/WeldLocation/GetDropdownList"></select>
+                            @*<input type="text" name="WeldLocationType" class="form-control" placeholder="请输入" data-bind="value: WorksThicknessH1"
+        validate="{required:true}" />*@
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">焊接位置:</label>
+                        <div class="col-sm-9">
+                            <select class="form-control" id="HanJieType" name="HanJieType" style="" data-bind="value: HanJieType" validate="{required:true}" data-geturl="/HanjieLoation/GetDropdownList"></select>
+                            @*<input type="text" name="WeldGeometry" class="form-control" placeholder="请输入" data-bind="value: WeldGeometry"
+                validate="{required:true}" />*@
                         </div>
                     </div>
                     <div class="form-group">
@@ -139,6 +152,7 @@
 {
     <script src="~/Scripts/EasyUI/jquery.easyui.min.js"></script>
     <script src="http://static.runoob.com/assets/jquery-validation-1.14.0/dist/localization/messages_zh.js"></script>
+    <script src="~/Scripts/ace/chosen.jquery.js"></script>
     <script type="text/javascript">
         //$('[data-toggle="tooltip"]').tooltip();
         var popMenu;
@@ -177,7 +191,53 @@
             }));
             //inital select2
             $('.select2').css("width", "362px").select2({ allowClear: true });
+            //获取项目信息
+            BindChosen('/Project/GetDropdownList', $('#ProjectName'), InitChosen);
+            $.each($('select'), function (i, obj) {
+                BindSelect(obj);
+            });
+
         });
+
+        //应当出去js包
+        function InitChosen(select) {
+            $(select).chosen({ allow_single_deselect: true }).change(function () { console.log('change'); });
+            setTimeout(function () {
+                var pwidth = Math.min($(select).parent().width(), 362);
+                $(select).next().css({ 'width': pwidth });
+            }, 1000);
+            
+            //resize the chosen on window resize            
+            $(window).on('resize.chosen', function () {
+                var w = Math.min($('.chosen-select').parent().width(), 362);
+                $('.chosen-select').next().css({ 'width': w });
+            }).trigger('resize.chosen');
+        }
+
+        function BindSelect(select) {
+            var url = $(select).attr('data-geturl');
+            $(select).children().remove();
+            $(select).append('<option value></option>');
+            $.ajax(url)
+                .done(function (data) {
+                    $.each(data, function (i, op) {
+                        $(select).append('<option value="' + op.key + '">' + op.value + '</option>');
+                    });
+                    callback(select);
+                });
+        }
+
+        function BindChosen(url, select, callback, search) {
+            $(select).children().remove();
+            $(select).append('<option value></option>');
+            $.ajax(url)
+                .done(function (data) {
+                    $.each(data, function (i, op) {
+                        $(select).append('<option value="' + op.key + '">' + op.value + '</option>');
+                    });
+                    callback(select);
+                });
+        }
     </script>
 }
 

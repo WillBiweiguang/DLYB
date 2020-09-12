@@ -50,6 +50,13 @@ namespace DLYB.Web.Controllers
             int rowCount = gridRequest.PageCondition.RowCount;
             List<WeldLocationView> listEx = GetListEx(expression, gridRequest.PageCondition);
             return this.GetPageResult(listEx, gridRequest);
-        }     
+        }
+
+        public JsonResult GetDropdownList(string keyword = "")
+        {
+            var list = _service.GetList<WeldLocationView>(10, x => !x.IsDeleted && x.WeldLocationType.Contains(keyword.Trim()))
+                        .Select(x => new { key = x.Id, value = x.WeldLocationType }).ToList();
+            return new JsonResult { Data = list, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
+        }
     }
 }

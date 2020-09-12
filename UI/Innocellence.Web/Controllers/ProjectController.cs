@@ -16,6 +16,7 @@ using Infrastructure.Web.UI;
 using Infrastructure.Utility.Filter;
 using System.Linq.Expressions;
 using DLYB.Web.Controllers;
+using Newtonsoft.Json;
 
 namespace Innocellence.Web.Controllers
 {
@@ -53,6 +54,12 @@ namespace Innocellence.Web.Controllers
             return this.GetPageResult(listEx, gridRequest);
         }
 
+        public JsonResult GetDropdownList(string keyword = "")
+        {           
+            var list = _projectService.GetList<ProjectView>(10, x => !x.IsDeleted && x.ProjectName.Contains(keyword.Trim()))
+    .Select(x => new { key = x.Id, value = x.ProjectName }).ToList();
+            return new JsonResult { Data = list, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
+        }
         //public override ActionResult GetList()
         //{
         //    GridRequest gridRequest = new GridRequest(Request);

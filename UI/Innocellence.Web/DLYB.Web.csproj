@@ -250,7 +250,6 @@
     <Compile Include="Controllers\HanJieLocationController.cs" />
     <Compile Include="Controllers\ThicknessController.cs" />
     <Compile Include="Controllers\WeldCategoryController.cs" />
-    <Compile Include="Controllers\TaskListController.cs" />
     <Compile Include="Controllers\WeldLocationController.cs" />
     <Compile Include="Controllers\WeldGeometryController.cs" />
     <Compile Include="Controllers\WeldingController.cs" />
@@ -361,6 +360,7 @@
     <Content Include="Content\Site.css" />
     <Content Include="notauthed-lock.html" />
     <Content Include="notauthed.html" />
+    <Content Include="Scripts\ace\chosen.jquery.js" />
     <Content Include="Scripts\date-time\bootstrap-datetimepicker.min.js" />
     <Content Include="Scripts\dialogs\polling\polling.css" />
     <Content Include="Scripts\dialogs\polling\polling.html" />

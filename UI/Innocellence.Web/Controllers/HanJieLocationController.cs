@@ -50,6 +50,13 @@ namespace DLYB.Web.Controllers
             int rowCount = gridRequest.PageCondition.RowCount;
             List<HanJieLocationView> listEx = GetListEx(expression, gridRequest.PageCondition);
             return this.GetPageResult(listEx, gridRequest);
-        }     
+        }
+
+        public JsonResult GetDropdownList(string keyword = "")
+        {
+            var list = _service.GetList<HanJieLocationView>(10, x => !x.IsDeleted && x.HanJieType.Contains(keyword.Trim()))
+                        .Select(x => new { key = x.Id, value = x.HanJieType }).ToList();
+            return new JsonResult { Data = list, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
+        }
     }
 }

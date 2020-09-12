@@ -49,5 +49,12 @@ namespace DLYB.Web.Controllers
             List<WeldingView> listEx = GetListEx(expression, gridRequest.PageCondition);
             return this.GetPageResult(listEx, gridRequest);
         }
+
+        public JsonResult GetDropdownList(string keyword = "")
+        {
+            var list = _weldingService.GetList<WeldingView>(10, x => !x.IsDeleted && x.WeldingType.Contains(keyword.Trim()))
+                        .Select(x => new { key = x.Id, value = x.WeldingType }).ToList();
+            return new JsonResult { Data = list, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
+        }
     }
 }
