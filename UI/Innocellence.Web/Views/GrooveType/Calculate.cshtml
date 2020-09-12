@@ -1,0 +1,173 @@
+﻿@model IEnumerable<Infrastructure.Web.Domain.ModelsView.GrooveTypeView>
+@using Infrastructure.Web.Domain.ModelsView;
+@section easyui_css{
+    <link rel="stylesheet" href="~/Style/EasyUI/easyui.css" />
+}
+<style>
+    .datagrid-mask-msg {
+        height: 36px !important;
+    }
+</style>
+<!--Action boxes-->
+
+<button class="btn btn-primary btn-lg" data-toggle="modal" data-target="#ModalTable">
+   截面积计算
+</button>
+<div id="ModalTable" class="modal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="blue bigger">截面积计算</h4>
+            </div>
+
+            <div class="modal-body">
+                <form action="Post" id="ff" method="get" class="form-horizontal" datasource="Get">
+                    <input type="hidden" id="ID" name="ID" value="0" />
+                    @*<input type="hidden" id="CreatedDate" name="CreatedDate" data-bind="value: CreatedDate" validate="{required:false}" value="1970-01-01"/>
+        <input type="hidden" id="CreatedUserID" name="CreatedUserID" data-bind="value: CreatedUserID" validate="{required:false}" value="0" />*@
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">接口形式:</label>
+                        <div class="col-sm-9">
+                            <select multiple="" class="select2 tag-input-style" name="GrooveType" id="GrooveType" data-placeholder="请选择接口形式" data-bind="value: GrooveType">
+                                @foreach (GrooveTypeView a in ViewBag.GrooveTypes)
+                                {
+                                    <option value="@a.GrooveType">@a.GrooveType</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">焊缝类型:</label>
+                        <div class="col-sm-9">
+                            <select multiple="" class="select2 tag-input-style" name="WeldGeometry" id="WeldGeometry" data-placeholder="请选择焊缝类型" data-bind="value: WeldGeometry">
+                                @foreach (GrooveTypeView a in ViewBag.GrooveTypes)
+                                {
+                                    <option value="@a.WeldGeometry">@a.WeldGeometry</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">板厚:</label>
+                        <div class="col-sm-9">
+                            <select multiple="" class="select2 tag-input-style" name="Thickness" id="Thickness" data-placeholder="请选择板厚" data-bind="value: Thickness">
+
+                                @foreach (GrooveTypeView a in ViewBag.GrooveTypes)
+                                {
+                                    <option value="@a.Thickness">@a.Thickness</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">坡口深度h:</label>
+                        <div class="col-sm-9">
+                            <input type="text" name="WorksThicknessH1" class="form-control" placeholder="请输入" data-bind="value: WorksThicknessH1"
+                                   validate="{required:true}" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">余高H:</label>
+                        <div class="col-sm-9">
+                            <input type="text" name="WorksThicknessH2" class="form-control" placeholder="请输入" data-bind="value: WorksThicknessH2"
+                                   validate="{required:true}" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">组对间隙c:</label>
+                        <div class="col-sm-9">
+                            <input type="text" name="GrooveClearance" class="form-control" placeholder="请输入" data-bind="value: GrooveClearance"
+                                   validate="{required:true}" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">钝边高度p:</label>
+                        <div class="col-sm-9">
+                            <input type="text" name="BluntThickness" class="form-control" placeholder="请输入" data-bind="value: BluntThickness"
+                                   validate="{required:true}" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">坡口角度a1:</label>
+                        <div class="col-sm-9">
+                            <input type="text" name="GrooveAngleA1" class="form-control" placeholder="请输入" data-bind="value: GrooveAngleA1"
+                                   validate="{required:true}" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">坡口角度a:</label>
+                        <div class="col-sm-9">
+                            <input type="text" name="GrooveAngleA2" class="form-control" placeholder="请输入" data-bind="value: GrooveAngleA2"
+                                   validate="{required:true}" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">熔宽l:</label>
+                        <div class="col-sm-9">
+                            <input type="text" name="GrooveArcR1" class="form-control" placeholder="请输入" data-bind="value: GrooveArcR1"
+                                   validate="{required:true}" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">焊脚尺寸K:</label>
+                        <div class="col-sm-9">
+                            <input type="text" name="GrooveArcR2" class="form-control" placeholder="请输入" data-bind="value: GrooveArcR2"
+                                   validate="{required:true}" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">圆弧半径R:</label>
+                        <div class="col-sm-9">
+                            <input type="text" name="CircleArcR" class="form-control" placeholder="请输入" data-bind="value: CircleArcR"
+                                   validate="{required:true}" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">开坡口板厚t:</label>
+                        <div class="col-sm-9">
+                            <input type="text" name="GrooveThicknessT" class="form-control" placeholder="请输入" data-bind="value: GrooveThicknessT"
+                                   validate="{required:true}" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">图片预览:</label>
+                        <div class="col-sm-9">
+                            <input type="text" name="PreviewImage" class="form-control" placeholder="请输入" data-bind="value: PreviewImage"
+                                   validate="{required:true}" />
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-sm" data-dismiss="modal">
+                    <i class="ace-icon fa fa-times"></i>
+                    取消
+                </button>
+
+                <button class="btn btn-sm btn-primary" data-action="save">
+                    <i class="ace-icon fa fa-check"></i>
+                    保存
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts_Foot
+{
+    <script src="~/Scripts/EasyUI/jquery.easyui.min.js"></script>
+    <script src="http://static.runoob.com/assets/jquery-validation-1.14.0/dist/localization/messages_zh.js"></script>
+    <script type="text/javascript">
+        //$('[data-toggle="tooltip"]').tooltip();
+        var popMenu;
+        var IdCur;
+
+        $(document).ready(function () {
+            //inital select2
+            $('.select2').css("width", "362px").select2({ allowClear: true });
+        });
+    </script>
+}
+

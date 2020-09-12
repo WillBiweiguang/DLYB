@@ -12,15 +12,17 @@ namespace Infrastructure.Web.Domain.ModelsView
 
         public string GrooveType { get; set; }
         public string WeldGeometry { get; set; }
-        public string Thickness { get; set; }
-        public string WorksThicknessH1 { get; set; }
-        public string WorksThicknessH2 { get; set; }
-        public string GrooveClearance { get; set; }
-        public string BluntThickness { get; set; }
-        public string GrooveAngleA1 { get; set; }
-        public string GrooveAngleA2 { get; set; }
-        public string GrooveArcR1 { get; set; }
-        public string GrooveArcR2 { get; set; }
+        public double Thickness { get; set; }
+        public double? WorksThicknessH1 { get; set; }
+        public double? WorksThicknessH2 { get; set; }
+        public double? GrooveClearance { get; set; }
+        public double? BluntThickness { get; set; }
+        public double? GrooveAngleA1 { get; set; }
+        public double? GrooveAngleA2 { get; set; }
+        public double? GrooveArcR1 { get; set; }
+        public double? GrooveArcR2 { get; set; }
+        public double? CircleArcR { get; set; }
+        public double? GrooveThicknessT { get; set; }
         public string PreviewImage { get; set; }
         public DateTime? CreatedDate { get; set; }
 

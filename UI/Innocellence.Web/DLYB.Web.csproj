@@ -934,6 +934,7 @@
     <Content Include="subscribed.html" />
     <Content Include="500.html" />
     <Content Include="Views\CategoryStat\Index.cshtml" />
+    <Content Include="Views\GrooveType\Calculate.cshtml" />
     <None Include="Views\WeldCategory\cadwelding.cshtml" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>

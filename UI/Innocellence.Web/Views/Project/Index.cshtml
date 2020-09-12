@@ -74,17 +74,17 @@
                     <input type="hidden" id="ID" name="ID" value="0" />
                     <div>
                         <div style="float:right">
-                            <button class="btn btn-sm btn-primary" data-action="download">
+                            <button class="btn btn-sm btn-info" data-action="download">
                                 <i class="ace-icon fa fa-check"></i>
                                 下载模板
                             </button>
-                            <button class="btn btn-sm btn-primary" data-action="submit">
+                            <button class="btn btn-sm btn-info" data-action="submit">
                                 <i class="ace-icon fa fa-check"></i>
                                 提交
                             </button>
                         </div>
                         <br />
-                        <div style="clear:both">
+                        <div style="clear:both;padding-top:10px">
                             <table class="gridtable">
                                 <thead>
                                     <tr>
@@ -157,7 +157,7 @@
                     {
                         "targets": 5,
                         "render": function (data, type, full, meta) {
-                            return '<a href="#" onclick="LEAP.Common.MainPop.ShowUpdateInfo(\'' + full.Id + '\');return false;" class="artDailog btn btn-info  btn-xs" style="margin-right:4px;" data-toggle="tooltip" data-placement="top" title="历史消耗"><i class="fa fa-pencil"></i></a>';
+                            return '<a href="#" onclick="LEAP.Common.MainPop.ShowUpdateInfo(\'' + full.Id + '\');return false;" class="artDailog btn btn-info  btn-xs" style="margin-right:4px;" data-toggle="tooltip" data-placement="top" title="历史消耗"><i class="fa fa-history"></i></a>';
                         }
                     }],
                 fnDrawCallback: function () {
