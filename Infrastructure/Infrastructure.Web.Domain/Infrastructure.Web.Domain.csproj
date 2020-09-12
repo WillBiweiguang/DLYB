@@ -190,6 +190,7 @@
     <Compile Include="Configuration\CategoryConfiguration.generated.cs" />
     <Compile Include="Configuration\CommonConfiguration.generated.cs" />
     <Compile Include="Configuration\IdentityConfiguration.generated.cs" />
+    <Compile Include="Contracts\IHistoricalCostService.cs" />
     <Compile Include="Contracts\IWeldCategoryStatisticsService.cs" />
     <Compile Include="Contracts\IWeldCategoryLabelingService.cs" />
     <Compile Include="Contracts\IGrooveTypeService.cs" />
@@ -208,6 +209,7 @@
     <Compile Include="Contracts\ILogsService.cs" />
     <Compile Include="Contracts\ISysUserService.cs" />
     <Compile Include="Model\CommonEntity\UploadMessage.cs" />
+    <Compile Include="Model\Entity\DLYB\HistoricalCost.cs" />
     <Compile Include="Model\Entity\DLYB\WeldCategoryStatisticsV.cs" />
     <Compile Include="Model\Entity\DLYB\WeldCategoryStatistics.cs" />
     <Compile Include="Model\Entity\DLYB\WeldCategoryLabeling.cs" />
@@ -237,6 +239,7 @@
     <Compile Include="Model\ModelMap.cs" />
     <Compile Include="Model\ViewModel\AccountViewModels.cs" />
     <Compile Include="Model\ViewModel\CategoryView.cs" />
+    <Compile Include="Model\ViewModel\DLYB\HistoricalCostView.cs" />
     <Compile Include="Model\ViewModel\DLYB\WeldCategoryStatisticsVView.cs" />
     <Compile Include="Model\ViewModel\DLYB\WeldCategoryStatisticsView.cs" />
     <Compile Include="Model\ViewModel\DLYB\WeldCategoryLabelingView.cs" />
@@ -263,6 +266,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Service\DLYB\HistoricalService.cs" />
     <Compile Include="Service\DLYB\WeldCategoryStatisticsService.cs" />
     <Compile Include="Service\DLYB\WeldCategoryLabelingService.cs" />
     <Compile Include="Service\DLYB\GrooveTypeService.cs" />

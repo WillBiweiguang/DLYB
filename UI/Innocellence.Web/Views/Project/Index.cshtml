@@ -6,6 +6,30 @@
     .datagrid-mask-msg {
         height: 36px !important;
     }
+    table.gridtable {
+        font-family: verdana,arial,sans-serif;
+        font-size: 11px;
+        color: #333333;
+        border-width: 1px;
+        border-color: #666666;
+        border-collapse: collapse;
+    }
+
+    table.gridtable th {
+        border-width: 1px;
+        padding: 8px;
+        border-style: solid;
+        border-color: #666666;
+        background-color: #dedede;
+    }
+
+    table.gridtable td {
+        border-width: 1px;
+        padding: 8px;
+        border-style: solid;
+        border-color: #666666;
+        background-color: #ffffff;
+    }
 </style>
 <!--Action boxes-->
 <div class="row">
@@ -15,7 +39,7 @@
                 <input class="form-control" type="text" id="search_condition" name="search_condition" placeholder="名称">
                 <a href="#" class="btn btn-sm" id="btnSearch" data-toggle="tooltip" data-placement="top" title="搜索条件"><i class="fa fa-search"></i></a>
             </div>
-            
+
         </form>
         <div class="clearfix"></div>
 
@@ -37,7 +61,75 @@
         </div>
     </div>
 </div>
+<div id="ModalTable" class="modal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="blue bigger">历史消耗</h4>
+            </div>
 
+            <div class="modal-body">
+                <form action="Post" id="ff" method="get" class="form-horizontal" datasource="Get">
+                    <input type="hidden" id="ID" name="ID" value="0" />
+                    <div>
+                        <div style="float:right">
+                            <button class="btn btn-sm btn-info" data-action="download">
+                                <i class="ace-icon fa fa-check"></i>
+                                下载模板
+                            </button>
+                            <button class="btn btn-sm btn-info" data-action="submit">
+                                <i class="ace-icon fa fa-check"></i>
+                                提交
+                            </button>
+                        </div>
+                        <br />
+                        <div style="clear:both;padding-top:10px">
+                            <table class="gridtable">
+                                <thead>
+                                    <tr>
+                                        <th style="width:5%;text-align:center;">@T("序号")</th>
+                                        <th>@T("文件名")</th>
+                                        <th>@T("上传者")</th>
+                                        <th>@T("上传日期")</th>
+                                    </tr>
+                                </thead>
+                                @foreach (var item in ViewBag.list)
+                                {
+                                    <tr>
+                                        <td>
+                                            @item.Id
+                                        </td>
+                                        <td>
+                                            @item.HistoricalFile
+                                        </td>
+                                        <td>
+                                            @item.CreatedUserID
+                                        </td>
+                                        <td>
+                                            @item.CreatedDate
+                                        </td>
+
+                                    </tr>
+                                }
+
+                            </table>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-sm" data-dismiss="modal">
+                    <i class="ace-icon fa fa-times"></i>
+                    取消
+                </button>
+
+
+            </div>
+        </div>
+    </div>
+</div>
 
 @section scripts_Foot
 {
@@ -65,11 +157,7 @@
                     {
                         "targets": 5,
                         "render": function (data, type, full, meta) {
-                            return '<a href="#" onclick="LEAP.Common.MainPop.ShowUpdateInfo(\'' + full.Id + '\');return false;" class="artDailog btn btn-info  btn-xs" style="margin-right:4px;" data-toggle="tooltip" data-placement="top" title="PDF下载"><i class="fa fa-pencil"></i></a>' +
-                                '<a href="#" onclick="LEAP.Common.MainPop.RowClick(\'' + full.Id + '\',2);return false;" class="btn btn-danger btn-xs" id="btnDelete" data-toggle="tooltip" data-placement="top" title="查看">' +
-                                '<i class="fa fa-trash-o"></i></a>' +
-                                '<a href="#" onclick="LEAP.Common.MainPop.RowClick(\'' + full.Id + '\',2);return false;" class="btn btn-danger btn-xs" id="btnDelete" data-toggle="tooltip" data-placement="top" title="历史消耗">' +
-                                '<i class="fa fa-trash-o"></i></a>';
+                            return '<a href="#" onclick="LEAP.Common.MainPop.ShowUpdateInfo(\'' + full.Id + '\');return false;" class="artDailog btn btn-info  btn-xs" style="margin-right:4px;" data-toggle="tooltip" data-placement="top" title="历史消耗"><i class="fa fa-history"></i></a>';
                         }
                     }],
                 fnDrawCallback: function () {

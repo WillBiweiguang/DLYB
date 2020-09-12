@@ -27,6 +27,12 @@ namespace Innocellence.Web.Controllers
                  
             return View();
         }
+        public ActionResult Calculate()
+        {
+            ViewBag.GrooveTypes = _GrooveTypeService.GetList<GrooveTypeView>(int.MaxValue, x => !x.IsDeleted).ToList();
+
+            return View();
+        }
 
         public override ActionResult GetList()
         {
