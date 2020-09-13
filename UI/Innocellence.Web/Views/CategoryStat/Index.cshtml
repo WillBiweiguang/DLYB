@@ -6,6 +6,25 @@
     .datagrid-mask-msg {
         height: 36px !important;
     }
+    .form-control{
+        display: inline;
+        max-width: 300px;
+    }
+    .redirect-button {
+        border-radius: 0 !important;
+        background-color: #fff;
+        border: 1px solid #d5d5d5;
+        padding: 4px 2px 5px;
+        font-size: 14px;
+        font-family: inherit;
+        -webkit-box-shadow: none !important;
+        box-shadow: none !important;
+        -webkit-transition-duration: .1s;
+        transition-duration: .1s;
+        vertical-align: middle;
+        width: 110px;
+        float:right
+    }
 
 </style>
 <!--Action boxes-->
@@ -65,7 +84,8 @@
                     <div class="form-group">
                         <label class="col-sm-3 control-label">项目:</label>
                         <div class="col-sm-9">
-                            <select class="chosen-select form-control" id="ProjectName" name="ProjectName" style="display:none" data-bind="value: ProjectName" validate="{required:true}"></select>
+                            <select class="chosen-select form-control" id="ProjectName" name="ProjectId" style="display:none" data-bind="value:ProjectId" validate="{required:true}"></select>
+                            <button class="redirect-button" href="/Project/Index">项目管理</button>
                             @*<input type="text" name="GrooveType" class="form-control" placeholder="请输入" data-bind="value: ProjectName"
                 validate="{required:true}" />*@
                         </div>
@@ -73,61 +93,73 @@
                     <div class="form-group">
                         <label class="col-sm-3 control-label">厂址:</label>
                         <div class="col-sm-9">
-                            <select class="form-control" id="AddressName" name="AddressName" style="" data-bind="value: AddressName" validate="{required:true}" data-geturl="/Project/GetDropdownList"></select>
+                            <select class="single-select form-control" id="AddressName" name="AddressId" style="" data-bind="value:AddressId" validate="{required:true}" data-geturl="/Address/GetDropdownList"></select>
+                            <button class="redirect-button" href="/Address/Index">厂址管理</button>
                             @*<input type="text" name="GrooveType" class="form-control" placeholder="请输入" data-bind="value: AddressName"
-                validate="{required:true}" />*@
+        validate="{required:true}" />*@
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="col-sm-3 control-label">焊缝类型:</label>
                         <div class="col-sm-9">
-                            <select class="form-control" id="WeldType" name="WeldType" style="" data-bind="value: WeldType" validate="{required:true}" data-geturl="/WeldGeometry/GetDropdownList"></select>
-                            @*<input type="text" name="Thickness" class="form-control" placeholder="请输入" data-bind="value: Thickness"
+                            <select class="single-select form-control" id="WeldType" name="WeldTypeId" style="" data-bind="value:WeldTypeId" validate="{required:true}" data-geturl="/WeldGeometry/GetDropdownList"></select>
+                            <button class="redirect-button" href="/WeldGeometry/Index">焊缝类型管理</button>                        
+    @*<input type="text" name="Thickness" class="form-control" placeholder="请输入" data-bind="value: Thickness"
                 validate="{required:true}" />*@
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="col-sm-3 control-label">焊缝位置:</label>
                         <div class="col-sm-9">
-                            <select class="form-control" id="WeldLocationType" name="WeldLocationType" style="" data-bind="value: WeldLocationType" validate="{required:true}" data-geturl="/WeldLocation/GetDropdownList"></select>
-                            @*<input type="text" name="WeldLocationType" class="form-control" placeholder="请输入" data-bind="value: WorksThicknessH1"
+                            <select class="single-select form-control" id="WeldLocationType" name="WeldLocationId" style="" data-bind="value: WeldLocationId" validate="{required:true}" data-geturl="/WeldLocation/GetDropdownList"></select>
+                            <button class="redirect-button" href="/WeldLocation/Index">项目管理</button>                        
+    @*<input type="text" name="WeldLocationType" class="form-control" placeholder="请输入" data-bind="value: WorksThicknessH1"
         validate="{required:true}" />*@
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="col-sm-3 control-label">焊接位置:</label>
                         <div class="col-sm-9">
-                            <select class="form-control" id="HanJieType" name="HanJieType" style="" data-bind="value: HanJieType" validate="{required:true}" data-geturl="/HanjieLoation/GetDropdownList"></select>
-                            @*<input type="text" name="WeldGeometry" class="form-control" placeholder="请输入" data-bind="value: WeldGeometry"
+                            <select class="single-select form-control" id="HanJieType" name="HanjieId" style="" data-bind="value: HanjieId" validate="{required:true}" data-geturl="/HanjieLocation/GetDropdownList"></select>
+                            <button class="redirect-button" href="/HanJieLocation/Index">焊接位置管理</button>                        
+    @*<input type="text" name="WeldGeometry" class="form-control" placeholder="请输入" data-bind="value: WeldGeometry"
                 validate="{required:true}" />*@
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="col-sm-3 control-label">板厚(mm):</label>
                         <div class="col-sm-9">
-                            <input type="text" name="WorksThicknessH2" class="form-control" placeholder="请输入" data-bind="value: WorksThicknessH2"
-                                   validate="{required:true}" />
+                            <select class="single-select form-control" id="ThickType" name="ThicknessId" style="" data-bind="value: ThicknessId" validate="{required:true}" data-geturl="/Thickness/GetDropdownList"></select>
+                            <button class="redirect-button" href="/Thickness/Index">板厚管理</button>                        
+    @*<input type="text" name="WorksThicknessH2" class="form-control" placeholder="请输入" data-bind="value: WorksThicknessH2"
+        validate="{required:true}" />*@
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="col-sm-3 control-label">坡口形式:</label>
                         <div class="col-sm-9">
-                            <input type="text" name="GrooveClearance" class="form-control" placeholder="请输入" data-bind="value: GrooveClearance"
-                                   validate="{required:true}" />
+                            <select class="single-select form-control" id="GrooveType" name="GrooveTypeId" style="" data-bind="value: GrooveTypeId" validate="{required:true}" data-geturl="/GrooveType/GetDropdownList"></select>
+                            <button class="redirect-button" href="/GrooveType/Index">坡口形式管理</buttonclass="redirect-button">                        
+    @*<input type="text" name="GrooveClearance" class="form-control" placeholder="请输入" data-bind="value: GrooveClearance"
+        validate="{required:true}" />*@
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="col-sm-3 control-label">焊材类型:</label>
                         <div class="col-sm-9">
-                            <input type="text" name="BluntThickness" class="form-control" placeholder="请输入" data-bind="value: BluntThickness"
-                                   validate="{required:true}" />
+                            <select class="single-select form-control" id="WeldingType" name="WeldingId" style="width:100px;display: inline;" data-bind="value: WeldingId" validate="{required:true}" data-geturl="/Welding/GetDropdownList"></select>
+                            <input id="WeldingModel" name="WeldingModel" data-bind="value: WeldingModel" class="form-control" style="width: calc(100% - 140px);max-width: 179px; display: inline;" />
+                            <button class="redirect-button" href="/Welding/Index">焊材类型管理</button>                        
+    @*<input type="text" name="WeldingType" class="form-control" placeholder="请输入" data-bind="value: BluntThickness"
+        validate="{required:true}" />*@
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="col-sm-3 control-label">焊缝截面积:</label>
                         <div class="col-sm-9">
-                            <input type="text" name="GrooveAngleA1" class="form-control" placeholder="请输入" data-bind="value: GrooveAngleA1"
+                            <input type="text" name="SectionalArea" class="form-control" placeholder="请输入" data-bind="value: SectionalArea"
                                    validate="{required:true}" />
+                            <button class="redirect-button" href="/GrooveType/Calculate">焊缝截面积管理</button>
                         </div>
                     </div>
                 </form>
@@ -170,15 +202,16 @@
                     { "mData": 'ProjectName' },
                     { "mData": 'AddressName' },
                     { "mData": 'HanJieType' },
-                    { "mData": 'WeldLocationType' },
                     { "mData": 'WeldType' },
+                    { "mData": 'WeldLocationType' },                    
                     { "mData": 'ThickType' },
                     { "mData": 'GrooveType' },
                     { "mData": 'SectionalArea' },
+                    { "mData": 'WeldingModel' },
                 ],
                 "columnDefs": [
                     {
-                        "targets": 13,
+                        "targets": 10,
                         "render": function (data, type, full, meta) {
                             return '<a href="#" onclick="LEAP.Common.MainPop.ShowUpdateInfo(\'' + full.Id + '\');return false;" class="artDailog btn btn-info  btn-xs" style="margin-right:4px;" data-toggle="tooltip" data-placement="top" title="编辑"><i class="fa fa-pencil"></i></a>' +
                                 '<a href="#" onclick="LEAP.Common.MainPop.RowClick(\'' + full.Id + '\',2);return false;" class="btn btn-danger btn-xs" id="btnDelete" data-toggle="tooltip" data-placement="top" title="删除">' +
@@ -193,23 +226,37 @@
             $('.select2').css("width", "362px").select2({ allowClear: true });
             //获取项目信息
             BindChosen('/Project/GetDropdownList', $('#ProjectName'), InitChosen);
-            $.each($('select'), function (i, obj) {
+            $.each($('.single-select '), function (i, obj) {
                 BindSelect(obj);
             });
+            $(document).on('change', '#WeldingType', function () {
+                var id = $('#WeldingType option:selected').val();
+                $('#WeldingModel').val('');
+                if (id) {
+                    GetWeldingModel(id);
+                }
+            });
+            $(document).on('click', '.redirect-button', function () {
+                var url = $(this).attr('href');
+                window.location = url;
 
+            });
         });
 
         //应当出去js包
         function InitChosen(select) {
             $(select).chosen({ allow_single_deselect: true }).change(function () { console.log('change'); });
+            $(select).bind("change", function () {
+                $(select).trigger('chosen:updated');
+            });
             setTimeout(function () {
-                var pwidth = Math.min($(select).parent().width(), 362);
+                var pwidth = Math.min($(select).parent().width(), 300);
                 $(select).next().css({ 'width': pwidth });
             }, 1000);
             
             //resize the chosen on window resize            
             $(window).on('resize.chosen', function () {
-                var w = Math.min($('.chosen-select').parent().width(), 362);
+                var w = Math.min($('.chosen-select').parent().width(), 300);
                 $('.chosen-select').next().css({ 'width': w });
             }).trigger('resize.chosen');
         }
@@ -223,7 +270,6 @@
                     $.each(data, function (i, op) {
                         $(select).append('<option value="' + op.key + '">' + op.value + '</option>');
                     });
-                    callback(select);
                 });
         }
 
@@ -235,7 +281,16 @@
                     $.each(data, function (i, op) {
                         $(select).append('<option value="' + op.key + '">' + op.value + '</option>');
                     });
-                    callback(select);
+                    if (callback) {
+                        callback(select);
+                    }
+                });
+        }
+
+        function GetWeldingModel(id) {
+            $.ajax({ url: '/Welding/GetModelById', data: { id: id } })
+                .done(function (data) {
+                    $('#WeldingModel').val(data);
                 });
         }
     </script>

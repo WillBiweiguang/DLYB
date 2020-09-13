@@ -240,6 +240,7 @@
     <Compile Include="Model\ViewModel\AccountViewModels.cs" />
     <Compile Include="Model\ViewModel\CategoryView.cs" />
     <Compile Include="Model\ViewModel\DLYB\HistoricalCostView.cs" />
+    <Compile Include="Model\ViewModel\DLYB\WeldCategoryStatisticsViewModel.cs" />
     <Compile Include="Model\ViewModel\DLYB\WeldCategoryStatisticsVView.cs" />
     <Compile Include="Model\ViewModel\DLYB\WeldCategoryStatisticsView.cs" />
     <Compile Include="Model\ViewModel\DLYB\WeldCategoryLabelingView.cs" />

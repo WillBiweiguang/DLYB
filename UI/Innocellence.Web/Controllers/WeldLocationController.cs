@@ -54,7 +54,7 @@ namespace DLYB.Web.Controllers
 
         public JsonResult GetDropdownList(string keyword = "")
         {
-            var list = _service.GetList<WeldLocationView>(10, x => !x.IsDeleted && x.WeldLocationType.Contains(keyword.Trim()))
+            var list = _service.GetList<WeldLocationView>(int.MaxValue, x => !x.IsDeleted && x.WeldLocationType.Contains(keyword.Trim()))
                         .Select(x => new { key = x.Id, value = x.WeldLocationType }).ToList();
             return new JsonResult { Data = list, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
         }

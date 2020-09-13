@@ -54,7 +54,7 @@ namespace DLYB.Web.Controllers
 
         public JsonResult GetDropdownList(string keyword = "")
         {
-            var list = _service.GetList<HanJieLocationView>(10, x => !x.IsDeleted && x.HanJieType.Contains(keyword.Trim()))
+            var list = _service.GetList<HanJieLocationView>(int.MaxValue, x => !x.IsDeleted && x.HanJieType.Contains(keyword.Trim()))
                         .Select(x => new { key = x.Id, value = x.HanJieType }).ToList();
             return new JsonResult { Data = list, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
         }

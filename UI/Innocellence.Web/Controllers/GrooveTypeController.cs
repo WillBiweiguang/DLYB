@@ -51,5 +51,12 @@ namespace Innocellence.Web.Controllers
             List<GrooveTypeView> listEx = GetListEx(expression, gridRequest.PageCondition);
             return this.GetPageResult(listEx, gridRequest);
         }
+
+        public JsonResult GetDropdownList(string keyword = "")
+        {
+            var list = _GrooveTypeService.GetList<GrooveTypeView>(int.MaxValue, x => !x.IsDeleted && x.GrooveType.Contains(keyword.Trim()))
+                        .Select(x => new { key = x.Id, value = x.GrooveType }).ToList();
+            return new JsonResult { Data = list, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
+        }
     }
 }

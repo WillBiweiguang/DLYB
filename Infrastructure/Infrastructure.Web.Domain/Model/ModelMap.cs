@@ -46,6 +46,8 @@ namespace Infrastructure.Web.Domain.Entity
             Mapper.CreateMap<ThicknessView, Thickness>();
             Mapper.CreateMap<HanJieLocationView, HanJieLocation>();
             Mapper.CreateMap<GrooveTypeView, GrooveTypes>();
+            Mapper.CreateMap<WeldCategoryStatisticsView, WeldCategoryStatistics>();
+            Mapper.CreateMap<WeldCategoryStatisticsViewModel, WeldCategoryStatisticsV>();
         }
 
     }

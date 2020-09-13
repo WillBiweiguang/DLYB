@@ -26,6 +26,8 @@ namespace Infrastructure.Web.Domain.ModelsView
 
         public string SectionalArea { get; set; }
 
+        public int WeldingId { get; set; }
+
         public DateTime? CreatedDate { get; set; }
 
         public int? CreatedUserID { get; set; }
@@ -47,6 +49,7 @@ namespace Infrastructure.Web.Domain.ModelsView
             ThicknessId = entity.ThicknessId;
             GrooveTypeId = entity.GrooveTypeId;
             SectionalArea = entity.SectionalArea;
+            WeldingId = entity.WeldingId;
             CreatedDate = entity.CreatedDate;
             CreatedUserID = entity.CreatedUserID;
             UpdatedDate = entity.UpdatedDate;

@@ -50,6 +50,13 @@ namespace DLYB.Web.Controllers
             int rowCount = gridRequest.PageCondition.RowCount;
             List<ThicknessView> listEx = GetListEx(expression, gridRequest.PageCondition);
             return this.GetPageResult(listEx, gridRequest);
-        }     
+        }
+
+        public JsonResult GetDropdownList(string keyword = "")
+        {
+            var list = _service.GetList<ThicknessView>(int.MaxValue, x => !x.IsDeleted && x.ThickType.Contains(keyword.Trim()))
+                        .Select(x => new { key = x.Id, value = x.ThickType }).ToList();
+            return new JsonResult { Data = list, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
+        }
     }
 }

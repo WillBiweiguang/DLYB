@@ -56,7 +56,7 @@ namespace Innocellence.Web.Controllers
 
         public JsonResult GetDropdownList(string keyword = "")
         {           
-            var list = _projectService.GetList<ProjectView>(10, x => !x.IsDeleted && x.ProjectName.Contains(keyword.Trim()))
+            var list = _projectService.GetList<ProjectView>(int.MaxValue, x => !x.IsDeleted && x.ProjectName.Contains(keyword.Trim()))
     .Select(x => new { key = x.Id, value = x.ProjectName }).ToList();
             return new JsonResult { Data = list, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
         }

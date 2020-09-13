@@ -30,6 +30,8 @@ namespace Infrastructure.Web.Domain.Entity
         public string GrooveType { get; set; }
         [Column("Sectional_Area")]
         public string SectionalArea { get; set; }
+        [Column("Welding_Model")]
+        public string WeldingModel { get; set; }
 
         public DateTime? CreatedDate { get; set; }
 

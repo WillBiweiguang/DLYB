@@ -52,9 +52,14 @@ namespace DLYB.Web.Controllers
 
         public JsonResult GetDropdownList(string keyword = "")
         {
-            var list = _weldingService.GetList<WeldingView>(10, x => !x.IsDeleted && x.WeldingType.Contains(keyword.Trim()))
+            var list = _weldingService.GetList<WeldingView>(int.MaxValue, x => !x.IsDeleted && x.WeldingType.Contains(keyword.Trim()))
                         .Select(x => new { key = x.Id, value = x.WeldingType }).ToList();
             return new JsonResult { Data = list, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
+        }
+        public JsonResult GetModelById(int id)
+        {
+            var entity = _weldingService.GetList<WeldingView>(1, x => !x.IsDeleted && x.Id == id).FirstOrDefault();
+            return new JsonResult { Data = entity?.WeldingModel, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
         }
     }
 }

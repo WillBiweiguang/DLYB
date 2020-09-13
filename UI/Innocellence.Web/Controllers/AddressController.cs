@@ -34,9 +34,9 @@ namespace DLYB.Web.Controllers
             return View();
         }
 
-        public JsonResult GetDropdownList(string keyword)
+        public JsonResult GetDropdownList(string keyword = "")
         {
-            var list = _addressService.GetList<AddressView>(10, x => !x.IsDeleted && x.AddressName.Contains(keyword.Trim()))
+            var list = _addressService.GetList<AddressView>(int.MaxValue, x => !x.IsDeleted && x.AddressName.Contains(keyword.Trim()))
                 .Select(x => new { key = x.Id, value = x.AddressName }).ToList();
             return new JsonResult { Data = list, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
         }
