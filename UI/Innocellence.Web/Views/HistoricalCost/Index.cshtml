@@ -1,0 +1,168 @@
+﻿@model IEnumerable<Infrastructure.Web.Domain.ModelsView.HistoricalCostView>
+@section easyui_css{
+    <link rel="stylesheet" href="~/Style/EasyUI/easyui.css" />
+}
+<style>
+    .datagrid-mask-msg {
+        height: 36px !important;
+    }
+</style>
+<!--Action boxes-->
+<div class="row">
+    <div class="col-sm-12">
+        <form class="form-inline" id="SearchForm">
+            <div class="form-group">
+                <input class="form-control" type="text" id="search_condition" name="search_condition" placeholder="文件名">
+                <input type="hidden" id="project_id" name="project_id" value="@ViewBag.ProjectId" />
+                <a href="#" class="btn btn-sm" id="btnSearch" data-toggle="tooltip" data-placement="top" title="搜索条件"><i class="fa fa-search"></i></a>
+            </div>
+            <div class="form-group pull-right">
+                <a href="template" class="btn btn-success btn-sm" id="downloadTemplate" data-toggle="tooltip" data-placement="top" title="下载模板">
+                    下载模板
+                </a>
+                <a href="#" class="btn btn-success btn-sm" id="btnAdd" data-toggle="tooltip" data-placement="top" title="添加">
+                    提交
+                </a>
+            </div>
+        </form>
+        
+        <div class="clearfix"></div>
+
+        <div class="widget-box">
+            <div class="widget-content nopadding">
+                <table class="table table-bordered table-hover data-table">
+                    <thead>
+                        <tr>
+                            <th style="width:5%;text-align:center;">@T("序号")</th>
+                            <th>@T("文件名")</th>
+                            <th>@T("上传者")</th>
+                            <th>@T("上传日期")</th>
+                            <th style="width:10%;">@T("操作")</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="ModalTable" class="modal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="blue bigger">请填写以下内容</h4>
+            </div>
+
+            
+            <div class="modal-body">
+                <form action="PostFile" id="ff" method="post" class="form-horizontal" data-ajax="false" enctype="multipart/form-data">
+                    <input type="hidden" id="ID" name="ID" value="0" />
+                    <input type="hidden" id="ProjectId" name="ProjectId" value="@ViewBag.ProjectId" />
+                    @*<input type="hidden" id="CreatedDate" name="CreatedDate" data-bind="value: CreatedDate" validate="{required:false}" value="1970-01-01"/>
+            <input type="hidden" id="CreatedUserID" name="CreatedUserID" data-bind="value: CreatedUserID" validate="{required:false}" value="0" />*@
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">上传文件:</label>
+                        <div class="col-sm-9">
+                            @*<input type="file" id="upload-input" multiple="multiple" name="uploadfile" class="form-control" placeholder="请输入"
+        accept="application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        validate="{required:true}" />*@
+                            <input id="upload-input" class="form-control " multiple="multiple" type="file" name="file" onchange="return uploadFile(this);"
+                                   accept="application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"/>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+                <div class="modal-footer">
+                    @*<button class="btn btn-sm" data-dismiss="modal">
+                        <i class="ace-icon fa fa-times"></i>
+                        取消
+                    </button>*@
+
+                    <button class="btn btn-sm btn-primary" data-action="save" id="btnSave">
+                        <i class="ace-icon fa fa-check"></i>
+                        完成
+                    </button>
+                </div>
+        </div>
+    </div>
+</div>
+
+@section scripts_Foot
+{
+    <script src="~/Scripts/EasyUI/jquery.easyui.min.js"></script>
+    <script src="http://static.runoob.com/assets/jquery-validation-1.14.0/dist/localization/messages_zh.js"></script>
+    <script type="text/javascript">
+        //$('[data-toggle="tooltip"]').tooltip();
+        var popMenu;
+        var IdCur;
+
+        $(document).ready(function () {
+            LEAP.Common.MainPop.options.dataTable = $('.data-table').dataTable(jQuery.extend(true, datatableSetting, {
+                "ajax": {
+                    "url": "GetList?project_id=" + $('#project_id').val()
+                },
+                "paging": true,
+                "info": false,
+                "aoColumns": [
+                    { "mData": 'Id' },
+                    { "mData": 'HistoricalFile' },
+                    { "mData": 'CreatedUserID' },
+                    { "mData": 'CreatedDate' }
+                ],
+                "columnDefs": [
+                    {
+                        "targets": 4,
+                        "render": function (data, type, full, meta) {
+                            return '<a href="#" onclick="LEAP.Common.MainPop.ShowUpdateInfo(\'' + full.Id + '\');return false;" class="artDailog btn btn-info  btn-xs" style="margin-right:4px;" data-toggle="tooltip" data-placement="top" title="编辑"><i class="fa fa-pencil"></i></a>' +
+                                '<a href="#" onclick="LEAP.Common.MainPop.RowClick(\'' + full.Id + '\',2);return false;" class="btn btn-danger btn-xs" id="btnDelete" data-toggle="tooltip" data-placement="top" title="删除">' +
+                                '<i class="fa fa-trash-o"></i></a>';
+                        }
+                    }],
+                fnDrawCallback: function () {
+
+                    $('[data-toggle="tooltip"]').tooltip();
+                    $('#DataTables_Table_0_wrapper > .row:first-child').remove();
+                }
+            }));
+            //inital select2
+            $('.select2').css("width", "362px").select2({ allowClear: true });
+
+            //$('#upload-input').ace_file_input({
+            //    no_file: '尚未选择文件',
+            //    btn_choose: '选择',
+            //    btn_change: '修改',
+            //    droppable: false,
+            //    onchange: null,
+            //    thumbnail: false //| true | large
+            //}).on('change', function () {    
+            //    $('#upload-input').ace_file_input('reset_input');                
+            //});
+
+            $(document).on('click', '#btnSave', function (e) {
+                $('.form-horizontal').submit();
+            });
+        });
+
+        function uploadFile(obj) {
+            //$('#btnSave').prop("disabled", true);
+            var strUrl = "PostFile?ProjectId=" + $('#project_id').val();
+            $(obj).FileUpload({
+                self: obj,
+                url: strUrl,
+                allowExtension: '.xlsx,xls',
+                rewriteDocumentId: '',
+                processBarId: 'progress-bar',
+                callBack: function (data) {
+                    if (data.error) {
+                        bootbox.alert(data.error.message);
+                    } else {
+                        //$('#btnSave').prop("disabled", false);
+                    }
+                }
+            });
+        }
+    </script>
+}
+

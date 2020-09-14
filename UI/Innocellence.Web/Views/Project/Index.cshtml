@@ -6,6 +6,7 @@
     .datagrid-mask-msg {
         height: 36px !important;
     }
+
     table.gridtable {
         font-family: verdana,arial,sans-serif;
         font-size: 11px;
@@ -15,21 +16,21 @@
         border-collapse: collapse;
     }
 
-    table.gridtable th {
-        border-width: 1px;
-        padding: 8px;
-        border-style: solid;
-        border-color: #666666;
-        background-color: #dedede;
-    }
+        table.gridtable th {
+            border-width: 1px;
+            padding: 8px;
+            border-style: solid;
+            border-color: #666666;
+            background-color: #dedede;
+        }
 
-    table.gridtable td {
-        border-width: 1px;
-        padding: 8px;
-        border-style: solid;
-        border-color: #666666;
-        background-color: #ffffff;
-    }
+        table.gridtable td {
+            border-width: 1px;
+            padding: 8px;
+            border-style: solid;
+            border-color: #666666;
+            background-color: #ffffff;
+        }
 </style>
 <!--Action boxes-->
 <div class="row">
@@ -130,7 +131,11 @@
         </div>
     </div>
 </div>
+@*<div id="modalContainer" class="modal" tabindex="-1">
+    <div class="modal-dialog">
 
+    </div>
+</div>*@
 @section scripts_Foot
 {
     <script type="text/javascript">
@@ -157,7 +162,7 @@
                     {
                         "targets": 5,
                         "render": function (data, type, full, meta) {
-                            return '<a href="#" onclick="LEAP.Common.MainPop.ShowUpdateInfo(\'' + full.Id + '\');return false;" class="artDailog btn btn-info  btn-xs" style="margin-right:4px;" data-toggle="tooltip" data-placement="top" title="历史消耗"><i class="fa fa-history"></i></a>';
+                            return '<a href="#" onclick="showHistoricalCost(\'' + full.Id + '\');return false;" class="artDailog btn btn-info  btn-xs" style="margin-right:4px;" data-toggle="tooltip" data-placement="top" title="历史消耗">历史消耗</a>';
                         }
                     }],
                 fnDrawCallback: function () {
@@ -169,5 +174,17 @@
             //inital select2
             $('.select2').css("width", "362px").select2({ allowClear: true });
         });
+
+        function showHistoricalCost(pid) {
+            window.location = '/Historicalcost/index?projectid=' + pid;
+            //$.ajax({ url: '/Historicalcost/index', data: { projectid: pid } })
+            //    .done(function (data) {
+            //        $('#modalContainer .modal-dialog').children().remove();
+            //        var modalContent = '<div class="modal-content"></div >';
+            //        $('#modalContainer .modal-dialog').append(modalContent);
+            //        $('#modalContainer .modal-content').append(data);
+            //        $('#modalContainer').modal();
+            //    });
+        }
     </script>
 }

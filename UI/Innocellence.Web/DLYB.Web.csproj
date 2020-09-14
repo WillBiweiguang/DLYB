@@ -244,6 +244,7 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\HistoricalCostController.cs" />
     <Compile Include="Controllers\CategoryStatController.cs" />
     <Compile Include="Controllers\BeamInfoController.cs" />
     <Compile Include="Controllers\GrooveTypeController.cs" />
@@ -655,6 +656,7 @@
     <Content Include="Scripts\jquery-1.10.2.min.map" />
     <!--<Content Include="Content\wechatposter\QrCode" />-->
     <Content Include="Scripts\_parse\list.js" />
+    <Content Include="Files\Template\历史消耗.xlsx" />
     <None Include="Properties\PublishProfiles\Innocellence.We.pubxml" />
     <None Include="Properties\PublishProfiles\LillyChinaCAWechat.pubxml" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
@@ -935,6 +937,7 @@
     <Content Include="500.html" />
     <Content Include="Views\CategoryStat\Index.cshtml" />
     <Content Include="Views\GrooveType\Calculate.cshtml" />
+    <Content Include="Views\HistoricalCost\Index.cshtml" />
     <None Include="Views\WeldCategory\cadwelding.cshtml" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>

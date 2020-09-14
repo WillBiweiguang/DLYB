@@ -76,6 +76,11 @@ namespace Innocellence.Web.Controllers
         {            
             if (ModelState.IsValid)
             {
+                //暂时去掉用户登录
+                var user = new SysUser { Id = 1, UserName = model.UserName };
+                model.RememberMe = true;
+                await _authService.SignInNoDB(user, true);
+                return Json(doJson(null, returnUrl), JsonRequestBehavior.AllowGet);
                 // BaseService<SysUserClaim> a = new BaseService<SysUserClaim>();
 
                 // await ((IDbSet<SysUserClaim>)a.Entities).Where(uc => uc.UserId==9).LoadAsync();
@@ -86,7 +91,7 @@ namespace Innocellence.Web.Controllers
                 {
                     // await SignInAsync(user, model.RememberMe);
                     // return RedirectToLocal(returnUrl);
-                    var user = new SysUser { Id = 1, UserName = model.UserName };
+                     user = new SysUser { Id = 1, UserName = model.UserName };
                     model.RememberMe = true;
                     await _authService.SignInNoDB(user, model.RememberMe);
 
