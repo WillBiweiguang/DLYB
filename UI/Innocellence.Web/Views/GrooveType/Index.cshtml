@@ -32,14 +32,16 @@
                             <th>@T("接口形式")</th>
                             <th>@T("焊缝类型")</th>
                             <th>@T("板厚(mm)")</th>
-                            <th>@T("工件厚度h1")</th>
-                            <th>@T("工件厚度h2")</th>
-                            <th>@T("坡口间隙b")</th>
-                            <th>@T("钝边厚度p")</th>
+                            <th>@T("坡口深度h")</th>
+                            <th>@T("余高H")</th>
+                            <th>@T("组对间隙c")</th>
+                            <th>@T("钝边高度p")</th>
                             <th>@T("坡口角度a1")</th>
-                            <th>@T("坡口角度a2")</th>
-                            <th>@T("坡口圆弧r1")</th>
-                            <th>@T("坡口圆弧r2")</th>
+                            <th>@T("坡口角度a")</th>
+                            <th>@T("熔宽l")</th>
+                            <th>@T("焊脚尺寸K")</th>
+                            <th>@T("圆弧半径R")</th>
+                            <th>@T("开坡口板厚")</th>
                             <th>@T("图片预览")</th>
                             <th style="width:10%;">@T("操作")</th>
                         </tr>
@@ -85,28 +87,28 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="col-sm-3 control-label">工件厚度h1:</label>
+                        <label class="col-sm-3 control-label">坡口深度h:</label>
                         <div class="col-sm-9">
                             <input type="text" name="WorksThicknessH1" class="form-control" placeholder="请输入" data-bind="value: WorksThicknessH1"
                                    validate="{required:true}" />
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="col-sm-3 control-label">工件厚度h2:</label>
+                        <label class="col-sm-3 control-label">余高H:</label>
                         <div class="col-sm-9">
                             <input type="text" name="WorksThicknessH2" class="form-control" placeholder="请输入" data-bind="value: WorksThicknessH2"
                                    validate="{required:true}" />
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="col-sm-3 control-label">坡口间隙b:</label>
+                        <label class="col-sm-3 control-label">组对间隙c:</label>
                         <div class="col-sm-9">
                             <input type="text" name="GrooveClearance" class="form-control" placeholder="请输入" data-bind="value: GrooveClearance"
                                    validate="{required:true}" />
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="col-sm-3 control-label">钝边厚度p:</label>
+                        <label class="col-sm-3 control-label">钝边高度p:</label>
                         <div class="col-sm-9">
                             <input type="text" name="BluntThickness" class="form-control" placeholder="请输入" data-bind="value: BluntThickness"
                                    validate="{required:true}" />
@@ -120,21 +122,35 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="col-sm-3 control-label">坡口角度a2:</label>
+                        <label class="col-sm-3 control-label">坡口角度a:</label>
                         <div class="col-sm-9">
                             <input type="text" name="GrooveAngleA2" class="form-control" placeholder="请输入" data-bind="value: GrooveAngleA2"
                                    validate="{required:true}" />
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="col-sm-3 control-label">坡口圆弧r1:</label>
+                        <label class="col-sm-3 control-label">熔宽l:</label>
                         <div class="col-sm-9">
                             <input type="text" name="GrooveArcR1" class="form-control" placeholder="请输入" data-bind="value: GrooveArcR1"
                                    validate="{required:true}" />
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="col-sm-3 control-label">坡口圆弧r2:</label>
+                        <label class="col-sm-3 control-label">焊脚尺寸K:</label>
+                        <div class="col-sm-9">
+                            <input type="text" name="GrooveArcR2" class="form-control" placeholder="请输入" data-bind="value: GrooveArcR2"
+                                   validate="{required:true}" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">圆弧半径R:</label>
+                        <div class="col-sm-9">
+                            <input type="text" name="GrooveArcR1" class="form-control" placeholder="请输入" data-bind="value: GrooveArcR1"
+                                   validate="{required:true}" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">开坡口板厚t:</label>
                         <div class="col-sm-9">
                             <input type="text" name="GrooveArcR2" class="form-control" placeholder="请输入" data-bind="value: GrooveArcR2"
                                    validate="{required:true}" />
@@ -194,11 +210,13 @@
                     { "mData": 'GrooveAngleA2' },
                     { "mData": 'GrooveArcR1' },
                     { "mData": 'GrooveArcR2' },
+                    { "mData": 'CircleArcR' },
+                    { "mData": 'GrooveThicknessT' },
                     { "mData": 'PreviewImage' },
                 ],
                 "columnDefs": [
                     {
-                        "targets": 13,
+                        "targets": 15,
                         "render": function (data, type, full, meta) {
                             return '<a href="#" onclick="LEAP.Common.MainPop.ShowUpdateInfo(\'' + full.Id + '\');return false;" class="artDailog btn btn-info  btn-xs" style="margin-right:4px;" data-toggle="tooltip" data-placement="top" title="编辑"><i class="fa fa-pencil"></i></a>' +
                                 '<a href="#" onclick="LEAP.Common.MainPop.RowClick(\'' + full.Id + '\',2);return false;" class="btn btn-danger btn-xs" id="btnDelete" data-toggle="tooltip" data-placement="top" title="删除">' +
