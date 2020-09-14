@@ -69,7 +69,7 @@
                     <div class="form-group">
                         <label class="col-sm-3 control-label">图号:</label>
                         <div class="col-sm-9">
-                            <select multiple="" class="select2 tag-input-style" name="FigureNumber" id="FigureNumber" data-placeholder="请选择图号" data-bind="value: FigureNumber">
+                            <select class="single-select form-control" name="FigureNumber" id="FigureNumber" data-placeholder="请选择图号" data-bind="value: FigureNumber">
                                 @foreach (WeldCategoryLabeling a in ViewBag.weldCategorys)
                                 {
                                     <option value="@a.FigureNumber">@a.FigureNumber</option>
@@ -80,7 +80,7 @@
                     <div class="form-group">
                         <label class="col-sm-3 control-label">板件号:</label>
                         <div class="col-sm-9">
-                            <select multiple="" class="select2 tag-input-style" name="BoardNumber" id="BoardNumber" data-placeholder="请选择板件号" data-bind="value: BoardNumber">
+                            <select class="single-select form-control" name="BoardNumber" id="BoardNumber" data-placeholder="请选择板件号" data-bind="value: BoardNumber">
                                 @foreach (WeldCategoryLabeling a in ViewBag.weldCategorys)
                                 {
                                     <option value="@a.BoardNumber">@a.BoardNumber</option>
@@ -91,7 +91,7 @@
                     <div class="form-group">
                         <label class="col-sm-3 control-label">焊缝类型:</label>
                         <div class="col-sm-9">
-                            <select multiple="" class="select2 tag-input-style" name="WeldType" id="WeldType" data-placeholder="请选择焊缝类型" data-bind="value: WeldType">
+                            <select class="single-select form-control" name="WeldType" id="WeldType" data-placeholder="请选择焊缝类型" data-bind="value: WeldType">
                                 @foreach (WeldCategoryLabeling a in ViewBag.weldCategorys)
                                 {
                                     <option value="@a.WeldType">@a.WeldType</option>
@@ -102,7 +102,7 @@
                     <div class="form-group">
                         <label class="col-sm-3 control-label">板厚:</label>
                         <div class="col-sm-9">
-                            <select multiple="" class="select2 tag-input-style" name="Thickness" id="Thickness" data-placeholder="请选择板厚" data-bind="value: Thickness">
+                            <select class="single-select form-control" name="Thickness" id="Thickness" data-placeholder="请选择板厚" data-bind="value: Thickness">
                                 @foreach (WeldCategoryLabeling a in ViewBag.weldCategorys)
                                 {
                                     <option value="@a.Thickness">@a.Thickness</option>
@@ -113,7 +113,7 @@
                     <div class="form-group">
                         <label class="col-sm-3 control-label">焊缝位置:</label>
                         <div class="col-sm-9">
-                            <select multiple="" class="select2 tag-input-style" name="WeldLocation" id="WeldLocation" data-placeholder="请选择焊缝位置" data-bind="value: WeldLocation">
+                            <select class="single-select form-control" name="WeldLocation" id="WeldLocation" data-placeholder="请选择焊缝位置" data-bind="value: WeldLocation">
                                 @foreach (WeldCategoryLabeling a in ViewBag.weldCategorys)
                                 {
                                     <option value="@a.WeldLocation">@a.WeldLocation</option>
@@ -124,7 +124,7 @@
                     <div class="form-group">
                         <label class="col-sm-3 control-label">消耗系数:</label>
                         <div class="col-sm-9">
-                            <select multiple="" class="select2 tag-input-style" name="ConsumeFactor" id="ConsumeFactor" data-placeholder="请选择消耗系数" data-bind="value: ConsumeFactor">
+                            <select class="single-select form-control" name="ConsumeFactor" id="ConsumeFactor" data-placeholder="请选择消耗系数" data-bind="value: ConsumeFactor">
                                 @foreach (WeldCategoryLabeling a in ViewBag.weldCategorys)
                                 {
                                     <option value="@a.ConsumeFactor">@a.ConsumeFactor</option>
@@ -135,7 +135,7 @@
                     <div class="form-group">
                         <label class="col-sm-3 control-label">熔敷金属密度:</label>
                         <div class="col-sm-9">
-                            <select multiple="" class="select2 tag-input-style" name="MentalDensity" id="MentalDensity" data-placeholder="请选择熔敷金属密度" data-bind="value: MentalDensity">
+                            <select class="single-select form-control" name="MentalDensity" id="MentalDensity" data-placeholder="请选择熔敷金属密度" data-bind="value: MentalDensity">
                                 @foreach (WeldCategoryLabeling a in ViewBag.weldCategorys)
                                 {
                                     <option value="@a.MentalDensity">@a.MentalDensity</option>
@@ -146,7 +146,7 @@
                     <div class="form-group">
                         <label class="col-sm-3 control-label">焊缝截面积:</label>
                         <div class="col-sm-9">
-                            <select multiple="" class="select2 tag-input-style" name="SectionArea" id="SectionArea" data-placeholder="请选择焊缝截面积" data-bind="value: SectionArea">
+                            <select class="single-select form-control" name="SectionArea" id="SectionArea" data-placeholder="请选择焊缝截面积" data-bind="value: SectionArea">
                                 @foreach (WeldCategoryLabeling a in ViewBag.weldCategorys)
                                 {
                                     <option value="@a.SectionArea">@a.SectionArea</option>
@@ -157,7 +157,7 @@
                     <div class="form-group">
                         <label class="col-sm-3 control-label">焊缝长度:</label>
                         <div class="col-sm-9">
-                            <select multiple="" class="select2 tag-input-style" name="WeldLength" id="WeldLength" data-placeholder="请选择焊缝长度" data-bind="value: WeldLength">
+                            <select class="single-select form-control" name="WeldLength" id="WeldLength" data-placeholder="请选择焊缝长度" data-bind="value: WeldLength">
                                 @foreach (WeldCategoryLabeling a in ViewBag.weldCategorys)
                                 {
                                     <option value="@a.WeldLength">@a.WeldLength</option>
@@ -168,7 +168,7 @@
                     <div class="form-group">
                         <label class="col-sm-3 control-label">焊缝质量:</label>
                         <div class="col-sm-9">
-                            <select multiple="" class="select2 tag-input-style" name="WeldQuanlity" id="WeldQuanlity" data-placeholder="请选择焊缝质量" data-bind="value: WeldQuanlity">
+                            <select class="single-select form-control" name="WeldQuanlity" id="WeldQuanlity" data-placeholder="请选择焊缝质量" data-bind="value: WeldQuanlity">
                                 @foreach (WeldCategoryLabeling a in ViewBag.weldCategorys)
                                 {
                                     <option value="@a.WeldQuanlity">@a.WeldQuanlity</option>
@@ -179,7 +179,7 @@
                     <div class="form-group">
                         <label class="col-sm-3 control-label">焊接边数:</label>
                         <div class="col-sm-9">
-                            <select multiple="" class="select2 tag-input-style" name="FigureNumber" id="FigureNumber" data-placeholder="请选择焊接边数" data-bind="value: FigureNumber">
+                            <select class="single-select form-control" name="FigureNumber" id="FigureNumber" data-placeholder="请选择焊接边数" data-bind="value: FigureNumber">
                                 @foreach (WeldCategoryLabeling a in ViewBag.weldCategorys)
                                 {
                                     <option value="@a.WeldingNumber">@a.WeldingNumber</option>
@@ -190,7 +190,7 @@
                     <div class="form-group">
                         <label class="col-sm-3 control-label">数量:</label>
                         <div class="col-sm-9">
-                            <select multiple="" class="select2 tag-input-style" name="Quantity" id="Quantity" data-placeholder="请选择数量" data-bind="value: Quantity">
+                            <select  class="single-select form-control"  name="Quantity" id="Quantity" data-placeholder="请选择数量" data-bind="value: Quantity">
                                 @foreach (WeldCategoryLabeling a in ViewBag.weldCategorys)
                                 {
                                     <option value="@a.Quantity">@a.Quantity</option>
@@ -201,7 +201,7 @@
                     <div class="form-group">
                         <label class="col-sm-3 control-label">长度:</label>
                         <div class="col-sm-9">
-                            <select multiple="" class="select2 tag-input-style" name="Length" id="Length" data-placeholder="请选择长度" data-bind="value: Length">
+                            <select class="single-select form-control" name="Length" id="Length" data-placeholder="请选择长度" data-bind="value: Length">
                                 @foreach (WeldCategoryLabeling a in ViewBag.weldCategorys)
                                 {
                                     <option value="@a.Length">@a.Length</option>

@@ -249,6 +249,7 @@
     <Compile Include="Controllers\BeamInfoController.cs" />
     <Compile Include="Controllers\GrooveTypeController.cs" />
     <Compile Include="Controllers\HanJieLocationController.cs" />
+    <Compile Include="Controllers\TaskListController.cs" />
     <Compile Include="Controllers\ThicknessController.cs" />
     <Compile Include="Controllers\WeldCategoryController.cs" />
     <Compile Include="Controllers\WeldLocationController.cs" />
