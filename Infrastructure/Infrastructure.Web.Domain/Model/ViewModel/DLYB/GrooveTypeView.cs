@@ -13,6 +13,8 @@ namespace Infrastructure.Web.Domain.ModelsView
         public string GrooveType { get; set; }
         public string WeldGeometry { get; set; }
         public double Thickness { get; set; }
+        public double? WorksThickness1 { get; set; }
+        public double? WorksThickness2 { get; set; }
         public double? WorksThicknessH1 { get; set; }
         public double? WorksThicknessH2 { get; set; }
         public double? GrooveClearance { get; set; }
@@ -42,6 +44,8 @@ namespace Infrastructure.Web.Domain.ModelsView
             WeldGeometry = entity.WeldGeometry;
             GrooveType = entity.GrooveType;
             Thickness = entity.Thickness;
+            WorksThickness1 = entity.WorksThickness1;
+            WorksThickness2 = entity.WorksThickness2;
             WorksThicknessH1 = entity.WorksThicknessH1;
             WorksThicknessH2 = entity.WorksThicknessH2;
             GrooveClearance = entity.GrooveClearance;
@@ -50,6 +54,8 @@ namespace Infrastructure.Web.Domain.ModelsView
             GrooveAngleA2 = entity.GrooveAngleA2;
             GrooveArcR1 = entity.GrooveArcR1;
             GrooveArcR2 = entity.GrooveArcR2;
+            CircleArcR = entity.CircleArcR;
+            GrooveThicknessT = entity.GrooveThicknessT;
             PreviewImage = entity.PreviewImage;
             CreatedDate = entity.CreatedDate;
             CreatedUserID = entity.CreatedUserID;

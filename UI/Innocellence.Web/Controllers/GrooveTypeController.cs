@@ -29,9 +29,15 @@ namespace Innocellence.Web.Controllers
         }
         public ActionResult Calculate()
         {
-            ViewBag.GrooveTypes = _GrooveTypeService.GetList<GrooveTypeView>(int.MaxValue, x => !x.IsDeleted).ToList();
-
+            //ViewBag.GrooveTypes = _GrooveTypeService.GetList<GrooveTypeView>(int.MaxValue, x => !x.IsDeleted).ToList();
+            ViewBag.GrooveTypes = _GrooveTypeService.GetGrooveTypeQuerys();
             return View();
+        }
+        public ActionResult GetGrooveTypeSearchQuerys()
+        {
+            var list = _GrooveTypeService.GetGrooveTypeQuerys();
+
+            return Json(list, JsonRequestBehavior.AllowGet);
         }
 
         public override ActionResult GetList()
@@ -58,5 +64,6 @@ namespace Innocellence.Web.Controllers
                         .Select(x => new { key = x.Id, value = x.GrooveType }).ToList();
             return new JsonResult { Data = list, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
         }
+       
     }
 }
