@@ -17,6 +17,8 @@ namespace Infrastructure.Web.Domain.Entity
         public string GrooveType { get; set; }
         public string WeldGeometry { get; set; }
         public double Thickness { get; set; }
+        public double? WorksThickness1 { get; set; }
+        public double? WorksThickness2 { get; set; }
         public double? WorksThicknessH1 { get; set; }
         public double? WorksThicknessH2 { get; set; }
         public double? GrooveClearance { get; set; }

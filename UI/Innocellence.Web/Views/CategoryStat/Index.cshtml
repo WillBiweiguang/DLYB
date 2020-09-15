@@ -54,7 +54,6 @@
                             <th>@T("焊接位置")</th>
                             <th>@T("焊缝类型")</th>
                             <th>@T("焊缝位置")</th>
-                            <th>@T("板厚(mm)")</th>
                             <th>@T("坡口形式")</th>
                             <th>@T("焊缝截面积") (mm<sup>2</sup>)</th>
                             <th>@T("焊材型号")</th>
@@ -126,15 +125,15 @@
                 validate="{required:true}" />*@
                         </div>
                     </div>
-                    <div class="form-group">
+                    @*<div class="form-group">
                         <label class="col-sm-3 control-label">板厚(mm):</label>
                         <div class="col-sm-9">
                             <select class="single-select form-control" id="ThickType" name="ThicknessId" style="" data-bind="value: ThicknessId" validate="{required:true}" data-geturl="/Thickness/GetDropdownList"></select>
                             <button class="redirect-button" href="/Thickness/Index">板厚管理</button>                        
     @*<input type="text" name="WorksThicknessH2" class="form-control" placeholder="请输入" data-bind="value: WorksThicknessH2"
         validate="{required:true}" />*@
-                        </div>
-                    </div>
+                        @*</div>*@
+                    @*</div>*@
                     <div class="form-group">
                         <label class="col-sm-3 control-label">坡口形式:</label>
                         <div class="col-sm-9">
@@ -203,15 +202,14 @@
                     { "mData": 'AddressName' },
                     { "mData": 'HanJieType' },
                     { "mData": 'WeldType' },
-                    { "mData": 'WeldLocationType' },                    
-                    { "mData": 'ThickType' },
+                    { "mData": 'WeldLocationType' },  
                     { "mData": 'GrooveType' },
                     { "mData": 'SectionalArea' },
                     { "mData": 'WeldingModel' },
                 ],
                 "columnDefs": [
                     {
-                        "targets": 10,
+                        "targets": 9,
                         "render": function (data, type, full, meta) {
                             return '<a href="#" onclick="LEAP.Common.MainPop.ShowUpdateInfo(\'' + full.Id + '\');return false;" class="artDailog btn btn-info  btn-xs" style="margin-right:4px;" data-toggle="tooltip" data-placement="top" title="编辑"><i class="fa fa-pencil"></i></a>' +
                                 '<a href="#" onclick="LEAP.Common.MainPop.RowClick(\'' + full.Id + '\',2);return false;" class="btn btn-danger btn-xs" id="btnDelete" data-toggle="tooltip" data-placement="top" title="删除">' +

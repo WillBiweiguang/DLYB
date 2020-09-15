@@ -40,5 +40,26 @@ namespace Infrastructure.Web.Domain.Services
     /// </summary>
     public partial class GrooveTypeService : BaseService<GrooveTypes>, IGrooveTypeService
     {
+        public List<GrooveTypeView> GetGrooveTypeQuerys()
+        {
+            return Repository.Entities.Where(y => y.IsDeleted != true).Select(x => new GrooveTypeView()
+            {
+                WeldGeometry = x.WeldGeometry,
+                GrooveType = x.GrooveType,
+                WorksThickness1 = x.WorksThickness1,
+                WorksThickness2 = x.WorksThickness2,
+                PreviewImage = x.PreviewImage,
+                WorksThicknessH1 = x.WorksThicknessH1,
+                WorksThicknessH2 = x.WorksThicknessH2,
+                GrooveClearance = x.GrooveClearance,
+                BluntThickness = x.BluntThickness,
+                GrooveAngleA1 = x.GrooveAngleA1,
+                GrooveAngleA2 = x.GrooveAngleA2,
+                GrooveArcR1 = x.GrooveArcR1,
+                GrooveArcR2 = x.GrooveArcR2,
+                CircleArcR = x.CircleArcR,
+                GrooveThicknessT = x.GrooveThicknessT,
+            }).Distinct().ToList();
+        }
     }
 }
