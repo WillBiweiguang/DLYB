@@ -23,15 +23,19 @@ namespace DLYB.Web.Controllers
     {
         private readonly IWeldCategoryStatisticsService _service;
         private readonly IWeldCategoryStatisticsVService _wcsvService;
+        private readonly IGrooveTypeService _GrooveTypeService;
         public CategoryStatController(IWeldCategoryStatisticsService service,
-            IWeldCategoryStatisticsVService wcsvService) : base(wcsvService)
+            IWeldCategoryStatisticsVService wcsvService,
+            IGrooveTypeService grooveTypeService) : base(wcsvService)
         {
             _service = service;
             _wcsvService = wcsvService;
+            _GrooveTypeService = grooveTypeService;
         }
         // GET: Address
         public override ActionResult Index()
-        {                 
+        {
+            ViewBag.GrooveTypes = _GrooveTypeService.GetGrooveTypeQuerys();
             return View();
         }
 

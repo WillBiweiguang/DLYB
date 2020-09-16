@@ -10,7 +10,7 @@
         display: inline;
         max-width: 300px;
     }
-    .redirect-button {
+    .func-btn {
         border-radius: 0 !important;
         background-color: #fff;
         border: 1px solid #d5d5d5;
@@ -23,7 +23,9 @@
         transition-duration: .1s;
         vertical-align: middle;
         width: 110px;
-        float:right
+        float: right;
+        text-align: center;
+        cursor: pointer;
     }
 
 </style>
@@ -84,7 +86,7 @@
                         <label class="col-sm-3 control-label">项目:</label>
                         <div class="col-sm-9">
                             <select class="chosen-select form-control" id="ProjectName" name="ProjectId" style="display:none" data-bind="value:ProjectId" validate="{required:true}"></select>
-                            <button class="redirect-button" href="/Project/Index">项目管理</button>
+                            <span class="func-btn redirect-btn" href="/Project/Index">项目管理</span>
                             @*<input type="text" name="GrooveType" class="form-control" placeholder="请输入" data-bind="value: ProjectName"
                 validate="{required:true}" />*@
                         </div>
@@ -93,7 +95,7 @@
                         <label class="col-sm-3 control-label">厂址:</label>
                         <div class="col-sm-9">
                             <select class="single-select form-control" id="AddressName" name="AddressId" style="" data-bind="value:AddressId" validate="{required:true}" data-geturl="/Address/GetDropdownList"></select>
-                            <button class="redirect-button" href="/Address/Index">厂址管理</button>
+                            <span class="func-btn redirect-btn" href="/Address/Index">厂址管理</span>
                             @*<input type="text" name="GrooveType" class="form-control" placeholder="请输入" data-bind="value: AddressName"
         validate="{required:true}" />*@
                         </div>
@@ -102,7 +104,7 @@
                         <label class="col-sm-3 control-label">焊缝类型:</label>
                         <div class="col-sm-9">
                             <select class="single-select form-control" id="WeldType" name="WeldTypeId" style="" data-bind="value:WeldTypeId" validate="{required:true}" data-geturl="/WeldGeometry/GetDropdownList"></select>
-                            <button class="redirect-button" href="/WeldGeometry/Index">焊缝类型管理</button>                        
+                            <span class="func-btn redirect-btn" href="/WeldGeometry/Index">焊缝类型管理</span>                        
     @*<input type="text" name="Thickness" class="form-control" placeholder="请输入" data-bind="value: Thickness"
                 validate="{required:true}" />*@
                         </div>
@@ -111,7 +113,7 @@
                         <label class="col-sm-3 control-label">焊缝位置:</label>
                         <div class="col-sm-9">
                             <select class="single-select form-control" id="WeldLocationType" name="WeldLocationId" style="" data-bind="value: WeldLocationId" validate="{required:true}" data-geturl="/WeldLocation/GetDropdownList"></select>
-                            <button class="redirect-button" href="/WeldLocation/Index">焊缝位置管理</button>                        
+                            <span class="func-btn redirect-btn" href="/WeldLocation/Index">焊缝位置管理</span>                        
     @*<input type="text" name="WeldLocationType" class="form-control" placeholder="请输入" data-bind="value: WorksThicknessH1"
         validate="{required:true}" />*@
                         </div>
@@ -120,7 +122,7 @@
                         <label class="col-sm-3 control-label">焊接位置:</label>
                         <div class="col-sm-9">
                             <select class="single-select form-control" id="HanJieType" name="HanjieId" style="" data-bind="value: HanjieId" validate="{required:true}" data-geturl="/HanjieLocation/GetDropdownList"></select>
-                            <button class="redirect-button" href="/HanJieLocation/Index">焊接位置管理</button>                        
+                            <span class="func-btn redirect-btn" href="/HanJieLocation/Index">焊接位置管理</span>                        
     @*<input type="text" name="WeldGeometry" class="form-control" placeholder="请输入" data-bind="value: WeldGeometry"
                 validate="{required:true}" />*@
                         </div>
@@ -129,7 +131,7 @@
                         <label class="col-sm-3 control-label">板厚(mm):</label>
                         <div class="col-sm-9">
                             <select class="single-select form-control" id="ThickType" name="ThicknessId" style="" data-bind="value: ThicknessId" validate="{required:true}" data-geturl="/Thickness/GetDropdownList"></select>
-                            <button class="redirect-button" href="/Thickness/Index">板厚管理</button>                        
+                            <button class="func-btn redirect-btn" href="/Thickness/Index">板厚管理</button>                        
     @*<input type="text" name="WorksThicknessH2" class="form-control" placeholder="请输入" data-bind="value: WorksThicknessH2"
         validate="{required:true}" />*@
                         @*</div>*@
@@ -137,8 +139,8 @@
                     <div class="form-group">
                         <label class="col-sm-3 control-label">坡口形式:</label>
                         <div class="col-sm-9">
-                            <select class="single-select form-control" id="GrooveType" name="GrooveTypeId" style="" data-bind="value: GrooveTypeId" validate="{required:true}" data-geturl="/GrooveType/GetDropdownList"></select>
-                            <button class="redirect-button" href="/GrooveType/Index">坡口形式管理</buttonclass="redirect-button">                        
+                            <select class="single-select form-control" id="GrooveTypeId" name="GrooveTypeId" style="" data-bind="value: GrooveTypeId" validate="{required:true}" data-geturl="/GrooveType/GetDropdownList"></select>
+                            <span class="func-btn redirect-btn" href="/GrooveType/Index">坡口形式管理</span>
     @*<input type="text" name="GrooveClearance" class="form-control" placeholder="请输入" data-bind="value: GrooveClearance"
         validate="{required:true}" />*@
                         </div>
@@ -148,7 +150,7 @@
                         <div class="col-sm-9">
                             <select class="single-select form-control" id="WeldingType" name="WeldingId" style="width:100px;display: inline;" data-bind="value: WeldingId" validate="{required:true}" data-geturl="/Welding/GetDropdownList"></select>
                             <input id="WeldingModel" name="WeldingModel" data-bind="value: WeldingModel" class="form-control" style="width: calc(100% - 140px);max-width: 179px; display: inline;" />
-                            <button class="redirect-button" href="/Welding/Index">焊材类型管理</button>                        
+                            <span class="func-btn redirect-btn" href="/Welding/Index">焊材类型管理</span>                        
     @*<input type="text" name="WeldingType" class="form-control" placeholder="请输入" data-bind="value: BluntThickness"
         validate="{required:true}" />*@
                         </div>
@@ -156,9 +158,9 @@
                     <div class="form-group">
                         <label class="col-sm-3 control-label">焊缝截面积:</label>
                         <div class="col-sm-9">
-                            <input type="text" name="SectionalArea" class="form-control" placeholder="请输入" data-bind="value: SectionalArea"
+                            <input type="text" id="SectionalArea" name="SectionalArea" class="form-control" placeholder="请输入" data-bind="value: SectionalArea"
                                    validate="{required:true}" />
-                            <button class="redirect-button" href="/GrooveType/Calculate">焊缝截面积管理</button>
+                            <span class="func-btn pop-btn" >焊缝截面积管理</span>
                         </div>
                     </div>
                 </form>
@@ -179,10 +181,193 @@
     </div>
 </div>
 
+<div id="ModalTableGrooveCalc" class="modal" tabindex="-1" style="z-index:9000">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="blue bigger">截面积计算</h4>
+            </div>
+
+            <div class="modal-body">
+                <form action="Post" id="ff" method="get" class="form-horizontal" datasource="Get">
+                    <input type="hidden" id="ID" name="ID" value="0" />
+                    @*<input type="hidden" id="CreatedDate" name="CreatedDate" data-bind="value: CreatedDate" validate="{required:false}" value="1970-01-01"/>
+                        <input type="hidden" id="CreatedUserID" name="CreatedUserID" data-bind="value: CreatedUserID" validate="{required:false}" value="0" />*@
+                    <div style="width:70%;float:left">
+
+                        <div class="row">
+                            <div class="form-group col-lg-8">
+                                <label class="col-sm-5 control-label">焊缝类型:</label>
+                                <div class="col-sm-7">
+                                    <select class="single-select form-control" name="WeldGeometry" id="WeldGeometry" data-placeholder="请选择焊缝类型" data-bind="value: WeldGeometry">
+                                        @*@foreach (GrooveTypeView a in ViewBag.GrooveTypes)
+                                            {
+                                                <option value="@a.WeldGeometry">@a.WeldGeometry</option>
+                                            }*@
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-lg-8">
+                                <label class="col-sm-5 control-label">坡口类型:</label>
+                                <div class="col-sm-7">
+                                    <select class="single-select form-control" name="GrooveType" id="GrooveType" data-placeholder="请选择坡口类型" data-bind="value: GrooveType">
+
+                                        @*@foreach (GrooveTypeView a in ViewBag.GrooveTypes)
+                                            {
+                                                <option value="~/Content/images/anchor.gif">@a.GrooveType</option>
+                                            }*@
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-lg-8">
+                                <label class="col-sm-5 control-label">工件厚度1:</label>
+                                <div class="col-sm-7">
+                                    <select class="single-select form-control" name="WorksThickness1" id="WorksThickness1" data-placeholder="请选择" data-bind="value: WorksThickness1">
+
+                                        @*@foreach (GrooveTypeView a in ViewBag.GrooveTypes)
+                                            {
+                                                <option value="~/Content/images/anchor.gif">@a.GrooveType</option>
+                                            }*@
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-lg-8">
+                                <label class="col-sm-5 control-label">工件厚度2:</label>
+                                <div class="col-sm-7">
+                                    <select class="single-select form-control" name="WorksThickness2" id="WorksThickness2" data-placeholder="请选择" data-bind="value: WorksThickness2">
+
+                                        @*@foreach (GrooveTypeView a in ViewBag.GrooveTypes)
+                                            {
+                                                <option value="~/Content/images/anchor.gif">@a.GrooveType</option>
+                                            }*@
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="width:29%;float:right">
+                        <img id="PreviewImage" src="" />
+                    </div>
+                    <div style="border:1px solid;padding-top:3px;clear:both">
+                        <div class="row">
+                            <div class="form-group col-lg-6">
+                                <label class="col-sm-5 control-label">坡口深度h:</label>
+                                <div class="col-sm-7">
+                                    <input type="text" name="WorksThicknessH1" id="WorksThicknessH1" class="form-control" placeholder="请输入" data-bind="value: WorksThicknessH1"
+                                           validate="{required:true}" />
+                                </div>
+                            </div>
+                            <div class="form-group col-lg-6">
+                                <label class="col-sm-5 control-label">余高H:</label>
+                                <div class="col-sm-7">
+                                    <input type="text" name="WorksThicknessH2" id="WorksThicknessH2" class="form-control" placeholder="请输入" data-bind="value: WorksThicknessH2"
+                                           validate="{required:true}" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-lg-6">
+                                <label class="col-sm-5 control-label">组对间隙c:</label>
+                                <div class="col-sm-7">
+                                    <input type="text" name="GrooveClearance" id="GrooveClearance" class="form-control" placeholder="请输入" data-bind="value: GrooveClearance"
+                                           validate="{required:true}" />
+                                </div>
+                            </div>
+                            <div class="form-group col-lg-6">
+                                <label class="col-sm-5 control-label">钝边高度p:</label>
+                                <div class="col-sm-7">
+                                    <input type="text" name="BluntThickness" id="BluntThickness" class="form-control" placeholder="请输入" data-bind="value: BluntThickness"
+                                           validate="{required:true}" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="form-group col-lg-6">
+                                <label class="col-sm-5 control-label">坡口角度a1:</label>
+                                <div class="col-sm-7">
+                                    <input type="text" name="GrooveAngleA1" id="GrooveAngleA1" class="form-control" placeholder="请输入" data-bind="value: GrooveAngleA1"
+                                           validate="{required:true}" />
+                                </div>
+                            </div>
+                            <div class="form-group col-lg-6">
+                                <label class="col-sm-5 control-label">坡口角度a:</label>
+                                <div class="col-sm-7">
+                                    <input type="text" name="GrooveAngleA2" id="GrooveAngleA2" class="form-control" placeholder="请输入" data-bind="value: GrooveAngleA2"
+                                           validate="{required:true}" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-lg-6">
+                                <label class="col-sm-5 control-label">熔宽l:</label>
+                                <div class="col-sm-7">
+                                    <input type="text" name="GrooveArcR1" id="GrooveArcR1" class="form-control" placeholder="请输入" data-bind="value: GrooveArcR1"
+                                           validate="{required:true}" />
+                                </div>
+                            </div>
+                            <div class="form-group col-lg-6">
+                                <label class="col-sm-5 control-label">焊脚尺寸K:</label>
+                                <div class="col-sm-7">
+                                    <input type="text" name="GrooveArcR2" id="GrooveArcR2" class="form-control" placeholder="请输入" data-bind="value: GrooveArcR2"
+                                           validate="{required:true}" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-lg-6">
+                                <label class="col-sm-5 control-label">圆弧半径R:</label>
+                                <div class="col-sm-7">
+                                    <input type="text" name="CircleArcR" id="CircleArcR" class="form-control" placeholder="请输入" data-bind="value: CircleArcR"
+                                           validate="{required:true}" />
+                                </div>
+                            </div>
+                            <div class="form-group col-lg-6">
+                                <label class="col-sm-5 control-label">开坡口板厚t:</label>
+                                <div class="col-sm-7">
+                                    <input type="text" name="GrooveThicknessT" id="GrooveThicknessT" class="form-control" placeholder="请输入" data-bind="value: GrooveThicknessT"
+                                           validate="{required:true}" />
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </form>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-sm btn-info" onclick="calculateSection()">
+                    <i class="ace-icon fa fa-check"></i>
+                    截面积计算
+                </button>
+                <input type="text" id="SectionResult" placeholder="请输入" style="width:300px" />
+                <button class="btn btn-sm" data-dismiss="modal">
+                    <i class="ace-icon fa fa-times"></i>
+                    取消
+                </button>
+
+                <button class="btn btn-sm btn-info" data-action="" onclick="saveArea();">
+                    <i class="ace-icon fa fa-check"></i>
+                    保存
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 @section scripts_Foot
 {
     <script src="~/Scripts/EasyUI/jquery.easyui.min.js"></script>
     <script src="http://static.runoob.com/assets/jquery-validation-1.14.0/dist/localization/messages_zh.js"></script>
+    <script src="~/Scripts/linq/linq.min.js"></script>
     <script src="~/Scripts/ace/chosen.jquery.js"></script>
     <script type="text/javascript">
         //$('[data-toggle="tooltip"]').tooltip();
@@ -234,11 +419,128 @@
                     GetWeldingModel(id);
                 }
             });
-            $(document).on('click', '.redirect-button', function () {
+            $(document).on('click', '.redirect-btn', function () {
                 var url = $(this).attr('href');
                 window.location = url;
+            });
+            $(document).on('click', '.pop-btn', function () {
+                $('#ModalTableGrooveCalc').modal(500);
+            });
+            //Groove Calc
+            var WeldGeometry = document.getElementById('WeldGeometry');
+            var GrooveType = document.getElementById('GrooveType');
+            $("#WeldGeometry").change(function () {
+                $('#GrooveType').empty();
+                $('#WorksThickness1').empty();
+
+                $('#WorksThickness2').empty();
+                if ($("#WeldGeometry").val() != '') {
+                    //showChild(TherapeuticArea, TradeName, tradeNameArr, $('#TradeName'));
+                    var queryResult = Enumerable.From(BiddingQuerys)
+                        .Where(function (x) { return x.WeldGeometry == WeldGeometry.value })
+                        .Select(function (x) { return x.GrooveType }).Distinct().ToArray();
+                    showChild1(GrooveType, queryResult);
+                    $('#GrooveType').removeAttr("disabled");
+                }
+            });
+            // 工件厚度1
+            $('#GrooveType').change(function () {
+
+                $('#WorksThickness1').empty();
+
+                $('#WorksThickness2').empty();
+
+
+                //showChild(TradeName, DosageForm, dosageFormArr, $('#DosageForm'));
+                var queryResult = Enumerable.From(BiddingQuerys)
+                    .Where(function (x) {
+                        return x.WeldGeometry == WeldGeometry.value && x.GrooveType == GrooveType.value
+                    })
+                    .Select(function (x) { return x.WorksThickness1 }).Distinct().ToArray();
+                showChild1(WorksThickness1, queryResult);
+                $('#WorksThickness1').removeAttr("disabled");
 
             });
+            // 工件厚度2
+            $('#WorksThickness1').change(function () {
+
+                $('#WorksThickness2').empty();
+
+
+                //showChild(TradeName, DosageForm, dosageFormArr, $('#DosageForm'));
+                var queryResult = Enumerable.From(BiddingQuerys)
+                    .Where(function (x) {
+                        return x.WeldGeometry == WeldGeometry.value && x.GrooveType == GrooveType.value && x.WorksThickness1 == WorksThickness1.value;
+                    })
+                    .Select(function (x) { return x.WorksThickness2 }).Distinct().ToArray();
+                showChild1(WorksThickness2, queryResult);
+                $('#WorksThickness2').removeAttr("disabled");
+            });
+            $('#WorksThickness2').change(function () {
+                var queryResult = Enumerable.From(BiddingQuerys)
+                    .Where(function (x) {
+                        return x.WeldGeometry == WeldGeometry.value && x.GrooveType == GrooveType.value && x.WorksThickness1 == WorksThickness1.value
+                            && x.WorksThickness2 == WorksThickness2.value;
+                    }).ToArray();
+                $("#PreviewImage").attr('src', queryResult[0].PreviewImage);
+                $("#WorksThicknessH1").val(queryResult[0].WorksThicknessH1);
+                $("#WorksThicknessH2").val(queryResult[0].WorksThicknessH2);
+                $("#GrooveClearance").val(queryResult[0].GrooveClearance);
+                $("#BluntThickness").val(queryResult[0].BluntThickness);
+                $("#GrooveAngleA1").val(queryResult[0].GrooveAngleA1);
+                $("#GrooveAngleA2").val(queryResult[0].GrooveAngleA2);
+                $("#GrooveArcR1").val(queryResult[0].GrooveArcR1);
+                $("#GrooveArcR2").val(queryResult[0].GrooveArcR2);
+                $("#GrooveThicknessT").val(queryResult[0].GrooveThicknessT);
+                $("#CircleArcR").val(queryResult[0].CircleArcR);
+
+            });
+            $.ajax({
+                cache: true,
+                type: "GET",
+                url: "/GrooveType/GetGrooveTypeSearchQuerys",
+                async: true,
+                error: function (request) {
+                    artDialog.alert("查询条件信息获取失败。");
+                },
+                success: function (data) {
+                    if (data == null) {
+                        artDialog.alert("查询条件信息获取失败。");
+                        return;
+                    }
+                    BiddingQuerys = data;
+                    var queryResult = Enumerable.From(BiddingQuerys)
+                        .Select(function (x) { return x.WeldGeometry })
+                        .Distinct()
+                        .ToArray();
+                    showChild1(WeldGeometry, queryResult);
+                }
+            });
+
+
+            function showChild1(child, childArr) {
+                //child.empty();
+                var count = childArr.length;
+
+                var childOption = document.createElement('option');
+                //ie不支持option对象的value,所以加childOption.text
+                childOption.value = childOption.text = '';
+                child.options.add(childOption);
+
+                for (var i = 0; i < count; i++) {
+                    //判断所选的值即父类，与当前节点第一个数组元素是否相市'
+                    //不取第一个数组元市'因为第一个是父类，所以j市'开始，而不市'
+
+                    childOption = document.createElement('option');
+                    //ie不支持option对象的value,所以加childOption.text
+                    childOption.value = childOption.text = childArr[i];
+                    child.options.add(childOption);
+
+                }
+            }
+
+            $('select[name=WeldGeometry]').val('');
+            $('select[name=GrooveType]').val('');
         });
 
         //应当出去js包
@@ -261,14 +563,16 @@
 
         function BindSelect(select) {
             var url = $(select).attr('data-geturl');
-            $(select).children().remove();
-            $(select).append('<option value></option>');
-            $.ajax(url)
-                .done(function (data) {
-                    $.each(data, function (i, op) {
-                        $(select).append('<option value="' + op.key + '">' + op.value + '</option>');
+            if (url) {
+                $(select).children().remove();
+                $(select).append('<option value></option>');
+                $.ajax(url)
+                    .done(function (data) {
+                        $.each(data, function (i, op) {
+                            $(select).append('<option value="' + op.key + '">' + op.value + '</option>');
+                        });
                     });
-                });
+            }
         }
 
         function BindChosen(url, select, callback, search) {
@@ -290,6 +594,19 @@
                 .done(function (data) {
                     $('#WeldingModel').val(data);
                 });
+        }
+        //Groove Calc
+        function calculateSection() {
+            if ($("#WeldGeometry").val() == '对角焊缝' && $("#GrooveType").val() == 'I形坡口') {
+                $("#SectionResult").val($("#GrooveClearance").val() * $("#GrooveThicknessT").val() + $("#GrooveArcR1").val() * $("#WorksThicknessH2").val());
+            }
+        }
+        function saveArea() {
+            var area = $('#SectionResult').val();
+            if (area) {
+                $('#SectionalArea').val(area);
+                $('#ModalTableGrooveCalc').modal('hide');
+            }
         }
     </script>
 }
