@@ -44,5 +44,46 @@ namespace DLYB.Web.Controllers
             List<TaskListView> listEx = GetListEx(expression, gridRequest.PageCondition);
             return this.GetPageResult(listEx, gridRequest);
         }
+
+        [HttpPost]
+        [ValidateInput(true)]
+        public ActionResult PostFile(TaskListView objModal,int ProjectName)
+        {
+            //验证错误
+            if (!ModelState.IsValid)
+            {
+                return Json(GetErrorJson(), JsonRequestBehavior.AllowGet);
+            }
+            if (Request.Files.Count > 0)
+            {
+                var file = Request.Files[0];
+                objModal = objModal ?? new TaskListView();
+                objModal.DWGFile = file.FileName;
+                objModal.ProjectId = ProjectName;
+                var fileExtension = System.IO.Path.GetExtension(file.FileName);
+                if (fileExtension.ToLower() != ".dwg")
+                {
+                    var result = GetErrorJson();
+                    result.Message = new JsonMessage(103, "请上传dwg文件");
+                    return Json(result, JsonRequestBehavior.AllowGet);
+                }
+                if (!System.IO.Directory.Exists(Server.MapPath("/Files/TaskList/")))
+                {
+                    System.IO.Directory.CreateDirectory(Server.MapPath("/Files/TaskList/"));
+                }
+                string path = "/Files/TaskList/" + file.FileName;
+                file.SaveAs(Server.MapPath(path));
+                _TaskListService.InsertView(objModal);
+                //if (string.IsNullOrEmpty(Id) || Id == "0")
+                //{
+                //    _service.InsertView(objModal);
+                //}
+                //else
+                //{
+                //    _service.UpdateView(objModal);
+                //}
+            }
+            return Json(doJson(null), JsonRequestBehavior.AllowGet);
+        }
     }
 }

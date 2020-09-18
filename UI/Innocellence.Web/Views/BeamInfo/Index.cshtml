@@ -12,14 +12,16 @@
     <div class="col-sm-12">
         <form class="form-inline" id="SearchForm">
             <div>
-                <input type="text" name="UploadFile" id="UploadFile" />
-                <button type="button" id="btnSelect" class="btn btn-info btn-sm" data-toggle="tooltip" data-placement="top" title="选择文件">选择文件</button>
-
+                @*<input type="text" name="UploadFile" id="UploadFile" />*@
+                @*<button type="button" id="btnSelect" class="btn btn-info btn-sm" data-toggle="tooltip" data-placement="top" title="选择文件">选择文件</button>*@
+                <a href="#" class="btn btn-info btn-sm" id="btnAdd" data-toggle="tooltip" data-placement="top" title="文件上传">
+                    文件上传
+                </a>
                 @*<div style="float:right">
-                    <button type="button" id="btnDeleteAll" class="btn btn-info btn-sm" data-toggle="tooltip" data-placement="top" title="批量删除">批量删除</button>
-                    <button type="button" id="btnFileAnalysis" class="btn btn-info btn-sm" data-toggle="tooltip" data-placement="top" title="归档分析">归档分析</button>
-                    <button type="button" id="btnDownloadDWG" class="btn btn-info btn-sm" data-toggle="tooltip" data-placement="top" title="DWG下载">DWG下载</button>
-                </div>*@
+                        <button type="button" id="btnDeleteAll" class="btn btn-info btn-sm" data-toggle="tooltip" data-placement="top" title="批量删除">批量删除</button>
+                        <button type="button" id="btnFileAnalysis" class="btn btn-info btn-sm" data-toggle="tooltip" data-placement="top" title="归档分析">归档分析</button>
+                        <button type="button" id="btnDownloadDWG" class="btn btn-info btn-sm" data-toggle="tooltip" data-placement="top" title="DWG下载">DWG下载</button>
+                    </div>*@
             </div>
         </form>
         <div class="clearfix"></div>
@@ -31,46 +33,68 @@
                         <tr>
                             <th style="width:5%;text-align:center;">@T("ID")</th>
                             <th>@T("名称")</th>
-                            <th>@T("上传进度")</th>
-                            <th>@T("上传状态")</th>
-                            <th style="width:10%;">@T("操作")</th>
+                            @*<th>@T("上传进度")</th>
+                                <th>@T("上传状态")</th>*@
+                            <th style="width:25%;">@T("操作")</th>
                         </tr>
-                        @if (Model != null)
-                        {
 
-                            foreach (var item in Model)
-                            {
-                                <tr>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.PdfFile)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.PageNumber)
-                                    </td>
-
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Status)
-                                    </td>
-                                    <td>
-                                        @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
-                                        @Html.ActionLink("Details", "Details", new { id = item.Id }) |
-                                        @Html.ActionLink("Delete", "Delete", new { id = item.Id })
-                                    </td>
-                                </tr>
-                            }
-
-                        }
                     </thead>
                 </table>
             </div>
         </div>
     </div>
 </div>
+<div id="ModalTable" class="modal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="blue bigger">请填写以下内容</h4>
+            </div>
 
+
+            <div class="modal-body">
+                <form action="PostFile" id="ff" method="post" class="form-horizontal" data-ajax="false" enctype="multipart/form-data">
+                    <input type="hidden" id="ID" name="ID" value="0" />
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">项目:</label>
+                        <div class="col-sm-9">
+                            <select class="chosen-select form-control" id="ProjectName" name="ProjectId" style="display:none" data-bind="value:ProjectId" validate="{required:true}"></select>
+
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">上传文件:</label>
+                        <div class="col-sm-9">
+                            @*<input type="file" id="upload-input" multiple="multiple" name="uploadfile" class="form-control" placeholder="请输入"
+                                accept="application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                                validate="{required:true}" />*@
+                            <input id="upload-input" class="form-control " multiple="multiple" type="file" name="file" onchange="return uploadFile(this);"
+                                   accept="*" />
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <div class="modal-footer">
+                @*<button class="btn btn-sm" data-dismiss="modal">
+                        <i class="ace-icon fa fa-times"></i>
+                        取消
+                    </button>*@
+
+                @*<button class="btn btn-sm btn-info" data-action="save" id="btnSave">
+                    <i class="ace-icon fa fa-check"></i>
+                    完成
+                </button>*@
+            </div>
+        </div>
+    </div>
+</div>
 
 
 @section scripts_Foot
 {
+    <script src="~/Scripts/ace/chosen.jquery.js"></script>
     <script type="text/javascript">
         $('[data-toggle="tooltip"]').tooltip();
         var popMenu;
@@ -86,14 +110,16 @@
                 "aoColumns": [
                     { "mData": 'Id' },
                     { "mData": 'DwgFile' },
-                    { "mData": 'TheModel' },
-                    { "mData": 'Status' }
+                    //{ "mData": 'TheModel' },
+                    //{ "mData": 'Status' }
                 ],
                 "columnDefs": [
                     {
-                        "targets": 4,
+                        "targets": 2,
                         "render": function (data, type, full, meta) {
-                            return '<a href="#" onclick="LEAP.Common.MainPop.ShowUpdateInfo(\'' + full.Id + '\');return false;" class="artDailog btn btn-info  btn-xs" style="margin-right:4px;" data-toggle="tooltip" data-placement="top" title="编辑"><i class="fa fa-pencil"></i></a>' +
+                            return '<a href="#" onclick="CategoryStat(\'' + full.Id + '\');return false;" class="artDailog btn btn-info  btn-xs" style="margin-right:4px;" data-toggle="tooltip" data-placement="top" title="焊缝类别统计"><i class="ace-icon glyphicon glyphicon-stats"></i></a>' +
+                                '<a href="#" onclick="weldcategory(\'' + full.Id + '\');return false;" class="artDailog btn btn-info  btn-xs" style="margin-right:4px;" data-toggle="tooltip" data-placement="top" title="焊缝类别标注"><i class="ace-icon glyphicon  glyphicon-credit-card"></i></a>' +
+                                '<a href="#" onclick="tasklist(\'' + full.Id + '\');return false;" class="artDailog btn btn-info  btn-xs" style="margin-right:4px;" data-toggle="tooltip" data-placement="top" title="审核列表"><i class="ace-icon glyphicon glyphicon-list"></i></a>' +
                                 '<a href="#" onclick="LEAP.Common.MainPop.RowClick(\'' + full.Id + '\',2);return false;" class="btn btn-danger btn-xs" id="btnDelete" data-toggle="tooltip" data-placement="top" title="删除">' +
                                 '<i class="fa fa-trash-o"></i></a>';
                         }
@@ -107,5 +133,68 @@
             //inital select2
             $('.select2').css("width", "362px").select2({ allowClear: true });
         });
+        function CategoryStat(pid) {
+            window.location = '/CategoryStat/index?projectid=' + pid;
+        }
+        function weldcategory(pid) {
+            window.location = '/weldcategory/index?projectid=' + pid;
+        }
+        function tasklist(pid) {
+            window.location = '/tasklist/index?projectid=' + pid;
+        }
+        $(document).on('click', '#btnSave', function (e) {
+            $('.form-horizontal').submit();
+        });
+        function uploadFile(obj) {
+            //$('#btnSave').prop("disabled", true);
+            var strUrl = "PostFile?ProjectName=" + $('#ProjectName').val();
+            $(obj).FileUpload({
+                self: obj,
+                url: strUrl,
+                allowExtension: '.dwg',
+                rewriteDocumentId: '',
+                processBarId: 'progress-bar',
+                callBack: function (data) {
+                    if (data.error) {
+                        bootbox.alert(data.error.message);
+                    } else {
+                        location.reload();
+                        //bootbox.alert("上传成功");
+                    }
+                }
+            });
+        }
+        //获取项目信息
+        BindChosen('/Project/GetDropdownList', $('#ProjectName'), InitChosen);
+        //应当出去js包
+        function InitChosen(select) {
+            $(select).chosen({ allow_single_deselect: true }).change(function () { console.log('change'); });
+            $(select).bind("change", function () {
+                $(select).trigger('chosen:updated');
+            });
+            setTimeout(function () {
+                var pwidth = Math.min($(select).parent().width(), 300);
+                $(select).next().css({ 'width': pwidth });
+            }, 1000);
+
+            //resize the chosen on window resize
+            $(window).on('resize.chosen', function () {
+                var w = Math.min($('.chosen-select').parent().width(), 300);
+                $('.chosen-select').next().css({ 'width': w });
+            }).trigger('resize.chosen');
+        }
+        function BindChosen(url, select, callback, search) {
+            $(select).children().remove();
+            $(select).append('<option value></option>');
+            $.ajax(url)
+                .done(function (data) {
+                    $.each(data, function (i, op) {
+                        $(select).append('<option value="' + op.key + '">' + op.value + '</option>');
+                    });
+                    if (callback) {
+                        callback(select);
+                    }
+                });
+        }
     </script>
 }

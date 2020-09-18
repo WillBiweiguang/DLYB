@@ -49,6 +49,7 @@ namespace Infrastructure.Web.Domain.Entity
             Mapper.CreateMap<WeldCategoryStatisticsView, WeldCategoryStatistics>();
             Mapper.CreateMap<WeldCategoryStatisticsViewModel, WeldCategoryStatisticsV>();
             Mapper.CreateMap<HistoricalCostView, HistoricalCost>();
+            Mapper.CreateMap<TaskListView, TaskList>();
         }
 
     }
