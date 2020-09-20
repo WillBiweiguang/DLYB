@@ -252,6 +252,7 @@
     <Compile Include="Controllers\TaskListController.cs" />
     <Compile Include="Controllers\ThicknessController.cs" />
     <Compile Include="Controllers\WeldCategoryController.cs" />
+    <Compile Include="Controllers\WeldCognitionController.cs" />
     <Compile Include="Controllers\WeldLocationController.cs" />
     <Compile Include="Controllers\WeldGeometryController.cs" />
     <Compile Include="Controllers\WeldingController.cs" />
@@ -955,6 +956,7 @@
     <Content Include="Views\CategoryStat\Index.cshtml" />
     <Content Include="Views\GrooveType\Calculate.cshtml" />
     <Content Include="Views\HistoricalCost\Index.cshtml" />
+    <Content Include="Views\WeldCognition\Index.cshtml" />
     <None Include="Views\WeldCategory\cadwelding.cshtml" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>

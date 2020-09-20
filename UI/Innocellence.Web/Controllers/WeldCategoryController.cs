@@ -30,6 +30,7 @@ namespace Innocellence.FaultSearch.Controllers
             return View();
         }
 
+
         public override ActionResult GetList()
         {
             GridRequest gridRequest = new GridRequest(Request);

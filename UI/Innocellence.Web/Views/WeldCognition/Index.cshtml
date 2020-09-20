@@ -2,29 +2,109 @@
     ViewBag.Title = "焊缝识别标注";
     //Layout = null;
 }
-<html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8;no-cache">
     <meta name="GENERATOR" content="Microsoft FrontPage 4.0">
     <meta name="ProgId" content="FrontPage.Editor.Document">
     <title>MxDraw控件</title>
     <script language="javascript" type="text/javascript" src="~/Scripts/mxcustom.js"></script>
+    <style type="text/css">
+        .listContaner {
+            float: right;
+            top: 132px;
+            right: 0;
+            display: flex;
+            z-index: 9999;
+            width: 25%;
+            margin-left: 75%;
+        }
+    </style>
 </head>
-<body topmargin="0" leftmargin="0">
-    <p>
+<p>
 
 
-        <!--<input type="button" value="绘制直线" onclick="myclick()">
+    <!--<input type="button" value="绘制直线" onclick="myclick()">
     <input type="button" value="绘制块" onclick="myclick1()">
     <input type="button" value="绘制实心三角形" onclick="myclick2()">
     <input type="button" value="获取线的属性" onclick="myclick3()">
     <input type="button" value="创建块" onclick="myclick4()">-->
-        <input type="button" value="焊接符号识别" onclick="myclick5()">
-       
-        <a href="/WeldCategory/index"><i class="ace-icon glyphicon  glyphicon-credit-card"></i>焊缝类别标注</a></li>
+    <input type="button" value="焊接符号识别" onclick="adddata();">
+    <input type="button" value="焊接符号统计" onclick="myclick5();">
+
+    @*<a href="/WeldCategory/index"><i class="ace-icon glyphicon  glyphicon-credit-card"></i>焊缝类别标注</a>*@</li>
 
 
-    </p>
+</p>
+    <div id="list" class="listContaner modal" style="">
+        <div class="col-sm-12">
+            @*<form class="form-inline" id="SearchForm">
+                    <div class="form-group">
+                        <input class="form-control" type="text" id="search_condition" name="search_condition" placeholder="名称">
+                        <a href="#" class="btn btn-sm" id="btnSearch" data-toggle="tooltip" data-placement="top" title="搜索条件"><i class="fa fa-search"></i></a>
+                    </div>
+                    <div class="form-group pull-right">
+                        <a href="#" class="btn btn-success btn-sm" id="btnAdd" data-toggle="tooltip" data-placement="top" title="添加">
+                            <i class="fa fa-plus"></i>
+                        </a>
+                    </div>
+                </form>*@
+            <div class="clearfix"></div>
+
+            <div class="widget-box">
+                <div class="widget-content nopadding">
+                    <table class="table table-bordered table-hover data-table">
+                        <thead>
+                            <tr>
+                                <th style="width:5%;text-align:center;">@T("序号")</th>
+                                <th>@T("文件名")</th>
+                                <th>@T("Handle")</th>
+                                <th style="width:10%;">@T("操作")</th>
+                            </tr>                            
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="~/Scripts/EasyUI/jquery.easyui.min.js"></script>
+    <script src="http://static.runoob.com/assets/jquery-validation-1.14.0/dist/localization/messages_zh.js"></script>
+    <script>
+        var popMenu;
+        var IdCur;
+
+        $(document).ready(function () {
+            LEAP.Common.MainPop.options.dataTable = $('.data-table').dataTable(jQuery.extend(true, datatableSetting, {
+                "ajax": {
+                    "url": "GetList"
+                },
+                "paging": true,
+                "info": false,
+                "aoColumns": [
+                    { "mData": 'Id' },
+                    { "mData": 'FileName' },
+                    { "mData": 'HandleID' }
+                ],
+                "columnDefs": [
+                    {
+                        "targets": 3,
+                        "render": function (data, type, full, meta) {
+                            return '<a href="#" onclick="LEAP.Common.MainPop.ShowUpdateInfo(\'' + full.Id + '\');return false;" class="artDailog btn btn-info  btn-xs" style="margin-right:4px;" data-toggle="tooltip" data-placement="top" title="定位"><i class="fa fa-pencil"></i></a>' +
+                                '<i class="fa fa-trash-o"></i></a>';
+                        }
+                    }],
+                fnDrawCallback: function () {
+                    $('[data-toggle="tooltip"]').tooltip();
+                }
+            }));
+        });
+
+        function adddata() {
+            $('.data-table thead').append('<tr class=".fakedata"><td>1</td><td>1-143.dwg</td><td>6051</td><td><a href="#" onclick="" class="artDailog btn btn-info  btn-xs" style="margin-right:4px;" data-toggle="tooltip" data-placement="top" title="定位">定位</a></td></tr>');
+            $('.data-table thead').append('<tr class=".fakedata"><td>2</td><td>1-143.dwg</td><td>7051</td><td><a href="#" onclick="" class="artDailog btn btn-info  btn-xs" style="margin-right:4px;" data-toggle="tooltip" data-placement="top" title="定位">定位</a></td></tr>');
+            $('.data-table thead').append('<tr class=".fakedata"><td>3</td><td>1-143.dwg</td><td>8134</td><td><a href="#" onclick="" class="artDailog btn btn-info  btn-xs" style="margin-right:4px;" data-toggle="tooltip" data-placement="top" title="定位">定位</a></td></tr>');
+            $('.data-table thead').append('<tr class=".fakedata"><td>4</td><td>1-143.dwg</td><td>8872</td><td><a href="#" onclick="" class="artDailog btn btn-info  btn-xs" style="margin-right:4px;" data-toggle="tooltip" data-placement="top" title="定位">定位</a></td></tr>');
+        }
+    </script>
     <SCRIPT language="JavaScript">
         document.oncontextmenu = new Function('event.returnValue=false;'); //禁用右键
         function LoadMxDrawX(id, dwgfile, cabpath, msipath) {
@@ -34,9 +114,10 @@
 
                 Sys.ie || Sys.ie9 ? (document.write("<!-- 用来产生编辑状态的ActiveX控件的JS脚本-->   "),
                     document.write("<!-- 因为微软的ActiveX新机制，需要一个外部引入的js-->   "),
+                    document.write('<div id="cadContent" >'),
                     document.write('<object id="' + id + '" classid="clsid:' + classid + '" '),
                     //document.write('width="85%" height="85%" align="left">   '),
-                    document.write('codebase="' + cabpath + '" width="85%" height="85%" align="left">   '),
+                    document.write('codebase="' + cabpath + '" width="75%" height="90%" align="left">   '),
                     document.write('<param name="_Version" value="65536">  '),
                     document.write('<param name="_ExtentX" value="24262">  '),
                     document.write('<param name="_ExtentY" value="16219">  '),
@@ -53,9 +134,11 @@
                     document.write('<param name="EnableUndo" value="1">'),
                     document.write('<param name="ShowPropertyWindow" value="1">'),
                     document.write('<SPAN STYLE="color:red">不能装载文档控件。请在检查浏览器的选项中检查浏览器的安全设置。请点击<a href=' + msipath + '>安装控件</a></SPAN>'),
-                    document.write('</object>')) :
+                    document.write('</object>'),
+                    document.write('</div>')) :
 
-                    Sys.chrome ? (document.write('<object id="' + id + '" clsid="{' + classid + '}" '),
+                    Sys.chrome ? (document.write('<div id="cadContent" >'),
+                        document.write('<object id="' + id + '" clsid="{' + classid + '}" '),
                         document.write('type="application/mxdraw-activex" width="85%" height="85%" align="left"> '),
                         document.write('<param name="_Version" value="65536">  '),
                         document.write('<param name="_ExtentX" value="24262">  '),
@@ -74,7 +157,8 @@
                         document.write('<param name="ShowPropertyWindow" value="1">'),
                         document.write('<param name="Event_ImplementCommandEvent" value="DoCommandEventFunc">'),
                         document.write('<SPAN STYLE="color:red">不能装载文档控件,谷歌浏览器使用,下载MxChrome安装包到本地，安装后点击桌面 Chrome企业版 快捷方式启动。请点击<a href=' + msipath + '>安装控件</a></SPAN>'),
-                        document.write('</object>')) :
+                        document.write('</object>'),
+                        document.write('</div>')) :
 
                         Sys.firefox ? (document.write("<!-- 需要安装ieTab插件才能使用-->   "),
                             document.write("<!-- 右键弹出菜单，点击使用ieTab浏览> -->  "),
@@ -1686,5 +1770,3 @@
         }
 
     </script>
-    </p>
-</html>
