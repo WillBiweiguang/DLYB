@@ -125,7 +125,6 @@
                                     <option value="2*宽+长">2*宽+长</option>
                                     <option value="2*长+宽">2*长+宽</option>
                                     <option value="2*(长+宽)">2*(长+宽)</option>
-                                    <option value="其他">其他</option>
                                 </select>
                             </div>
                         </div>
@@ -303,29 +302,26 @@
                     * $("#Quantity").val() * $("#SectionArea").val() * 7.85 / 1000000)
             }
             if (txt == '长+宽') {
-                $("#WeldLength").val($("#LengthVal").val() + $("#WidthVal").val());
+                $("#WeldLength").val(parseInt($("#LengthVal").val()) + parseInt($("#WidthVal").val()));
                 $("#WeldQuanlity").val($("#WeldLength").val() * $("#BeamNum").val()
                     * $("#Quantity").val() * $("#SectionArea").val() * 7.85 / 1000000)
             }
             if (txt == '2*宽+长') {
-                $("#WeldLength").val(2 * $("#WidthVal").val() + $("#LengthVal").val());
+                $("#WeldLength").val(2 * parseInt($("#WidthVal").val()) + parseInt($("#LengthVal").val()));
                 $("#WeldQuanlity").val($("#WeldLength").val() * $("#BeamNum").val()
                     * $("#Quantity").val() * $("#SectionArea").val() * 7.85 / 1000000)
             }
             if (txt == '2*长+宽') {
-                $("#WeldLength").val(2 * $("#LengthVal").val()+$("#WidthVal").val());
+                $("#WeldLength").val(2 * parseInt($("#LengthVal").val()) +parseInt($("#WidthVal").val()));
                 $("#WeldQuanlity").val($("#WeldLength").val() * $("#BeamNum").val()
                     * $("#Quantity").val() * $("#SectionArea").val() * 7.85 / 1000000)
             }
-            if (txt == '2*（长+宽)') {
-                $("#WeldLength").val(2 * ($("#LengthVal").val() + $("#WidthVal").val()));
+            if (txt == '2*(长+宽)') {
+                $("#WeldLength").val(2 * (parseInt($("#LengthVal").val()) + parseInt($("#WidthVal").val())));
                 $("#WeldQuanlity").val($("#WeldLength").val() * $("#BeamNum").val()
                     * $("#Quantity").val() * $("#SectionArea").val() * 7.85 / 1000000)
             }
-            if (txt == '其他') {
-                $("#WeldQuanlity").val($("#WeldLength").val() * $("#BeamNum").val()
-                    * $("#Quantity").val() * $("#SectionArea").val() * 7.85 / 1000000)
-            }
+           
         });
     </script>
 }
