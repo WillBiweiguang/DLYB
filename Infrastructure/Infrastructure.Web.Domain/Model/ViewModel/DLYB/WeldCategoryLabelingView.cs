@@ -23,8 +23,9 @@ namespace Infrastructure.Web.Domain.ModelsView
         public double WeldQuanlity { get; set; }
         public string WeldingNumber { get; set; }
         public double Quantity { get; set; }
-        public double Length { get; set; }
-
+        public double BeamNum { get; set; }
+        public double LengthVal { get; set; }
+        public double WidthVal { get; set; }
         public DateTime? CreatedDate { get; set; }
 
         public int? CreatedUserID { get; set; }
@@ -51,8 +52,10 @@ namespace Infrastructure.Web.Domain.ModelsView
             WeldLength = entity.WeldLength;
             WeldQuanlity = entity.WeldQuanlity;
             WeldingNumber = entity.WeldingNumber;
+            BeamNum = entity.BeamNum;
             Quantity = entity.Quantity;
-            Length = entity.Length;
+            LengthVal = entity.LengthVal;
+            WidthVal = entity.WidthVal;
             CreatedDate = entity.CreatedDate;
             CreatedUserID = entity.CreatedUserID;
             UpdatedDate = entity.UpdatedDate;
