@@ -303,7 +303,7 @@
                     * $("#Quantity").val() * $("#SectionArea").val() * 7.85 / 1000000)
             }
             if (txt == '长+宽') {
-                $("#WeldLength").val($("#LengthVal").val() + $("#WidthVal").val());
+                $("#WeldLength").val(parseInt($("#LengthVal").val()) + parseInt($("#WidthVal").val()));
                 $("#WeldQuanlity").val($("#WeldLength").val() * $("#BeamNum").val()
                     * $("#Quantity").val() * $("#SectionArea").val() * 7.85 / 1000000)
             }

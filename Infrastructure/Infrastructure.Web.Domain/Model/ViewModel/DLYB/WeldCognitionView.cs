@@ -14,6 +14,8 @@ namespace Infrastructure.Web.Domain.ModelsView
 
         public int FileID { get; set; }
 
+        public string WeldType { get; set; }
+
         public int HandleID { get; set; }
 
         public DateTime? CreatedDate { get; set; }
@@ -32,6 +34,7 @@ namespace Infrastructure.Web.Domain.ModelsView
             FileID = entity.FileID;
             FileName = entity.FileName;
             HandleID = entity.HandleID;
+            WeldType = entity.WeldType;
             CreatedDate = entity.CreatedDate;
             CreatedUserID = entity.CreatedUserID;
             UpdatedDate = entity.UpdatedDate;

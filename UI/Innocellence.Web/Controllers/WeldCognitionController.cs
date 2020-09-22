@@ -34,7 +34,29 @@ namespace DLYB.Web.Controllers
             ViewBag.FileId = fileId;
             ViewBag.FileName = fileName;
             return View();
-        }        
+        }
+
+        public JsonResult PostWeld(string dwgfile, List<WeldCognitionView> weldList)
+        {
+            if (string.IsNullOrEmpty(dwgfile) || weldList == null || weldList.Count == 0)
+            {
+                return new JsonResult { Data = new { result = "failed" }, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
+            }
+            var existing = _service.Repository.Entities.Where(x => x.FileName == dwgfile).ToList();
+            if (existing.Count > 0)
+            {
+                _service.Repository.Delete(existing.Select(x => x.Id).ToArray());
+            }
+            foreach (var weldInfo in weldList)
+            {
+                if (weldInfo.HandleID > 0)
+                {
+                    weldInfo.FileName = dwgfile;
+                    _service.InsertView(weldInfo);
+                }
+            }
+            return new JsonResult { Data = new { result = "success" }, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
+        }
 
         public override ActionResult GetList()
         {

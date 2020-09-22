@@ -19,6 +19,8 @@ namespace Infrastructure.Web.Domain.Entity
 
         public int FileID { get; set; }
 
+        public string WeldType { get; set; }
+
         public int HandleID { get; set; }
 
         public DateTime? CreatedDate { get; set; }
