@@ -8,14 +8,23 @@
 }
 <script language="javascript" type="text/javascript" src="~/Scripts/mxcustom.js"></script>
 <style type="text/css">
+    .main-container{
+        overflow:scroll;
+        min-height:700px;
+        height:auto;
+    }
     .listContaner {
         float: right;
         top: 132px;
         right: 0;
-        display: flex;
+        display: block;
         z-index: 9999;
-        width: 25%;
-        margin-left: 75%;
+        width: 500px;
+        margin-left:940px;
+        min-height:800px;
+    }
+    #cadContent {
+        margin-right:20px;
     }
 </style>
 <p>
@@ -27,7 +36,7 @@
     <input type="button" value="焊接符号识别" onclick="adddata();">
     <input type="button" value="焊接符号统计" onclick="myclick5();">
 </p>
-<div id="list" class="listContaner modal" style="">
+<div id="list" class="listContaner modal" style="position:absolute">
     <div class="col-sm-12">
         @*<form class="form-inline" id="SearchForm">
                 <div class="form-group">
@@ -64,6 +73,7 @@
     <script>
         var popMenu;
         var IdCur;
+        var lastCircleHandle = 0;
 
         $(document).ready(function () {
             LEAP.Common.MainPop.options.dataTable = $('.data-table').dataTable(jQuery.extend(true, datatableSetting, {
@@ -73,16 +83,16 @@
                 "paging": true,
                 "info": false,
                 "aoColumns": [
-                    { "mData": 'Id' },
+                    { "mData": '操作' },
                     { "mData": 'FileName' },
                     { "mData": 'HandleID' }
                 ],
                 "columnDefs": [
                     {
-                        "targets": 3,
+                        "targets": 0,
                         "render": function (data, type, full, meta) {
-                            return '<a href="#" onclick="DrawCircleOfArrow(\'' + full.HandleID + '\');return false;" class="artDailog btn btn-info  btn-xs" style="margin-right:4px;" data-toggle="tooltip" data-placement="top" title="定位"><i class="fa fa-pencil"></i></a>' +
-                                '<i class="fa fa-trash-o"></i></a>';
+                            return '<a href="#" onclick="DrawCircleOfArrow(\'' + full.HandleID + '\');return false;" class="artDailog btn btn-info  btn-xs" style="margin-right:4px;" data-toggle="tooltip" data-placement="top" title="定位">定位</a>' +
+                                '</a>';
                         }
                     }],
                 fnDrawCallback: function () {
@@ -126,10 +136,10 @@
 
                 Sys.ie || Sys.ie9 ? (document.write("<!-- 用来产生编辑状态的ActiveX控件的JS脚本-->   "),
                     document.write("<!-- 因为微软的ActiveX新机制，需要一个外部引入的js-->   "),
-                    document.write('<div id="cadContent" >'),
+                document.write('<div id="cadContent" style="margin-left:0px;position:absolute;" >'),
                     document.write('<object id="' + id + '" classid="clsid:' + classid + '" '),
                     //document.write('width="85%" height="85%" align="left">   '),
-                    document.write('codebase="' + cabpath + '" width="75%" height="90%" align="left">   '),
+                    document.write('codebase="' + cabpath + '" width="900px" height="600px" align="left">   '),
                     document.write('<param name="_Version" value="65536">  '),
                     document.write('<param name="_ExtentX" value="24262">  '),
                     document.write('<param name="_ExtentY" value="16219">  '),
@@ -514,7 +524,11 @@
             adddata(weldData);
         }
         function DrawCircleOfArrow(m_handle) {
-
+            //删掉上一个画圈的handleid
+            if (lastCircleHandle > 0) {
+                deleClrByID(lastCircleHandle);
+                lastCircleHandle = 0;
+            }
             var mxOcx = document.all.item("MxDrawXCtrl");
             var database = mxOcx.GetDatabase();
             var ent = database.HandleToObject(m_handle);
@@ -523,7 +537,6 @@
             var polyline = PolylineArray.AtObject(0);
             var pt1 = polyline.GetPointAt(0);
 
-
             //创建一个图层,名为"CircleLayer"
             mxOcx.AddLayer("CircleLayer");
 
@@ -531,11 +544,19 @@
             mxOcx.LayerName = "CircleLayer";
 
             mxOcx.DrawColor = 255;
-            mxOcx.DrawCircle(pt1.x, pt1.y, 3);
-
+            lastCircleHandle = mxOcx.DrawCircle(pt1.x, pt1.y, 10);
+            
             //更新视区显示
             mxOcx.UpdateDisplay();
         }
+        //删除绘制的圈
+        function deleClrByID(myId) {
+            var mxOcx = document.all.item("MxDrawXCtrl");
+            var database = mxOcx.GetDatabase();
+            var ent;
+            ent = database.ObjectIdToObject(myId);
+            ent.Erase();
+        }
         function GetDimensArrowLine(myArrowDatas, TwoP_Polyline, ThreeP_Polyline) {
             var num = myArrowDatas.length;
 
