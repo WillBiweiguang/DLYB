@@ -244,6 +244,7 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\PlatformManageController.cs" />
     <Compile Include="Controllers\HistoricalCostController.cs" />
     <Compile Include="Controllers\CategoryStatController.cs" />
     <Compile Include="Controllers\BeamInfoController.cs" />
@@ -315,6 +316,7 @@
     <Content Include="Content\GrooveImage\UType.png" />
     <Content Include="Content\GrooveImage\VType.png" />
     <Content Include="Content\GrooveImage\XType.png" />
+    <Content Include="Content\html\cad-welding-fwq-20200921-4k.html" />
     <Content Include="Content\images\anchor.gif" />
     <Content Include="Content\images\arrow.png" />
     <Content Include="Content\images\arrow_down.png" />
@@ -957,6 +959,8 @@
     <Content Include="Views\GrooveType\Calculate.cshtml" />
     <Content Include="Views\HistoricalCost\Index.cshtml" />
     <Content Include="Views\WeldCognition\Index.cshtml" />
+    <Content Include="Views\PlatformManage\Index.cshtml" />
+    <Content Include="Views\PlatformManage\PasswordChange.cshtml" />
     <None Include="Views\WeldCategory\cadwelding.cshtml" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>

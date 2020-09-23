@@ -30,9 +30,9 @@ namespace DLYB.Web
                     //#if  DEBUG
                     //#else
                     //CookieDomain = WebConfigurationManager.AppSettings["WebUrl"].IndexOf("lilly.com") >= 0 ? ".lilly.com" : ""
-                    CookieDomain = WebConfigurationManager.AppSettings["CookieDomain"] ?? ""
+                    CookieDomain = WebConfigurationManager.AppSettings["CookieDomain"] ?? "",
                     //#endif
-                   // ExpireTimeSpan=new System.TimeSpan()
+                    ExpireTimeSpan = new System.TimeSpan(24, 0, 0)
 
                 });
 
