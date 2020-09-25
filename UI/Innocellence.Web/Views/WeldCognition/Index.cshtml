@@ -33,10 +33,10 @@
     <input type="button" value="绘制实心三角形" onclick="myclick2()">
     <input type="button" value="获取线的属性" onclick="myclick3()">
     <input type="button" value="创建块" onclick="myclick4()">-->
-    <input type="button" value="焊接符号识别" onclick="adddata();">
-    <input type="button" value="焊接符号统计" onclick="myclick5();">
+    <input type="button" value="焊接符号识别" onclick="myclick5();">
 </p>
 <div id="list" class="listContaner modal" style="position:absolute">
+    <input type="hidden" id="filename" name="filename" value="@ViewBag.FileName" />
     <div class="col-sm-12">
         @*<form class="form-inline" id="SearchForm">
                 <div class="form-group">
@@ -111,7 +111,7 @@
             }
             var filename = $('#filename').val();
             if (!filename) {
-                filename = 'sample.dwg';
+                filename = 'sample1.dwg';
             }
             
                 $.post('/WeldCognition/PostWeld',
@@ -220,7 +220,11 @@
                 if (!mxOcx.IsIniting()) {
 
                     clearInterval(mxtime);
-
+                    var filename = $('#filename').val();
+                    if (filename) {
+                        var path = 'http://localhost:24889/Files/BeamInfo/' + filename; 
+                        mxOcx.OpenWebDwgFile(path);
+                    }
                     // 控件初始化完成，需要在启动做的事，在这里做
 
                     // 启动时打开文件
@@ -235,7 +239,7 @@
 
         }
 
-        mxtime = setInterval(InitMxDrawX, 100);
+        mxtime = setInterval(InitMxDrawX, 300);
         //document.getElementById("MxDrawXCtrl").ImplementCommandEventFun = DoCommandEventFunc;
         function FindWelding() {
             var myDate = new Date();

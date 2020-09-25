@@ -121,7 +121,8 @@
                                 '<a href="#" onclick="weldcategory(\'' + full.Id + '\');return false;" class="artDailog btn btn-info  btn-xs" style="margin-right:4px;" data-toggle="tooltip" data-placement="top" title="焊缝类别标注"><i class="ace-icon glyphicon  glyphicon-credit-card"></i></a>' +
                                 '<a href="#" onclick="tasklist(\'' + full.Id + '\');return false;" class="artDailog btn btn-info  btn-xs" style="margin-right:4px;" data-toggle="tooltip" data-placement="top" title="审核列表"><i class="ace-icon glyphicon glyphicon-list"></i></a>' +
                                 '<a href="#" onclick="LEAP.Common.MainPop.RowClick(\'' + full.Id + '\',2);return false;" class="btn btn-danger btn-xs" id="btnDelete" data-toggle="tooltip" data-placement="top" title="删除">' +
-                                '<i class="fa fa-trash-o"></i></a>';
+                                '<i class="fa fa-trash-o"></i></a>' +
+                                '<a href="#" onclick="weldcognize(\'' + full.DwgFile + '\');return false;" class="artDailog btn btn-info  btn-xs" style="margin-right:4px;" data-toggle="tooltip" data-placement="top" title="焊缝识别">焊缝识别</i></a>';
                         }
                     }],
                 fnDrawCallback: function () {
@@ -138,6 +139,9 @@
         }
         function weldcategory(pid) {
             window.location = '/weldcategory/index?projectid=' + pid;
+        }
+        function weldcognize(dwgfile) {
+            window.location = '/WeldCognition/index?fileName=' + dwgfile;
         }
         function tasklist(pid) {
             window.location = '/tasklist/index?projectid=' + pid;
