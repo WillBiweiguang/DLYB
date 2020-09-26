@@ -16,19 +16,26 @@ using Infrastructure.Web.UI;
 using Infrastructure.Utility.Filter;
 using System.Linq.Expressions;
 using Infrastructure.Utility.Data;
+using System.IO;
+using NPOI.XSSF.UserModel;
 
 namespace DLYB.Web.Controllers
 {
     public class TaskListController : BaseController<TaskList, TaskListView>
     {
         private readonly ITaskListService _TaskListService;
-        public TaskListController(ITaskListService TaskListService) : base(TaskListService)
+        const string templateExcelFilename = "/content/焊材统计表.xlsx";
+        private readonly IWeldCategoryLabelingService _weldCategoryService;
+        public TaskListController(ITaskListService TaskListService,
+            IWeldCategoryLabelingService weldCategoryService) : base(TaskListService)
         {
             _TaskListService = TaskListService;
+            _weldCategoryService = weldCategoryService;
         }
         // GET: Address
         public override ActionResult Index()
         {
+            ViewBag.list = _weldCategoryService.Repository.Entities.Where(a => !a.IsDeleted).ToList();
             return View();
         }
 
@@ -84,6 +91,57 @@ namespace DLYB.Web.Controllers
                 //}
             }
             return Json(doJson(null), JsonRequestBehavior.AllowGet);
+        }
+        public ActionResult ExportToExcel()
+        {
+            string fileName =  "焊材_" + DateTime.Now.ToString("yyyyMMddHHmmssfff") + ".xlsx";
+
+            string templateFilename = Server.MapPath(templateExcelFilename);
+            using (FileStream file = new FileStream(templateFilename, FileMode.Open, FileAccess.Read))
+            {
+                var workbook = new XSSFWorkbook(file);
+                var sheet1 = workbook.GetSheet("焊材");
+
+                // 导出 答卷 
+                //var answer = _pollingResultService.GetList(Id);
+                var reportList1 = _weldCategoryService.Repository.Entities.Where(a => !a.IsDeleted).ToList();
+                int i = 1;
+                foreach (var v in reportList1)
+                {
+                    int j = 0;
+                    var row = sheet1.CreateRow(i++);
+                    row.CreateCell(j++).SetCellValue(i-1);
+                    row.CreateCell(j++).SetCellValue(v.BeamId);
+                    row.CreateCell(j++).SetCellValue(v.BeamId);
+                    row.CreateCell(j++).SetCellValue(v.FigureNumber);
+                    row.CreateCell(j++).SetCellValue(v.BoardNumber);
+                    row.CreateCell(j++).SetCellValue(v.WeldType);
+                    row.CreateCell(j++).SetCellValue(v.Thickness);
+                    row.CreateCell(j++).SetCellValue(v.WeldLocation);
+                    row.CreateCell(j++).SetCellValue(v.ConsumeFactor);
+                    row.CreateCell(j++).SetCellValue(v.SectionArea);
+                    row.CreateCell(j++).SetCellValue(v.WeldLength);
+                    row.CreateCell(j++).SetCellValue(v.WeldQuanlity);
+                    row.CreateCell(j++).SetCellValue(v.WeldingNumber);
+                    row.CreateCell(j++).SetCellValue(v.Quantity);
+                    row.CreateCell(j++).SetCellValue(v.BeamNum);
+                    row.CreateCell(j++).SetCellValue(v.ConsumeFactor*v.WeldQuanlity);
+
+                }
+                
+                using (MemoryStream ms = new MemoryStream())
+                {
+                    workbook.Write(ms);
+                    ms.Flush();
+                    ms.Position = 0;
+                    //sheet = null;
+                    //workbook = null;
+                    //workbook.Close();//一般只用写这一个就OK了，他会遍历并释放所有资源，但当前版本有问题所以只释放sheet
+                    return File(ms.ToArray(), "application/vnd-excel", fileName);
+                }
+
+            }
+
         }
     }
 }

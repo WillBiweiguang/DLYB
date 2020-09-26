@@ -6,6 +6,30 @@
     .datagrid-mask-msg {
         height: 36px !important;
     }
+    table.gridtable {
+        font-family: verdana,arial,sans-serif;
+        font-size: 11px;
+        color: #333333;
+        border-width: 1px;
+        border-color: #666666;
+        border-collapse: collapse;
+    }
+
+        table.gridtable th {
+            border-width: 1px;
+            padding: 8px;
+            border-style: solid;
+            border-color: #666666;
+            background-color: #dedede;
+        }
+
+        table.gridtable td {
+            border-width: 1px;
+            padding: 8px;
+            border-style: solid;
+            border-color: #666666;
+            background-color: #ffffff;
+        }
 </style>
 <!--Action boxes-->
 <div class="row">
@@ -89,7 +113,108 @@
         </div>
     </div>
 </div>
+<div id="ModalTableDetail" class="modal" tabindex="-1" style="z-index:9000">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <a href="javascript:void(0);" class="btn btn-sm btn-success" data-toggle="tooltip" data-placement="top" title="导出Excel" id="btnScoreExport">
+                    <i class="fa fa-download"></i> 导出Excel
+                </a>
+            </div>
 
+            <div class="modal-body">
+                <form action="Post" id="ff" method="get" class="form-horizontal" datasource="Get">
+                    <input type="hidden" id="ID" name="ID" value="0" />
+                    <div>
+                       
+                        <div style="clear:both;padding-top:10px">
+                            <table class="gridtable">
+                                <thead>
+                                    <tr>
+                                        <th style="width:5%;text-align:center;">@T("序号")</th>
+
+                                        <th>@T("图号")</th>
+                                        <th>@T("板件号")</th>
+                                        <th>@T("焊缝类型")</th>
+                                        <th>@T("板厚")</th>
+                                        <th>@T("焊缝位置")</th>
+                                        <th>@T("消耗系数")</th>
+                                        <th>@T("焊缝截面积")</th>
+                                        <th>@T("焊缝长度")</th>
+                                        <th>@T("焊缝质量")</th>
+                                        <th>@T("焊接边数")</th>
+                                        <th>@T("焊缝数量")</th>
+                                        <th>@T("梁段数量")</th>
+                                    </tr>
+                                </thead>
+                                @foreach (var item in ViewBag.list)
+                                {
+                                <tr>
+                                    <td>
+                                        @item.Id
+                                    </td>
+
+                                    <td>
+                                        @item.FigureNumber
+                                    </td>
+                                    <td>
+                                        @item.BoardNumber
+                                    </td>
+                                    <td>
+                                        @item.WeldType
+                                    </td>
+
+                                    <td>
+                                        @item.Thickness
+                                    </td>
+                                    <td>
+                                        @item.WeldLocation
+                                    </td>
+                                    <td>
+                                        @item.ConsumeFactor
+                                    </td>
+
+                                    <td>
+                                        @item.SectionArea
+                                    </td>
+                                    <td>
+                                        @item.WeldLength
+                                    </td>
+                                    <td>
+                                        @item.WeldQuanlity
+                                    </td>
+
+                                    <td>
+                                        @item.WeldingNumber
+                                    </td>
+                                    <td>
+                                        @item.Quantity
+                                    </td>
+                                    <td>
+                                        @item.BeamNum
+                                    </td>
+
+                                </tr>
+                                }
+
+                            </table>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-sm" id ='CancelBtn' data-dismiss="modal">
+                    <i class="ace-icon fa fa-times"></i>
+                    取消
+                </button>
+
+
+            </div>
+        </div>
+    </div>
+</div>
 @section scripts_Foot
 {
     <script src="~/Scripts/EasyUI/jquery.easyui.min.js"></script>
@@ -120,9 +245,7 @@
                     {
                         "targets": 6,
                         "render": function (data, type, full, meta) {
-                            return '<a href="#" onclick="LEAP.Common.MainPop.ShowUpdateInfo(\'' + full.Id + '\');return false;" class="artDailog btn btn-info  btn-xs" style="margin-right:4px;" data-toggle="tooltip" data-placement="top" title="焊材详情统计"><i class="fa fa-pencil"></i></a>' +
-                                '<a href="#" onclick="LEAP.Common.MainPop.RowClick(\'' + full.Id + '\',2);return false;" class="btn btn-danger btn-xs" id="btnDelete" data-toggle="tooltip" data-placement="top" title="定额数据统计">' +
-                                '<i class="fa fa-trash-o"></i></a>';
+                            return '<a href="#" onclick="LEAP.Common.MainPop.ShowUpdateInfo(\'' + full.Id + '\');return false;" class="artDailog btn btn-info  btn-xs pop-btn" style="margin-right:4px;" data-toggle="tooltip" data-placement="top" title="焊材详情统计"><i class="ace-icon glyphicon glyphicon-align-left"></i></a>';
                         }
                     }],
                 fnDrawCallback: function () {
@@ -132,8 +255,32 @@
             //inital select2
             $('.select2').css("width", "362px").select2({ allowClear: true });
         });
+        $(document).on('click', '.pop-btn', function () {
+            $('#ModalTableDetail').modal(500);
+            $('#ModalTable').modal('hide');
+        });
+        $(document).on('click', '#CancelBtn', function () {
+
+            $('#ModalTableDetail').modal('hide');
+        });
         $(document).on('click', '#btnSave', function (e) {
             $('.form-horizontal').submit();
+        });
+        $('#btnScoreExport').on('click', function () {
+
+            var para = '';
+            var dSearch = $("#SearchForm").serializeArray();
+            if (!BeforeExport(dSearch)) {
+                return false;
+            }
+
+            $.each(dSearch, function (key, val) {
+                para += val.name + '=' + val.value + '&';
+            });
+
+            // $.download("ExportAnswer", para + "t=" + (new Date()).getTime());
+            $.download("ExportToExcel", para + "t=" + (new Date()).getTime());
+            return true;
         });
         function uploadFile(obj) {
             //$('#btnSave').prop("disabled", true);
