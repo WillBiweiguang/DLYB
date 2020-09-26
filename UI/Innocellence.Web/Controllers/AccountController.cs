@@ -59,9 +59,6 @@ namespace Innocellence.Web.Controllers
             ViewBag.Mode = section.Mode;
             // ViewBag.UserName = User.Identity.Name;
             ViewBag.ReturnUrl = returnUrl;
-            string uuid = Guid.NewGuid().ToString();
-            ViewBag.Uuid = uuid;
-            ViewBag.Captcha = _loginService.GetCaptcha(uuid);
             return View();
         }
         //TODO 获取验证码

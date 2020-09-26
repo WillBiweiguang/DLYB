@@ -9,7 +9,7 @@ using System.Security.Claims;
 using System.ComponentModel.DataAnnotations.Schema;
 namespace Infrastructure.Web.Domain.Entity
 {
-    //[Table("ValidUser")]
+    [Table("t_sysUser")]
     public partial class SysUser : EntityBase<int>, IUser<int>
     {
 

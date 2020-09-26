@@ -35,7 +35,9 @@ namespace Infrastructure.Web.Domain.ModelsView
         public int? UpdatedUserID { get; set; }
 
         public bool IsDeleted { get; set; }
-        
+
+        public string HandleID { get; set; }
+
         public IViewModel ConvertAPIModel(object obj) {
             var entity = (WeldCategoryLabeling)obj;
             Id = entity.Id;
@@ -56,6 +58,7 @@ namespace Infrastructure.Web.Domain.ModelsView
             Quantity = entity.Quantity;
             LengthVal = entity.LengthVal;
             WidthVal = entity.WidthVal;
+            HandleID = entity.HandleID;
             CreatedDate = entity.CreatedDate;
             CreatedUserID = entity.CreatedUserID;
             UpdatedDate = entity.UpdatedDate;

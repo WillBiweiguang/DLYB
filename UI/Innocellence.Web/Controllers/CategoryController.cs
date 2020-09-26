@@ -31,9 +31,9 @@ namespace DLYB.Web.Controllers
         public override ActionResult Index()
         {
             var corpId = CommonService.GetSysConfig("WeixinCorpId", string.Empty);
-            var lst = CommonService.lstSysWeChatConfig.Where(a => a.WeixinCorpId == corpId).ToList();
+            //var lst = CommonService.lstSysWeChatConfig.Where(a => a.WeixinCorpId == corpId).ToList();
 
-            ViewBag.Apps = lst;
+            //ViewBag.Apps = lst;
             ViewBag.CateType = Request["CateType"];
             return base.Index();
         }

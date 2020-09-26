@@ -1,11 +1,12 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using Infrastructure.Core;
 
 namespace Infrastructure.Web.Domain.Entity
 {
-	//[Table("Logs")]
+    [Table("t_sysWechatConfig")]
     public partial class SysWechatConfig : EntityBase<int>
 	{
 

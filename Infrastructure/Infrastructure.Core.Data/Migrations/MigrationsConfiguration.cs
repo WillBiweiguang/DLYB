@@ -20,7 +20,7 @@ namespace Infrastructure.Core.Data.Migrations
     /// <summary>
     /// 默认迁移配置
     /// </summary>
-    public class MigrationsConfiguration : DbMigrationsConfiguration<CodeFirstDbContext>
+    public class MigrationsConfiguration : DbMigrationsConfiguration<MySqlDbContext>
     {
         static MigrationsConfiguration()
         {
@@ -41,7 +41,7 @@ namespace Infrastructure.Core.Data.Migrations
         /// </summary>
         public static ICollection<ISeedAction> SeedActions { get; private set; }
 
-        protected override void Seed(CodeFirstDbContext context)
+        protected override void Seed(MySqlDbContext context)
         {
             IEnumerable<ISeedAction> seedActions = SeedActions.OrderBy(m => m.Order);
             foreach (ISeedAction seedAction in seedActions)

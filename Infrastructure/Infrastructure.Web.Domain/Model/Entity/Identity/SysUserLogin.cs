@@ -4,9 +4,11 @@ using System.Linq;
 using Infrastructure.Core;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity;
+using System.ComponentModel.DataAnnotations.Schema;
+
 namespace Infrastructure.Web.Domain.Entity
 {
-    //[Table("SysUserLogin")]
+    [Table("t_sysUserLogin")]
     /// <summary>
     /// 外部登录用，比如QQ集成等
     /// </summary>

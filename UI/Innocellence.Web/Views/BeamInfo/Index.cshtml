@@ -6,6 +6,10 @@
     .datagrid-mask-msg {
         height: 36px !important;
     }
+    .chosen-container {
+        width:100%;
+        max-width : 362px;
+    }
 </style>
 <!--Action boxes-->
 <div class="row">
@@ -32,9 +36,11 @@
                     <thead>
                         <tr>
                             <th style="width:5%;text-align:center;">@T("ID")</th>
-                            <th>@T("名称")</th>
+                            <th>@T("项目")</th>
+                            <th>@T("梁段名")</th>
+                            <th>@T("文件名")</th>
                             @*<th>@T("上传进度")</th>
-                                <th>@T("上传状态")</th>*@
+        <th>@T("上传状态")</th>*@
                             <th style="width:25%;">@T("操作")</th>
                         </tr>
 
@@ -94,7 +100,7 @@
 
 @section scripts_Foot
 {
-    <script src="~/Scripts/ace/chosen.jquery.js"></script>
+    <script src="~/Scripts/ace/chosen.jquery.js?v=1"></script>
     <script type="text/javascript">
         $('[data-toggle="tooltip"]').tooltip();
         var popMenu;
@@ -109,20 +115,22 @@
                 "info": false,
                 "aoColumns": [
                     { "mData": 'Id' },
-                    { "mData": 'DwgFile' },
+                    { "mData": 'ProjectName' },      
+                    { "mData": 'BridgeComponent' },      
+                    { "mData": 'DwgFile' },                                  
                     //{ "mData": 'TheModel' },
                     //{ "mData": 'Status' }
                 ],
                 "columnDefs": [
                     {
-                        "targets": 2,
+                        "targets": 4,
                         "render": function (data, type, full, meta) {
                             return '<a href="#" onclick="CategoryStat(\'' + full.Id + '\');return false;" class="artDailog btn btn-info  btn-xs" style="margin-right:4px;" data-toggle="tooltip" data-placement="top" title="焊缝类别统计"><i class="ace-icon glyphicon glyphicon-stats"></i></a>' +
                                 '<a href="#" onclick="weldcategory(\'' + full.Id + '\');return false;" class="artDailog btn btn-info  btn-xs" style="margin-right:4px;" data-toggle="tooltip" data-placement="top" title="焊缝类别标注"><i class="ace-icon glyphicon  glyphicon-credit-card"></i></a>' +
                                 '<a href="#" onclick="tasklist(\'' + full.Id + '\');return false;" class="artDailog btn btn-info  btn-xs" style="margin-right:4px;" data-toggle="tooltip" data-placement="top" title="审核列表"><i class="ace-icon glyphicon glyphicon-list"></i></a>' +
                                 '<a href="#" onclick="LEAP.Common.MainPop.RowClick(\'' + full.Id + '\',2);return false;" class="btn btn-danger btn-xs" id="btnDelete" data-toggle="tooltip" data-placement="top" title="删除">' +
-                                '<i class="fa fa-trash-o"></i></a>' +
-                                '<a href="#" onclick="weldcognize(\'' + full.DwgFile + '\');return false;" class="artDailog btn btn-info  btn-xs" style="margin-right:4px;" data-toggle="tooltip" data-placement="top" title="焊缝识别">焊缝识别</i></a>';
+                                '<i class="fa fa-trash-o"></i></a>';
+                                //+ '<a href="#" onclick="weldcognize(\'' + full.DwgFile + '\');return false;" class="artDailog btn btn-info  btn-xs" style="margin-right:4px;" data-toggle="tooltip" data-placement="top" title="焊缝识别">焊缝识别</i></a>';
                         }
                     }],
                 fnDrawCallback: function () {
@@ -133,12 +141,15 @@
             }));
             //inital select2
             $('.select2').css("width", "362px").select2({ allowClear: true });
+            setTimeout(function () {
+                $('.chosen-container').removeAttr('style');
+            }, 3000);            
         });
         function CategoryStat(pid) {
             window.location = '/CategoryStat/index?projectid=' + pid;
         }
-        function weldcategory(pid) {
-            window.location = '/weldcategory/index?projectid=' + pid;
+        function weldcategory(id) {
+            window.location = '/weldcategory/index?beamId=' + id;
         }
         function weldcognize(dwgfile) {
             window.location = '/WeldCognition/index?fileName=' + dwgfile;
@@ -151,7 +162,7 @@
         });
         function uploadFile(obj) {
             //$('#btnSave').prop("disabled", true);
-            var strUrl = "PostFile?ProjectName=" + $('#ProjectName').val();
+            var strUrl = "PostFile?ProjectId=" + $('#ProjectName').val();
             $(obj).FileUpload({
                 self: obj,
                 url: strUrl,
@@ -172,18 +183,18 @@
         BindChosen('/Project/GetDropdownList', $('#ProjectName'), InitChosen);
         //应当出去js包
         function InitChosen(select) {
-            $(select).chosen({ allow_single_deselect: true }).change(function () { console.log('change'); });
+            $(select).chosen({ allow_single_deselect: true, width: '362px' }).change(function () { console.log('change'); });
             $(select).bind("change", function () {
                 $(select).trigger('chosen:updated');
             });
             setTimeout(function () {
-                var pwidth = Math.min($(select).parent().width(), 300);
-                $(select).next().css({ 'width': pwidth });
+                var w = Math.min($('.chosen-select').parent().width(), 362);
+                $('.chosen-container').css('width', w)
             }, 1000);
-
+            
             //resize the chosen on window resize
             $(window).on('resize.chosen', function () {
-                var w = Math.min($('.chosen-select').parent().width(), 300);
+                var w = Math.min($('.chosen-select').parent().width(), 362);
                 $('.chosen-select').next().css({ 'width': w });
             }).trigger('resize.chosen');
         }

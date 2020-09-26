@@ -402,6 +402,7 @@
     <Content Include="Scripts\dialogs\uploadimage\uploadimage.js" />
     <Content Include="Scripts\dropload\dropload.css" />
     <Content Include="Scripts\dropload\dropload.min.js" />
+    <Content Include="Scripts\jsviews.min.js" />
     <Content Include="Scripts\linq\FailureModeQuery.js" />
     <Content Include="Scripts\jquery.loadTemplate-1.4.4.js" />
     <Content Include="Scripts\jquery.loadTemplate-1.4.4.min.js" />
@@ -409,6 +410,8 @@
     <Content Include="Scripts\linq\linq.min.js" />
     <Content Include="Scripts\mxcustom.js" />
     <Content Include="Scripts\mxocx.js" />
+    <Content Include="Scripts\p.list.bind.js" />
+    <Content Include="Scripts\pages.js" />
     <Content Include="Scripts\plugins\list.js" />
     <Content Include="releasenotes.txt" />
     <Content Include="Scripts\ace-elements.js" />
@@ -451,7 +454,6 @@
     <Content Include="Scripts\build\dist\chart\bar.js" />
     <Content Include="Scripts\build\dist\chart\pie.js" />
     <Content Include="Scripts\build\dist\echarts.js" />
-    <Content Include="Scripts\chosen.jquery.js" />
     <Content Include="Scripts\Common\Html5Upload.js" />
     <Content Include="Scripts\Common\ImgPreview.js" />
     <Content Include="Scripts\Common\lang\zh.js" />
@@ -469,6 +471,7 @@
     <Content Include="Scripts\dialogs\ivote\ivote.css" />
     <Content Include="Scripts\dialogs\ivote\ivote.html" />
     <Content Include="Scripts\dialogs\ivote\ivote.js" />
+    <Content Include="Scripts\util.js" />
     <Content Include="Scripts\ZeroClipboard\clipboard.js" />
     <Content Include="Scripts\ZeroClipboard\clipboard.min.js" />
     <Content Include="Scripts\ZeroClipboard\ZeroClipboard.js" />
@@ -944,6 +947,7 @@
     <Content Include="Style\jquery-ui.custom.css" />
     <Content Include="Style\jquery.fancybox.css" />
     <Content Include="Style\jquery.gritter.css" />
+    <Content Include="Style\layout\layout.css" />
     <Content Include="Style\prettify.css" />
     <Content Include="Style\select2-spinner.gif" />
     <Content Include="Style\select2.css" />
@@ -953,6 +957,8 @@
     <Content Include="Style\ui-dialog.css" />
     <Content Include="Style\ui.jqgrid.css" />
     <Content Include="Style\video-js.css" />
+    <Content Include="Style\webAdmin\Site.css" />
+    <Content Include="Style\webAdmin\style.css" />
     <Content Include="subscribed.html" />
     <Content Include="500.html" />
     <Content Include="Views\CategoryStat\Index.cshtml" />

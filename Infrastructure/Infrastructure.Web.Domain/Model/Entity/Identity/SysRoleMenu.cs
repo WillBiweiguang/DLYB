@@ -7,7 +7,7 @@ using Microsoft.AspNet.Identity;
 using System.ComponentModel.DataAnnotations.Schema;
 namespace Infrastructure.Web.Domain.Entity
 {
-    [Table("SysRoleMenu")]
+    [Table("t_sysRoleMenu")]
     public partial class SysRoleMenuModel : EntityBase<int>
 	{
 

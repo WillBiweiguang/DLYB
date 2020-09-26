@@ -4,9 +4,11 @@ using System.Linq;
 using Infrastructure.Core;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity;
+using System.ComponentModel.DataAnnotations.Schema;
+
 namespace Infrastructure.Web.Domain.Entity
 {
-	//[Table("ValidUser")]
+    [Table("t_sysUserClaim")]
     public partial class SysUserClaim : EntityBase<int>
 	{
 

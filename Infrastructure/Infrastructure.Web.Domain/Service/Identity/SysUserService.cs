@@ -241,7 +241,7 @@ namespace Infrastructure.Web.Domain.Services
 
 
         public UserStore()
-            : this(new CodeFirstDbContext())
+            : this(new MySqlDbContext())
         {
 
         }

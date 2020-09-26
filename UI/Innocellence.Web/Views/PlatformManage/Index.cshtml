@@ -4,9 +4,9 @@
 }
 
 @section easyui_css{
-    <link rel="stylesheet" href="~/styles/EasyUI/easyui.css" />
-    <link rel="stylesheet" href="~/styles/layout/layout.css" />
-    <link rel="stylesheet" href="~/styles/webAdmin/style.css" />
+    <link rel="stylesheet" href="~/style/EasyUI/easyui.css" />
+    <link rel="stylesheet" href="~/style/layout/layout.css" />
+    <link rel="stylesheet" href="~/style/webAdmin/style.css" />
 
 }
 <script src="/Scripts/jsviews.min.js"></script>
@@ -407,7 +407,7 @@
                             </div>
                         </div>
 
-                        <div class="form-group">
+                        @*<div class="form-group">
                             <label class="col-sm-3 control-label">治疗领域:</label>
                             <div class="col-sm-9">
                                 <select class="form-control" name="sltTA" id="sltTA">
@@ -420,7 +420,7 @@
                                     }
                                 </select>
                             </div>
-                        </div>
+                        </div>*@
 
                         <div class="form-group">
                             <label class="col-sm-3 control-label">邮箱:</label>
@@ -621,9 +621,9 @@
                     }
 
 
-                    if (ta != null && ta != "") {
-                        $("#sltTA").find("option[value=" + ta + "]").attr("selected", true);
-                    }
+                    //if (ta != null && ta != "") {
+                    //    $("#sltTA").find("option[value=" + ta + "]").attr("selected", true);
+                    //}
                     $('#UserModalTable').modal('show');
                 },
             });
@@ -739,7 +739,7 @@
                     datatype: "json",
                     success: function (result) {
                         if (result.Status == 200) {
-                            window.location.href = "http://" + window.location.host + "/WeChatMain/PlateformManage/index";
+                            window.location.href = "http://" + window.location.host + "/PlateformManage/index";
                         }
                         else {
                             alert(result.Message);
@@ -771,7 +771,7 @@
                         })
                     }
                     else {
-                        window.location.href = "http://" + window.location.host + "/WeChatMain/PlateformManage/index";
+                        window.location.href = "http://" + window.location.host + "/PlateformManage/index";
                     }
                     //$('.data-table').dataTable().api().draw(true);
                     //$("#RoleModalTable").modal("hide");

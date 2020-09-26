@@ -9,7 +9,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 
-namespace DLYB.WeChatMain.Controllers
+namespace DLYB.Web.Controllers
 {
     public class PlatformManageController : BaseController<SysRole, SysRoleView>
     {

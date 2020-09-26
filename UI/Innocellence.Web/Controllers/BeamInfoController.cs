@@ -23,10 +23,12 @@ namespace Innocellence.Web.Controllers
     public class BeamInfoController : BaseController<BeamInfo, BeamInfoView>
     {
         private readonly IBeamInfoService _beamInfoService;
+        private readonly IProjectService _projectService;
 
-        public BeamInfoController(IBeamInfoService beamInfoService) : base(beamInfoService)
+        public BeamInfoController(IBeamInfoService beamInfoService, IProjectService projectService) : base(beamInfoService)
         {
             _beamInfoService = beamInfoService;
+            _projectService = projectService;
         }
         // GET: Address
         public override ActionResult Index()
@@ -46,11 +48,20 @@ namespace Innocellence.Web.Controllers
 
             int rowCount = gridRequest.PageCondition.RowCount;
             List<BeamInfoView> listEx = GetListEx(expression, gridRequest.PageCondition);
+            var projectIDs = listEx.Select(x => x.ProjectId).ToList();
+            var projects = _projectService.GetList<ProjectView>(int.MaxValue, x => projectIDs.Contains(x.Id)).ToList();
+            listEx.ForEach(w => {
+                var p = projects.FirstOrDefault(x => x.Id == w.ProjectId);
+                if(p!= null)
+                {
+                    w.ProjectName = p.ProjectName;
+                }
+            });
             return this.GetPageResult(listEx, gridRequest);
         }
         [HttpPost]
         [ValidateInput(true)]
-        public ActionResult PostFile(BeamInfoView objModal, int ProjectName)
+        public ActionResult PostFile(BeamInfoView objModal, int ProjectId)
         {
             //验证错误
             if (!ModelState.IsValid)
@@ -62,7 +73,7 @@ namespace Innocellence.Web.Controllers
                 var file = Request.Files[0];
                 objModal = objModal ?? new BeamInfoView();
                 objModal.DwgFile = file.FileName;
-                objModal.ProjectId = ProjectName;
+                objModal.ProjectId = ProjectId;
                 var fileExtension = System.IO.Path.GetExtension(file.FileName);
                 if (fileExtension.ToLower() != ".dwg" )
                 {

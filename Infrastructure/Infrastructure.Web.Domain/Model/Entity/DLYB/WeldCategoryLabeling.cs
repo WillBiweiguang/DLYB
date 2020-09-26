@@ -30,6 +30,7 @@ namespace Infrastructure.Web.Domain.Entity
         public double Quantity { get; set; }
         public double LengthVal { get; set; }
         public double WidthVal { get; set; }
+        public string HandleID { get; set; }
         public DateTime? CreatedDate { get; set; }
 
         public int? CreatedUserID { get; set; }
@@ -39,5 +40,6 @@ namespace Infrastructure.Web.Domain.Entity
         public int? UpdatedUserID { get; set; }
 
         public bool IsDeleted { get; set; }
+
     }
 }
