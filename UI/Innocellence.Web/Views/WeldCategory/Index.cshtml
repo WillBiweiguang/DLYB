@@ -92,12 +92,12 @@
                         <div class="form-group col-lg-6">
                             <label class="col-sm-5 control-label">焊缝类型:</label>
                             <div class="col-sm-7">
-                                <select class="single-select form-control" name="WeldType" id="WeldType" data-placeholder="请选择焊缝类型" data-geturl="/WeldGeometry/GetDropdownList">
+                                <select class="single-select form-control" id="WeldType" name="WeldTypeId" style="" data-bind="value:WeldTypeId" validate="{required:true}" data-geturl="/WeldGeometry/GetDropdownList"></select>
                                     @*@foreach (WeldGeometry a in ViewBag.weldgeometrys)
                                     {
                                         <option value="@a.WeldType">@a.WeldType</option>
                                     }*@
-                                </select>
+                               
                             </div>
                         </div>
 

@@ -104,6 +104,18 @@
     <Reference Include="MySql.Data.Entity.EF6, Version=6.9.12.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
       <HintPath>..\..\packages\MySql.Data.Entity.6.9.12\lib\net45\MySql.Data.Entity.EF6.dll</HintPath>
     </Reference>
+    <Reference Include="NPOI">
+      <HintPath>D:\Project\wechatnew\LillyChinaCAWeChat\source\UI\Innocellence.Web\Plugins\Innocellence.Activity\bin\NPOI.dll</HintPath>
+    </Reference>
+    <Reference Include="NPOI.OOXML">
+      <HintPath>D:\Project\wechatnew\LillyChinaCAWeChat\source\UI\Innocellence.Web\Plugins\Innocellence.Activity\bin\NPOI.OOXML.dll</HintPath>
+    </Reference>
+    <Reference Include="NPOI.OpenXml4Net">
+      <HintPath>D:\Project\wechatnew\LillyChinaCAWeChat\source\UI\Innocellence.Web\Plugins\Innocellence.Activity\bin\NPOI.OpenXml4Net.dll</HintPath>
+    </Reference>
+    <Reference Include="NPOI.OpenXmlFormats">
+      <HintPath>D:\Project\wechatnew\LillyChinaCAWeChat\source\UI\Innocellence.Web\Plugins\Innocellence.Activity\bin\NPOI.OpenXmlFormats.dll</HintPath>
+    </Reference>
     <Reference Include="RouteDebugger, Version=2.1.5.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\routedebugger.2.1.5\lib\net40\RouteDebugger.dll</HintPath>
       <Private>True</Private>
@@ -1258,6 +1270,9 @@
       <Project>{d2ac8387-fc21-4e8e-810b-c0a637d44222}</Project>
       <Name>Infrastructure.Web</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Connected Services\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
