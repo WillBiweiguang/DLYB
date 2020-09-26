@@ -49,7 +49,11 @@ namespace DLYB.Web.Controllers
                     ViewBag.IsUser = true;
                 }
             }
-
+            if (user != null && user.UserName == "administrator")
+            {
+                ViewBag.IsRole = true;
+                ViewBag.IsUser = true;
+            }
             return View();
         }
 

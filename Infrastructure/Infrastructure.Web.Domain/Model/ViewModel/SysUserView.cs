@@ -12,7 +12,7 @@ namespace Infrastructure.Web.Domain.ModelsView
 	
 		public Int32 Id { get;set; }
 
-        public String LillyId { get; set; }
+        public String UserId { get; set; }
 
         public String UserName { get; set; }
         public String Email { get; set; }
@@ -30,20 +30,21 @@ namespace Infrastructure.Web.Domain.ModelsView
         public String PasswordHash { get; set; }
 
         public String strRoles { get; set; }
-        
-        
-        public IViewModel ConvertAPIModel(object obj){
-        var entity = (SysUser)obj;
-	    Id =entity.Id;
-        LillyId = entity.LillyId;
-        UserName = entity.UserName;
-        Email = entity.Email;
-        PhoneNumber = entity.PhoneNumber;
-        UserTrueName = entity.UserTrueName;
+
+
+        public IViewModel ConvertAPIModel(object obj)
+        {
+            var entity = (SysUser)obj;
+            Id = entity.Id;
+            UserId = entity.UserId;
+            UserName = entity.UserName;
+            Email = entity.Email;
+            PhoneNumber = entity.PhoneNumber;
+            UserTrueName = entity.UserTrueName;
             PasswordHash = entity.PasswordHash;
             SecurityStamp = entity.SecurityStamp;
- 
-        return this;
+
+            return this;
         }
 	}
 }

@@ -146,6 +146,7 @@ namespace Infrastructure.Web.Domain.Entity
             get;
             set;
         }
+        public String UserId { get; set; }
         /// <summary>
         ///     Constructor
         /// </summary>
@@ -158,7 +159,7 @@ namespace Infrastructure.Web.Domain.Entity
 
         //
         //[Column("UserID",DbType=DBType.VarChar,Length=50,Precision=50,IsNullable=true)]
-        public String LillyId { get; set; }
+        //public String LillyId { get; set; }
 
         public bool? IsDeleted { get; set; }
 

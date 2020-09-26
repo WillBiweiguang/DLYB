@@ -41,33 +41,33 @@ namespace Infrastructure.Core.Data
 
         private static List<IEntityMapper> MyEntityMappers = new List<IEntityMapper>();
 
-        /// <summary>
-        /// 设置数据库初始化，策略为自动迁移到最新版本
-        /// </summary>
-        public static void Initialize()
-        {
-            CodeFirstDbContext context = new CodeFirstDbContext();
-            IDatabaseInitializer<CodeFirstDbContext> initializer;
-            if (!context.Database.Exists())
-            {
-                initializer = new CreateDatabaseIfNotExistsWithSeed();
-            }
-            else
-            {
-                initializer = new NullDatabaseInitializer<CodeFirstDbContext>();
+        ///// <summary>
+        ///// 设置数据库初始化，策略为自动迁移到最新版本
+        ///// </summary>
+        //public static void Initialize()
+        //{
+        //    CodeFirstDbContext context = new CodeFirstDbContext();
+        //    IDatabaseInitializer<CodeFirstDbContext> initializer;
+        //    if (!context.Database.Exists())
+        //    {
+        //        initializer = new CreateDatabaseIfNotExistsWithSeed();
+        //    }
+        //    else
+        //    {
+        //        initializer = new NullDatabaseInitializer<CodeFirstDbContext>();
 
-                // initializer = new MigrateDatabaseToLatestVersion<CodeFirstDbContext, MigrationsConfiguration>();
-            }
+        //        // initializer = new MigrateDatabaseToLatestVersion<CodeFirstDbContext, MigrationsConfiguration>();
+        //    }
 
-            Database.SetInitializer(initializer);
+        //    Database.SetInitializer(initializer);
 
-            //EF预热，解决EF6第一次加载慢的问题
-            ObjectContext objectContext = ((IObjectContextAdapter)context).ObjectContext;
-            StorageMappingItemCollection mappingItemCollection = (StorageMappingItemCollection)objectContext.ObjectStateManager
-                .MetadataWorkspace.GetItemCollection(DataSpace.CSSpace);
-            mappingItemCollection.GenerateViews(new List<EdmSchemaError>());
-            context.Dispose();
-        }
+        //    //EF预热，解决EF6第一次加载慢的问题
+        //    ObjectContext objectContext = ((IObjectContextAdapter)context).ObjectContext;
+        //    StorageMappingItemCollection mappingItemCollection = (StorageMappingItemCollection)objectContext.ObjectStateManager
+        //        .MetadataWorkspace.GetItemCollection(DataSpace.CSSpace);
+        //    mappingItemCollection.GenerateViews(new List<EdmSchemaError>());
+        //    context.Dispose();
+        //}
         /// <summary>
         /// 设置Mysql初始化，不适用CodeFirst
         /// </summary>

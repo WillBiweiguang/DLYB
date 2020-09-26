@@ -26,7 +26,7 @@ namespace DLYB.CA.Service.job
         private readonly IUserBehaviorService _userBehaviorService = EngineContext.Current.Resolve<IUserBehaviorService>();
         private readonly IArticleReportService _articleReportService = EngineContext.Current.Resolve<IArticleReportService>();
         private readonly IArticleInfoService _articleInfoService = EngineContext.Current.Resolve<IArticleInfoService>();
-        private readonly IQuestionManageService _questionManageService = new QuestionManageService(new CodeFirstDbContext());
+        private readonly IQuestionManageService _questionManageService = new QuestionManageService(new MySqlDbContext());
         private readonly IMessageService _messageService = EngineContext.Current.Resolve<IMessageService>();
 
         private static readonly ILogger Log = LogManager.GetLogger(typeof(ArticleReportJob));

@@ -236,7 +236,7 @@ namespace DLYB.CA.Service
             }
             var deleteUsers = deleteList.Select(y => y.LillyID).ToList();
             //reduce roundtrip between with db
-            _sysUserService.Repository.Entities.Where(x => deleteUsers.Contains(x.LillyId)).Delete();
+            //_sysUserService.Repository.Entities.Where(x => deleteUsers.Contains(x.LillyId)).Delete();
 
             #endregion
 
