@@ -46,8 +46,7 @@ namespace DLYB.Web.Controllers
             if (!string.IsNullOrEmpty(strCondition))
             {
                 strCondition = strCondition.Trim().ToLower();
-                predicate = predicate.AndAlso(x => x.LillyId.Contains(strCondition) ||
-                        (x.Email != null && x.Email.ToLower().Contains(strCondition)) ||
+                predicate = predicate.AndAlso(x => (x.Email != null && x.Email.ToLower().Contains(strCondition)) ||
                         x.UserName.ToLower().Contains(strCondition) ||
                         x.UserTrueName.ToLower().Contains(strCondition));
             }
@@ -112,13 +111,48 @@ namespace DLYB.Web.Controllers
             //去掉密码外入力项的多余空格
             if (objModal != null)
             {
-                objModal.LillyId = objModal.LillyId.Trim();
                 objModal.UserName = objModal.UserName.Trim();
                 objModal.UserTrueName = objModal.UserTrueName.Trim();
-                objModal.Email = objModal.Email.Trim();
+                objModal.Email = objModal.Email?.Trim();
             }
 
             return true;
+        }
+
+        [AllowAnonymous]
+        public JsonResult GetCurrentUser()
+        {
+            var userId = HttpContext.User.Identity.GetUserId<int>();
+            var userEntity = _objService.Repository.Entities.Where(x => x.Id == userId).AsNoTracking().FirstOrDefault();
+            SysUserView data = ConvertToSysUserView(userEntity);
+            return Json(data, JsonRequestBehavior.AllowGet);
+        }
+
+        private SysUserView ConvertToSysUserView(SysUser userEntity)
+        {
+            if (userEntity != null)
+            {
+                var role = string.Empty;
+                if (userEntity.Roles != null && userEntity.Roles.Count > 0)
+                {
+                    var rolesId = userEntity.Roles.Select(r => r.RoleId).ToList();
+                    var roles = string.Join(",", rolesId);
+                    role += roles;
+                }
+                return new SysUserView
+                {
+                    Id = userEntity.Id,
+                    PasswordHash = userEntity.PasswordHash,
+                    UserName = userEntity.UserName,
+                    UserTrueName = userEntity.UserTrueName,
+                    Email = userEntity.Email,
+                    SecurityStamp = userEntity.SecurityStamp,
+                    PhoneNumber = userEntity.PhoneNumber,
+                    strRoles = role,
+                    UpdatedDate = DateTime.UtcNow,
+                };
+            }
+            return new SysUserView { };
         }
 
         //public override JsonResult Post(SysUserView objModal, string Id)

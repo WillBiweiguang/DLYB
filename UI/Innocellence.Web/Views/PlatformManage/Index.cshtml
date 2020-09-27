@@ -4,9 +4,9 @@
 }
 
 @section easyui_css{
-    <link rel="stylesheet" href="~/styles/EasyUI/easyui.css" />
-    <link rel="stylesheet" href="~/styles/layout/layout.css" />
-    <link rel="stylesheet" href="~/styles/webAdmin/style.css" />
+    <link rel="stylesheet" href="~/style/EasyUI/easyui.css" />
+    <link rel="stylesheet" href="~/style/layout/layout.css" />
+    <link rel="stylesheet" href="~/style/webAdmin/style.css" />
 
 }
 <script src="/Scripts/jsviews.min.js"></script>
@@ -62,9 +62,9 @@
 
                 <div class="row" id="RoleDiv" style="display: none">
                     <div class="col-sm-12">
-                        <form class="form-inline" id="SearchForm">
+                        @*<form class="form-inline" id="SearchForm">
                             <input type="hidden" name="DeptId" id="DeptId" />
-                        </form>
+                        </form>*@
                         <div class="pull-right btn-margin">
                             <a class="btn btn-success btn-sm" onclick="addRoleBtnClick()" data-target="#RoleModalTable" data-toggle="modal" data-placement="top" title="增加">
                                 <i class="fa fa-plus"></i>
@@ -117,7 +117,6 @@
                                                 <th class="sorting_disabled" rowspan="1" colspan="1">用户名</th>
                                                 <th class="sorting_disabled" rowspan="1" colspan="1">真实姓名</th>
                                                 <th class="sorting_disabled" rowspan="1" colspan="1">员工ID</th>
-                                                <th class="sorting_disabled" rowspan="1" colspan="1">治疗领域</th>
                                                 <th class="sorting_disabled" rowspan="1" colspan="1">邮箱</th>
                                                 <th style="width: 8%;" class="sorting_disabled" rowspan="1" colspan="1">操作</th>
                                             </tr>
@@ -145,9 +144,9 @@
 
                 <div class="row" id="RoleDiv" style="display: none">
                     <div class="col-sm-12">
-                        <form class="form-inline" id="SearchForm">
+                        @*<form class="form-inline" id="SearchForm">
                             <input type="hidden" name="DeptId" id="DeptId" />
-                        </form>
+                        </form>*@
                         <div class="pull-right btn-margin">
                             <a class="btn btn-success btn-sm" onclick="addRoleBtnClick()" data-target="#RoleModalTable" data-toggle="modal" data-placement="top" title="增加">
                                 <i class="fa fa-plus"></i>
@@ -231,7 +230,7 @@
     </div>
 
 
-    <div id="ModalTable" class="modal" tabindex="-1">
+    @*<div id="ModalTable" class="modal" tabindex="-1">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -283,7 +282,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div>*@
 
     <div id="RoleModalTable" class="modal" tabindex="-1">
         <div class="modal-dialog">
@@ -296,7 +295,7 @@
 
                 <div class="modal-body">
                     <div id="RoleModalEditForm" class="form-horizontal">
-                        <input type="hidden" id="ID" name="ID" sysroleid="true" value="0" />
+                        <input type="hidden"  name="ID" sysroleid="true" value="0" />
                         <div class="form-group">
                             <label class="col-sm-3 control-label">角色名：</label>
                             <div class="col-sm-9">
@@ -332,7 +331,7 @@
 
                 <div class="modal-body">
                     <form action="SetMenu" id="ff" method="get" class="form-horizontal" datasource="Get">
-                        <input type="hidden" id="ID" name="ID" value="0" />
+                        <input type="hidden"  name="ID" value="0" />
                         <input type="hidden" id="RoleID" name="RoleID" value="" />
                         <div class="form-group">
                             <label class="col-sm-12 control-label" style="text-align: left">MenuName:</label>
@@ -369,7 +368,7 @@
 
                 <div class="modal-body">
                     <form action="Post" id="updateUserForm" method="get" class="form-horizontal" datasource="Get">
-                        <input type="hidden" id="ID" name="ID" value="0" />
+                        <input type="hidden"  name="ID" value="0" />
                         <input type="hidden" id="UserPWDHash" />
                         <div class="form-group">
                             <label class="col-sm-3 control-label">用户名:</label>
@@ -381,7 +380,7 @@
                         <div class="form-group">
                             <label class="col-sm-3 control-label">员工ID:</label>
                             <div class="col-sm-9">
-                                <input type="text" name="WeChatUserID" class="form-control" placeholder="输入员工ID" data-bind="value: WeChatUserID"
+                                <input type="text" name="UserID" class="form-control" placeholder="输入员工ID" data-bind="value: UserID"
                                        validate="{required:true}" />
                             </div>
                         </div>
@@ -407,7 +406,7 @@
                             </div>
                         </div>
 
-                        <div class="form-group">
+                        @*<div class="form-group">
                             <label class="col-sm-3 control-label">治疗领域:</label>
                             <div class="col-sm-9">
                                 <select class="form-control" name="sltTA" id="sltTA">
@@ -420,7 +419,7 @@
                                     }
                                 </select>
                             </div>
-                        </div>
+                        </div>*@
 
                         <div class="form-group">
                             <label class="col-sm-3 control-label">邮箱:</label>
@@ -495,8 +494,7 @@
         var htmlStr = '<tr role="row">' +
                       '<td>{{: UserName}}</td>' +
                       '<td>{{: UserTrueName}}</td>' +
-                      '<td>{{: WeChatUserID}}</td>' +
-                      '<td>{{: TANameDES}}</td>' +
+                      '<td>{{: UserId}}</td>' +
                       '<td>{{: Email}}</td>' +
                       '<td><a href="#" onclick="EditUser(\'{{: Id}}\', \'{{: TAName}}\');return false;" class="artDailog btn btn-info  btn-xs" style="margin-right: 4px;" data-toggle="modal" data-placement="top" title="编辑"><i class="fa fa-pencil"></i></a><a href="#" onclick="DeleteUserBtnClick(\'{{: Id}}\');return false;" class="btn btn-danger btn-xs" data-toggle="modal" data-placement="top" title="删除"><i class="fa fa-trash-o"></i></a></td>' +
                       '</tr>';
@@ -611,7 +609,7 @@
                     $('#UserModalTable input[name=UserName]').val(data.UserName);
                     $('#UserModalTable #UserPWDHash').val(data.PasswordHash);
                     $('#UserModalTable input[name=UserTrueName]').val(data.UserTrueName);
-                    $('#UserModalTable input[name=WeChatUserID]').val(data.WeChatUserID);
+                    $('#UserModalTable input[name=UserID]').val(data.UserID);
                     $('#UserModalTable input[name=Email]').val(data.Email);
                     $('#UserModalTable input[name=strRoles]').val(data.strRoles);
                     if (data.strRoles!=null) {
@@ -621,9 +619,9 @@
                     }
 
 
-                    if (ta != null && ta != "") {
-                        $("#sltTA").find("option[value=" + ta + "]").attr("selected", true);
-                    }
+                    //if (ta != null && ta != "") {
+                    //    $("#sltTA").find("option[value=" + ta + "]").attr("selected", true);
+                    //}
                     $('#UserModalTable').modal('show');
                 },
             });
@@ -661,7 +659,7 @@
 
                 });
 
-                if (postData[7].value.length > 0) {
+                if (postData[6].value.length > 0) {
                     $.post("/SysUser/Post", postData, function (result) {
                         InitImageList();
                         $('#UserModalTable').modal('hide');
@@ -739,7 +737,7 @@
                     datatype: "json",
                     success: function (result) {
                         if (result.Status == 200) {
-                            window.location.href = "http://" + window.location.host + "/WeChatMain/PlateformManage/index";
+                            window.location.href = "http://" + window.location.host + "/PlateformManage/index";
                         }
                         else {
                             alert(result.Message);
@@ -771,7 +769,7 @@
                         })
                     }
                     else {
-                        window.location.href = "http://" + window.location.host + "/WeChatMain/PlateformManage/index";
+                        window.location.href = "http://" + window.location.host + "/PlateformManage/index";
                     }
                     //$('.data-table').dataTable().api().draw(true);
                     //$("#RoleModalTable").modal("hide");

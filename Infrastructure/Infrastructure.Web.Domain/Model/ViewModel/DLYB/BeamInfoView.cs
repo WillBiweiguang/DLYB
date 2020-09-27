@@ -25,6 +25,8 @@ namespace Infrastructure.Web.Domain.ModelsView
         public int? UpdatedUserID { get; set; }
 
         public bool IsDeleted { get; set; }
+        public string ProjectName { get; set; }
+        public string BridgeComponent { get { return this.DwgFile.Substring(0, this.DwgFile.IndexOf("dwg")); } }
 
         public IViewModel ConvertAPIModel(object obj)
         {

@@ -7,6 +7,28 @@
     .datagrid-mask-msg {
         height: 36px !important;
     }
+    .main-container {
+        overflow: scroll;
+        min-height: 700px;
+        height: auto;
+    }
+
+    /*.listContaner {
+        float: right;
+        top: 132px;
+        right: 0;
+        display: block;
+        z-index: 9999;
+        width: 500px;
+        margin-left: 940px;
+        min-height: 800px;
+    }*/
+
+    #cadContent {
+        margin-left: 0px;
+        position: relative;
+        /*margin-right: 20px;*/
+    }
 </style>
 <!--Action boxes-->
 <div class="row">
@@ -15,6 +37,9 @@
             <div class="form-group">
                 <input class="form-control" type="text" id="search_condition" name="search_condition" placeholder="名称">
                 <a href="#" class="btn btn-sm" id="btnSearch" data-toggle="tooltip" data-placement="top" title="搜索条件"><i class="fa fa-search"></i></a>
+            </div>
+            <div class="form-group">
+                <input type="button" value="焊接符号识别" onclick="myclick5();">
             </div>
             <div class="form-group pull-right">
                 <a href="#" class="btn btn-success btn-sm" id="btnAdd" data-toggle="tooltip" data-placement="top" title="添加">
@@ -50,6 +75,10 @@
             </div>
         </div>
     </div>
+    <input type="hidden" id="beamId" name="beamId" value="@ViewBag.BeamId" />
+    <input type="hidden" id="projectId" name="projectId" value="@ViewBag.ProjectId" />
+    <input type="hidden" id="fileName" name="fileName" value="@ViewBag.FileName" />
+    <input type="hidden" id="filePath" name="filePath" value="@ViewBag.FilePath" />
 </div>
 
 <div id="ModalTable" class="modal" tabindex="-1" aria-show="true">
@@ -63,7 +92,7 @@
             <div class="modal-body">
                 <form action="Post" id="ff" method="get" class="form-horizontal" datasource="Get">
                     <input type="hidden" id="ID" name="ID" value="0" />
-                  
+
                     <div class="row">
                         <div class="form-group col-lg-6">
                             <label class="col-sm-5 control-label">图号:</label>
@@ -92,12 +121,12 @@
                         <div class="form-group col-lg-6">
                             <label class="col-sm-5 control-label">焊缝类型:</label>
                             <div class="col-sm-7">
-                                <select class="single-select form-control" id="WeldType" name="WeldTypeId" style="" data-bind="value:WeldTypeId" validate="{required:true}" data-geturl="/WeldGeometry/GetDropdownList"></select>
+                                <select class="single-select form-control" id="WeldType" name="WeldTypeId" style="" data-bind="value:WeldTypeId" validate="{required:true}" data-geturl="/WeldGeometry/GetDropdownList">
                                     @*@foreach (WeldGeometry a in ViewBag.weldgeometrys)
-                                    {
-                                        <option value="@a.WeldType">@a.WeldType</option>
-                                    }*@
-                               
+                                        {
+                                            <option value="@a.WeldType">@a.WeldType</option>
+                                        }*@
+                                </select>                               
                             </div>
                         </div>
 
@@ -106,9 +135,9 @@
                             <div class="col-sm-7">
                                 <select class="single-select form-control" name="WeldLocation" id="WeldLocation" data-placeholder="请选择焊缝位置" data-geturl="/WeldLocation/GetDropdownList">
                                     @*@foreach (WeldLocation a in ViewBag.weldlocation)
-                                    {
-                                        <option value="@a.WeldLocationType">@a.WeldLocationType</option>
-                                    }*@
+                                        {
+                                            <option value="@a.WeldLocationType">@a.WeldLocationType</option>
+                                        }*@
                                 </select>
                             </div>
                         </div>
@@ -131,7 +160,7 @@
                         <div class="form-group col-lg-6">
                             <label class="col-sm-5 control-label">焊缝长度值:</label>
                             <div class="col-sm-7">
-                                <input type="text" name="WeldLength" id="WeldLength" class="form-control" data-bind="value: WeldLength"  />
+                                <input type="text" name="WeldLength" id="WeldLength" class="form-control" data-bind="value: WeldLength" />
                             </div>
                         </div>
                     </div>
@@ -242,17 +271,19 @@
 
 @section scripts_Foot
 {
-    <script src="~/Scripts/EasyUI/jquery.easyui.min.js"></script>
-    <script src="http://static.runoob.com/assets/jquery-validation-1.14.0/dist/localization/messages_zh.js"></script>
+    @*<script src="~/Scripts/EasyUI/jquery.easyui.min.js"></script>
+    <script src="http://static.runoob.com/assets/jquery-validation-1.14.0/dist/localization/messages_zh.js"></script>*@
     <script type="text/javascript">
         //$('[data-toggle="tooltip"]').tooltip();
         var popMenu;
         var IdCur;
+        var lastCircleHandle;
 
         $(document).ready(function () {
+            var beamId = $('')
             LEAP.Common.MainPop.options.dataTable = $('.data-table').dataTable(jQuery.extend(true, datatableSetting, {
                 "ajax": {
-                    "url": "GetList"
+                    "url": "GetList?beamId=" + $('#beamId').val()
                 },
                 "paging": true,
                 "info": false,
@@ -312,7 +343,7 @@
                     * $("#Quantity").val() * $("#SectionArea").val() * 7.85 / 1000000)
             }
             if (txt == '2*长+宽') {
-                $("#WeldLength").val(2 * parseInt($("#LengthVal").val()) +parseInt($("#WidthVal").val()));
+                $("#WeldLength").val(2 * parseInt($("#LengthVal").val()) + parseInt($("#WidthVal").val()));
                 $("#WeldQuanlity").val($("#WeldLength").val() * $("#BeamNum").val()
                     * $("#Quantity").val() * $("#SectionArea").val() * 7.85 / 1000000)
             }
@@ -321,8 +352,2665 @@
                 $("#WeldQuanlity").val($("#WeldLength").val() * $("#BeamNum").val()
                     * $("#Quantity").val() * $("#SectionArea").val() * 7.85 / 1000000)
             }
-           
+
         });
+
+        function adddata(list) {
+            //$('.data-table thead').append('<tr class=".fakedata"><td>1</td><td>1-143.dwg</td><td>6051</td><td><a href="#" onclick="" class="artDailog btn btn-info  btn-xs" style="margin-right:4px;" data-toggle="tooltip" data-placement="top" title="定位">定位</a></td></tr>');
+            //$('.data-table thead').append('<tr class=".fakedata"><td>2</td><td>1-143.dwg</td><td>7051</td><td><a href="#" onclick="" class="artDailog btn btn-info  btn-xs" style="margin-right:4px;" data-toggle="tooltip" data-placement="top" title="定位">定位</a></td></tr>');
+            //$('.data-table thead').append('<tr class=".fakedata"><td>3</td><td>1-143.dwg</td><td>8134</td><td><a href="#" onclick="" class="artDailog btn btn-info  btn-xs" style="margin-right:4px;" data-toggle="tooltip" data-placement="top" title="定位">定位</a></td></tr>');
+            //$('.data-table thead').append('<tr class=".fakedata"><td>4</td><td>1-143.dwg</td><td>8872</td><td><a href="#" onclick="" class="artDailog btn btn-info  btn-xs" style="margin-right:4px;" data-toggle="tooltip" data-placement="top" title="定位">定位</a></td></tr>');
+            if (!list) {
+                alert('未识别到焊缝');
+            }
+            var filename = $('#filename').val();
+            if (!filename) {
+                filename = 'sample1.dwg';
+            }
+
+            $.post('/WeldCategory/PostWeld',
+                { beamId: $('#beamId').val(), dwgfile: filename, weldList: list }
+            ).done(function (r) {
+                //$('.data-table').trigger('');
+                LEAP.Common.MainPop.options.dataTable.fnDraw(false);
+            });
+
+        }
     </script>
 }
 
+
+<!--以下是CAD控件对象-->
+<SCRIPT language="JavaScript">
+    document.oncontextmenu = new Function('event.returnValue=false;'); //禁用右键
+    function LoadMxDrawX(id, dwgfile, cabpath, msipath) {
+        var s, classid, Sys = {}, ua = navigator.userAgent.toLowerCase();
+        (s = ua.match(/msie ([\d.]+)/)) ? Sys.ie = s[1] : (s = ua.match(/trident\/([\d.]+)/)) ? Sys.ie9 = s[1] : (s = ua.match(/firefox\/([\d.]+)/)) ? Sys.firefox = s[1] : (s = ua.match(/chrome\/([\d.]+)/)) ? Sys.chrome = s[1] : (s = ua.match(/opera.([\d.]+)/)) ? Sys.opera = s[1] : (s = ua.match(/version\/([\d.]+).*safari/)) ? Sys.safari = s[1] : 0,
+            classid = "74A777F8-7A8F-4e7c-AF47-7074828086E2",
+
+            Sys.ie || Sys.ie9 ? (document.write("<!-- 用来产生编辑状态的ActiveX控件的JS脚本-->   "),
+                document.write("<!-- 因为微软的ActiveX新机制，需要一个外部引入的js-->   "),
+                document.write('<div id="cadContent" style="" >'),
+                document.write('<object id="' + id + '" classid="clsid:' + classid + '" '),
+                //document.write('width="85%" height="85%" align="left">   '),
+                document.write('codebase="' + cabpath + '" width="900px" height="600px" align="left">   '),
+                document.write('<param name="_Version" value="65536">  '),
+                document.write('<param name="_ExtentX" value="24262">  '),
+                document.write('<param name="_ExtentY" value="16219">  '),
+                document.write('<param name="_StockProps" value="0">'),
+                document.write('<param name="DwgFilePath" value="' + dwgfile + '" > '),
+                document.write('<param name="IsRuningAtIE" value="1">'),
+                document.write('<param name="EnablePrintCmd" value="1">  '),
+                document.write('<param name="ShowCommandWindow" value="1">   '),
+                document.write('<param name="ShowToolBars" value="1">  '),
+                document.write('<param name="ShowModelBar" value="1">'),
+                document.write('<param name="Iniset" value="READCONTENT=131072">  '),
+                document.write('<param name="ToolBarFiles" value="">'),
+                document.write('<param name="ShowMenuBar" value="1">'),
+                document.write('<param name="EnableUndo" value="1">'),
+                document.write('<param name="ShowPropertyWindow" value="1">'),
+                document.write('<SPAN STYLE="color:red">不能装载文档控件。请在检查浏览器的选项中检查浏览器的安全设置。请点击<a href=' + msipath + '>安装控件</a></SPAN>'),
+                document.write('</object>'),
+                document.write('</div>')) :
+
+                Sys.chrome ? (document.write('<div id="cadContent" >'),
+                    document.write('<object id="' + id + '" clsid="{' + classid + '}" '),
+                    document.write('type="application/mxdraw-activex" width="85%" height="85%" align="left"> '),
+                    document.write('<param name="_Version" value="65536">  '),
+                    document.write('<param name="_ExtentX" value="24262">  '),
+                    document.write('<param name="_ExtentY" value="16219">  '),
+                    document.write('<param name="_StockProps" value="0">'),
+                    document.write('<param name="DwgFilePath" value="' + dwgfile + '" > '),
+                    document.write('<param name="IsRuningAtIE" value="1">'),
+                    document.write('<param name="EnablePrintCmd" value="1">  '),
+                    document.write('<param name="ShowCommandWindow" value="1">   '),
+                    document.write('<param name="ShowToolBars" value="1">  '),
+                    document.write('<param name="ShowModelBar" value="1">'),
+                    document.write('<param name="Iniset" value="CHROME=Y,LimitDisplayObjectNumber=10">  '),
+                    document.write('<param name="ToolBarFiles" value="">'),
+                    document.write('<param name="ShowMenuBar" value="1">'),
+                    document.write('<param name="EnableUndo" value="1">'),
+                    document.write('<param name="ShowPropertyWindow" value="1">'),
+                    document.write('<param name="Event_ImplementCommandEvent" value="DoCommandEventFunc">'),
+                    document.write('<SPAN STYLE="color:red">不能装载文档控件,谷歌浏览器使用,下载MxChrome安装包到本地，安装后点击桌面 Chrome企业版 快捷方式启动。请点击<a href=' + msipath + '>安装控件</a></SPAN>'),
+                    document.write('</object>'),
+                    document.write('</div>')) :
+
+                    Sys.firefox ? (document.write("<!-- 需要安装ieTab插件才能使用-->   "),
+                        document.write("<!-- 右键弹出菜单，点击使用ieTab浏览> -->  "),
+
+                        document.write('<div class="no_title">  不能装载文档控件。1.请在安装ieTab插件，2.然后请点击<a href=' + msipath + '>安装控件</a>, 3.然后右键弹出菜单，点击使用ieTab浏览 </div> ')
+
+                    ) :
+                        Sys.opera ? alert("sorry,ntko 暂时不支持opera!") :
+                            Sys.safari && alert("sorry,ntko 暂时不支持safari!");
+    }
+
+
+    function isFireFox() {
+        var s, classid, Sys = {}, ua = navigator.userAgent.toLowerCase();
+        (s = ua.match(/msie ([\d.]+)/)) ? Sys.ie = s[1] : (s = ua.match(/trident\/([\d.]+)/)) ? Sys.ie9 = s[1] : (s = ua.match(/firefox\/([\d.]+)/)) ? Sys.firefox = s[1] : (s = ua.match(/chrome\/([\d.]+)/)) ? Sys.chrome = s[1] : (s = ua.match(/opera.([\d.]+)/)) ? Sys.opera = s[1] : (s = ua.match(/version\/([\d.]+).*safari/)) ? Sys.safari = s[1] : 0;
+
+        return Sys.firefox;
+
+    }
+</SCRIPT>
+<script type="text/javascript">LoadMxDrawX("MxDrawXCtrl", "", "http://www.mxdraw.com/MxDrawX52.CAB#version=11,0,0,1", "http://www.mxcad.net:2080/MxChromex86Setup.exe");</script>
+
+<script>
+
+    function myclick5() {
+        FindWelding();
+    }
+
+    //初始化
+
+    function InitMxDrawX() {
+
+        var mxOcx = document.getElementById("MxDrawXCtrl");
+
+        if (mxOcx) {
+
+            if (!mxOcx.IsIniting()) {
+
+                clearInterval(mxtime);
+                var filename = $('#fileName').val();
+                
+                if (filename) {
+                    var path = '/Files/BeamInfo/' + filename;
+                    mxOcx.OpenWebDwgFile(path);
+                }
+                // 控件初始化完成，需要在启动做的事，在这里做
+
+                // 启动时打开文件
+
+                //mxOcx.OpenWebDwgFile("http://www.mxcad.net:2080/test.dwg");
+                // FindWelding()
+
+
+            }
+
+        }
+
+    }
+
+    mxtime = setInterval(InitMxDrawX, 1000);
+    //document.getElementById("MxDrawXCtrl").ImplementCommandEventFun = DoCommandEventFunc;
+    function FindWelding() {
+        var myDate = new Date();
+        var strtimestart = myDate.toLocaleString();
+        var mxOcx = document.all.item("MxDrawXCtrl");
+        //mxOcx.OpenDwgFile("D:\\中铁-许滨\\图纸\\1-143.dwg");
+        //--1-----------------------获取箭头--------------------------0724试验--
+        //实例化一个构造选择集进行过滤,该类封装了选择集及其处理函数。
+        var ss = mxOcx.NewSelectionSet();
+        //构造一个过滤链表
+        var spFilte = mxOcx.NewResbuf();
+        spFilte.AddStringEx("HATCH", 5020);
+        //得到当前空间的所有实体
+        ss.AllSelect(spFilte);
+        var ArrowArray = [];
+
+        for (var i = 0; i < ss.Count; i++) {
+            var ent = ss.Item(i);
+            var HatchArrow = ent;
+            var PolylineArray = HatchArrow.GetPolylines();
+            var PAnum = PolylineArray.Count;
+            if (PAnum == 1) {
+                var polyline = PolylineArray.AtObject(0);
+                var num = polyline.numVerts;
+                if (num == 4) {
+                    var pt1 = polyline.GetPointAt(0);
+                    var pt2 = polyline.GetPointAt(1);
+                    var pt3 = polyline.GetPointAt(2);
+                    var pt4 = polyline.GetPointAt(3);
+                    if (polyline.IsClosedStatus == true)//相同
+                    {
+                        var mL1 = pt1.DistanceTo(pt2);
+                        var mL2 = pt1.DistanceTo(pt3);
+                        var mL3 = pt2.DistanceTo(pt3);
+                        if ((mL1 <= mL2 + 0.07 && mL1 >= mL2 - 0.07) || (mL2 <= mL1 + 0.07 && mL2 >= mL1 - 0.07)) {
+                            var x = (pt2.x + pt3.x) / 2;
+                            var y = (pt2.y + pt3.y) / 2;
+                            var midP = mxOcx.NewPoint();
+                            midP.x = x;
+                            midP.y = y;
+                            var MObjectID = HatchArrow.handle;
+                            var myArrowtest = new myArrow(MObjectID, pt1, pt2, pt3, midP)
+                            ArrowArray[ArrowArray.length] = myArrowtest;
+                        }
+                        else if ((mL2 <= mL3 + 0.07 && mL2 >= mL3 - 0.07) || (mL3 <= mL2 + 0.07 && mL3 >= mL2 - 0.07)) {
+                            var x = (pt1.x + pt2.x) / 2;
+                            var y = (pt1.y + pt2.y) / 2;
+                            var midP = mxOcx.NewPoint();
+                            midP.x = x;
+                            midP.y = y;
+                            var MObjectID = HatchArrow.handle;
+                            var myArrowtest = new myArrow(MObjectID, pt3, pt1, pt2, midP)
+                            ArrowArray[ArrowArray.length] = myArrowtest;
+                        }
+                        else if ((mL1 <= mL3 + 0.07 && mL1 >= mL3 - 0.07) || (mL3 <= mL1 + 0.07 && mL3 >= mL1 - 0.07)) {
+                            var x = (pt1.x + pt3.x) / 2;
+                            var y = (pt1.y + pt3.y) / 2;
+                            var midP = mxOcx.NewPoint();
+                            midP.x = x;
+                            midP.y = y;
+                            var MObjectID = HatchArrow.handle;
+                            var myArrowtest = new myArrow(MObjectID, pt2, pt1, pt3, midP)
+                            ArrowArray[ArrowArray.length] = myArrowtest;
+                        }
+
+                    }
+                }
+            }
+        }
+        var NSArrowArray = DeletSameArrow(ArrowArray)
+        //--2---------------------------------------------------
+        var sPL = mxOcx.NewSelectionSet();
+        //构造一个过滤链表
+        var spFiltePL = mxOcx.NewResbuf();
+        spFiltePL.AddStringEx("LWPOLYLINE", 5020);
+        //得到当前空间的所有实体
+        sPL.AllSelect(spFiltePL);
+        var PolyLArray2 = [];
+        var PolyLArray3 = [];
+        var PolyLArray4_10 = [];
+
+        for (var i = 0; i < sPL.Count; i++) {
+            var ent = sPL.Item(i);
+            var mployLine = ent;
+            if (mployLine.numVerts == 2) {
+                PolyLArray2[PolyLArray2.length] = mployLine;
+            }
+            else if (mployLine.numVerts == 3) {
+                PolyLArray3[PolyLArray3.length] = mployLine;
+            }
+            else if (mployLine.numVerts >= 4 && mployLine.numVerts <= 10) {
+                PolyLArray4_10[PolyLArray4_10.length] = mployLine;
+            }
+        }
+        //删除重复的线
+        var NS_PolylineArray2 = DeletSamePolyLine(PolyLArray2);
+        var NS_PolylineArray3 = DeletSamePolyLine(PolyLArray3);
+        var NS_PolylineArray4_10 = DeletSamePolyLine(PolyLArray4_10);
+        //找引线
+        var myDimesArray = GetDimensArrowLine(NSArrowArray, NS_PolylineArray2, NS_PolylineArray3);
+        var mDimNum = myDimesArray.length;
+        //---3-------------------------------------------------
+        var myTempWeldingArray = [];
+        //找引线
+        var YX_Length_Max = 0;
+        for (var i = 0; i < mDimNum; i++) {
+            if (myDimesArray[i].myCAnnotationLine.myPolyPNum == 3) {
+
+                if (myDimesArray[i].myCAnnotationLine.myPolyCHSE == "Start") {
+                    if (IsHorizontal(myDimesArray[i].myCAnnotationLine.myPolyEndP, myDimesArray[i].myCAnnotationLine.myPolyMid)) {
+                        var Hlength = GetDisFromTwoPoint(myDimesArray[i].myCAnnotationLine.myPolyEndP, myDimesArray[i].myCAnnotationLine.myPolyMid)
+                        var mtempWeld = new myWelding(myDimesArray[i].myCAnnotationArrow, myDimesArray[i].myCAnnotationLine, null, Hlength,
+                            myDimesArray[i].myCAnnotationCHSE, myDimesArray[i].myCAnnotationCHP, 1, myDimesArray[i].myCAnnotationLine.myPolyMid,
+                            myDimesArray[i].myCAnnotationLine.myPolyEndP, null, null, null, 0, null, null, null, null, 0, null, null, null, "", null, "", null, "", 0, null, "", null, "", null, "",
+                            0, null, null, 0, null, null, null, 0, null, null, null, null, null, null, null, null, null, null, 0, null, null, null, 0, "")
+                        YX_Length_Max = GetMaxData(YX_Length_Max, Hlength)
+                        myTempWeldingArray[myTempWeldingArray.length] = mtempWeld
+                    }
+                }
+                else if (myDimesArray[i].myCAnnotationLine.myPolyCHSE == "End") {
+                    if (IsHorizontal(myDimesArray[i].myCAnnotationLine.myPolyStartP, myDimesArray[i].myCAnnotationLine.myPolyMid)) {
+                        var Hlength = GetDisFromTwoPoint(myDimesArray[i].myCAnnotationLine.myPolyStartP, myDimesArray[i].myCAnnotationLine.myPolyMid)
+                        var mtempWeld = new myWelding(myDimesArray[i].myCAnnotationArrow, myDimesArray[i].myCAnnotationLine, null, Hlength,
+                            myDimesArray[i].myCAnnotationCHSE, myDimesArray[i].myCAnnotationCHP, 1, myDimesArray[i].myCAnnotationLine.myPolyMid,
+                            myDimesArray[i].myCAnnotationLine.myPolyStartP, null, null, null, 0, null, null, null, null, 0, null, null, null, "", null, "", null, "", 0, null, "", null, "", null, "",
+                            0, null, null, 0, null, null, null, 0, null, null, null, null, null, null, null, null, null, null, 0, null, null, null, 0, "")
+                        YX_Length_Max = GetMaxData(YX_Length_Max, Hlength)
+                        myTempWeldingArray[myTempWeldingArray.length] = mtempWeld
+                    }
+                }
+
+            }
+            else if (myDimesArray[i].myCAnnotationLine.myPolyPNum == 2) {
+
+                if (CheckLineType(myDimesArray[i].myCAnnotationLine.myPolyStartP, myDimesArray[i].myCAnnotationLine.myPolyEndP)) {
+                    var mL_line = myDimesArray[i].myCAnnotationLine
+
+                    var TwoNumPL = NS_PolylineArray2.length
+                    for (var j = 0; j < TwoNumPL; j++) {
+
+                        if (IsHorizontal(NS_PolylineArray2[j].GetPointAt(0), NS_PolylineArray2[j].GetPointAt(1))) {
+                            if (mL_line.myPolyCHSE == "Start") {
+                                if (IsNearPoint(mL_line.myPolyEndP, NS_PolylineArray2[j].GetPointAt(0))) {
+                                    var Hlength = GetDisFromTwoPoint(mL_line.myPolyEndP, NS_PolylineArray2[j].GetPointAt(1))
+                                    var mtline = new myPolyLine(NS_PolylineArray2[j].handle, 2, NS_PolylineArray2[j].GetPointAt(0),
+                                        NS_PolylineArray2[j].GetPointAt(1), null, "Start")
+                                    var mtempWeld = new myWelding(myDimesArray[i].myCAnnotationArrow, myDimesArray[i].myCAnnotationLine, mtline, Hlength,
+                                        myDimesArray[i].myCAnnotationCHSE, myDimesArray[i].myCAnnotationCHP, 2, myDimesArray[i].myCAnnotationLine.myPolyEndP,
+                                        NS_PolylineArray2[j].GetPointAt(1), null, null, null, 0, null, null, null, null, 0, null, null, null, "", null, "", null, "", 0, null, "", null, "", null, "",
+                                        0, null, null, 0, null, null, null, 0, null, null, null, null, null, null, null, null, null, null, 0, null, null, null, 0, "")
+                                    YX_Length_Max = GetMaxData(YX_Length_Max, Hlength)
+                                    myTempWeldingArray[myTempWeldingArray.length] = mtempWeld
+                                }
+                                else if (IsNearPoint(mL_line.myPolyEndP, NS_PolylineArray2[j].GetPointAt(1))) {
+                                    var Hlength = GetDisFromTwoPoint(mL_line.myPolyEndP, NS_PolylineArray2[j].GetPointAt(0))
+                                    var mtline = new myPolyLine(NS_PolylineArray2[j].handle, 2, NS_PolylineArray2[j].GetPointAt(0),
+                                        NS_PolylineArray2[j].GetPointAt(1), null, "End")
+                                    var mtempWeld = new myWelding(myDimesArray[i].myCAnnotationArrow, myDimesArray[i].myCAnnotationLine, mtline, Hlength,
+                                        myDimesArray[i].myCAnnotationCHSE, myDimesArray[i].myCAnnotationCHP, 2, myDimesArray[i].myCAnnotationLine.myPolyEndP,
+                                        NS_PolylineArray2[j].GetPointAt(0), null, null, null, 0, null, null, null, null, 0, null, null, null, "", null, "", null, "", 0, null, "", null, "", null, "",
+                                        0, null, null, 0, null, null, null, 0, null, null, null, null, null, null, null, null, null, null, 0, null, null, null, 0, "")
+                                    YX_Length_Max = GetMaxData(YX_Length_Max, Hlength)
+                                    myTempWeldingArray[myTempWeldingArray.length] = mtempWeld
+                                }
+                            }
+                            else if (mL_line.myPolyCHSE == "End") {
+                                if (IsNearPoint(mL_line.myPolyStartP, NS_PolylineArray2[j].GetPointAt(0))) {
+                                    var Hlength = GetDisFromTwoPoint(mL_line.myPolyStartP, NS_PolylineArray2[j].GetPointAt(1))
+                                    var mtline = new myPolyLine(NS_PolylineArray2[j].handle, 2, NS_PolylineArray2[j].GetPointAt(0),
+                                        NS_PolylineArray2[j].GetPointAt(1), null, "End")
+                                    var mtempWeld = new myWelding(myDimesArray[i].myCAnnotationArrow, myDimesArray[i].myCAnnotationLine, mtline, Hlength,
+                                        myDimesArray[i].myCAnnotationCHSE, myDimesArray[i].myCAnnotationCHP, 2, myDimesArray[i].myCAnnotationLine.myPolyStartP,
+                                        NS_PolylineArray2[j].GetPointAt(1), null, null, null, 0, null, null, null, null, 0, null, null, null, "", null, "", null, "", 0, null, "", null, "", null, "",
+                                        0, null, null, 0, null, null, null, 0, null, null, null, null, null, null, null, null, null, null, 0, null, null, null, 0, "")
+                                    YX_Length_Max = GetMaxData(YX_Length_Max, Hlength)
+                                    myTempWeldingArray[myTempWeldingArray.length] = mtempWeld
+                                }
+                                else if (IsNearPoint(mL_line.myPolyStartP, NS_PolylineArray2[j].GetPointAt(1))) {
+                                    var Hlength = GetDisFromTwoPoint(mL_line.myPolyStartP, NS_PolylineArray2[j].GetPointAt(0))
+                                    var mtline = new myPolyLine(NS_PolylineArray2[j].handle, 2, NS_PolylineArray2[j].GetPointAt(0),
+                                        NS_PolylineArray2[j].GetPointAt(1), null, "End")
+                                    var mtempWeld = new myWelding(myDimesArray[i].myCAnnotationArrow, myDimesArray[i].myCAnnotationLine, mtline, Hlength,
+                                        myDimesArray[i].myCAnnotationCHSE, myDimesArray[i].myCAnnotationCHP, 2, myDimesArray[i].myCAnnotationLine.myPolyStartP,
+                                        NS_PolylineArray2[j].GetPointAt(0), null, null, null, 0, null, null, null, null, 0, null, null, null, "", null, "", null, "", 0, null, "", null, "", null, "",
+                                        0, null, null, 0, null, null, null, 0, null, null, null, null, null, null, null, null, null, null, 0, null, null, null, 0, "")
+                                    YX_Length_Max = GetMaxData(YX_Length_Max, Hlength)
+                                    myTempWeldingArray[myTempWeldingArray.length] = mtempWeld
+                                }
+                            }
+                        }
+                    }
+
+                    var ThreeNumPL = NS_PolylineArray3.length
+                    for (var t = 0; t < ThreeNumPL; t++) {
+
+                        if (IsHorizontal(NS_PolylineArray3[t].GetPointAt(1), NS_PolylineArray3[t].GetPointAt(2))) {
+                            if (mL_line.myPolyCHSE == "Start") {
+                                if (IsNearPoint(mL_line.myPolyEndP, NS_PolylineArray3[t].GetPointAt(1)))//中点重合
+                                {
+                                    var Hlength = GetDisFromTwoPoint(mL_line.myPolyEndP, NS_PolylineArray3[t].GetPointAt(2))
+                                    var mtline = new myPolyLine(NS_PolylineArray3[t].handle, 3, NS_PolylineArray3[t].GetPointAt(0),
+                                        NS_PolylineArray3[t].GetPointAt(2), NS_PolylineArray3[t].GetPointAt(1), "Mid")
+                                    var mtempWeld = new myWelding(myDimesArray[i].myCAnnotationArrow, myDimesArray[i].myCAnnotationLine, mtline, Hlength,
+                                        myDimesArray[i].myCAnnotationCHSE, myDimesArray[i].myCAnnotationCHP, 2, myDimesArray[i].myCAnnotationLine.myPolyEndP,
+                                        NS_PolylineArray3[t].GetPointAt(2), null, null, null, 0, null, null, null, null, 0, null, null, null, "", null, "", null, "", 0, null, "", null, "", null, "",
+                                        0, null, null, 0, null, null, null, 0, null, null, null, null, null, null, null, null, null, null, 0, null, null, null, 0, "")
+                                    YX_Length_Max = GetMaxData(YX_Length_Max, Hlength)
+                                    myTempWeldingArray[myTempWeldingArray.length] = mtempWeld
+                                }
+                            }
+                            else if (mL_line.myPolyCHSE == "End") {
+                                if (IsNearPoint(mL_line.myPolyStartP, NS_PolylineArray3[t].GetPointAt(1))) {
+                                    var Hlength = GetDisFromTwoPoint(mL_line.myPolyStartP, NS_PolylineArray3[t].GetPointAt(2))
+                                    var mtline = new myPolyLine(NS_PolylineArray3[t].handle, 3, NS_PolylineArray3[t].GetPointAt(0),
+                                        NS_PolylineArray3[t].GetPointAt(2), NS_PolylineArray3[t].GetPointAt(1), "Mid")
+                                    var mtempWeld = new myWelding(myDimesArray[i].myCAnnotationArrow, myDimesArray[i].myCAnnotationLine, mtline, Hlength,
+                                        myDimesArray[i].myCAnnotationCHSE, myDimesArray[i].myCAnnotationCHP, 2, myDimesArray[i].myCAnnotationLine.myPolyStartP,
+                                        NS_PolylineArray3[t].GetPointAt(2), null, null, null, 0, null, null, null, null, 0, null, null, null, "", null, "", null, "", 0, null, "", null, "", null, "",
+                                        0, null, null, 0, null, null, null, 0, null, null, null, null, null, null, null, null, null, null, 0, null, null, null, 0, "")
+                                    YX_Length_Max = GetMaxData(YX_Length_Max, Hlength)
+                                    myTempWeldingArray[myTempWeldingArray.length] = mtempWeld
+                                }
+                            }
+                        }
+
+                        else if (IsHorizontal(NS_PolylineArray3[t].GetPointAt(1), NS_PolylineArray3[t].GetPointAt(0))) {
+                            if (mL_line.myPolyCHSE == "Start") {
+                                if (IsNearPoint(mL_line.myPolyEndP, NS_PolylineArray3[t].GetPointAt(1))) {
+                                    var Hlength = GetDisFromTwoPoint(mL_line.myPolyEndP, NS_PolylineArray3[t].GetPointAt(0))
+                                    var mtline = new myPolyLine(NS_PolylineArray3[t].handle, 3, NS_PolylineArray3[t].GetPointAt(0),
+                                        NS_PolylineArray3[t].GetPointAt(2), NS_PolylineArray3[t].GetPointAt(1), "Mid")
+                                    var mtempWeld = new myWelding(myDimesArray[i].myCAnnotationArrow, myDimesArray[i].myCAnnotationLine, mtline, Hlength,
+                                        myDimesArray[i].myCAnnotationCHSE, myDimesArray[i].myCAnnotationCHP, 2, myDimesArray[i].myCAnnotationLine.myPolyEndP,
+                                        NS_PolylineArray3[t].GetPointAt(0), null, null, null, 0, null, null, null, null, 0, null, null, null, "", null, "", null, "", 0, null, "", null, "", null, "",
+                                        0, null, null, 0, null, null, null, 0, null, null, null, null, null, null, null, null, null, null, 0, null, null, null, 0, "")
+                                    YX_Length_Max = GetMaxData(YX_Length_Max, Hlength)
+                                    myTempWeldingArray[myTempWeldingArray.length] = mtempWeld
+                                }
+                            }
+                            else if (mL_line.myPolyCHSE == "End") {
+                                if (IsNearPoint(mL_line.myPolyStartP, NS_PolylineArray3[t].GetPointAt(1))) {
+                                    var Hlength = GetDisFromTwoPoint(mL_line.myPolyStartP, NS_PolylineArray3[t].GetPointAt(0))
+                                    var mtline = new myPolyLine(NS_PolylineArray3[t].handle, 3, NS_PolylineArray3[t].GetPointAt(0),
+                                        NS_PolylineArray3[t].GetPointAt(2), NS_PolylineArray3[t].GetPointAt(1), "Mid")
+                                    var mtempWeld = new myWelding(myDimesArray[i].myCAnnotationArrow, myDimesArray[i].myCAnnotationLine, mtline, Hlength,
+                                        myDimesArray[i].myCAnnotationCHSE, myDimesArray[i].myCAnnotationCHP, 2, myDimesArray[i].myCAnnotationLine.myPolyStartP,
+                                        NS_PolylineArray3[t].GetPointAt(0), null, null, null, 0, null, null, null, null, 0, null, null, null, "", null, "", null, "", 0, null, "", null, "", null, "",
+                                        0, null, null, 0, null, null, null, 0, null, null, null, null, null, null, null, null, null, null, 0, null, null, null, 0, "")
+                                    YX_Length_Max = GetMaxData(YX_Length_Max, Hlength)
+                                    myTempWeldingArray[myTempWeldingArray.length] = mtempWeld
+                                }
+                            }
+                        }
+                    }
+                }
+
+            }
+        }
+        //-----4-------------筛选------------------
+        var myWeldingArray = GetIntersectLineArray(myTempWeldingArray, NS_PolylineArray2, NS_PolylineArray3, NS_PolylineArray4_10)
+        var m_ResWeldArr = [];//识别到的焊缝符号都存在这个数组里
+        m_ResWeldArr = FirstDivideWelding(myWeldingArray, NS_PolylineArray2, NS_PolylineArray3, NS_PolylineArray4_10)
+
+
+        if (m_ResWeldArr.length == 0) {
+            alert('未识别到焊缝');
+            return;
+        }
+        DrawCircleOfArrow(m_ResWeldArr[0].myWelArrow.myArrowObjectID) //实现使用箭头handle 在箭头处画圆
+
+
+        //m_ResWeldArr[i].myWelArrow.myArrowObjectID  保存的是箭头handle的值
+        //m_ResWeldArr[i].myWelType 保存识别到焊缝的类型，字符说明如下
+        //"N_PoKDuiJieH"// 1-不开坡口对接焊
+        // "Y_DMDCPoKDuiJieH"// 2-单面-单侧-坡口-背面封底-对接焊缝
+        // "Y_SMDCPoKDuiJieH"// 3-双面-单侧-坡口-对接焊缝
+        //"Y_SMDuiJieH"// 12-双面角焊缝
+
+        var myDateEnd = new Date();
+        var strtimesend = myDateEnd.toLocaleTimeString();
+        //alert("开始时间：" + strtimestart + ",结束时间：" + strtimesend)
+
+        //插入数据
+        var weldData = [];
+        for (var i = 0; i < m_ResWeldArr.length; i++) {
+            weldData.push({ WeldType: m_ResWeldArr[i].myWelType, HandleID: m_ResWeldArr[i].myWelArrow.myArrowObjectID });
+        }
+        adddata(weldData);
+    }
+    function DrawCircleOfArrow(m_handle) {
+        //删掉上一个画圈的handleid
+        if (lastCircleHandle > 0) {
+            deleClrByID(lastCircleHandle);
+            lastCircleHandle = 0;
+        }
+        var mxOcx = document.all.item("MxDrawXCtrl");
+        var database = mxOcx.GetDatabase();
+        var ent = database.HandleToObject(m_handle);
+        var HatchArrow = ent;
+        var PolylineArray = HatchArrow.GetPolylines();
+        var polyline = PolylineArray.AtObject(0);
+        var pt1 = polyline.GetPointAt(0);
+
+        //创建一个图层,名为"CircleLayer"
+        mxOcx.AddLayer("CircleLayer");
+
+        //设置当前图层为"CircleLayer"
+        mxOcx.LayerName = "CircleLayer";
+
+        mxOcx.DrawColor = 255;
+        lastCircleHandle = mxOcx.DrawCircle(pt1.x, pt1.y, 10);
+
+        //更新视区显示
+        mxOcx.UpdateDisplay();
+    }
+    //删除绘制的圈
+    function deleClrByID(myId) {
+        var mxOcx = document.all.item("MxDrawXCtrl");
+        var database = mxOcx.GetDatabase();
+        var ent;
+        ent = database.ObjectIdToObject(myId);
+        ent.Erase();
+    }
+
+    function GetDimensArrowLine(myArrowDatas, TwoP_Polyline, ThreeP_Polyline) {
+        var num = myArrowDatas.length;
+
+
+        var mDimesArray = [];
+        for (var j = 0; j < num; j++) {
+            var sameNum = 0;
+            var twoNum = TwoP_Polyline.length;
+            var threeNum = ThreeP_Polyline.length;
+
+            var tempPolyLineArray = [];
+            for (var i = 0; i < twoNum; i++) {
+                if (IsNearPoint(TwoP_Polyline[i].GetPointAt(0), myArrowDatas[j].myArrowMid)) {
+                    var mytempPL = new myPolyLine(TwoP_Polyline[i].handle, 2, TwoP_Polyline[i].GetPointAt(0), TwoP_Polyline[i].GetPointAt(1), null, "Start");
+                    tempPolyLineArray[tempPolyLineArray.length] = mytempPL;
+                    sameNum = sameNum + 1;
+                }
+                else if (IsNearPoint(TwoP_Polyline[i].GetPointAt(1), myArrowDatas[j].myArrowMid)) {
+                    var mytempPL = new myPolyLine(TwoP_Polyline[i].handle, 2, TwoP_Polyline[i].GetPointAt(0), TwoP_Polyline[i].GetPointAt(1), null, "End");
+                    tempPolyLineArray[tempPolyLineArray.length] = mytempPL;
+                    sameNum = sameNum + 1;
+                }
+                //顶点
+                if (IsNearPoint(TwoP_Polyline[i].GetPointAt(0), myArrowDatas[j].myArrowDingP)) {
+                    var mytempPL = new myPolyLine(TwoP_Polyline[i].handle, 2, TwoP_Polyline[i].GetPointAt(0), TwoP_Polyline[i].GetPointAt(1), null, "Start");
+                    tempPolyLineArray[tempPolyLineArray.length] = mytempPL;
+                    sameNum = sameNum + 1;
+                }
+                else if (IsNearPoint(TwoP_Polyline[i].GetPointAt(1), myArrowDatas[j].myArrowDingP)) {
+                    var mytempPL = new myPolyLine(TwoP_Polyline[i].handle, 2, TwoP_Polyline[i].GetPointAt(0), TwoP_Polyline[i].GetPointAt(1), null, "End");
+                    tempPolyLineArray[tempPolyLineArray.length] = mytempPL;
+                    sameNum = sameNum + 1;
+                }
+
+            }
+            for (var t = 0; t < threeNum; t++) {
+                if (IsNearPoint(ThreeP_Polyline[t].GetPointAt(0), myArrowDatas[j].myArrowMid)) {
+                    var mytempPL = new myPolyLine(ThreeP_Polyline[t].handle, 3, ThreeP_Polyline[t].GetPointAt(0), ThreeP_Polyline[t].GetPointAt(2), ThreeP_Polyline[t].GetPointAt(1), "Start");
+                    tempPolyLineArray[tempPolyLineArray.length] = mytempPL;
+                    sameNum = sameNum + 1;
+                }
+                else if (IsNearPoint(ThreeP_Polyline[t].GetPointAt(2), myArrowDatas[j].myArrowMid)) {
+                    var mytempPL = new myPolyLine(ThreeP_Polyline[t].handle, 3, ThreeP_Polyline[t].GetPointAt(0), ThreeP_Polyline[t].GetPointAt(2), ThreeP_Polyline[t].GetPointAt(1), "End");
+                    tempPolyLineArray[tempPolyLineArray.length] = mytempPL;
+                    sameNum = sameNum + 1;
+                }
+                //顶点
+                if (IsNearPoint(ThreeP_Polyline[t].GetPointAt(0), myArrowDatas[j].myArrowDingP)) {
+                    var mytempPL = new myPolyLine(ThreeP_Polyline[t].handle, 3, ThreeP_Polyline[t].GetPointAt(0), ThreeP_Polyline[t].GetPointAt(2), ThreeP_Polyline[t].GetPointAt(1), "Start");
+                    tempPolyLineArray[tempPolyLineArray.length] = mytempPL;
+                    sameNum = sameNum + 1;
+                }
+                else if (IsNearPoint(ThreeP_Polyline[t].GetPointAt(2), myArrowDatas[j].myArrowDingP)) {
+                    var mytempPL = new myPolyLine(ThreeP_Polyline[t].handle, 3, ThreeP_Polyline[t].GetPointAt(0), ThreeP_Polyline[t].GetPointAt(2), ThreeP_Polyline[t].GetPointAt(1), "End");
+                    tempPolyLineArray[tempPolyLineArray.length] = mytempPL;
+                    sameNum = sameNum + 1;
+                }
+            }
+            if (sameNum == 1) {
+
+                if (tempPolyLineArray[0].myPolyCHSE == "Start") {
+                    var mDim = new myCAnnotation(myArrowDatas[j], tempPolyLineArray[0],
+                        tempPolyLineArray[0].myPolyCHSE, tempPolyLineArray[0].myPolyStartP)
+                    mDimesArray[mDimesArray.length] = mDim;
+                }
+                else {
+                    var mDim = new myCAnnotation(myArrowDatas[j], tempPolyLineArray[0],
+                        tempPolyLineArray[0].myPolyCHSE, tempPolyLineArray[0].myPolyEndP);
+                    mDimesArray[mDimesArray.length] = mDim;
+                }
+
+            }
+
+            else if (sameNum == 2) {
+
+            }
+        }
+        return mDimesArray;
+    }
+    //---4----筛选
+    function GetIntersectLineArray(myWeldArray, TwoP_PolyLArray, ThreeP_PolyLArray, FourMP_PolyLArray) {
+        var num = myWeldArray.length
+        for (var i = 0; i < num; i++) {
+            var myGuaiP = myWeldArray[i].myWelGUIP
+            var myWeiP = myWeldArray[i].myWelWEIP
+
+            for (var twoi = 0; twoi < TwoP_PolyLArray.length; twoi++) {
+
+                if (TwoP_PolyLArray[twoi].handle == myWeldArray[i].myWelYINline1.myPolyLineObjectID) {
+                    continue;
+                }
+                else if (myWeldArray[i].myWelYINnum == 2 && TwoP_PolyLArray[twoi].handle == myWeldArray[i].myWelYINline2.myPolyLineObjectID) {
+                    continue;
+                }
+
+                else if (CheckLineInHLine(TwoP_PolyLArray[twoi].GetPointAt(0), TwoP_PolyLArray[twoi].GetPointAt(1), myGuaiP, myWeiP)) {
+                    TwoP_PolyLArray.splice(twoi, 1)
+                    twoi = twoi - 1;
+                    continue
+                }
+
+
+                var mtempLine = new myPolyLine(TwoP_PolyLArray[twoi].handle, 2, TwoP_PolyLArray[twoi].GetPointAt(0),
+                    TwoP_PolyLArray[twoi].GetPointAt(1), null, "")
+
+
+                if (IsNearPoint(myWeiP, TwoP_PolyLArray[twoi].GetPointAt(0))) {
+                    if (myWeldArray[i].myWelWH_num == 0) {
+
+                        myWeldArray[i].myWelWHline_1 = mtempLine
+                        myWeldArray[i].myWelWHline_1.myPolyCHSE = "Start"
+                        myWeldArray[i].myWelWH_num = 1;
+                        myWeldArray[i].myWelWHPoint_1 = mtempLine.myPolyStartP
+                    }
+                    else if (myWeldArray[i].myWelWH_num == 1) {
+                        myWeldArray[i].myWelWHline_2 = mtempLine
+                        myWeldArray[i].myWelWHline_2.myPolyCHSE = "Start"
+                        myWeldArray[i].myWelWH_num = 2;
+                        myWeldArray[i].myWelWHPoint_2 = mtempLine.myPolyStartP
+                    }
+                }
+                else if (IsNearPoint(myWeiP, TwoP_PolyLArray[twoi].GetPointAt(1))) {
+                    if (myWeldArray[i].myWelWH_num == 0) {
+                        myWeldArray[i].myWelWHline_1 = mtempLine
+                        myWeldArray[i].myWelWHline_1.myPolyCHSE = "End"
+                        myWeldArray[i].myWelWH_num = 1;
+                        myWeldArray[i].myWelWHPoint_1 = mtempLine.myPolyEndP
+                    }
+                    else if (myWeldArray[i].myWelWH_num == 1) {
+                        myWeldArray[i].myWelWHline_2 = mtempLine
+                        myWeldArray[i].myWelWHline_2.myPolyCHSE = "End"
+                        myWeldArray[i].myWelWH_num = 2;
+                        myWeldArray[i].myWelWHPoint_2 = mtempLine.myPolyEndP
+                    }
+                }
+
+                if (IsPointOnLine(TwoP_PolyLArray[twoi].GetPointAt(0), myGuaiP, myWeiP)) {
+
+                    var tempDisStr = GetPositionOfLine(TwoP_PolyLArray[twoi], myGuaiP, myWeiP)
+                    if (tempDisStr == "up") {
+                        if (myWeldArray[i].myWelMS_num == 0) {
+                            myWeldArray[i].myWelMSline_1 = mtempLine
+                            myWeldArray[i].myWelMSStorEdorMd_1 = "Start"
+                            myWeldArray[i].myWelMS_num = 1
+                        }
+                        else if (myWeldArray[i].myWelMS_num == 1) {
+                            myWeldArray[i].myWelMSline_2 = mtempLine
+                            myWeldArray[i].myWelMSStorEdorMd_2 = "Start"
+                            myWeldArray[i].myWelMS_num = 2
+                        }
+                        else if (myWeldArray[i].myWelMS_num == 2) {
+                            myWeldArray[i].myWelMSline_3 = mtempLine
+                            myWeldArray[i].myWelMSStorEdorMd_3 = "Start"
+                            myWeldArray[i].myWelMS_num = 3
+                        }
+                    }
+                    else if (tempDisStr == "down") {
+                        if (myWeldArray[i].myWelMX_num == 0) {
+                            myWeldArray[i].myWelMXline_1 = mtempLine
+                            myWeldArray[i].myWelMXStorEdorMd_1 = "Start"
+                            myWeldArray[i].myWelMX_num = 1
+                        }
+                        else if (myWeldArray[i].myWelMX_num == 1) {
+                            myWeldArray[i].myWelMXline_2 = mtempLine
+                            myWeldArray[i].myWelMXStorEdorMd_2 = "Start"
+                            myWeldArray[i].myWelMX_num = 2
+                        }
+                        else if (myWeldArray[i].myWelMX_num == 2) {
+                            myWeldArray[i].myWelMXline_3 = mtempLine
+                            myWeldArray[i].myWelMXStorEdorMd_3 = "Start"
+                            myWeldArray[i].myWelMX_num = 3
+                        }
+                    }
+                    else if (tempDisStr == "mid") {
+                        if (myWeldArray[i].myWelMid_num == 0) {
+                            myWeldArray[i].myWelMidline_1 = mtempLine
+                            myWeldArray[i].myWelMid_num = 1
+                        }
+                        else if (myWeldArray[i].myWelMid_num == 1) {
+                            myWeldArray[i].myWelMidline_2 = mtempLine
+                            myWeldArray[i].myWelMid_num = 2
+                        }
+                    }
+                }
+
+                else if (IsPointOnLine(TwoP_PolyLArray[twoi].GetPointAt(1), myGuaiP, myWeiP)) {
+                    var tempDisStr = GetPositionOfLine(TwoP_PolyLArray[twoi], myGuaiP, myWeiP)
+                    if (tempDisStr == "up") {
+                        if (myWeldArray[i].myWelMS_num == 0) {
+                            myWeldArray[i].myWelMSline_1 = mtempLine
+                            myWeldArray[i].myWelMSStorEdorMd_1 = "End"
+                            myWeldArray[i].myWelMS_num = 1
+                        }
+                        else if (myWeldArray[i].myWelMS_num == 1) {
+                            myWeldArray[i].myWelMSline_2 = mtempLine
+                            myWeldArray[i].myWelMSStorEdorMd_2 = "End"
+                            myWeldArray[i].myWelMS_num = 2
+                        }
+                        else if (myWeldArray[i].myWelMS_num == 2) {
+                            myWeldArray[i].myWelMSline_3 = mtempLine
+                            myWeldArray[i].myWelMSStorEdorMd_3 = "End"
+                            myWeldArray[i].myWelMS_num = 3
+                        }
+                    }
+                    else if (tempDisStr == "down") {
+                        if (myWeldArray[i].myWelMX_num == 0) {
+                            myWeldArray[i].myWelMXline_1 = mtempLine
+                            myWeldArray[i].myWelMXStorEdorMd_1 = "End"
+                            myWeldArray[i].myWelMX_num = 1
+                        }
+                        else if (myWeldArray[i].myWelMX_num == 1) {
+                            myWeldArray[i].myWelMXline_2 = mtempLine
+                            myWeldArray[i].myWelMXStorEdorMd_2 = "End"
+                            myWeldArray[i].myWelMX_num = 2
+                        }
+                        else if (myWeldArray[i].myWelMX_num == 2) {
+                            myWeldArray[i].myWelMXline_3 = mtempLine
+                            myWeldArray[i].myWelMXStorEdorMd_3 = "End"
+                            myWeldArray[i].myWelMX_num = 3
+                        }
+                    }
+                    else if (tempDisStr == "mid") {
+                        if (myWeldArray[i].myWelMid_num == 0) {
+                            myWeldArray[i].myWelMidline_1 = mtempLine
+                            myWeldArray[i].myWelMid_num = 1
+                        }
+                        else if (myWeldArray[i].myWelMid_num == 1) {
+                            myWeldArray[i].myWelMidline_2 = mtempLine
+                            myWeldArray[i].myWelMid_num = 2
+                        }
+                    }
+                }
+
+                else if (IsLineInterWithHYinLine(TwoP_PolyLArray[twoi].GetPointAt(0), TwoP_PolyLArray[twoi].GetPointAt(1), myGuaiP, myWeiP)) {
+                    var str = GetPositionOfLine(TwoP_PolyLArray[twoi], myGuaiP, myWeiP)
+                    if (str == "mid") {
+                        if (myWeldArray[i].myWelMid_num == 0) {
+                            myWeldArray[i].myWelMidline_1 = mtempLine
+                            myWeldArray[i].myWelMid_num = 1
+                        }
+                        else if (myWeldArray[i].myWelMid_num == 1) {
+                            myWeldArray[i].myWelMidline_2 = mtempLine
+                            myWeldArray[i].myWelMid_num = 2
+                        }
+                    }
+                }
+            }
+
+            for (var threei = 0; threei < ThreeP_PolyLArray.length; threei++) {
+                if (ThreeP_PolyLArray[threei].handle == myWeldArray[i].myWelYINline1.myPolyLineObjectID) {
+                    continue;
+                }
+                else if (myWeldArray[i].myWelYINnum == 2 && ThreeP_PolyLArray[threei].handle == myWeldArray[i].myWelYINline2.myPolyLineObjectID) {
+                    continue;
+                }
+
+                var mtempline3 = new myPolyLine(ThreeP_PolyLArray[threei].handle, 3, ThreeP_PolyLArray[threei].GetPointAt(0),
+                    ThreeP_PolyLArray[threei].GetPointAt(2), ThreeP_PolyLArray[threei].GetPointAt(1), "")
+
+
+                if (!IsNearPoint(ThreeP_PolyLArray[threei].GetPointAt(1), myGuaiP)) {
+                    if (IsNearPoint(myWeiP, ThreeP_PolyLArray[threei].GetPointAt(0))) {
+                        if (myWeldArray[i].myWelWH_num == 0) {
+                            myWeldArray[i].myWelWHline_1 = mtempline3
+                            myWeldArray[i].myWelWHline_1.myPolyCHSE = "Start"
+                            myWeldArray[i].myWelWH_num = 1;
+                            myWeldArray[i].myWelWHPoint_1 = ThreeP_PolyLArray[threei].GetPointAt(0)
+                        }
+                        else if (myWeldArray[i].myWelWH_num == 1) {
+                            myWeldArray[i].myWelWHline_2 = mtempline3
+                            myWeldArray[i].myWelWHline_2.myPolyCHSE = "Start"
+                            myWeldArray[i].myWelWH_num = 2;
+                            myWeldArray[i].myWelWHPoint_2 = ThreeP_PolyLArray[threei].GetPointAt(0)
+                        }
+                    }
+                    else if (IsNearPoint(myWeiP, ThreeP_PolyLArray[threei].GetPointAt(2))) {
+                        if (myWeldArray[i].myWelWH_num == 0) {
+                            myWeldArray[i].myWelWHline_1 = mtempline3
+                            myWeldArray[i].myWelWHline_1.myPolyCHSE = "End"
+                            myWeldArray[i].myWelWH_num = 1;
+                            myWeldArray[i].myWelWHPoint_1 = ThreeP_PolyLArray[threei].GetPointAt(2)
+                        }
+                        else if (myWeldArray[i].myWelWH_num == 1) {
+                            myWeldArray[i].myWelWHline_2 = mtempline3
+                            myWeldArray[i].myWelWHline_2.myPolyCHSE = "End"
+                            myWeldArray[i].myWelWH_num = 2;
+                            myWeldArray[i].myWelWHPoint_2 = ThreeP_PolyLArray[threei].GetPointAt(2)
+                        }
+                    }
+
+                    else {
+                        if (IsNearPoint(myWeiP, ThreeP_PolyLArray[threei].GetPointAt(1))) {
+                            if (myWeldArray[i].myWelWH_num == 0) {
+                                myWeldArray[i].myWelWHline_1 = mtempline3
+                                myWeldArray[i].myWelWHline_1.myPolyCHSE = "Mid"
+                                myWeldArray[i].myWelWH_num = 1;
+                                myWeldArray[i].myWelWHPoint_1 = ThreeP_PolyLArray[threei].GetPointAt(1)
+                            }
+                            else if (myWeldArray[i].myWelWH_num == 1) {
+                                myWeldArray[i].myWelWHline_2 = mtempline3
+                                myWeldArray[i].myWelWHline_2.myPolyCHSE = "Mid"
+                                myWeldArray[i].myWelWH_num = 2;
+                                myWeldArray[i].myWelWHPoint_2 = ThreeP_PolyLArray[threei].GetPointAt(1)
+                            }
+                        }
+                    }
+                }
+
+                if (IsPointOnLine(ThreeP_PolyLArray[threei].GetPointAt(0), myGuaiP, myWeiP)) {
+
+                    var tempDisStr = GetPositionOfLine(ThreeP_PolyLArray[threei], myGuaiP, myWeiP)
+                    if (tempDisStr == "up") {
+                        if (myWeldArray[i].myWelMS_num == 0) {
+                            myWeldArray[i].myWelMSline_1 = mtempline3
+                            myWeldArray[i].myWelMSStorEdorMd_1 = "Start"
+                            myWeldArray[i].myWelMS_num = 1
+                        }
+                        else if (myWeldArray[i].myWelMS_num == 1) {
+                            myWeldArray[i].myWelMSline_2 = mtempline3
+                            myWeldArray[i].myWelMSStorEdorMd_2 = "Start"
+                            myWeldArray[i].myWelMS_num = 2
+                        }
+                        else if (myWeldArray[i].myWelMS_num == 2) {
+                            myWeldArray[i].myWelMSline_3 = mtempline3
+                            myWeldArray[i].myWelMSStorEdorMd_3 = "Start"
+                            myWeldArray[i].myWelMS_num = 3
+                        }
+                    }
+                    else if (tempDisStr == "down") {
+                        if (myWeldArray[i].myWelMX_num == 0) {
+                            myWeldArray[i].myWelMXline_1 = mtempline3
+                            myWeldArray[i].myWelMXStorEdorMd_1 = "Start"
+                            myWeldArray[i].myWelMX_num = 1
+                        }
+                        else if (myWeldArray[i].myWelMX_num == 1) {
+                            myWeldArray[i].myWelMXline_2 = mtempline3
+                            myWeldArray[i].myWelMXStorEdorMd_2 = "Start"
+                            myWeldArray[i].myWelMX_num = 2
+                        }
+                        else if (myWeldArray[i].myWelMX_num == 2) {
+                            myWeldArray[i].myWelMXline_3 = mtempline3
+                            myWeldArray[i].myWelMXStorEdorMd_3 = "Start"
+                            myWeldArray[i].myWelMX_num = 3
+                        }
+                    }
+                    else if (tempDisStr == "mid") {
+                        if (myWeldArray[i].myWelMid_num == 0) {
+                            myWeldArray[i].myWelMidline_1 = mtempline3
+                            myWeldArray[i].myWelMid_num = 1
+                        }
+                        else if (myWeldArray[i].myWelMid_num == 1) {
+                            myWeldArray[i].myWelMidline_2 = mtempline3
+                            myWeldArray[i].myWelMid_num = 2
+                        }
+                    }
+                }
+
+                else if (IsPointOnLine(ThreeP_PolyLArray[threei].GetPointAt(2), myGuaiP, myWeiP)) {
+
+                    var tempDisStr = GetPositionOfLine(ThreeP_PolyLArray[threei], myGuaiP, myWeiP)
+                    if (tempDisStr == "up") {
+                        if (myWeldArray[i].myWelMS_num == 0) {
+                            myWeldArray[i].myWelMSline_1 = mtempline3
+                            myWeldArray[i].myWelMSStorEdorMd_1 = "End"
+                            myWeldArray[i].myWelMS_num = 1
+                        }
+                        else if (myWeldArray[i].myWelMS_num == 1) {
+                            myWeldArray[i].myWelMSline_2 = mtempline3
+                            myWeldArray[i].myWelMSStorEdorMd_2 = "End"
+                            myWeldArray[i].myWelMS_num = 2
+                        }
+                        else if (myWeldArray[i].myWelMS_num == 2) {
+                            myWeldArray[i].myWelMSline_3 = mtempline3
+                            myWeldArray[i].myWelMSStorEdorMd_3 = "End"
+                            myWeldArray[i].myWelMS_num = 3
+                        }
+                    }
+                    else if (tempDisStr == "down") {
+                        if (myWeldArray[i].myWelMX_num == 0) {
+                            myWeldArray[i].myWelMXline_1 = mtempline3
+                            myWeldArray[i].myWelMXStorEdorMd_1 = "End"
+                            myWeldArray[i].myWelMX_num = 1
+                        }
+                        else if (myWeldArray[i].myWelMX_num == 1) {
+                            myWeldArray[i].myWelMXline_2 = mtempline3
+                            myWeldArray[i].myWelMXStorEdorMd_2 = "End"
+                            myWeldArray[i].myWelMX_num = 2
+                        }
+                        else if (myWeldArray[i].myWelMX_num == 2) {
+                            myWeldArray[i].myWelMXline_3 = mtempline3
+                            myWeldArray[i].myWelMXStorEdorMd_3 = "End"
+                            myWeldArray[i].myWelMX_num = 3
+                        }
+                    }
+                    else if (tempDisStr == "mid") {
+                        if (myWeldArray[i].myWelMid_num == 0) {
+                            myWeldArray[i].myWelMidline_1 = mtempline3
+                            myWeldArray[i].myWelMid_num = 1
+                        }
+                        else if (myWeldArray[i].myWelMid_num == 1) {
+                            myWeldArray[i].myWelMidline_2 = mtempline3
+                            myWeldArray[i].myWelMid_num = 2
+                        }
+                    }
+                }
+                else {
+
+                    if (IsPointOnLine(ThreeP_PolyLArray[threei].GetPointAt(1), myGuaiP, myWeiP)) {
+                        var tempDisStr = GetPositionOfLine(ThreeP_PolyLArray[threei], myGuaiP, myWeiP)
+                        if (tempDisStr == "up") {
+                            if (myWeldArray[i].myWelMS_num == 0) {
+                                myWeldArray[i].myWelMSline_1 = mtempline3
+                                myWeldArray[i].myWelMSStorEdorMd_1 = "Mid"
+                                myWeldArray[i].myWelMS_num = 1
+                            }
+                            else if (myWeldArray[i].myWelMS_num == 1) {
+                                myWeldArray[i].myWelMSline_2 = mtempline3
+                                myWeldArray[i].myWelMSStorEdorMd_2 = "Mid"
+                                myWeldArray[i].myWelMS_num = 2
+                            }
+                            else if (myWeldArray[i].myWelMS_num == 2) {
+                                myWeldArray[i].myWelMSline_3 = mtempline3
+                                myWeldArray[i].myWelMSStorEdorMd_3 = "Mid"
+                                myWeldArray[i].myWelMS_num = 3
+                            }
+                        }
+                        else if (tempDisStr == "down") {
+                            if (myWeldArray[i].myWelMX_num == 0) {
+                                myWeldArray[i].myWelMXline_1 = mtempline3
+                                myWeldArray[i].myWelMXStorEdorMd_1 = "Mid"
+                                myWeldArray[i].myWelMX_num = 1
+                            }
+                            else if (myWeldArray[i].myWelMX_num == 1) {
+                                myWeldArray[i].myWelMXline_2 = mtempline3
+                                myWeldArray[i].myWelMXStorEdorMd_2 = "Mid"
+                                myWeldArray[i].myWelMX_num = 2
+                            }
+                            else if (myWeldArray[i].myWelMX_num == 2) {
+                                myWeldArray[i].myWelMXline_3 = mtempline3
+                                myWeldArray[i].myWelMXStorEdorMd_3 = "Mid"
+                                myWeldArray[i].myWelMX_num = 3
+                            }
+                        }
+                        else if (tempDisStr == "mid") {
+                            if (myWeldArray[i].myWelMid_num == 0) {
+                                myWeldArray[i].myWelMidline_1 = mtempline3
+                                myWeldArray[i].myWelMid_num = 1
+                            }
+                            else if (myWeldArray[i].myWelMid_num == 1) {
+                                myWeldArray[i].myWelMidline_2 = mtempline3
+                                myWeldArray[i].myWelMid_num = 2
+                            }
+                        }
+                    }
+                }
+            }
+
+            for (var fouri = 0; fouri < FourMP_PolyLArray.length; fouri++) {
+
+                if (FourMP_PolyLArray[fouri].handle == myWeldArray[i].myWelYINline1.myPolyLineObjectID) {
+                    continue;
+                }
+                else if (myWeldArray[i].myWelYINnum == 2 && FourMP_PolyLArray[fouri].handle == myWeldArray[i].myWelYINline2.myPolyLineObjectID) {
+                    continue;
+                }
+
+                var mtempline4 = new myPolyLine(FourMP_PolyLArray[fouri].handle, FourMP_PolyLArray[fouri].numVerts, FourMP_PolyLArray[fouri].GetPointAt(0), FourMP_PolyLArray[fouri].GetPointAt(FourMP_PolyLArray[fouri].numVerts - 1), null, "")
+
+                if (IsPointOnLine(FourMP_PolyLArray[fouri].GetPointAt(0), myGuaiP, myWeiP)) {
+
+                    var tempDisStr = GetPositionOfLine(FourMP_PolyLArray[fouri], myGuaiP, myWeiP)
+                    if (tempDisStr == "up") {
+                        if (myWeldArray[i].myWelMS_num == 0) {
+                            myWeldArray[i].myWelMSline_1 = mtempline4
+                            myWeldArray[i].myWelMSStorEdorMd_1 = "Start"
+                            myWeldArray[i].myWelMS_num = 1
+                        }
+                        else if (myWeldArray[i].myWelMS_num == 1) {
+                            myWeldArray[i].myWelMSline_2 = mtempline4
+                            myWeldArray[i].myWelMSStorEdorMd_2 = "Start"
+                            myWeldArray[i].myWelMS_num = 2
+                        }
+                        else if (myWeldArray[i].myWelMS_num == 2) {
+                            myWeldArray[i].myWelMSline_3 = mtempline4
+                            myWeldArray[i].myWelMSStorEdorMd_3 = "Start"
+                            myWeldArray[i].myWelMS_num = 3
+                        }
+                    }
+                    else if (tempDisStr == "down") {
+                        if (myWeldArray[i].myWelMX_num == 0) {
+                            myWeldArray[i].myWelMXline_1 = mtempline4
+                            myWeldArray[i].myWelMXStorEdorMd_1 = "Start"
+                            myWeldArray[i].myWelMX_num = 1
+                        }
+                        else if (myWeldArray[i].myWelMX_num == 1) {
+                            myWeldArray[i].myWelMXline_2 = mtempline4
+                            myWeldArray[i].myWelMXStorEdorMd_2 = "Start"
+                            myWeldArray[i].myWelMX_num = 2
+                        }
+                        else if (myWeldArray[i].myWelMX_num == 2) {
+                            myWeldArray[i].myWelMXline_3 = mtempline4
+                            myWeldArray[i].myWelMXStorEdorMd_3 = "Start"
+                            myWeldArray[i].myWelMX_num = 3
+                        }
+                    }
+                    else if (tempDisStr == "mid") {
+                        if (myWeldArray[i].myWelMid_num == 0) {
+                            myWeldArray[i].myWelMidline_1 = mtempline4
+                            myWeldArray[i].myWelMid_num = 1
+                        }
+                        else if (myWeldArray[i].myWelMid_num == 1) {
+                            myWeldArray[i].myWelMidline_2 = mtempline4
+                            myWeldArray[i].myWelMid_num = 2
+                        }
+                    }
+                }
+
+                else if (IsPointOnLine(FourMP_PolyLArray[fouri].GetPointAt(FourMP_PolyLArray[fouri].numVerts - 1), myGuaiP, myWeiP)) {
+                    var tempDisStr = GetPositionOfLine(FourMP_PolyLArray[fouri], myGuaiP, myWeiP)
+                    if (tempDisStr == "up") {
+                        if (myWeldArray[i].myWelMS_num == 0) {
+                            myWeldArray[i].myWelMSline_1 = mtempline4
+                            myWeldArray[i].myWelMSStorEdorMd_1 = "End"
+                            myWeldArray[i].myWelMS_num = 1
+                        }
+                        else if (myWeldArray[i].myWelMS_num == 1) {
+                            myWeldArray[i].myWelMSline_2 = mtempline4
+                            myWeldArray[i].myWelMSStorEdorMd_2 = "End"
+                            myWeldArray[i].myWelMS_num = 2
+                        }
+                        else if (myWeldArray[i].myWelMS_num == 2) {
+                            myWeldArray[i].myWelMSline_3 = mtempline4
+                            myWeldArray[i].myWelMSStorEdorMd_3 = "End"
+                            myWeldArray[i].myWelMS_num = 3
+                        }
+                    }
+                    else if (tempDisStr == "down") {
+                        if (myWeldArray[i].myWelMX_num == 0) {
+                            myWeldArray[i].myWelMXline_1 = mtempline4
+                            myWeldArray[i].myWelMXStorEdorMd_1 = "End"
+                            myWeldArray[i].myWelMX_num = 1
+                        }
+                        else if (myWeldArray[i].myWelMX_num == 1) {
+                            myWeldArray[i].myWelMXline_2 = mtempline4
+                            myWeldArray[i].myWelMXStorEdorMd_2 = "End"
+                            myWeldArray[i].myWelMX_num = 2
+                        }
+                        else if (myWeldArray[i].myWelMX_num == 2) {
+                            myWeldArray[i].myWelMXline_3 = mtempline4
+                            myWeldArray[i].myWelMXStorEdorMd_3 = "End"
+                            myWeldArray[i].myWelMX_num = 3
+                        }
+                    }
+                    else if (tempDisStr == "mid") {
+                        if (myWeldArray[i].myWelMid_num == 0) {
+                            myWeldArray[i].myWelMidline_1 = mtempline4
+                            myWeldArray[i].myWelMid_num = 1
+                        }
+                        else if (myWeldArray[i].myWelMid_num == 1) {
+                            myWeldArray[i].myWelMidline_2 = mtempline4
+                            myWeldArray[i].myWelMid_num = 2
+                        }
+                    }
+                }
+            }
+        }
+        return myWeldArray
+    }
+    //---5---------初步划分焊接符号类型
+    function FirstDivideWelding(myWeldArray, TwoP_PolyLArray, ThreeP_PolyLArray, FourMP_PolyLArray) {
+        var num = myWeldArray.length
+        var m_NPK_DJ_WeldArray = []; //不开坡口对接焊缝--1
+        var m_DM_DC_PK_BM_DJ_WeldArray = [];//单面-单侧-坡口-背面封底-对接焊缝----2
+        var m_SM_DC_PK_DJ_WeldArray = [];//双面单侧开坡口对接焊缝----3
+        var m_SM_J_WeldArray = []; //双面角焊缝----12
+
+        var m_ResWeldArray = [];
+        for (var i = 0; i < num; i++) {
+
+            var nG = myWeldArray[i].myWelGH_num;
+            var nW = myWeldArray[i].myWelWH_num;
+            var nS = myWeldArray[i].myWelMS_num;
+            var nX = myWeldArray[i].myWelMX_num;
+            var nM = myWeldArray[i].myWelMid_num;
+            // 双面角焊缝
+            if (nG == 0 && nW == 0 && nS == 1 && nX == 0 && nM == 1) {
+
+                if (myWeldArray[i].myWelMSline_1.myPolyPNum == 3 && myWeldArray[i].myWelMidline_1.myPolyPNum == 3) {
+                    if (CheckAngleIn(myWeldArray[i].myWelMSline_1.myPolyMid, myWeldArray[i].myWelMSline_1.myPolyStartP, myWeldArray[i].myWelMSline_1.myPolyEndP, 47, 43)
+                        && CheckAngleIn(myWeldArray[i].myWelMidline_1.myPolyMid, myWeldArray[i].myWelMidline_1.myPolyStartP, myWeldArray[i].myWelMidline_1.myPolyEndP, 47, 43)) {
+
+                        myWeldArray[i].myWelType = "Y_SMDuiJieH"// 12-双面角焊缝
+                        //m_SM_J_WeldArray[m_SM_J_WeldArray.length] = myWeldArray[i];
+                        m_ResWeldArray[m_ResWeldArray.length] = myWeldArray[i];
+                    }
+                }
+
+                if (myWeldArray[i].myWelMSline_1.myPolyPNum == 2 && myWeldArray[i].myWelMidline_1.myPolyPNum == 3) {
+                    if (CheckLineType(myWeldArray[i].myWelMSline_1.myPolyStartP, myWeldArray[i].myWelMSline_1.myPolyEndP) == "X"
+                        && CheckAngleIn(myWeldArray[i].myWelMidline_1.myPolyMid, myWeldArray[i].myWelMidline_1.myPolyStartP, myWeldArray[i].myWelMidline_1.myPolyEndP, 47, 38)) {
+                        myWeldArray[i].myWelType = "Y_SMDuiJieH"// 12-双面角焊缝
+                        //m_SM_J_WeldArray[m_SM_J_WeldArray.length] = myWeldArray[i];
+                        m_ResWeldArray[m_ResWeldArray.length] = myWeldArray[i];
+                    }
+                }
+            }
+            // 双面-单侧-坡口-对接焊缝----3
+            else if (nG == 0 && nW == 0 && nS == 0 && nX == 0 && nM == 2) {
+                if (myWeldArray[i].myWelMidline_1.myPolyPNum == 3 && myWeldArray[i].myWelMidline_2.myPolyPNum == 3) {
+                }
+                else if (myWeldArray[i].myWelMidline_1.myPolyPNum == 2 && myWeldArray[i].myWelMidline_2.myPolyPNum == 3) {
+                    if (CheckAngleIn(myWeldArray[i].myWelMidline_2.myPolyMid, myWeldArray[i].myWelMidline_2.myPolyStartP, myWeldArray[i].myWelMidline_2.myPolyEndP, 83, 79)) {
+                        myWeldArray[i].myWelType = "Y_SMDCPoKDuiJieH"// 3-双面-单侧-坡口-对接焊缝
+                        //m_SM_DC_PK_DJ_WeldArray[m_SM_DC_PK_DJ_WeldArray.length] = myWeldArray[i];
+                        m_ResWeldArray[m_ResWeldArray.length] = myWeldArray[i];
+                    }
+                    if (CheckAngleIn(myWeldArray[i].myWelMidline_2.myPolyMid, myWeldArray[i].myWelMidline_2.myPolyStartP, myWeldArray[i].myWelMidline_2.myPolyEndP, 92, 88)) {
+                        myWeldArray[i].myWelType = "Y_SMDuiJieH"// 12-双面角焊缝
+                        //m_SM_J_WeldArray[m_SM_J_WeldArray.length] = myWeldArray[i];
+                        m_ResWeldArray[m_ResWeldArray.length] = myWeldArray[i];
+                    }
+                }
+                else if (myWeldArray[i].myWelMidline_1.myPolyPNum == 3 && myWeldArray[i].myWelMidline_2.myPolyPNum == 2) {
+                    if (CheckAngleIn(myWeldArray[i].myWelMidline_1.myPolyMid, myWeldArray[i].myWelMidline_1.myPolyStartP, myWeldArray[i].myWelMidline_1.myPolyEndP, 83, 79)) {
+                        myWeldArray[i].myWelType = "Y_SMDCPoKDuiJieH"// 3-双面-单侧-坡口-对接焊缝
+                        // m_SM_DC_PK_DJ_WeldArray[m_SM_DC_PK_DJ_WeldArray.length] = myWeldArray[i];
+                        m_ResWeldArray[m_ResWeldArray.length] = myWeldArray[i];
+                    }
+                }
+            }
+
+            //单面-单侧-坡口-背面封底-对接焊缝----2(9)
+            else if (nG == 0 && nW == 0 && nS == 1 && nX == 0 && nM == 0) {
+                if (myWeldArray[i].myWelMSline_1.myPolyPNum == 3) {
+                    var dis = GetDisFromTwoPoint(myWeldArray[i].myWelMSline_1.myPolyStartP, myWeldArray[i].myWelMSline_1.myPolyMid);
+                    var m_XXPlLineArr = [];
+                    m_XXPlLineArr = GetXXline(myWeldArray[i].myWelGUIP, myWeldArray[i].myWelWEIP, "down", dis, TwoP_PolyLArray)
+                    if (m_XXPlLineArr.length >= 3 && m_XXPlLineArr.length <= 10) {
+                        if (m_XXPlLineArr.length == 3) {
+                            myWeldArray[i].m_XX_num = 3;
+                            myWeldArray[i].m_XXline_1 = m_XXPlLineArr[0];
+                            myWeldArray[i].m_XXline_2 = m_XXPlLineArr[1];
+                            myWeldArray[i].m_XXline_3 = m_XXPlLineArr[2];
+                        }
+                        else if (m_XXPlLineArr.length == 4) {
+                            myWeldArray[i].m_XX_num = 4;
+                            myWeldArray[i].m_XXline_1 = m_XXPlLineArr[0];
+                            myWeldArray[i].m_XXline_2 = m_XXPlLineArr[1];
+                            myWeldArray[i].m_XXline_3 = m_XXPlLineArr[2];
+                            myWeldArray[i].m_XXline_4 = m_XXPlLineArr[3];
+                        }
+                        else if (m_XXPlLineArr.length == 5) {
+                            myWeldArray[i].m_XX_num = 5;
+                            myWeldArray[i].m_XXline_1 = m_XXPlLineArr[0];
+                            myWeldArray[i].m_XXline_2 = m_XXPlLineArr[1];
+                            myWeldArray[i].m_XXline_3 = m_XXPlLineArr[2];
+                            myWeldArray[i].m_XXline_4 = m_XXPlLineArr[3];
+                            myWeldArray[i].m_XXline_5 = m_XXPlLineArr[4];
+                        }
+                        else if (m_XXPlLineArr.length == 6) {
+                            myWeldArray[i].m_XX_num = 6;
+                            myWeldArray[i].m_XXline_1 = m_XXPlLineArr[0];
+                            myWeldArray[i].m_XXline_2 = m_XXPlLineArr[1];
+                            myWeldArray[i].m_XXline_3 = m_XXPlLineArr[2];
+                            myWeldArray[i].m_XXline_4 = m_XXPlLineArr[3];
+                            myWeldArray[i].m_XXline_5 = m_XXPlLineArr[4];
+                            myWeldArray[i].m_XXline_6 = m_XXPlLineArr[5];
+                        }
+                        else if (m_XXPlLineArr.length == 7) {
+                            myWeldArray[i].m_XX_num = 7;
+                            myWeldArray[i].m_XXline_1 = m_XXPlLineArr[0];
+                            myWeldArray[i].m_XXline_2 = m_XXPlLineArr[1];
+                            myWeldArray[i].m_XXline_3 = m_XXPlLineArr[2];
+                            myWeldArray[i].m_XXline_4 = m_XXPlLineArr[3];
+                            myWeldArray[i].m_XXline_5 = m_XXPlLineArr[4];
+                            myWeldArray[i].m_XXline_6 = m_XXPlLineArr[5];
+                            myWeldArray[i].m_XXline_7 = m_XXPlLineArr[6];
+                        }
+                        else if (m_XXPlLineArr.length == 8) {
+                            myWeldArray[i].m_XX_num = 8;
+                            myWeldArray[i].m_XXline_1 = m_XXPlLineArr[0];
+                            myWeldArray[i].m_XXline_2 = m_XXPlLineArr[1];
+                            myWeldArray[i].m_XXline_3 = m_XXPlLineArr[2];
+                            myWeldArray[i].m_XXline_4 = m_XXPlLineArr[3];
+                            myWeldArray[i].m_XXline_5 = m_XXPlLineArr[4];
+                            myWeldArray[i].m_XXline_6 = m_XXPlLineArr[5];
+                            myWeldArray[i].m_XXline_7 = m_XXPlLineArr[6];
+                            myWeldArray[i].m_XXline_8 = m_XXPlLineArr[7];
+                        }
+                        else if (m_XXPlLineArr.length == 9) {
+                            myWeldArray[i].m_XX_num = 9;
+                            myWeldArray[i].m_XXline_1 = m_XXPlLineArr[0];
+                            myWeldArray[i].m_XXline_2 = m_XXPlLineArr[1];
+                            myWeldArray[i].m_XXline_3 = m_XXPlLineArr[2];
+                            myWeldArray[i].m_XXline_4 = m_XXPlLineArr[3];
+                            myWeldArray[i].m_XXline_5 = m_XXPlLineArr[4];
+                            myWeldArray[i].m_XXline_6 = m_XXPlLineArr[5];
+                            myWeldArray[i].m_XXline_7 = m_XXPlLineArr[6];
+                            myWeldArray[i].m_XXline_8 = m_XXPlLineArr[7];
+                            myWeldArray[i].m_XXline_9 = m_XXPlLineArr[8];
+                        }
+                        else if (m_XXPlLineArr.length == 10) {
+                            myWeldArray[i].m_XX_num = 10;
+                            myWeldArray[i].m_XXline_1 = m_XXPlLineArr[0];
+                            myWeldArray[i].m_XXline_2 = m_XXPlLineArr[1];
+                            myWeldArray[i].m_XXline_3 = m_XXPlLineArr[2];
+                            myWeldArray[i].m_XXline_4 = m_XXPlLineArr[3];
+                            myWeldArray[i].m_XXline_5 = m_XXPlLineArr[4];
+                            myWeldArray[i].m_XXline_6 = m_XXPlLineArr[5];
+                            myWeldArray[i].m_XXline_7 = m_XXPlLineArr[6];
+                            myWeldArray[i].m_XXline_8 = m_XXPlLineArr[7];
+                            myWeldArray[i].m_XXline_9 = m_XXPlLineArr[8];
+                            myWeldArray[i].m_XXline_10 = m_XXPlLineArr[9];
+                        }
+                        var m_mtlLineArr = [];
+                        m_mtlLineArr = GetMultiPointLineInterXX(myWeldArray[i].myWelGUIP, myWeldArray[i].myWelWEIP, myWeldArray[i].m_XXline_1.myPolyStartP.y, FourMP_PolyLArray)
+                        if (m_mtlLineArr.length == 1) {
+                            if (CheckAngleIn(myWeldArray[i].myWelMSline_1.myPolyMid, myWeldArray[i].myWelMSline_1.myPolyStartP, myWeldArray[i].myWelMSline_1.myPolyEndP, 47, 43)) {
+                                myWeldArray[i].myWelDOWN_num = 1;
+                                myWeldArray[i].myWelDOWNline_1 = m_mtlLineArr[0];
+                                myWeldArray[i].myWelType = "Y_DMDCPoKDuiJieH"// 2-单面-单侧-坡口-背面封底-对接焊缝
+                                //单面-单侧-坡口-背面封底-对接焊缝----2(9)
+                                //m_DM_DC_PK_BM_DJ_WeldArray[m_DM_DC_PK_BM_DJ_WeldArray.length] = myWeldArray[i];
+                                m_ResWeldArray[m_ResWeldArray.length] = myWeldArray[i];
+                            }
+                        }
+                    }
+                }
+                //单面-单侧-坡口-背面封底-对接焊缝----2(8)
+                else if (myWeldArray[i].myWelMSline_1.myPolyPNum == 2) {
+                    var mUpChaArr = [];
+                    mUpChaArr = GetInterLineFromVerLine(myWeldArray[i].myWelMSline_1.myPolyStartP, myWeldArray[i].myWelMSline_1.myPolyEndP, TwoP_PolyLArray);
+                    if (mUpChaArr.length == 1) {
+                        myWeldArray[i].myWelMSline_2 = mUpChaArr[0];
+                        myWeldArray[i].myWelMS_num = 2;
+
+                        var dis = GetDisFromTwoPoint(myWeldArray[i].myWelMSline_1.myPolyStartP, myWeldArray[i].myWelMSline_1.myPolyEndP);
+                        var m_XXPlLineArr = [];
+                        m_XXPlLineArr = GetXXline(myWeldArray[i].myWelGUIP, myWeldArray[i].myWelWEIP, "down", dis, TwoP_PolyLArray)
+                        if (m_XXPlLineArr.length >= 3 && m_XXPlLineArr.length <= 10) {
+                            if (m_XXPlLineArr.length == 3) {
+                                myWeldArray[i].m_XX_num = 3;
+                                myWeldArray[i].m_XXline_1 = m_XXPlLineArr[0];
+                                myWeldArray[i].m_XXline_2 = m_XXPlLineArr[1];
+                                myWeldArray[i].m_XXline_3 = m_XXPlLineArr[2];
+                            }
+                            else if (m_XXPlLineArr.length == 4) {
+                                myWeldArray[i].m_XX_num = 4;
+                                myWeldArray[i].m_XXline_1 = m_XXPlLineArr[0];
+                                myWeldArray[i].m_XXline_2 = m_XXPlLineArr[1];
+                                myWeldArray[i].m_XXline_3 = m_XXPlLineArr[2];
+                                myWeldArray[i].m_XXline_4 = m_XXPlLineArr[3];
+                            }
+                            else if (m_XXPlLineArr.length == 5) {
+                                myWeldArray[i].m_XX_num = 5;
+                                myWeldArray[i].m_XXline_1 = m_XXPlLineArr[0];
+                                myWeldArray[i].m_XXline_2 = m_XXPlLineArr[1];
+                                myWeldArray[i].m_XXline_3 = m_XXPlLineArr[2];
+                                myWeldArray[i].m_XXline_4 = m_XXPlLineArr[3];
+                                myWeldArray[i].m_XXline_5 = m_XXPlLineArr[4];
+                            }
+                            else if (m_XXPlLineArr.length == 6) {
+                                myWeldArray[i].m_XX_num = 6;
+                                myWeldArray[i].m_XXline_1 = m_XXPlLineArr[0];
+                                myWeldArray[i].m_XXline_2 = m_XXPlLineArr[1];
+                                myWeldArray[i].m_XXline_3 = m_XXPlLineArr[2];
+                                myWeldArray[i].m_XXline_4 = m_XXPlLineArr[3];
+                                myWeldArray[i].m_XXline_5 = m_XXPlLineArr[4];
+                                myWeldArray[i].m_XXline_6 = m_XXPlLineArr[5];
+                            }
+                            else if (m_XXPlLineArr.length == 7) {
+                                myWeldArray[i].m_XX_num = 7;
+                                myWeldArray[i].m_XXline_1 = m_XXPlLineArr[0];
+                                myWeldArray[i].m_XXline_2 = m_XXPlLineArr[1];
+                                myWeldArray[i].m_XXline_3 = m_XXPlLineArr[2];
+                                myWeldArray[i].m_XXline_4 = m_XXPlLineArr[3];
+                                myWeldArray[i].m_XXline_5 = m_XXPlLineArr[4];
+                                myWeldArray[i].m_XXline_6 = m_XXPlLineArr[5];
+                                myWeldArray[i].m_XXline_7 = m_XXPlLineArr[6];
+                            }
+                            else if (m_XXPlLineArr.length == 8) {
+                                myWeldArray[i].m_XX_num = 8;
+                                myWeldArray[i].m_XXline_1 = m_XXPlLineArr[0];
+                                myWeldArray[i].m_XXline_2 = m_XXPlLineArr[1];
+                                myWeldArray[i].m_XXline_3 = m_XXPlLineArr[2];
+                                myWeldArray[i].m_XXline_4 = m_XXPlLineArr[3];
+                                myWeldArray[i].m_XXline_5 = m_XXPlLineArr[4];
+                                myWeldArray[i].m_XXline_6 = m_XXPlLineArr[5];
+                                myWeldArray[i].m_XXline_7 = m_XXPlLineArr[6];
+                                myWeldArray[i].m_XXline_8 = m_XXPlLineArr[7];
+                            }
+                            else if (m_XXPlLineArr.length == 9) {
+                                myWeldArray[i].m_XX_num = 9;
+                                myWeldArray[i].m_XXline_1 = m_XXPlLineArr[0];
+                                myWeldArray[i].m_XXline_2 = m_XXPlLineArr[1];
+                                myWeldArray[i].m_XXline_3 = m_XXPlLineArr[2];
+                                myWeldArray[i].m_XXline_4 = m_XXPlLineArr[3];
+                                myWeldArray[i].m_XXline_5 = m_XXPlLineArr[4];
+                                myWeldArray[i].m_XXline_6 = m_XXPlLineArr[5];
+                                myWeldArray[i].m_XXline_7 = m_XXPlLineArr[6];
+                                myWeldArray[i].m_XXline_8 = m_XXPlLineArr[7];
+                                myWeldArray[i].m_XXline_9 = m_XXPlLineArr[8];
+                            }
+                            else if (m_XXPlLineArr.length == 10) {
+                                myWeldArray[i].m_XX_num = 10;
+                                myWeldArray[i].m_XXline_1 = m_XXPlLineArr[0];
+                                myWeldArray[i].m_XXline_2 = m_XXPlLineArr[1];
+                                myWeldArray[i].m_XXline_3 = m_XXPlLineArr[2];
+                                myWeldArray[i].m_XXline_4 = m_XXPlLineArr[3];
+                                myWeldArray[i].m_XXline_5 = m_XXPlLineArr[4];
+                                myWeldArray[i].m_XXline_6 = m_XXPlLineArr[5];
+                                myWeldArray[i].m_XXline_7 = m_XXPlLineArr[6];
+                                myWeldArray[i].m_XXline_8 = m_XXPlLineArr[7];
+                                myWeldArray[i].m_XXline_9 = m_XXPlLineArr[8];
+                                myWeldArray[i].m_XXline_10 = m_XXPlLineArr[9];
+                            }
+
+
+                            dis = GetDisFromTwoPoint(myWeldArray[i].myWelGUIP, myWeldArray[i].myWelWEIP);
+                            var mtempSP, mtemEP;
+                            if (myWeldArray[i].myWelMSStorEdorMd_1 == "Start") {
+                                mtempSP = myWeldArray[i].myWelMSline_1.myPolyEndP;
+                            }
+                            else {
+                                mtempSP = myWeldArray[i].myWelMSline_1.myPolyStartP;
+                            }
+                            if (myWeldArray[i].myWelMSline_2.myPolyCHSE == "Start") {
+                                mtemEP = myWeldArray[i].myWelMSline_2.myPolyEndP;
+                            }
+                            else {
+                                mtemEP = myWeldArray[i].myWelMSline_2.myPolyStartP;
+                            }
+                            var upGrapLine = [];
+                            upGrapLine = GetGraphFromArea(mtempSP.x, mtemEP.x, mtempSP.y, dis, "up", TwoP_PolyLArray, ThreeP_PolyLArray)
+                            if (upGrapLine.length == 2) {
+                                myWeldArray[i].myWelUP_num = 2;
+                                myWeldArray[i].myWelUPline_1 = upGrapLine[0];
+                                myWeldArray[i].myWelUPline_2 = upGrapLine[1];
+                            }
+                            else if (upGrapLine.length == 1) {
+                                myWeldArray[i].myWelUP_num = 1;
+                                myWeldArray[i].myWelUPline_1 = upGrapLine[0];
+                            }
+
+                            var m_mtlLineArr = [];
+                            m_mtlLineArr = GetMultiPointLineInterXX(myWeldArray[i].myWelGUIP, myWeldArray[i].myWelWEIP, myWeldArray[i].m_XXline_1.myPolyStartP.y, FourMP_PolyLArray)
+                            if (m_mtlLineArr.length == 1) {
+                                myWeldArray[i].myWelDOWN_num = 1;
+                                myWeldArray[i].myWelDOWNline_1 = m_mtlLineArr[0];
+                            }
+                            else if (m_mtlLineArr.length == 0) {
+                                var mTTwoLineArr = [];
+                                mTTwoLineArr = GetTwoPointLineInterXX(myWeldArray[i].myWelGUIP, myWeldArray[i].myWelWEIP, myWeldArray[i].m_XXline_1.myPolyStartP.y, TwoP_PolyLArray)
+                                if (mTTwoLineArr.length == 1) {
+                                    myWeldArray[i].myWelMX_num = 1;
+                                    myWeldArray[i].myWelMXline_1 = mTTwoLineArr[0];
+                                    var mTDownChaArr = [];
+                                    mTDownChaArr = GetInterLineFromVerLine(myWeldArray[i].myWelMXline_1.myPolyStartP, myWeldArray[i].myWelMXline_1.myPolyEndP, TwoP_PolyLArray)
+                                    if (mTDownChaArr.length == 1) {
+                                        myWeldArray[i].myWelMXline_2 = mTDownChaArr[0];
+                                        myWeldArray[i].myWelMX_num = 2;
+                                    }
+                                    var mtempSP, mtemEP;
+                                    if (myWeldArray[i].myWelMXStorEdorMd_1 == "Start") {
+                                        mtempSP = myWeldArray[i].myWelMXline_1.myPolyEndP;
+                                    }
+                                    else {
+                                        mtempSP = myWeldArray[i].myWelMXline_1.myPolyStartP;
+                                    }
+                                    if (myWeldArray[i].myWelMXline_2.myPolyCHSE == "Start") {
+                                        mtemEP = myWeldArray[i].myWelMXline_2.myPolyEndP;
+                                    }
+                                    else {
+                                        mtemEP = myWeldArray[i].myWelMXline_2.myPolyStartP;
+                                    }
+                                    var mtDLineArr = [];
+                                    mtDLineArr = GetGraphFromArea(mtempSP.x, mtemEP.x, mtempSP.y, dis, "down", TwoP_PolyLArray, ThreeP_PolyLArray)
+                                    if (mtDLineArr.length == 2) {
+                                        myWeldArray[i].myWelDOWN_num = 2;
+                                        myWeldArray[i].myWelDOWNline_1 = mtDLineArr[0];
+                                        myWeldArray[i].myWelDOWNline_2 = mtDLineArr[1];
+                                    }
+                                    else if (mtDLineArr.length == 1) {
+                                        myWeldArray[i].myWelDOWN_num = 1;
+                                        myWeldArray[i].myWelDOWNline_1 = mtDLineArr[0];
+                                    }
+                                }
+                            }
+                            if (myWeldArray[i].myWelUP_num == 0 && myWeldArray[i].myWelDOWN_num == 1 && myWeldArray[i].myWelMX_num == 0) {
+                                myWeldArray[i].myWelType = "Y_DMDCPoKDuiJieH"// 2-单面-单侧-坡口-背面封底-对接焊缝
+                                //单面-单侧-坡口-背面封底-对接焊缝----2(8)
+                                //m_DM_DC_PK_BM_DJ_WeldArray[m_DM_DC_PK_BM_DJ_WeldArray.length] = myWeldArray[i];
+                                m_ResWeldArray[m_ResWeldArray.length] = myWeldArray[i];
+                            }
+                        }
+                    }
+                }
+            }
+            // 双面角焊缝
+            else if (nG == 0 && nW == 0 && nS == 0 && nX == 0 && nM == 1) {
+                if (myWeldArray[i].myWelMidline_1.myPolyPNum == 6) {
+                    var templine = FindLineFromArray(myWeldArray[i].myWelMidline_1.myPolyLineObjectID, FourMP_PolyLArray)
+                    if (CheckAngleIn(templine.GetPointAt(2), templine.GetPointAt(1), templine.GetPointAt(4), 92, 88)) {
+                        myWeldArray[i].myWelType = "Y_SMDuiJieH"// 12-双面角焊缝
+                        //m_SM_J_WeldArray[m_SM_J_WeldArray.length] = myWeldArray[i];
+                        m_ResWeldArray[m_ResWeldArray.length] = myWeldArray[i];
+                    }
+                }
+                else if (myWeldArray[i].myWelMidline_1.myPolyPNum == 3 && myWeldArray[i].myWelMidline_1.myPolyCHSE != "Mid") {
+                    if (CheckAngleIn(myWeldArray[i].myWelMidline_1.myPolyStartP, myWeldArray[i].myWelMidline_1.myPolyMid, myWeldArray[i].myWelMidline_1.myPolyEndP, 92, 88)
+                        || CheckAngleIn(myWeldArray[i].myWelMidline_1.myPolyEndP, myWeldArray[i].myWelMidline_1.myPolyStartP, myWeldArray[i].myWelMidline_1.myPolyMid, 92, 88)) {
+                        myWeldArray[i].myWelType = "Y_SMDuiJieH"// 12-双面角焊缝
+                        //m_SM_J_WeldArray[m_SM_J_WeldArray.length] = myWeldArray[i];
+                        m_ResWeldArray[m_ResWeldArray.length] = myWeldArray[i];
+                    }
+                }
+            }
+
+            else if (nG == 0 && nW == 0 && nS == 1 && nX == 1 && nM == 0) {
+                // 14--双面角焊缝
+                if (myWeldArray[i].myWelMSline_1.myPolyPNum == 3 && myWeldArray[i].myWelMSStorEdorMd_1 != "Mid"
+                    && myWeldArray[i].myWelMXline_1.myPolyPNum == 3 && myWeldArray[i].myWelMXStorEdorMd_1 != "Mid") {
+                    if (CheckAngleIn(myWeldArray[i].myWelMSline_1.myPolyMid, myWeldArray[i].myWelMSline_1.myPolyStartP, myWeldArray[i].myWelMSline_1.myPolyEndP, 48, 43)
+                        && CheckAngleIn(myWeldArray[i].myWelMXline_1.myPolyMid, myWeldArray[i].myWelMXline_1.myPolyStartP, myWeldArray[i].myWelMXline_1.myPolyEndP, 48, 43)) {
+                        myWeldArray[i].myWelType = "Y_SMDuiJieH"// 12-双面角焊缝
+                        // m_SM_J_WeldArray[m_SM_J_WeldArray.length] = myWeldArray[i];
+                        m_ResWeldArray[m_ResWeldArray.length] = myWeldArray[i];
+                    }
+                }
+                else if (myWeldArray[i].myWelMSline_1.myPolyPNum == 3 && myWeldArray[i].myWelMSStorEdorMd_1 == "Mid"
+                    && myWeldArray[i].myWelMXline_1.myPolyPNum == 3 && myWeldArray[i].myWelMXStorEdorMd_1 == "Mid") {
+                    //4-双面单侧坡口(10)
+                    if (CheckAngleIn(myWeldArray[i].myWelMSline_1.myPolyMid, myWeldArray[i].myWelMSline_1.myPolyStartP, myWeldArray[i].myWelMSline_1.myPolyEndP, 51, 43)
+                        && CheckAngleIn(myWeldArray[i].myWelMXline_1.myPolyMid, myWeldArray[i].myWelMXline_1.myPolyStartP, myWeldArray[i].myWelMXline_1.myPolyEndP, 51, 43)) {
+                        var dis;
+                        dis = GetDisFromTwoPoint(myWeldArray[i].myWelGUIP, myWeldArray[i].myWelWEIP);
+                        var res_PolyLineArr = [];
+                        res_PolyLineArr = GetGraphFromArea(myWeldArray[i].myWelMSline_1.myPolyStartP.x, myWeldArray[i].myWelMSline_1.myPolyEndP.x, myWeldArray[i].myWelMSline_1.myPolyStartP.y, dis, "up", TwoP_PolyLArray, ThreeP_PolyLArray)
+                        if (res_PolyLineArr.length == 2) {
+                            myWeldArray[i].myWelUP_num = 2;
+                            myWeldArray[i].myWelUPline_1 = res_PolyLineArr[0];
+                            myWeldArray[i].myWelUPline_2 = res_PolyLineArr[1];
+                        }
+                        else if (res_PolyLineArr.length == 1) {
+                            myWeldArray[i].myWelUP_num = 1;
+                            myWeldArray[i].myWelUPline_1 = res_PolyLineArr[0];
+                        }
+                        var res_XPolyLineArr = [];
+                        res_XPolyLineArr = GetGraphFromArea(myWeldArray[i].myWelMXline_1.myPolyStartP.x, myWeldArray[i].myWelMXline_1.myPolyEndP.x, myWeldArray[i].myWelMXline_1.myPolyStartP.y, dis, "down", TwoP_PolyLArray, ThreeP_PolyLArray)
+                        if (res_XPolyLineArr.length == 2) {
+                            myWeldArray[i].myWelDOWN_num = 2;
+                            myWeldArray[i].myWelDOWNline_1 = res_XPolyLineArr[0];
+                            myWeldArray[i].myWelDOWNline_2 = res_XPolyLineArr[1];
+                        }
+                        else if (res_XPolyLineArr.length == 1) {
+                            myWeldArray[i].myWelDOWN_num = 1;
+                            myWeldArray[i].myWelDOWNline_1 = res_XPolyLineArr[0];
+                        }
+                        //4-双面单侧坡口(10)--上下都没有
+                        if (myWeldArray[i].myWelUP_num == 0 && myWeldArray[i].myWelDOWN_num == 0) {
+                            myWeldArray[i].myWelType = "Y_SMDCPoKDuiJieH"// 3-双面-单侧-坡口-对接焊缝
+                            //m_SM_DC_PK_DJ_WeldArray[m_SM_DC_PK_DJ_WeldArray.length] = myWeldArray[i];
+                            m_ResWeldArray[m_ResWeldArray.length] = myWeldArray[i];
+                        }
+                    }
+                }
+                //4-双面单侧坡口(11)
+                else if (myWeldArray[i].myWelMSline_1.myPolyPNum == 2 && myWeldArray[i].myWelMXline_1.myPolyPNum == 2) {
+                    if (IsVertical(myWeldArray[i].myWelMSline_1.myPolyStartP, myWeldArray[i].myWelMSline_1.myPolyEndP)
+                        && IsVertical(myWeldArray[i].myWelMXline_1.myPolyStartP, myWeldArray[i].myWelMXline_1.myPolyEndP)) {
+                        var mUpChaArr = [];
+                        var mDownChaArr = [];
+                        mUpChaArr = GetInterLineFromVerLine(myWeldArray[i].myWelMSline_1.myPolyStartP, myWeldArray[i].myWelMSline_1.myPolyEndP, TwoP_PolyLArray);
+                        mDownChaArr = GetInterLineFromVerLine(myWeldArray[i].myWelMXline_1.myPolyStartP, myWeldArray[i].myWelMXline_1.myPolyEndP, TwoP_PolyLArray);
+                        if (mUpChaArr.length == 1 && mDownChaArr.length == 1) {
+                            myWeldArray[i].myWelMSline_2 = mUpChaArr[0];
+                            myWeldArray[i].myWelMS_num = 2;
+                            myWeldArray[i].myWelMXline_2 = mDownChaArr[0];
+                            myWeldArray[i].myWelMX_num = 2;
+
+                            var dis;
+                            dis = GetDisFromTwoPoint(myWeldArray[i].myWelGUIP, myWeldArray[i].myWelWEIP)
+                            var mtempSP, mtemEP;
+                            if (myWeldArray[i].myWelMSStorEdorMd_1 == "Start") {
+                                mtempSP = myWeldArray[i].myWelMSline_1.myPolyEndP;
+                            }
+                            else {
+                                mtempSP = myWeldArray[i].myWelMSline_1.myPolyStartP;
+                            }
+                            if (myWeldArray[i].myWelMSline_2.myPolyCHSE == "Start") {
+                                mtemEP = myWeldArray[i].myWelMSline_2.myPolyEndP;
+                            }
+                            else {
+                                mtemEP = myWeldArray[i].myWelMSline_2.myPolyStartP;
+                            }
+                            var upGrapLine = [];
+                            upGrapLine = GetGraphFromArea(mtempSP.x, mtemEP.x, mtempSP.y, dis, "up", TwoP_PolyLArray, ThreeP_PolyLArray)
+                            if (upGrapLine.length == 2) {
+                                myWeldArray[i].myWelUP_num = 2;
+                                myWeldArray[i].myWelUPline_1 = upGrapLine[0];
+                                myWeldArray[i].myWelUPline_2 = upGrapLine[1];
+                            }
+                            else if (upGrapLine.length == 1) {
+                                myWeldArray[i].myWelUP_num = 1;
+                                myWeldArray[i].myWelUPline_1 = upGrapLine[0];
+                            }
+                            if (myWeldArray[i].myWelMXStorEdorMd_1 == "Start") {
+                                mtempSP = myWeldArray[i].myWelMXline_1.myPolyEndP;
+                            }
+                            else {
+                                mtempSP = myWeldArray[i].myWelMXline_1.myPolyStartP;
+                            }
+                            if (myWeldArray[i].myWelMXline_2.myPolyCHSE == "Start") {
+                                mtemEP = myWeldArray[i].myWelMXline_2.myPolyEndP;
+                            }
+                            else {
+                                mtemEP = myWeldArray[i].myWelMXline_2.myPolyStartP;
+                            }
+                            var DownGrapLine = [];
+                            DownGrapLine = GetGraphFromArea(mtempSP.x, mtemEP.x, mtempSP.y, dis, "down", TwoP_PolyLArray, ThreeP_PolyLArray)
+                            if (DownGrapLine.length == 2) {
+                                myWeldArray[i].myWelDOWN_num = 2;
+                                myWeldArray[i].myWelDOWNline_1 = DownGrapLine[0];
+                                myWeldArray[i].myWelDOWNline_2 = DownGrapLine[1];
+                            }
+                            else if (DownGrapLine.length == 1) {
+                                myWeldArray[i].myWelDOWN_num = 1;
+                                myWeldArray[i].myWelDOWNline_1 = DownGrapLine[0];
+                            }
+
+                            //4-双面单侧坡口(11)；
+                            if (myWeldArray[i].myWelUP_num == 0 && myWeldArray[i].myWelDOWN_num == 0) {
+                                myWeldArray[i].myWelType = "Y_SMDCPoKDuiJieH"// 3-双面-单侧-坡口-对接焊缝
+                                //m_SM_DC_PK_DJ_WeldArray[m_SM_DC_PK_DJ_WeldArray.length] = myWeldArray[i];
+                                m_ResWeldArray[m_ResWeldArray.length] = myWeldArray[i];
+                            }
+                        }
+                    }
+                }
+            }
+            // 双面角焊缝
+            else if (nG == 0 && nW == 0 && nS == 1 && nX == 1 && nM == 1) {
+                if (myWeldArray[i].myWelMSline_1.myPolyPNum == 2 && myWeldArray[i].myWelMXline_1.myPolyPNum == 2 && myWeldArray[i].myWelMidline_1.myPolyPNum == 2) {
+                    if (CheckAngleIn(myWeldArray[i].myWelMidline_1.myPolyStartP, myWeldArray[i].myWelMidline_1.myPolyEndP, myWeldArray[i].myWelMSline_1.myPolyStartP, 47, 38)
+                        && CheckAngleIn(myWeldArray[i].myWelMidline_1.myPolyStartP, myWeldArray[i].myWelMidline_1.myPolyEndP, myWeldArray[i].myWelMSline_1.myPolyEndP, 47, 38)) {
+                        myWeldArray[i].myWelType = "Y_SMDuiJieH"// 12-双面角焊缝
+                        //m_SM_J_WeldArray[m_SM_J_WeldArray.length] = myWeldArray[i];
+                        m_ResWeldArray[m_ResWeldArray.length] = myWeldArray[i];
+                    }
+                }
+                else if (myWeldArray[i].myWelMSline_1.myPolyPNum == 3 && myWeldArray[i].myWelMXline_1.myPolyPNum == 3 && myWeldArray[i].myWelMidline_1.myPolyPNum == 2) {
+                    if (CheckAngleIn(myWeldArray[i].myWelMSline_1.myPolyMid, myWeldArray[i].myWelMSline_1.myPolyStartP, myWeldArray[i].myWelMSline_1.myPolyEndP, 52, 43)
+                        && CheckAngleIn(myWeldArray[i].myWelMXline_1.myPolyMid, myWeldArray[i].myWelMXline_1.myPolyStartP, myWeldArray[i].myWelMXline_1.myPolyEndP, 52, 43)) {
+                        myWeldArray[i].myWelType = "Y_SMDuiJieH"// 12-双面角焊缝
+                        //m_SM_J_WeldArray[m_SM_J_WeldArray.length] = myWeldArray[i];
+                        m_ResWeldArray[m_ResWeldArray.length] = myWeldArray[i];
+                    }
+                }
+                else if (myWeldArray[i].myWelMSline_1.myPolyPNum == 3 && myWeldArray[i].myWelMXline_1.myPolyPNum == 2 && myWeldArray[i].myWelMidline_1.myPolyPNum == 2) {
+                    if (CheckAngleIn(myWeldArray[i].myWelMSline_1.myPolyMid, myWeldArray[i].myWelMSline_1.myPolyStartP, myWeldArray[i].myWelMSline_1.myPolyEndP, 52, 43)) {
+                        myWeldArray[i].myWelType = "Y_SMDuiJieH"// 12-双面角焊缝
+                        // m_SM_J_WeldArray[m_SM_J_WeldArray.length] = myWeldArray[i];
+                        m_ResWeldArray[m_ResWeldArray.length] = myWeldArray[i];
+                    }
+                }
+                else if (myWeldArray[i].myWelMSline_1.myPolyPNum == 2 && myWeldArray[i].myWelMXline_1.myPolyPNum == 3 && myWeldArray[i].myWelMidline_1.myPolyPNum == 2) {
+                    if (CheckAngleIn(myWeldArray[i].myWelMXline_1.myPolyMid, myWeldArray[i].myWelMXline_1.myPolyStartP, myWeldArray[i].myWelMXline_1.myPolyEndP, 52, 43)) {
+                        myWeldArray[i].myWelType = "Y_SMDuiJieH"// 12-双面角焊缝
+                        // m_SM_J_WeldArray[m_SM_J_WeldArray.length] = myWeldArray[i];
+                        m_ResWeldArray[m_ResWeldArray.length] = myWeldArray[i];
+                    }
+                }
+            }
+
+            else if (nG == 0 && nW == 0 && nS == 2 && nX == 0 && nM == 0) {
+                //1-不开坡口对接焊
+                if (myWeldArray[i].myWelMSline_1.myPolyPNum == 2 && myWeldArray[i].myWelMSline_2.myPolyPNum == 2
+                    && IsVertical(myWeldArray[i].myWelMSline_1.myPolyStartP, myWeldArray[i].myWelMSline_1.myPolyEndP)
+                    && IsVertical(myWeldArray[i].myWelMSline_2.myPolyStartP, myWeldArray[i].myWelMSline_2.myPolyEndP)) {
+                    myWeldArray[i].myWelType = "N_PoKDuiJieH"// 1-不开坡口对接焊
+                    //m_NPK_DJ_WeldArray[m_NPK_DJ_WeldArray.length] = myWeldArray[i];
+                    m_ResWeldArray[m_ResWeldArray.length] = myWeldArray[i];
+                }
+            }
+        }
+        //ChangeWeldColorbyHandle(m_NPK_DJ_WeldArray, 1)//1-红色
+        //ChangeWeldColorbyHandle(m_DM_DC_PK_BM_DJ_WeldArray, 3)//2-绿色
+        //ChangeWeldColorbyHandle(m_SM_DC_PK_DJ_WeldArray, 5)//3-蓝色
+        //ChangeWeldColorbyHandle(m_SM_J_WeldArray, 15)//12-
+
+        return m_ResWeldArray;
+    }
+    function myArrow(m_ObjectID, m_DingP, m_DiA, m_DiB, m_Mid) {
+        this.myArrowObjectID = m_ObjectID;
+        this.myArrowDingP = m_DingP;
+        this.myArrowDiA = m_DiA;
+        this.myArrowDiB = m_DiB;
+        this.myArrowMid = m_Mid;
+    }
+    function myPolyLine(m_ObjectID, m_Pnum, m_StartP, m_EndP, m_MidP, m_CHStarOREnd) {
+        this.myPolyLineObjectID = m_ObjectID;
+        this.myPolyPNum = m_Pnum;
+        this.myPolyStartP = m_StartP;
+        this.myPolyEndP = m_EndP;
+        this.myPolyMid = m_MidP;
+        this.myPolyCHSE = m_CHStarOREnd;
+    }
+    function myCAnnotation(m_Arrow, m_Line1, m_CHStartOREnd, m_CHPoint) {
+        this.myCAnnotationArrow = m_Arrow;
+        this.myCAnnotationLine = m_Line1;
+        this.myCAnnotationCHSE = m_CHStartOREnd;
+        this.myCAnnotationCHP = m_CHPoint;
+    }
+    function myWelding(m_Arrow, m_YINLine1, m_YINLine2, m_HLength, m_CHStartOREnd, m_CHPoint, m_YIN_num,
+        m_GUAIPoint, m_WEIPoint, m_GHline_1, m_GHline_2, m_GHArc, m_GH_num, m_GHPoint_1,
+        m_GHPoint_2, m_WHline_1, m_WHline_2, m_WH_num, m_WHPoint_1, m_WHPoint_2,
+        m_MSline_1, m_MSStorEdorMd_1, m_MSline_2, m_MSStorEdorMd_2, m_MSline_3, m_MSStorEdorMd_3, m_MS_num,
+        m_MXline_1, m_MXStorEdorMd_1, m_MXline_2, m_MXStorEdorMd_2, m_MXline_3, m_MXStorEdorMd_3, m_MX_num,
+        m_Midline_1, m_Midline_2, m_Mid_num, m_UPline_1, m_UPline_2, m_UPline_3, m_UP_num,
+        m_XXline_1, m_XXline_2, m_XXline_3, m_XXline_4, m_XXline_5, m_XXline_6, m_XXline_7, m_XXline_8, m_XXline_9, m_XXline_10, m_XX_num,
+        m_DOWNline_1, m_DOWNline_2, m_DOWNline_3, m_DOWN_num, m_strType) {
+        this.myWelArrow = m_Arrow;
+        this.myWelYINline1 = m_YINLine1;
+        this.myWelYINline2 = m_YINLine2;
+        this.myWelHLength = m_HLength;
+        this.myWelCHSE = m_CHStartOREnd;
+        this.myWelCHP = m_CHPoint;
+        this.myWelYINnum = m_YIN_num;
+        this.myWelGUIP = m_GUAIPoint;
+        this.myWelWEIP = m_WEIPoint;
+
+        this.myWelGHline1 = m_GHline_1;
+        this.myWelGHline2 = m_GHline_2;
+        this.myWelGHArc = m_GHArc;
+        this.myWelGH_num = m_GH_num;
+        this.myWelGHPoint_1 = m_GHPoint_1;
+        this.myWelGHPoint_2 = m_GHPoint_2;
+
+        this.myWelWHline_1 = m_WHline_1;
+        this.myWelWHline_2 = m_WHline_2;
+        this.myWelWH_num = m_WH_num;
+        this.myWelWHPoint_1 = m_WHPoint_1;
+        this.myWelWHPoint_2 = m_WHPoint_2;
+
+        this.myWelMSline_1 = m_MSline_1;
+        this.myWelMSStorEdorMd_1 = m_MSStorEdorMd_1;
+        this.myWelMSline_2 = m_MSline_2;
+        this.myWelMSStorEdorMd_2 = m_MSStorEdorMd_2;
+        this.myWelMSline_3 = m_MSline_3;
+        this.myWelMSStorEdorMd_3 = m_MSStorEdorMd_3;
+        this.myWelMS_num = m_MS_num;
+
+        this.myWelMXline_1 = m_MXline_1;
+        this.myWelMXStorEdorMd_1 = m_MXStorEdorMd_1;
+        this.myWelMXline_2 = m_MXline_2;
+        this.myWelMXStorEdorMd_2 = m_MXStorEdorMd_2;
+        this.myWelMXline_3 = m_MXline_3;
+        this.myWelMXStorEdorMd_3 = m_MXStorEdorMd_3;
+        this.myWelMX_num = m_MX_num;
+
+        this.myWelMidline_1 = m_Midline_1;
+        this.myWelMidline_2 = m_Midline_2;
+        this.myWelMid_num = m_Mid_num;
+
+        this.myWelUPline_1 = m_UPline_1;
+        this.myWelUPline_2 = m_UPline_2;
+        this.myWelUPline_3 = m_UPline_3;
+        this.myWelUP_num = m_UP_num;
+
+        this.myWelXXline_1 = m_XXline_1;
+        this.myWelXXline_2 = m_XXline_2;
+        this.myWelXXline_3 = m_XXline_3;
+        this.myWelXXline_4 = m_XXline_4;
+        this.myWelXXline_5 = m_XXline_5;
+        this.myWelXXline_6 = m_XXline_6;
+        this.myWelXXline_7 = m_XXline_7;
+        this.myWelXXline_8 = m_XXline_8;
+        this.myWelXXline_9 = m_XXline_9;
+        this.myWelXXline_10 = m_XXline_10;
+        this.myWelXX_num = m_XX_num;
+
+        this.myWelDOWNline_1 = m_DOWNline_1;
+        this.myWelDOWNline_2 = m_DOWNline_2;
+        this.myWelDOWNline_3 = m_DOWNline_3;
+        this.myWelDOWN_num = m_DOWN_num;
+        this.myWelType = m_strType;
+        // this.myWelAwHandle = m_AwHandle;
+    }
+    function IsSamePoint(pA1, pA2) {
+        var d = 0.005;
+        if (pA1.x == pA2.x && pA1.y == pA2.y && pA1.z == pA2.z) {
+            return true;
+        }
+        else if (((pA1.x <= pA2.x + d && pA1.x >= pA2.x - d) || (pA2.x <= pA1.x + d && pA2.x >= pA1.x - d))
+            && ((pA1.y <= pA2.y + d && pA1.y >= pA2.y - d) || (pA2.y <= pA1.y + d && pA2.y >= pA1.y - d))) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+    function IsNearPoint(pA1, pA2) {
+        var d = 0.05;
+        if (pA1.x == pA2.x && pA1.y == pA2.y) {
+            return true;
+        }
+        else if (((pA1.x <= pA2.x + d && pA1.x >= pA2.x - d) || (pA2.x <= pA1.x + d && pA2.x >= pA1.x - d))
+            && ((pA1.y <= pA2.y + d && pA1.y >= pA2.y - d) || (pA2.y <= pA1.y + d && pA2.y >= pA1.y - d))) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+    function IsHorizontal(pA1, pA2) {
+        if (pA1.x != pA2.x && pA1.y == pA2.y) {
+            return true;
+        }
+        else if (pA1.x != pA2.x && ((pA1.y <= pA2.y + 0.001 && pA1.y >= pA2.y - 0.001) || (pA2.y <= pA1.y + 0.001 && pA2.y >= pA1.y - 0.001))) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+    function IsVertical(pA1, pA2) {
+        if (pA1.y != pA2.y && pA1.x == pA2.x) {
+            return true;
+        }
+        else if (pA1.y != pA2.y && ((pA1.x <= pA2.x + 0.001 && pA1.x >= pA2.x - 0.001) || (pA2.x <= pA1.x + 0.001 && pA2.x >= pA1.x - 0.001))) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+    function CheckLineType(pA1, pA2) {
+        var str = "";
+        if (IsHorizontal(pA1, pA2)) {
+            str = "H"
+        }
+        else if (IsVertical(pA1, pA2)) {
+            str = "V"
+        }
+        else {
+            str = "X"
+        }
+        return str
+    }
+    function GetDisFromTwoPoint(pA1, pA2) {
+        var mdis;
+        mdis = Math.sqrt(Math.pow((pA1.x - pA2.x), 2) + Math.pow((pA1.y - pA2.y), 2));
+        return mdis;
+    }
+    function GetMaxData(mData1, mData2) {
+        if (mData1 >= mData2) {
+            return mData1;
+        }
+        else {
+            return mData2;
+        }
+    }
+    function CheckLineInHLine(LoneP1, LoneP2, HLP1, HLP2) {
+        var bl = false;
+        if (IsHorizontal(LoneP1, LoneP2) && LoneP1.y == HLP1.y) {
+            if (LoneP1.x >= LoneP2.x) {
+                if (HLP1.x > HLP2.x) {
+                    if (LoneP1.x <= HLP1.x && LoneP2.x >= HLP2.x) {
+                        bl = true;
+                    }
+                }
+                else {
+                    if (LoneP1.x <= HLP2.x && LoneP2.x >= HLP1.x) {
+                        bl = true;
+                    }
+                }
+            }
+            else {
+                if (HLP1.x > HLP2.x) {
+                    if (LoneP2.x <= HLP1.x && LoneP1.x >= HLP2.x) {
+                        bl = true;
+                    }
+                }
+                else {
+                    if (LoneP2.x <= HLP2.x && LoneP1.x >= HLP1.x) {
+                        bl = true;
+                    }
+                }
+            }
+        }
+        return bl;
+    }
+    function IsPointOnLine(pA, pB, pC) {
+        var bl = false;
+        var td = 0.05;
+        if (pB.x >= pC.x) {
+            if (pA.x < pB.x && pA.x > pC.x
+                && pA.y >= pB.y - td && pA.y <= pB.y + td) {
+                bl = true;
+
+            }
+        }
+        else {
+            if (pA.x > pB.x && pA.x < pC.x
+                && pA.y >= pB.y - td && pA.y <= pB.y + td) {
+                bl = true;
+
+            }
+        }
+        return bl;
+    }
+    function GetPositionOfLine(mLine, pB, pC) {
+        var mrest = "";
+        var up_num = 0;
+        var down_num = 0;
+        var n = mLine.numVerts;
+        for (var i = 0; i < n; i++) {
+            var mstr = GetPositionOfPoint(mLine.GetPointAt(i), pB, pC, 0.05)
+            if (mstr == "up") {
+                up_num = up_num + 1;
+            }
+            else if (mstr == "down") {
+                down_num = down_num + 1;
+            }
+        }
+        if (up_num != 0 && down_num == 0) {
+            mrest = "up";
+        }
+        else if (up_num == 0 && down_num != 0) {
+            mrest = "down";
+        }
+        else {
+            mrest = "mid";
+        }
+
+        return mrest;
+
+    }
+    function GetPositionOfPoint(pA, pB, pC, dd) {
+        var mstr = "";
+        if (pB.x > pC.x) {
+            if (pA.x < pB.x && pA.x > pC.x) {
+                if (pA.y > pB.y + dd) {
+                    mstr = "up";
+                }
+                else if (pA.y < pB.y - dd) {
+                    mstr = "down";
+                }
+            }
+        }
+        else {
+            if (pA.x < pC.x && pA.x > pB.x) {
+                if (pA.y > pB.y + dd) {
+                    mstr = "up";
+                }
+                else if (pA.y < pB.y - dd) {
+                    mstr = "down";
+                }
+            }
+        }
+        return mstr;
+    }
+    function IsLineInterWithHYinLine(StartP, EndP, GuaiP, WeiP) {
+        var bl = false;
+        var max_X = 0;
+        var min_X = 0;
+        if (GuaiP.x >= WeiP.x) {
+            max_X = GuaiP.x;
+            min_X = WeiP.x;
+        }
+        else {
+            max_X = WeiP.x;
+            min_X = GuaiP.x;
+        }
+        if (IsVertical(StartP, EndP)) {
+            if (StartP.x < max_X && StartP.x > min_X
+                && EndP.x < max_X && EndP.x > min_X) {
+                bl = true;
+            }
+        }
+        return bl;
+    }
+
+    function GetXXline(sPoint1, sPoint2, direction, dis, TwoP_PolyLineArray) {
+        var mResLineArray = []
+        var num = TwoP_PolyLineArray.length;
+        var max_X, min_X, max_Y, min_Y;
+        var td = 0.2 * GetDisFromTwoPoint(sPoint1, sPoint2)
+        if (sPoint1.x >= sPoint2.x) {
+            max_X = sPoint1.x + td;
+            min_X = sPoint2.x - td;
+        }
+        else {
+            max_X = sPoint2.x + td;
+            min_X = sPoint1.x - td;
+        }
+        if (direction == "down") {
+            max_Y = sPoint1.y;
+            min_Y = sPoint1.y - dis;
+        }
+        else if (direction == "up") {
+            max_Y = sPoint1.y + dis;
+            min_Y = sPoint1.y;
+        }
+        for (var i = 0; i < num; i++) {
+            if (IsHorizontal(TwoP_PolyLineArray[i].GetPointAt(0), TwoP_PolyLineArray[i].GetPointAt(1))) {
+                if (TwoP_PolyLineArray[i].GetPointAt(0).x <= max_X && TwoP_PolyLineArray[i].GetPointAt(0).x >= min_X
+                    && TwoP_PolyLineArray[i].GetPointAt(1).x <= max_X && TwoP_PolyLineArray[i].GetPointAt(1).x >= min_X
+                    && TwoP_PolyLineArray[i].GetPointAt(0).y <= max_Y && TwoP_PolyLineArray[i].GetPointAt(0).y >= min_Y) {
+                    var mtline = new myPolyLine(TwoP_PolyLineArray[i].handle, 2, TwoP_PolyLineArray[i].GetPointAt(0),
+                        TwoP_PolyLineArray[i].GetPointAt(1), null, null)
+                    mResLineArray[mResLineArray.length] = mtline
+                }
+            }
+        }
+        return mResLineArray
+    }
+    function CheckAngleIn(pA, pB, pC, maxA, minA) {
+        var mAngle = GetAngleFrom3Point(pA, pB, pC);
+        if (mAngle <= maxA && mAngle >= minA) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+    function GetAngleFrom3Point(pA, pB, pC) {
+        var mAngle_A;
+        var mAB, mAC, mCosA;
+        mAB = Math.sqrt((pB.x - pA.x) * (pB.x - pA.x) + (pB.y - pA.y) * (pB.y - pA.y));
+        mAC = Math.sqrt((pC.x - pA.x) * (pC.x - pA.x) + (pC.y - pA.y) * (pC.y - pA.y));
+        mCosA = ((pB.x - pA.x) * (pC.x - pA.x) + (pB.y - pA.y) * (pC.y - pA.y)) / (mAB * mAC);
+        mAngle_A = Math.acos(mCosA) * 180 / 3.1415926;
+        return mAngle_A;
+    }
+    function FindLineFromArray(myObjectID, PolyLineArray) {
+        var num = PolyLineArray.length
+        var myline = null
+        for (var i = 0; i < num; i++) {
+            if (PolyLineArray[i].handle == myObjectID) {
+                myline = PolyLineArray[i]
+                break;
+            }
+        }
+        return myline;
+
+    }
+
+    function DeletSameArrow(ArrowArray) {
+        var mNSameArrowArray = [];
+        var snum = 0;
+        var mbl = false;
+        var num = ArrowArray.length;
+        for (var i = 0; i < num; i++) {
+            mbl = false;
+            snum = mNSameArrowArray.length;
+            for (var j = 0; j < snum; j++) {
+                if (IsSamePoint(ArrowArray[i].myArrowDiA, mNSameArrowArray[j].myArrowDiA)
+                    && IsSamePoint(ArrowArray[i].myArrowDiB, mNSameArrowArray[j].myArrowDiB)
+                    && IsSamePoint(ArrowArray[i].myArrowDingP, mNSameArrowArray[j].myArrowDingP)) {
+                    mbl = true;
+                    break;
+                }
+            }
+            if (mbl == false) {
+                mNSameArrowArray[mNSameArrowArray.length] = ArrowArray[i]
+            }
+        }
+        return mNSameArrowArray
+    }
+    function DeletSamePolyLine(polyLArray) {
+        var snum = 0;
+        var bool = false;
+        var num = polyLArray.length;
+        var NSPolyLineArr = [];
+        for (var i = 0; i < num; i++) {
+            mbl = false;
+            snum = NSPolyLineArr.length;
+            for (var j = 0; j < snum; j++) {
+                var pnum = polyLArray[i].numVerts
+                var blnum = 0;
+                for (var t = 0; t < pnum; t++) {
+                    if (IsSamePoint(polyLArray[i].GetPointAt(t), NSPolyLineArr[j].GetPointAt(t))) {
+                        blnum = blnum + 1;
+                    }
+                    else {
+                        blnum = 0;
+                        break;
+                    }
+                }
+                if (blnum == pnum) {
+                    mbl = true;
+                    break;
+                }
+            }
+            if (mbl == false) {
+                NSPolyLineArr[NSPolyLineArr.length] = polyLArray[i];
+            }
+        }
+        return NSPolyLineArr;
+    }
+    //HandleToObject
+    function ChangeWeldColor(myWeldArray, myColorID) {
+
+        var mxOcx = document.all.item("MxDrawXCtrl");
+        var database = mxOcx.GetDatabase();
+        var num = myWeldArray.length
+        var ent;
+        for (var i = 0; i < num; i++) {
+
+            if (myWeldArray[i].myWelYINnum == 1) {
+                ent = database.ObjectIdToObject(myWeldArray[i].myWelYINline1.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+            }
+            else if (myWeldArray[i].myWelYINnum == 2) {
+                ent = database.ObjectIdToObject(myWeldArray[i].myWelYINline1.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+                ent = database.ObjectIdToObject(myWeldArray[i].myWelYINline2.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+            }
+
+            if (myWeldArray[i].myWelGH_num == 1) {
+                ent = database.ObjectIdToObject(myWeldArray[i].myWelGHline1.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+            }
+            else if (myWeldArray[i].myWelGH_num == 2) {
+                ent = database.ObjectIdToObject(myWeldArray[i].myWelGHline1.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+                ent = database.ObjectIdToObject(myWeldArray[i].myWelGHline2.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+            }
+
+            if (myWeldArray[i].myWelWH_num == 1) {
+                ent = database.ObjectIdToObject(myWeldArray[i].myWelWHline_1.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+            }
+            else if (myWeldArray[i].myWelWH_num == 2) {
+                ent = database.ObjectIdToObject(myWeldArray[i].myWelWHline_1.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+                ent = database.ObjectIdToObject(myWeldArray[i].myWelWHline_2.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+            }
+
+            if (myWeldArray[i].myWelMS_num == 1) {
+                ent = database.ObjectIdToObject(myWeldArray[i].myWelMSline_1.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+            }
+            else if (myWeldArray[i].myWelMS_num == 2) {
+                ent = database.ObjectIdToObject(myWeldArray[i].myWelMSline_1.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+                ent = database.ObjectIdToObject(myWeldArray[i].myWelMSline_2.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+            }
+            else if (myWeldArray[i].myWelMS_num == 3) {
+                ent = database.ObjectIdToObject(myWeldArray[i].myWelMSline_1.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+                ent = database.ObjectIdToObject(myWeldArray[i].myWelMSline_2.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+                ent = database.ObjectIdToObject(myWeldArray[i].myWelMSline_3.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+            }
+
+            if (myWeldArray[i].myWelMX_num == 1) {
+                ent = database.ObjectIdToObject(myWeldArray[i].myWelMXline_1.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+            }
+            else if (myWeldArray[i].myWelMX_num == 2) {
+                ent = database.ObjectIdToObject(myWeldArray[i].myWelMXline_1.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+                ent = database.ObjectIdToObject(myWeldArray[i].myWelMXline_2.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+            }
+            else if (myWeldArray[i].myWelMX_num == 3) {
+                ent = database.ObjectIdToObject(myWeldArray[i].myWelMXline_1.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+                ent = database.ObjectIdToObject(myWeldArray[i].myWelMXline_2.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+                ent = database.ObjectIdToObject(myWeldArray[i].myWelMXline_3.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+            }
+
+            if (myWeldArray[i].myWelMid_num == 1) {
+                ent = database.ObjectIdToObject(myWeldArray[i].myWelMidline_1.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+            }
+            else if (myWeldArray[i].myWelMid_num == 2) {
+                ent = database.ObjectIdToObject(myWeldArray[i].myWelMidline_1.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+                ent = database.ObjectIdToObject(myWeldArray[i].myWelMidline_2.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+            }
+
+            if (myWeldArray[i].myWelUP_num == 1) {
+                ent = database.ObjectIdToObject(myWeldArray[i].myWelUPline_1.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+            }
+            else if (myWeldArray[i].myWelUP_num == 2) {
+                ent = database.ObjectIdToObject(myWeldArray[i].myWelUPline_1.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+                ent = database.ObjectIdToObject(myWeldArray[i].myWelUPline_2.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+            }
+            else if (myWeldArray[i].myWelUP_num == 3) {
+                ent = database.ObjectIdToObject(myWeldArray[i].myWelUPline_1.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+                ent = database.ObjectIdToObject(myWeldArray[i].myWelUPline_2.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+                ent = database.ObjectIdToObject(myWeldArray[i].myWelUPline_3.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+            }
+
+            if (myWeldArray[i].myWelXX_num == 1) {
+                ent = database.ObjectIdToObject(myWeldArray[i].myWelXXline_1.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+            }
+            else if (myWeldArray[i].myWelXX_num == 2) {
+                ent = database.ObjectIdToObject(myWeldArray[i].myWelXXline_1.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+                ent = database.ObjectIdToObject(myWeldArray[i].myWelXXline_2.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+            }
+            else if (myWeldArray[i].myWelXX_num == 3) {
+                ent = database.ObjectIdToObject(myWeldArray[i].myWelXXline_1.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+                ent = database.ObjectIdToObject(myWeldArray[i].myWelXXline_2.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+                ent = database.ObjectIdToObject(myWeldArray[i].myWelXXline_3.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+            }
+            else if (myWeldArray[i].myWelXX_num == 4) {
+                ent = database.ObjectIdToObject(myWeldArray[i].myWelXXline_1.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+                ent = database.ObjectIdToObject(myWeldArray[i].myWelXXline_2.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+                ent = database.ObjectIdToObject(myWeldArray[i].myWelXXline_3.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+                ent = database.ObjectIdToObject(myWeldArray[i].myWelXXline_4.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+            }
+            else if (myWeldArray[i].myWelXX_num == 5) {
+                ent = database.ObjectIdToObject(myWeldArray[i].myWelXXline_1.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+                ent = database.ObjectIdToObject(myWeldArray[i].myWelXXline_2.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+                ent = database.ObjectIdToObject(myWeldArray[i].myWelXXline_3.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+                ent = database.ObjectIdToObject(myWeldArray[i].myWelXXline_4.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+                ent = database.ObjectIdToObject(myWeldArray[i].myWelXXline_5.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+            }
+            else if (myWeldArray[i].myWelXX_num == 6) {
+                ent = database.ObjectIdToObject(myWeldArray[i].myWelXXline_1.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+                ent = database.ObjectIdToObject(myWeldArray[i].myWelXXline_2.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+                ent = database.ObjectIdToObject(myWeldArray[i].myWelXXline_3.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+                ent = database.ObjectIdToObject(myWeldArray[i].myWelXXline_4.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+                ent = database.ObjectIdToObject(myWeldArray[i].myWelXXline_5.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+                ent = database.ObjectIdToObject(myWeldArray[i].myWelXXline_6.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+            }
+            else if (myWeldArray[i].myWelXX_num == 7) {
+                ent = database.ObjectIdToObject(myWeldArray[i].myWelXXline_1.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+                ent = database.ObjectIdToObject(myWeldArray[i].myWelXXline_2.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+                ent = database.ObjectIdToObject(myWeldArray[i].myWelXXline_3.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+                ent = database.ObjectIdToObject(myWeldArray[i].myWelXXline_4.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+                ent = database.ObjectIdToObject(myWeldArray[i].myWelXXline_5.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+                ent = database.ObjectIdToObject(myWeldArray[i].myWelXXline_6.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+                ent = database.ObjectIdToObject(myWeldArray[i].myWelXXline_7.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+            }
+            else if (myWeldArray[i].myWelXX_num == 8) {
+                ent = database.ObjectIdToObject(myWeldArray[i].myWelXXline_1.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+                ent = database.ObjectIdToObject(myWeldArray[i].myWelXXline_2.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+                ent = database.ObjectIdToObject(myWeldArray[i].myWelXXline_3.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+                ent = database.ObjectIdToObject(myWeldArray[i].myWelXXline_4.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+                ent = database.ObjectIdToObject(myWeldArray[i].myWelXXline_5.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+                ent = database.ObjectIdToObject(myWeldArray[i].myWelXXline_6.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+                ent = database.ObjectIdToObject(myWeldArray[i].myWelXXline_7.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+                ent = database.ObjectIdToObject(myWeldArray[i].myWelXXline_8.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+            }
+            else if (myWeldArray[i].myWelXX_num == 9) {
+                ent = database.ObjectIdToObject(myWeldArray[i].myWelXXline_1.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+                ent = database.ObjectIdToObject(myWeldArray[i].myWelXXline_2.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+                ent = database.ObjectIdToObject(myWeldArray[i].myWelXXline_3.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+                ent = database.ObjectIdToObject(myWeldArray[i].myWelXXline_4.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+                ent = database.ObjectIdToObject(myWeldArray[i].myWelXXline_5.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+                ent = database.ObjectIdToObject(myWeldArray[i].myWelXXline_6.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+                ent = database.ObjectIdToObject(myWeldArray[i].myWelXXline_7.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+                ent = database.ObjectIdToObject(myWeldArray[i].myWelXXline_8.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+                ent = database.ObjectIdToObject(myWeldArray[i].myWelXXline_9.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+            }
+            else if (myWeldArray[i].myWelXX_num == 10) {
+                ent = database.ObjectIdToObject(myWeldArray[i].myWelXXline_1.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+                ent = database.ObjectIdToObject(myWeldArray[i].myWelXXline_2.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+                ent = database.ObjectIdToObject(myWeldArray[i].myWelXXline_3.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+                ent = database.ObjectIdToObject(myWeldArray[i].myWelXXline_4.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+                ent = database.ObjectIdToObject(myWeldArray[i].myWelXXline_5.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+                ent = database.ObjectIdToObject(myWeldArray[i].myWelXXline_6.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+                ent = database.ObjectIdToObject(myWeldArray[i].myWelXXline_7.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+                ent = database.ObjectIdToObject(myWeldArray[i].myWelXXline_8.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+                ent = database.ObjectIdToObject(myWeldArray[i].myWelXXline_9.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+                ent = database.ObjectIdToObject(myWeldArray[i].myWelXXline_10.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+            }
+
+            if (myWeldArray[i].myWelDOWN_num == 1) {
+                ent = database.ObjectIdToObject(myWeldArray[i].myWelDOWNline_1.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+            }
+            else if (myWeldArray[i].myWelDOWN_num == 2) {
+                ent = database.ObjectIdToObject(myWeldArray[i].myWelDOWNline_1.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+                ent = database.ObjectIdToObject(myWeldArray[i].myWelDOWNline_2.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+            }
+            else if (myWeldArray[i].myWelDOWN_num == 3) {
+                ent = database.ObjectIdToObject(myWeldArray[i].myWelDOWNline_1.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+                ent = database.ObjectIdToObject(myWeldArray[i].myWelDOWNline_2.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+                ent = database.ObjectIdToObject(myWeldArray[i].myWelDOWNline_3.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+            }
+        }
+
+    }
+    function ChangeWeldColorbyHandle(myWeldArray, myColorID) {
+
+        var mxOcx = document.all.item("MxDrawXCtrl");
+        var database = mxOcx.GetDatabase();
+        var num = myWeldArray.length
+        var ent;
+        for (var i = 0; i < num; i++) {
+
+            if (myWeldArray[i].myWelYINnum == 1) {
+                ent = database.HandleToObject(myWeldArray[i].myWelYINline1.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+            }
+            else if (myWeldArray[i].myWelYINnum == 2) {
+                ent = database.HandleToObject(myWeldArray[i].myWelYINline1.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+                ent = database.HandleToObject(myWeldArray[i].myWelYINline2.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+            }
+
+            if (myWeldArray[i].myWelGH_num == 1) {
+                ent = database.HandleToObject(myWeldArray[i].myWelGHline1.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+            }
+            else if (myWeldArray[i].myWelGH_num == 2) {
+                ent = database.HandleToObject(myWeldArray[i].myWelGHline1.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+                ent = database.HandleToObject(myWeldArray[i].myWelGHline2.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+            }
+
+            if (myWeldArray[i].myWelWH_num == 1) {
+                ent = database.HandleToObject(myWeldArray[i].myWelWHline_1.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+            }
+            else if (myWeldArray[i].myWelWH_num == 2) {
+                ent = database.HandleToObject(myWeldArray[i].myWelWHline_1.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+                ent = database.HandleToObject(myWeldArray[i].myWelWHline_2.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+            }
+
+            if (myWeldArray[i].myWelMS_num == 1) {
+                ent = database.HandleToObject(myWeldArray[i].myWelMSline_1.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+            }
+            else if (myWeldArray[i].myWelMS_num == 2) {
+                ent = database.HandleToObject(myWeldArray[i].myWelMSline_1.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+                ent = database.HandleToObject(myWeldArray[i].myWelMSline_2.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+            }
+            else if (myWeldArray[i].myWelMS_num == 3) {
+                ent = database.HandleToObject(myWeldArray[i].myWelMSline_1.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+                ent = database.HandleToObject(myWeldArray[i].myWelMSline_2.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+                ent = database.HandleToObject(myWeldArray[i].myWelMSline_3.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+            }
+
+            if (myWeldArray[i].myWelMX_num == 1) {
+                ent = database.HandleToObject(myWeldArray[i].myWelMXline_1.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+            }
+            else if (myWeldArray[i].myWelMX_num == 2) {
+                ent = database.HandleToObject(myWeldArray[i].myWelMXline_1.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+                ent = database.HandleToObject(myWeldArray[i].myWelMXline_2.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+            }
+            else if (myWeldArray[i].myWelMX_num == 3) {
+                ent = database.HandleToObject(myWeldArray[i].myWelMXline_1.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+                ent = database.HandleToObject(myWeldArray[i].myWelMXline_2.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+                ent = database.HandleToObject(myWeldArray[i].myWelMXline_3.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+            }
+
+            if (myWeldArray[i].myWelMid_num == 1) {
+                ent = database.HandleToObject(myWeldArray[i].myWelMidline_1.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+            }
+            else if (myWeldArray[i].myWelMid_num == 2) {
+                ent = database.HandleToObject(myWeldArray[i].myWelMidline_1.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+                ent = database.HandleToObject(myWeldArray[i].myWelMidline_2.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+            }
+
+            if (myWeldArray[i].myWelUP_num == 1) {
+                ent = database.HandleToObject(myWeldArray[i].myWelUPline_1.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+            }
+            else if (myWeldArray[i].myWelUP_num == 2) {
+                ent = database.HandleToObject(myWeldArray[i].myWelUPline_1.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+                ent = database.HandleToObject(myWeldArray[i].myWelUPline_2.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+            }
+            else if (myWeldArray[i].myWelUP_num == 3) {
+                ent = database.HandleToObject(myWeldArray[i].myWelUPline_1.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+                ent = database.HandleToObject(myWeldArray[i].myWelUPline_2.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+                ent = database.HandleToObject(myWeldArray[i].myWelUPline_3.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+            }
+
+            if (myWeldArray[i].myWelXX_num == 1) {
+                ent = database.HandleToObject(myWeldArray[i].myWelXXline_1.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+            }
+            else if (myWeldArray[i].myWelXX_num == 2) {
+                ent = database.HandleToObject(myWeldArray[i].myWelXXline_1.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+                ent = database.HandleToObject(myWeldArray[i].myWelXXline_2.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+            }
+            else if (myWeldArray[i].myWelXX_num == 3) {
+                ent = database.HandleToObject(myWeldArray[i].myWelXXline_1.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+                ent = database.HandleToObject(myWeldArray[i].myWelXXline_2.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+                ent = database.HandleToObject(myWeldArray[i].myWelXXline_3.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+            }
+            else if (myWeldArray[i].myWelXX_num == 4) {
+                ent = database.HandleToObject(myWeldArray[i].myWelXXline_1.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+                ent = database.HandleToObject(myWeldArray[i].myWelXXline_2.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+                ent = database.HandleToObject(myWeldArray[i].myWelXXline_3.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+                ent = database.HandleToObject(myWeldArray[i].myWelXXline_4.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+            }
+            else if (myWeldArray[i].myWelXX_num == 5) {
+                ent = database.HandleToObject(myWeldArray[i].myWelXXline_1.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+                ent = database.HandleToObject(myWeldArray[i].myWelXXline_2.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+                ent = database.HandleToObject(myWeldArray[i].myWelXXline_3.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+                ent = database.HandleToObject(myWeldArray[i].myWelXXline_4.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+                ent = database.HandleToObject(myWeldArray[i].myWelXXline_5.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+            }
+            else if (myWeldArray[i].myWelXX_num == 6) {
+                ent = database.HandleToObject(myWeldArray[i].myWelXXline_1.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+                ent = database.HandleToObject(myWeldArray[i].myWelXXline_2.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+                ent = database.HandleToObject(myWeldArray[i].myWelXXline_3.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+                ent = database.HandleToObject(myWeldArray[i].myWelXXline_4.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+                ent = database.HandleToObject(myWeldArray[i].myWelXXline_5.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+                ent = database.HandleToObject(myWeldArray[i].myWelXXline_6.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+            }
+            else if (myWeldArray[i].myWelXX_num == 7) {
+                ent = database.HandleToObject(myWeldArray[i].myWelXXline_1.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+                ent = database.HandleToObject(myWeldArray[i].myWelXXline_2.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+                ent = database.HandleToObject(myWeldArray[i].myWelXXline_3.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+                ent = database.HandleToObject(myWeldArray[i].myWelXXline_4.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+                ent = database.HandleToObject(myWeldArray[i].myWelXXline_5.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+                ent = database.HandleToObject(myWeldArray[i].myWelXXline_6.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+                ent = database.HandleToObject(myWeldArray[i].myWelXXline_7.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+            }
+            else if (myWeldArray[i].myWelXX_num == 8) {
+                ent = database.HandleToObject(myWeldArray[i].myWelXXline_1.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+                ent = database.HandleToObject(myWeldArray[i].myWelXXline_2.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+                ent = database.HandleToObject(myWeldArray[i].myWelXXline_3.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+                ent = database.HandleToObject(myWeldArray[i].myWelXXline_4.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+                ent = database.HandleToObject(myWeldArray[i].myWelXXline_5.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+                ent = database.HandleToObject(myWeldArray[i].myWelXXline_6.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+                ent = database.HandleToObject(myWeldArray[i].myWelXXline_7.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+                ent = database.HandleToObject(myWeldArray[i].myWelXXline_8.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+            }
+            else if (myWeldArray[i].myWelXX_num == 9) {
+                ent = database.HandleToObject(myWeldArray[i].myWelXXline_1.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+                ent = database.HandleToObject(myWeldArray[i].myWelXXline_2.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+                ent = database.HandleToObject(myWeldArray[i].myWelXXline_3.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+                ent = database.HandleToObject(myWeldArray[i].myWelXXline_4.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+                ent = database.HandleToObject(myWeldArray[i].myWelXXline_5.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+                ent = database.HandleToObject(myWeldArray[i].myWelXXline_6.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+                ent = database.HandleToObject(myWeldArray[i].myWelXXline_7.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+                ent = database.HandleToObject(myWeldArray[i].myWelXXline_8.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+                ent = database.HandleToObject(myWeldArray[i].myWelXXline_9.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+            }
+            else if (myWeldArray[i].myWelXX_num == 10) {
+                ent = database.HandleToObject(myWeldArray[i].myWelXXline_1.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+                ent = database.HandleToObject(myWeldArray[i].myWelXXline_2.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+                ent = database.HandleToObject(myWeldArray[i].myWelXXline_3.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+                ent = database.HandleToObject(myWeldArray[i].myWelXXline_4.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+                ent = database.HandleToObject(myWeldArray[i].myWelXXline_5.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+                ent = database.HandleToObject(myWeldArray[i].myWelXXline_6.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+                ent = database.HandleToObject(myWeldArray[i].myWelXXline_7.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+                ent = database.HandleToObject(myWeldArray[i].myWelXXline_8.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+                ent = database.HandleToObject(myWeldArray[i].myWelXXline_9.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+                ent = database.HandleToObject(myWeldArray[i].myWelXXline_10.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+            }
+
+            if (myWeldArray[i].myWelDOWN_num == 1) {
+                ent = database.HandleToObject(myWeldArray[i].myWelDOWNline_1.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+            }
+            else if (myWeldArray[i].myWelDOWN_num == 2) {
+                ent = database.HandleToObject(myWeldArray[i].myWelDOWNline_1.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+                ent = database.HandleToObject(myWeldArray[i].myWelDOWNline_2.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+            }
+            else if (myWeldArray[i].myWelDOWN_num == 3) {
+                ent = database.HandleToObject(myWeldArray[i].myWelDOWNline_1.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+                ent = database.HandleToObject(myWeldArray[i].myWelDOWNline_2.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+                ent = database.HandleToObject(myWeldArray[i].myWelDOWNline_3.myPolyLineObjectID);
+                ent.ColorIndex = myColorID
+            }
+        }
+
+    }
+    function GetGraphFromArea(StartX, EndX, mY, dis, direction, TwoP_PolyLineArray, ThreeP_PolyLineArray) {
+        var bl = false;
+        var max_X = 0;
+        var min_X = 0;
+        var max_Y = 0;
+        var min_Y = 0;
+        var td = 0.05;
+
+        var twoLnum = 0;
+        var threeLnum = 0;
+        var res_PolyLineArray = [];
+
+        if (StartX > EndX) {
+            max_X = StartX + td;
+            min_X = EndX - td;
+        }
+        else {
+            max_X = EndX + td;
+            min_X = StartX - td;
+        }
+        if (direction == "up") {
+            max_Y = mY + dis;
+            min_Y = mY;
+        }
+        else if (direction == "down") {
+            max_Y = mY;
+            min_Y = mY - dis;
+        }
+        for (var i = 0; i < TwoP_PolyLineArray.length; i++) {
+            if (TwoP_PolyLineArray[i].GetPointAt(0).x <= max_X && TwoP_PolyLineArray[i].GetPointAt(0).x >= min_X
+                && TwoP_PolyLineArray[i].GetPointAt(0).y <= max_Y && TwoP_PolyLineArray[i].GetPointAt(0).y >= min_Y
+                && TwoP_PolyLineArray[i].GetPointAt(1).x <= max_X && TwoP_PolyLineArray[i].GetPointAt(1).x >= min_X
+                && TwoP_PolyLineArray[i].GetPointAt(1).y <= max_Y && TwoP_PolyLineArray[i].GetPointAt(1).y >= min_Y) {
+
+                var mtline = new myPolyLine(TwoP_PolyLineArray[i].handle, 2, TwoP_PolyLineArray[i].GetPointAt(0),
+                    TwoP_PolyLineArray[i].GetPointAt(1), null, null)
+                res_PolyLineArray[res_PolyLineArray.length] = mtline;
+                twoLnum = twoLnum + 1;
+            }
+        }
+
+        for (var j = 0; j < ThreeP_PolyLineArray.length; j++) {
+            if (ThreeP_PolyLineArray[j].GetPointAt(0).x <= max_X && ThreeP_PolyLineArray[j].GetPointAt(0).x >= min_X
+                && ThreeP_PolyLineArray[j].GetPointAt(0).y <= max_Y && ThreeP_PolyLineArray[j].GetPointAt(0).y >= min_Y
+                && ThreeP_PolyLineArray[j].GetPointAt(2).x <= max_X && ThreeP_PolyLineArray[j].GetPointAt(2).x >= min_X
+                && ThreeP_PolyLineArray[j].GetPointAt(2).y <= max_Y && ThreeP_PolyLineArray[j].GetPointAt(2).y >= min_Y
+                && ThreeP_PolyLineArray[j].GetPointAt(1).x <= max_X && ThreeP_PolyLineArray[j].GetPointAt(1).x >= min_X
+                && ThreeP_PolyLineArray[j].GetPointAt(1).y <= max_Y && ThreeP_PolyLineArray[j].GetPointAt(1).y >= min_Y) {
+
+                var mtline = new myPolyLine(ThreeP_PolyLineArray[j].handle, 3, ThreeP_PolyLineArray[j].GetPointAt(0),
+                    ThreeP_PolyLineArray[j].GetPointAt(2), ThreeP_PolyLineArray[j].GetPointAt(1), null)
+                res_PolyLineArray[res_PolyLineArray.length] = mtline;
+                threeLnum = threeLnum + 1;
+            }
+        }
+        if (twoLnum == 1 && threeLnum == 1) {
+            if (CheckAngleIn(res_PolyLineArray[0].myPolyEndP, res_PolyLineArray[0].myPolyStartP, res_PolyLineArray[1].myPolyMid, 47, 43)) {
+                return res_PolyLineArray;
+            }
+        }
+        else if (twoLnum == 0 && threeLnum == 1) {
+            if (CheckAngleIn(res_PolyLineArray[0].myPolyMid, res_PolyLineArray[0].myPolyStartP, res_PolyLineArray[0].myPolyEndP, 47, 43)
+                || CheckAngleIn(res_PolyLineArray[0].myPolyMid, res_PolyLineArray[0].myPolyStartP, res_PolyLineArray[0].myPolyEndP, 92, 88)) {
+                return res_PolyLineArray;
+            }
+        }
+        else {
+            res_PolyLineArray = [];
+            return res_PolyLineArray;
+        }
+    }
+
+    function GetMultiPointLineInterXX(StartP, EndP, mY, FourMP_PolyLArray) {
+        var dis = 0.05;
+        var max_X, min_X;
+        var resPolyline = [];
+        if (StartP.x > EndP.x) {
+            max_X = StartP.x;
+            min_X = EndP.x;
+        }
+        else {
+            max_X = EndP.x;
+            min_X = StartP.x;
+        }
+        for (var i = 0; i < FourMP_PolyLArray.length; i++) {
+            var Pnum = FourMP_PolyLArray[i].numVerts;
+            if (FourMP_PolyLArray[i].GetPointAt(0).y <= mY + dis && FourMP_PolyLArray[i].GetPointAt(0).y >= mY - dis
+                && FourMP_PolyLArray[i].GetPointAt(Pnum - 1).y <= mY + dis && FourMP_PolyLArray[i].GetPointAt(Pnum - 1).y >= mY - dis
+                && FourMP_PolyLArray[i].GetPointAt(0).x <= max_X && FourMP_PolyLArray[i].GetPointAt(0).x >= min_X
+                && FourMP_PolyLArray[i].GetPointAt(Pnum - 1).x <= max_X && FourMP_PolyLArray[i].GetPointAt(Pnum - 1).x >= min_X) {
+                //var mxOcx = document.all.item("MxDrawXCtrl");
+                //var database = mxOcx.GetDatabase();
+                //var ent;
+                //ent = database.ObjectIdToObject(FourMP_PolyLArray[i].myPolyLineObjectID);
+                //var ob = ent;
+                if (FourMP_PolyLArray[i].IsClosedStatus == true) {
+
+                    var mtline = new myPolyLine(FourMP_PolyLArray[i].handle, Pnum, FourMP_PolyLArray[i].GetPointAt(0),
+                        FourMP_PolyLArray[i].GetPointAt(Pnum - 1), null, null)
+                    resPolyline[resPolyline.length] = mtline;
+                    break;
+                }
+
+            }
+        }
+        return resPolyline;
+
+    }
+    function GetInterLineFromVerLine(StartP, EndP, TwoP_PolyLineArray) {
+        var max_Y, min_Y;
+        var td = 0.05;
+        var mResLineArr = [];
+        if (IsVertical(StartP, EndP)) {
+            if (StartP.y >= EndP.y) {
+                max_Y = StartP.y;
+                min_Y = EndP.y;
+            }
+            else {
+                max_Y = EndP.y;
+                min_Y = StartP.y;
+            }
+            for (var i = 0; i < TwoP_PolyLineArray.length; i++) {
+                if (CheckLineType(TwoP_PolyLineArray[i].GetPointAt(0), TwoP_PolyLineArray[i].GetPointAt(1)) == "X") {
+                    if (TwoP_PolyLineArray[i].GetPointAt(0).x < (StartP.x + td) && TwoP_PolyLineArray[i].GetPointAt(0).x > (StartP.x - td)
+                        && TwoP_PolyLineArray[i].GetPointAt(0).y <= max_Y && TwoP_PolyLineArray[i].GetPointAt(0).y >= min_Y) {
+                        var mtline = new myPolyLine(TwoP_PolyLineArray[i].handle, 2, TwoP_PolyLineArray[i].GetPointAt(0),
+                            TwoP_PolyLineArray[i].GetPointAt(1), null, "Start")
+                        mResLineArr[mResLineArr.length] = mtline;
+                    }
+                    else if (TwoP_PolyLineArray[i].GetPointAt(1).x < (StartP.x + td) && TwoP_PolyLineArray[i].GetPointAt(1).x > (StartP.x - td)
+                        && TwoP_PolyLineArray[i].GetPointAt(1).y <= max_Y && TwoP_PolyLineArray[i].GetPointAt(1).y >= min_Y) {
+                        var mtline = new myPolyLine(TwoP_PolyLineArray[i].handle, 2, TwoP_PolyLineArray[i].GetPointAt(0),
+                            TwoP_PolyLineArray[i].GetPointAt(1), null, "End")
+                        mResLineArr[mResLineArr.length] = mtline;
+                    }
+                }
+            }
+        }
+        return mResLineArr;
+    }
+    function GetTwoPointLineInterXX(StartP, EndP, mY, TwoP_PolyLineArray) {
+        var resPolyLineArr = [];
+        var dis = 0.05;
+        var max_X, min_X;
+        if (StartP.x > EndP.x) {
+            max_X = StartP.x;
+            min_X = EndP.x;
+        }
+        else {
+            max_X = EndP.x;
+            min_X = StartP.x;
+        }
+        for (var i = 0; i < TwoP_PolyLineArray.length; i++) {
+            if (IsVertical(TwoP_PolyLineArray[i].GetPointAt(0), TwoP_PolyLineArray[i].GetPointAt(1))) {
+                if (TwoP_PolyLineArray[i].GetPointAt(0).y <= mY + dis && TwoP_PolyLineArray[i].GetPointAt(0).y >= mY - dis
+                    && TwoP_PolyLineArray[i].GetPointAt(0).x <= max_X && TwoP_PolyLineArray[i].GetPointAt(0).x >= min_X) {
+                    var mtline = new myPolyLine(TwoP_PolyLineArray[i].handle, 2, TwoP_PolyLineArray[i].GetPointAt(0),
+                        TwoP_PolyLineArray[i].GetPointAt(1), null, "Start")
+                    resPolyLineArr[resPolyLineArr.length] = mtline
+                }
+                else if (TwoP_PolyLineArray[i].GetPointAt(1).y <= mY + dis && TwoP_PolyLineArray[i].GetPointAt(1).y >= mY - dis
+                    && TwoP_PolyLineArray[i].GetPointAt(1).x <= max_X && TwoP_PolyLineArray[i].GetPointAt(1).x >= min_X) {
+                    var mtline = new myPolyLine(TwoP_PolyLineArray[i].handle, 2, TwoP_PolyLineArray[i].GetPointAt(0),
+                        TwoP_PolyLineArray[i].GetPointAt(1), null, "End")
+                    resPolyLineArr[resPolyLineArr.length] = mtline
+                }
+            }
+        }
+        return resPolyLineArr;
+    }
+</script>

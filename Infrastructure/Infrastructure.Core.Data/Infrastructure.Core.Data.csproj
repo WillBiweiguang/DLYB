@@ -91,7 +91,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MySqlDbContext.cs" />
-    <Compile Include="CodeFirstDbContext.cs" />
     <Compile Include="DatabaseInitializer.cs" />
     <Compile Include="DataHelper.cs" />
     <Compile Include="EntityConfigurationBase.cs" />

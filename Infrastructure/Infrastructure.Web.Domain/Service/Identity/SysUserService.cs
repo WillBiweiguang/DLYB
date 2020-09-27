@@ -65,7 +65,7 @@ namespace Infrastructure.Web.Domain.Services
             // var strUser = objWI is WindowsIdentity ? SysCommon.GetUserName(objWI) : objWI.Name;
             //数据库获取设置信息
             BaseService<SysUser> objServ = new BaseService<SysUser>();
-            var obj = objServ.Repository.Entities.Where(a => (a.LillyId == strUser || a.UserName == strUser) && a.IsDeleted == false ).FirstOrDefault();
+            var obj = objServ.Repository.Entities.Where(a => (a.UserId == strUser || a.UserName == strUser) && a.IsDeleted == false ).FirstOrDefault();
             if (obj != null)
             {
 
@@ -82,7 +82,7 @@ namespace Infrastructure.Web.Domain.Services
                     LogCate = "AdminLogin",
                     LogContent = "登录成功",
                     CreatedUserID = obj.Id.ToString(),
-                    CreatedUserName = obj.LillyId
+                    CreatedUserName = obj.UserName
                 });
             }
 
@@ -112,7 +112,7 @@ namespace Infrastructure.Web.Domain.Services
 
         public SysUser UserLoginAsync(string strUser, string strPassword)
         {
-            SysUser tUser = Repository.Entities.Where(a => (a.LillyId == strUser || a.UserName == strUser) && a.IsDeleted == false).FirstOrDefault();
+            SysUser tUser = Repository.Entities.Where(a => (a.UserId == strUser || a.UserName == strUser) && a.IsDeleted == false).FirstOrDefault();
             SysUser result;
             if (tUser == null)
             {
@@ -241,7 +241,7 @@ namespace Infrastructure.Web.Domain.Services
 
 
         public UserStore()
-            : this(new CodeFirstDbContext())
+            : this(new MySqlDbContext())
         {
 
         }

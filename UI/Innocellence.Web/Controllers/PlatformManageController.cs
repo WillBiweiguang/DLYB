@@ -9,7 +9,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 
-namespace DLYB.WeChatMain.Controllers
+namespace DLYB.Web.Controllers
 {
     public class PlatformManageController : BaseController<SysRole, SysRoleView>
     {
@@ -49,7 +49,11 @@ namespace DLYB.WeChatMain.Controllers
                     ViewBag.IsUser = true;
                 }
             }
-
+            if (user != null && user.UserName == "administrator")
+            {
+                ViewBag.IsRole = true;
+                ViewBag.IsUser = true;
+            }
             return View();
         }
 

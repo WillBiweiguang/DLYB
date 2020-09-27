@@ -26,7 +26,7 @@ namespace DLYB.CA.Service.job
         private readonly IUserBehaviorService _userBehaviorService = EngineContext.Current.Resolve<IUserBehaviorService>();
         private readonly IArticleReportService _articleReportService = EngineContext.Current.Resolve<IArticleReportService>();
         private readonly IArticleInfoService _articleInfoService = EngineContext.Current.Resolve<IArticleInfoService>();
-        private readonly IQuestionManageService _questionManageService = new QuestionManageService(new CodeFirstDbContext());
+        private readonly IQuestionManageService _questionManageService = new QuestionManageService(new MySqlDbContext());
         private readonly IMessageService _messageService = EngineContext.Current.Resolve<IMessageService>();
 
         private static readonly ILogger Log = LogManager.GetLogger(typeof(ArticleReportJob));
@@ -286,18 +286,19 @@ namespace DLYB.CA.Service.job
 
         private string GetAppNameFromCach(int appId)
         {
-            var app = CommonService.lstSysWeChatConfig.FirstOrDefault(x => x.WeixinAppId == appId.ToString(CultureInfo.CurrentCulture));
-            var appName = string.Empty;
-            if (app == null)
-            {
-                Log.Info("没有找到app id 为{0}的app!", appId);
-            }
-            else
-            {
-                appName = app.AppName;
-            }
+            return "";
+            //var app = CommonService.lstSysWeChatConfig.FirstOrDefault(x => x.WeixinAppId == appId.ToString(CultureInfo.CurrentCulture));
+            //var appName = string.Empty;
+            //if (app == null)
+            //{
+            //    Log.Info("没有找到app id 为{0}的app!", appId);
+            //}
+            //else
+            //{
+            //    appName = app.AppName;
+            //}
 
-            return appName;
+            //return appName;
         }
 
         private static IEnumerable<int> getTargetIDs(IEnumerable<UserBehavior> behaviors)

@@ -19,7 +19,7 @@ namespace Infrastructure.Core.Data.Migrations
     /// <summary>
     /// 在数据库不存在时使用种子数据创建数据库
     /// </summary>
-    public class CreateDatabaseIfNotExistsWithSeed : CreateDatabaseIfNotExists<CodeFirstDbContext>
+    public class CreateDatabaseIfNotExistsWithSeed : CreateDatabaseIfNotExists<MySqlDbContext>
     {
         static CreateDatabaseIfNotExistsWithSeed()
         {
@@ -31,7 +31,7 @@ namespace Infrastructure.Core.Data.Migrations
         /// </summary>
         public static ICollection<ISeedAction> SeedActions { get; private set; }
 
-        protected override void Seed(CodeFirstDbContext context)
+        protected override void Seed(MySqlDbContext context)
         {
             IEnumerable<ISeedAction> seedActions = SeedActions.OrderBy(m => m.Order);
             foreach (ISeedAction seedAction in seedActions)
