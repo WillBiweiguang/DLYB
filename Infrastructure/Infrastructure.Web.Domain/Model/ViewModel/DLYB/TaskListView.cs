@@ -19,7 +19,7 @@ namespace Infrastructure.Web.Domain.ModelsView
         public string DWGProcess { get; set; }
         public string ResultProcess { get; set; }
 
-        public string TaskStatus { get; set; }
+        public int TaskStatus { get; set; }
 
         public string AuditStatus { get; set; }
 

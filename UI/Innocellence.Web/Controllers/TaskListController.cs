@@ -18,6 +18,7 @@ using System.Linq.Expressions;
 using Infrastructure.Utility.Data;
 using System.IO;
 using NPOI.XSSF.UserModel;
+using Infrastructure.Web.Domain.Common;
 
 namespace DLYB.Web.Controllers
 {
@@ -26,15 +27,25 @@ namespace DLYB.Web.Controllers
         private readonly ITaskListService _TaskListService;
         const string templateExcelFilename = "/content/焊材统计表.xlsx";
         private readonly IWeldCategoryLabelingService _weldCategoryService;
+        private readonly ISysUserRoleService _sysUserRoleService;
         public TaskListController(ITaskListService TaskListService,
-            IWeldCategoryLabelingService weldCategoryService) : base(TaskListService)
+            IWeldCategoryLabelingService weldCategoryService,
+            ISysUserRoleService sysUserRoleService) : base(TaskListService)
         {
             _TaskListService = TaskListService;
             _weldCategoryService = weldCategoryService;
+            _sysUserRoleService = sysUserRoleService;
         }
         // GET: Address
         public override ActionResult Index()
         {
+            var role = objLoginInfo.Roles.FirstOrDefault(x => x.RoleId == 1);
+            if (objLoginInfo.Roles.Count == 0)
+            {
+                role = _sysUserRoleService.Repository.Entities.Where(x => x.UserId == objLoginInfo.Id && x.RoleId == 1).FirstOrDefault();
+            }            
+            ViewBag.isApprover = role != null && role.RoleId == 1 ? 1 : 0;
+            ViewBag.UserId = objLoginInfo.Id;
             ViewBag.list = _weldCategoryService.Repository.Entities.Where(a => !a.IsDeleted).ToList();
             return View();
         }
@@ -142,6 +153,30 @@ namespace DLYB.Web.Controllers
 
             }
 
+        }
+
+        public ActionResult ApproveTask(int Id, int option) {
+            var task = _TaskListService.GetList<TaskListView>(1, x => !x.IsDeleted && x.Id == Id).FirstOrDefault();
+            if (task == null || (task.TaskStatus != (int)TaskStatus.PendingApproval && task.TaskStatus != (int)TaskStatus.Rejected))
+            {
+                return new JsonResult { Data = new { result = ApiReturnCode.Fail, message = "任务不存在或状态不正常" }, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
+            }
+            //option = 1 审核，0 驳回
+            task.TaskStatus = option == 1 ? (int)TaskStatus.Approved : (int)TaskStatus.Rejected;
+            _TaskListService.UpdateView(task);
+            return new JsonResult { Data = new { result = ApiReturnCode.Success }, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
+        }
+
+        public ActionResult RaiseApprove(int Id)
+        {
+            var task = _TaskListService.GetList<TaskListView>(1, x => !x.IsDeleted && x.Id == Id).FirstOrDefault();
+            if (task == null || (task.TaskStatus != (int)TaskStatus.NotRequest && task.TaskStatus != (int)TaskStatus.Rejected))
+            {
+                return new JsonResult { Data = new { result = ApiReturnCode.Fail, message = "任务不存在或状态不正常" }, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
+            }
+            task.TaskStatus = (int)TaskStatus.PendingApproval;
+            _TaskListService.UpdateView(task);
+            return new JsonResult { Data = new { result = ApiReturnCode.Success }, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
         }
     }
 }

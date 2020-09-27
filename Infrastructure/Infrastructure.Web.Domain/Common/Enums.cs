@@ -6,9 +6,11 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.Web.Domain.Common
 {
-   public class ApiReturnCode
+    public enum TaskStatus
     {
-        public const string Success = "SYSTEM_SUCCESS";
-        public const string Fail = "failed";
+        NotRequest,
+        PendingApproval,
+        Approved,
+        Rejected
     }
 }

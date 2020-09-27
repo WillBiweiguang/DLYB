@@ -308,6 +308,8 @@
                         "targets": 14,
                         "render": function (data, type, full, meta) {
                             return '<a href="#" onclick="LEAP.Common.MainPop.ShowUpdateInfo(\'' + full.Id + '\');return false;" class="artDailog btn btn-info  btn-xs" style="margin-right:4px;" data-toggle="tooltip" data-placement="top" title="编辑"><i class="fa fa-pencil"></i></a>' +
+                                '<a href="#" onclick="DrawCircleOfArrow(\'' + full.HandleID + '\');return false;" class="artDailog btn btn-info  btn-xs" style="margin-right:4px;" data-toggle="tooltip" data-placement="top" title="定位">定位</a>' +
+                                '</a>'+
                                 '<a href="#" onclick="LEAP.Common.MainPop.RowClick(\'' + full.Id + '\',2);return false;" class="btn btn-danger btn-xs" id="btnDelete" data-toggle="tooltip" data-placement="top" title="删除">' +
                                 '<i class="fa fa-trash-o"></i></a>';
                         }
@@ -477,7 +479,7 @@
                 var filename = $('#fileName').val();
                 
                 if (filename) {
-                    var path = '/Files/BeamInfo/' + filename;
+                    var path = "http://" + window.location.host + '/Files/BeamInfo/' + filename;
                     mxOcx.OpenWebDwgFile(path);
                 }
                 // 控件初始化完成，需要在启动做的事，在这里做
@@ -763,7 +765,7 @@
             alert('未识别到焊缝');
             return;
         }
-        DrawCircleOfArrow(m_ResWeldArr[0].myWelArrow.myArrowObjectID) //实现使用箭头handle 在箭头处画圆
+        //DrawCircleOfArrow(m_ResWeldArr[0].myWelArrow.myArrowObjectID) //实现使用箭头handle 在箭头处画圆
 
 
         //m_ResWeldArr[i].myWelArrow.myArrowObjectID  保存的是箭头handle的值

@@ -33,6 +33,7 @@
 </style>
 <!--Action boxes-->
 <div class="row">
+    <input type="hidden" id="isApprover" value="@ViewBag.isApprover" />
     <div class="col-sm-12">
         <form class="form-inline" id="SearchForm">
             <div>
@@ -41,9 +42,12 @@
                 </a>
                 @*<input id="upload-input" class="form-control " multiple="multiple" type="file" name="file" onchange="return uploadFile(this);"
         accept="image/vnd.dwg" />*@
+                @if (ViewBag.isApprover == 1)
+                {
                 <div style="float:right">
                     <button type="button" id="btnAudit" class="btn btn-primary btn-sm" data-toggle="tooltip" data-placement="top" title="审核">审核</button>
                 </div>
+                }
             </div>
         </form>
         <div class="clearfix"></div>
@@ -225,7 +229,9 @@
         //$('[data-toggle="tooltip"]').tooltip();
         var popMenu;
         var IdCur;
-
+        var isapprover = @ViewBag.isApprover;
+        var userId = @ViewBag.UserId;
+        var tastStatus = { new: 0, pending: 1, approved: 2, rejected: 3 };
         $(document).ready(function () {
             LEAP.Common.MainPop.options.dataTable = $('.data-table').dataTable(jQuery.extend(true, datatableSetting, {
                 "ajax": {
@@ -245,7 +251,15 @@
                     {
                         "targets": 6,
                         "render": function (data, type, full, meta) {
-                            return '<a href="#" onclick="LEAP.Common.MainPop.ShowUpdateInfo(\'' + full.Id + '\');return false;" class="artDailog btn btn-info  btn-xs pop-btn" style="margin-right:4px;" data-toggle="tooltip" data-placement="top" title="焊材详情统计"><i class="ace-icon glyphicon glyphicon-align-left"></i></a>';
+                            var opstr = '<a href="#" onclick="LEAP.Common.MainPop.ShowUpdateInfo(\'' + full.Id + '\');return false;" class="artDailog btn btn-info  btn-xs pop-btn" style="margin-right:4px;" data-toggle="tooltip" data-placement="top" title="焊材详情统计"><i class="ace-icon glyphicon glyphicon-align-left"></i></a>';
+                            if (isapprover == 1 && full.TaskStatus == tastStatus.pending) {
+                                opstr = opstr + '<a href="#" onclick="approveTask(\'' + full.Id + '\',1);return false;" class="artDailog btn btn-info  btn-xs" style="margin-right:4px;" data-toggle="tooltip" data-placement="top" title="审核"><i class="ace-icon glyphicon glyphicon-ok"></i></a>';
+                                opstr = opstr + '<a href="#" onclick="approveTask(\'' + full.Id + '\',0);return false;" class="artDailog btn btn-info  btn-xs" style="margin-right:4px;" data-toggle="tooltip" data-placement="top" title="驳回"><i class="ace-icon glyphicon glyphicon-remove"></i></a>';
+                            }
+                            if ((full.TaskStatus == tastStatus.new || full.TaskStatus == tastStatus.rejected) && userId == full.CreatedUserID) {
+                                opstr = opstr + '<a href="#" onclick="raiseApproval(\'' + full.Id + '\');return false;" class="artDailog btn btn-info  btn-xs" style="margin-right:4px;" data-toggle="tooltip" data-placement="top" title="提交审核"><i class="ace-icon glyphicon glyphicon-cog"></i></a>';
+                            }
+                            return opstr;
                         }
                     }],
                 fnDrawCallback: function () {
@@ -332,6 +346,28 @@
                         callback(select);
                     }
                 });
+        }
+        function approveTask(id, option) {
+            if (confirm('是否确认审核通过？')) {
+                $.ajax('ApproveTask?Id=' + id + '&option=' + option).done(function (data) {
+                    if (data.result == 'failed') {
+                        alert('操作失败，详情：' + data.message);
+                    } else {
+                        LEAP.Common.MainPop.options.dataTable.fnDraw(false);
+                    }
+                });
+            }
+        }
+        function raiseApproval(id) {
+            if (confirm('是否提交审核？')) {
+                $.ajax('RaiseApprove?Id=' + id).done(function (data) {
+                    if (data.result == 'failed') {
+                        alert('提交失败，详情：' + data.message);
+                    } else {
+                        LEAP.Common.MainPop.options.dataTable.fnDraw(false);
+                    }
+                });
+            }
         }
     </script>
 }

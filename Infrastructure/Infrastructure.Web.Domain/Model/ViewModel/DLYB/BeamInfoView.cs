@@ -26,7 +26,13 @@ namespace Infrastructure.Web.Domain.ModelsView
 
         public bool IsDeleted { get; set; }
         public string ProjectName { get; set; }
-        public string BridgeComponent { get { return this.DwgFile.Substring(0, this.DwgFile.IndexOf("dwg")); } }
+        public string BridgeComponent { get {
+                if (this.DwgFile.IndexOf("dwg") > -1)
+                {
+                    return this.DwgFile.Substring(0, this.DwgFile.IndexOf("dwg") - 1);
+                }
+                return "";
+            } }
 
         public IViewModel ConvertAPIModel(object obj)
         {

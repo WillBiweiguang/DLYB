@@ -16,6 +16,7 @@ using Infrastructure.Web.UI;
 using Infrastructure.Utility.Filter;
 using System.Linq.Expressions;
 using Infrastructure.Utility.Data;
+using Infrastructure.Web.Domain.Common;
 
 namespace DLYB.Web.Controllers
 {
@@ -55,7 +56,7 @@ namespace DLYB.Web.Controllers
                     _service.InsertView(weldInfo);
                 }
             }
-            return new JsonResult { Data = new { result = "success" }, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
+            return new JsonResult { Data = new { result = ApiReturnCode.Success }, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
         }
 
         public override ActionResult GetList()
