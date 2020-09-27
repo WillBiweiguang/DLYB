@@ -247,7 +247,7 @@
                 "info": false,
                 "aoColumns": [
                     { "mData": 'Id' },
-                    { "mData": 'ProjectId' },
+                    { "mData": 'ProjectName' },
                     { "mData": 'DWGFile' },
                     { "mData": 'TaskStatusDes' },
                     { "mData": 'CreatedUserID' },
@@ -274,6 +274,10 @@
             }));
             //inital select2
             $('.select2').css("width", "362px").select2({ allowClear: true });
+            //删掉chosen的内联样式
+            setTimeout(function () {
+                $('.chosen-container').removeAttr('style');
+            }, 3000);   
         });
         $(document).on('click', '.pop-btn', function () {
             $('#ModalTableDetail').modal(500);
