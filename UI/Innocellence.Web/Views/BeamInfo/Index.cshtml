@@ -11,6 +11,7 @@
 <div class="row">
     <div class="col-sm-12">
         <form class="form-inline" id="SearchForm">
+            <input type="hidden" id="project_id" name="project_id" value="@ViewBag.ProjectId" />
             <div>
                 @*<input type="text" name="UploadFile" id="UploadFile" />*@
                 @*<button type="button" id="btnSelect" class="btn btn-info btn-sm" data-toggle="tooltip" data-placement="top" title="选择文件">选择文件</button>*@
@@ -18,10 +19,10 @@
                     文件上传
                 </a>
                 @*<div style="float:right">
-                        <button type="button" id="btnDeleteAll" class="btn btn-info btn-sm" data-toggle="tooltip" data-placement="top" title="批量删除">批量删除</button>
-                        <button type="button" id="btnFileAnalysis" class="btn btn-info btn-sm" data-toggle="tooltip" data-placement="top" title="归档分析">归档分析</button>
-                        <button type="button" id="btnDownloadDWG" class="btn btn-info btn-sm" data-toggle="tooltip" data-placement="top" title="DWG下载">DWG下载</button>
-                    </div>*@
+                <button type="button" id="btnDeleteAll" class="btn btn-info btn-sm" data-toggle="tooltip" data-placement="top" title="批量删除">批量删除</button>
+                <button type="button" id="btnFileAnalysis" class="btn btn-info btn-sm" data-toggle="tooltip" data-placement="top" title="归档分析">归档分析</button>
+                <button type="button" id="btnDownloadDWG" class="btn btn-info btn-sm" data-toggle="tooltip" data-placement="top" title="DWG下载">DWG下载</button>
+            </div>*@
             </div>
         </form>
         <div class="clearfix"></div>
@@ -103,7 +104,7 @@
         $(document).ready(function () {
             LEAP.Common.MainPop.options.dataTable = $('.data-table').dataTable(jQuery.extend(true, datatableSetting, {
                 "ajax": {
-                    "url": "GetList"
+                    "url": "GetList?project_id=" + $('#project_id').val()
                 },
                 "paging": true,
                 "info": false,

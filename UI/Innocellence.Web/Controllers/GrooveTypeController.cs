@@ -64,6 +64,44 @@ namespace Innocellence.Web.Controllers
                         .Select(x => new { key = x.Id, value = x.GrooveType }).ToList();
             return new JsonResult { Data = list, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
         }
-       
+        [HttpPost]
+        [ValidateInput(true)]
+        public ActionResult PostFile(GrooveTypeView objModal, int ProjectName)
+        {
+            //验证错误
+            if (!ModelState.IsValid)
+            {
+                return Json(GetErrorJson(), JsonRequestBehavior.AllowGet);
+            }
+            if (Request.Files.Count > 0)
+            {
+                var file = Request.Files[0];
+                objModal = objModal ?? new GrooveTypeView();
+                objModal.PreviewImage = "/Content/GrooveImage/" + file.FileName;
+                objModal.Id = ProjectName;
+                var fileExtension = System.IO.Path.GetExtension(file.FileName);
+                if (fileExtension.ToLower() != ".png")
+                {
+                    var result = GetErrorJson();
+                    result.Message = new JsonMessage(103, "请上传png文件");
+                    return Json(result, JsonRequestBehavior.AllowGet);
+                }
+                if (!System.IO.Directory.Exists(Server.MapPath("/Content/GrooveImage/")))
+                {
+                    System.IO.Directory.CreateDirectory(Server.MapPath("/Content/GrooveImage/"));
+                }
+                string path = "/Content/GrooveImage/" + file.FileName;
+                file.SaveAs(Server.MapPath(path));
+                if (ProjectName ==0)
+                {
+                    _GrooveTypeService.InsertView(objModal);
+                }
+                else
+                {
+                    _GrooveTypeService.UpdateView(objModal);
+                }
+            }
+            return Json(doJson(null), JsonRequestBehavior.AllowGet);
+        }
     }
 }

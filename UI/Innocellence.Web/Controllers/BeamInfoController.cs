@@ -32,7 +32,8 @@ namespace Innocellence.Web.Controllers
         public override ActionResult Index()
         {
             //var list = _addressService.GetList<AddressView>(int.MaxValue, x => !x.IsDeleted).ToList();
-
+            string projectId = Request["projectId"];
+            ViewBag.ProjectId = projectId;
             return View();
         }
 
@@ -40,10 +41,17 @@ namespace Innocellence.Web.Controllers
         {
             GridRequest gridRequest = new GridRequest(Request);
             string strCondition = Request["search_condition"];
+            string projectId = Request["project_id"];
+            int pid = string.IsNullOrEmpty(projectId) ? 0 : int.Parse(projectId);
             Expression<Func<BeamInfo, bool>> expression = FilterHelper.GetExpression<BeamInfo>(gridRequest.FilterGroup);
-
-            expression = expression.AndAlso<BeamInfo>(x => x.IsDeleted != true);
-
+            if (!string.IsNullOrEmpty(projectId))
+            {
+                expression = expression.AndAlso<BeamInfo>(x => x.ProjectId == pid && x.IsDeleted != true);
+            }
+            else
+            {
+                expression = expression.AndAlso<BeamInfo>(x => x.IsDeleted != true);
+            }
             int rowCount = gridRequest.PageCondition.RowCount;
             List<BeamInfoView> listEx = GetListEx(expression, gridRequest.PageCondition);
             return this.GetPageResult(listEx, gridRequest);
@@ -64,7 +72,7 @@ namespace Innocellence.Web.Controllers
                 objModal.DwgFile = file.FileName;
                 objModal.ProjectId = ProjectName;
                 var fileExtension = System.IO.Path.GetExtension(file.FileName);
-                if (fileExtension.ToLower() != ".dwg" )
+                if (fileExtension.ToLower() != ".dwg")
                 {
                     var result = GetErrorJson();
                     result.Message = new JsonMessage(103, "请上传dwg文件");
