@@ -100,7 +100,10 @@
                                 <select class="single-select form-control" name="FigureNumber" id="FigureNumber" data-placeholder="请选择图号" data-bind="value: FigureNumber">
                                     @foreach (WeldCategoryLabeling a in ViewBag.weldCategorys)
                                     {
+                                        if (!string.IsNullOrEmpty(a.FigureNumber))
+                                        {
                                         <option value="@a.FigureNumber">@a.FigureNumber</option>
+                                        }
                                     }
                                 </select>
                             </div>
@@ -111,7 +114,10 @@
                                 <select class="single-select form-control" name="BoardNumber" id="BoardNumber" data-placeholder="请选择板件号" data-bind="value: BoardNumber">
                                     @foreach (WeldCategoryLabeling a in ViewBag.weldCategorys)
                                     {
+                                        if (!string.IsNullOrEmpty(a.BoardNumber))
+                                        {
                                         <option value="@a.BoardNumber">@a.BoardNumber</option>
+                                        }
                                     }
                                 </select>
                             </div>
@@ -122,10 +128,12 @@
                             <label class="col-sm-5 control-label">焊缝类型:</label>
                             <div class="col-sm-7">
                                 <select class="single-select form-control" id="WeldType" name="WeldTypeId" style="" data-bind="value:WeldTypeId" validate="{required:true}" data-geturl="/WeldGeometry/GetDropdownList">
-                                    @*@foreach (WeldGeometry a in ViewBag.weldgeometrys)
+                                    @foreach (WeldGeometry a in ViewBag.weldGeometries)
+                                    {
+                                        if (!string.IsNullOrEmpty(a.WeldType))
                                         {
-                                            <option value="@a.WeldType">@a.WeldType</option>
-                                        }*@
+                                            <option value="@a.WeldType">@a.WeldType</option>}
+                                        }
                                 </select>                               
                             </div>
                         </div>
@@ -134,10 +142,12 @@
                             <label class="col-sm-5 control-label">焊缝位置:</label>
                             <div class="col-sm-7">
                                 <select class="single-select form-control" name="WeldLocation" id="WeldLocation" data-placeholder="请选择焊缝位置" data-geturl="/WeldLocation/GetDropdownList">
-                                    @*@foreach (WeldLocation a in ViewBag.weldlocation)
+                                    @foreach (WeldLocation a in ViewBag.weldLocations)
+                                    {
+                                        if (!string.IsNullOrEmpty(a.WeldLocationType))
                                         {
-                                            <option value="@a.WeldLocationType">@a.WeldLocationType</option>
-                                        }*@
+                                            <option value="@a.WeldLocationType">@a.WeldLocationType</option>}
+                                        }
                                 </select>
                             </div>
                         </div>
@@ -358,10 +368,6 @@
         });
 
         function adddata(list) {
-            //$('.data-table thead').append('<tr class=".fakedata"><td>1</td><td>1-143.dwg</td><td>6051</td><td><a href="#" onclick="" class="artDailog btn btn-info  btn-xs" style="margin-right:4px;" data-toggle="tooltip" data-placement="top" title="定位">定位</a></td></tr>');
-            //$('.data-table thead').append('<tr class=".fakedata"><td>2</td><td>1-143.dwg</td><td>7051</td><td><a href="#" onclick="" class="artDailog btn btn-info  btn-xs" style="margin-right:4px;" data-toggle="tooltip" data-placement="top" title="定位">定位</a></td></tr>');
-            //$('.data-table thead').append('<tr class=".fakedata"><td>3</td><td>1-143.dwg</td><td>8134</td><td><a href="#" onclick="" class="artDailog btn btn-info  btn-xs" style="margin-right:4px;" data-toggle="tooltip" data-placement="top" title="定位">定位</a></td></tr>');
-            //$('.data-table thead').append('<tr class=".fakedata"><td>4</td><td>1-143.dwg</td><td>8872</td><td><a href="#" onclick="" class="artDailog btn btn-info  btn-xs" style="margin-right:4px;" data-toggle="tooltip" data-placement="top" title="定位">定位</a></td></tr>');
             if (!list) {
                 alert('未识别到焊缝');
             }

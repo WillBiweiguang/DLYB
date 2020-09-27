@@ -28,13 +28,15 @@ namespace DLYB.Web.Controllers
         const string templateExcelFilename = "/content/焊材统计表.xlsx";
         private readonly IWeldCategoryLabelingService _weldCategoryService;
         private readonly ISysUserRoleService _sysUserRoleService;
+        private readonly IProjectService _projectService;
         public TaskListController(ITaskListService TaskListService,
             IWeldCategoryLabelingService weldCategoryService,
-            ISysUserRoleService sysUserRoleService) : base(TaskListService)
+            ISysUserRoleService sysUserRoleService,IProjectService projectService) : base(TaskListService)
         {
             _TaskListService = TaskListService;
             _weldCategoryService = weldCategoryService;
             _sysUserRoleService = sysUserRoleService;
+            _projectService = projectService;
         }
         // GET: Address
         public override ActionResult Index()
@@ -60,6 +62,15 @@ namespace DLYB.Web.Controllers
 
             int rowCount = gridRequest.PageCondition.RowCount;
             List<TaskListView> listEx = GetListEx(expression, gridRequest.PageCondition);
+            var projectIDs = listEx.Select(x => x.ProjectId).ToList();
+            var projects = _projectService.GetList<ProjectView>(int.MaxValue, x => projectIDs.Contains(x.Id)).ToList();
+            listEx.ForEach(w => {
+                var p = projects.FirstOrDefault(x => x.Id == w.ProjectId);
+                if (p != null)
+                {
+                    w.ProjectName = p.ProjectName;
+                }
+            });
             return this.GetPageResult(listEx, gridRequest);
         }
 

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Infrastructure.Core;
+using Infrastructure.Utility.Extensions;
 using Infrastructure.Web.Domain.Entity;
 
 namespace Infrastructure.Web.Domain.ModelsView
@@ -11,7 +12,7 @@ namespace Infrastructure.Web.Domain.ModelsView
 		public Int32 Id { get;set; }
 
         public int ProjectId { get; set; }
-
+        public string ProjectName { get; set; }
         public int BeamId { get; set; }
         
         public string DWGFile { get; set; }
@@ -20,6 +21,14 @@ namespace Infrastructure.Web.Domain.ModelsView
         public string ResultProcess { get; set; }
 
         public int TaskStatus { get; set; }
+
+        public string TaskStatusDes
+        {
+            get
+            {
+                return ((Infrastructure.Web.Domain.Common.TaskStatus)this.TaskStatus).ToDescription();
+            }
+        }
 
         public string AuditStatus { get; set; }
 

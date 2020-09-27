@@ -48,9 +48,9 @@
         accept="image/vnd.dwg" />*@
                 @if (ViewBag.isApprover == 1)
                 {
-                <div style="float:right">
+                @*<div style="float:right">
                     <button type="button" id="btnAudit" class="btn btn-primary btn-sm" data-toggle="tooltip" data-placement="top" title="审核">审核</button>
-                </div>
+                </div>*@
                 }
             </div>
         </form>
@@ -247,7 +247,7 @@
                     { "mData": 'Id' },
                     { "mData": 'ProjectId' },
                     { "mData": 'DWGFile' },
-                    { "mData": 'AuditStatus' },
+                    { "mData": 'TaskStatusDes' },
                     { "mData": 'CreatedUserID' },
                     { "mData": 'CreatedDate' },
                 ],

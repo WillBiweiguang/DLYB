@@ -16,14 +16,18 @@ namespace Innocellence.FaultSearch.Controllers
     {
         private readonly IWeldCategoryLabelingService _weldCategoryService;
         private readonly IBeamInfoService _beamInfoService;
+        private readonly IWeldGeometryService _weldGeometryService;
+        private readonly IWeldLocationService _weldLocationService;
 
         private readonly string baseUrl = "http://42.202.130.245:3001/";
         public WeldCategoryController(IWeldCategoryLabelingService weldCategoryService,
-            IBeamInfoService beamInfoService) : base(weldCategoryService)
+            IBeamInfoService beamInfoService,IWeldGeometryService weldGeometryService,
+            IWeldLocationService weldLocationService) : base(weldCategoryService)
         {
             _weldCategoryService = weldCategoryService;
             _beamInfoService = beamInfoService;
-            
+            _weldGeometryService = weldGeometryService;
+            _weldLocationService = weldLocationService;
         }
         public override ActionResult Index()
         {
@@ -40,6 +44,8 @@ namespace Innocellence.FaultSearch.Controllers
                 }
             }
             ViewBag.weldCategorys = _weldCategoryService.Repository.Entities.Where(a => !a.IsDeleted).ToList();
+            ViewBag.weldGeometries = _weldGeometryService.Repository.Entities.Where(x => !x.IsDeleted).ToList();
+            ViewBag.weldLocations = _weldLocationService.Repository.Entities.Where(x => !x.IsDeleted).ToList();
             return View();
         }
         public ActionResult cadwelding()
