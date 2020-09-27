@@ -24,11 +24,14 @@ namespace Innocellence.Web.Controllers
     {
         private readonly IBeamInfoService _beamInfoService;
         private readonly IProjectService _projectService;
+        private readonly ITaskListService _taskListService;
 
-        public BeamInfoController(IBeamInfoService beamInfoService, IProjectService projectService) : base(beamInfoService)
+        public BeamInfoController(IBeamInfoService beamInfoService, IProjectService projectService,
+            ITaskListService taskListService) : base(beamInfoService)
         {
             _beamInfoService = beamInfoService;
             _projectService = projectService;
+            _taskListService = taskListService;
         }
         // GET: Address
         public override ActionResult Index()
@@ -58,11 +61,14 @@ namespace Innocellence.Web.Controllers
             List<BeamInfoView> listEx = GetListEx(expression, gridRequest.PageCondition);
             var projectIDs = listEx.Select(x => x.ProjectId).ToList();
             var projects = _projectService.GetList<ProjectView>(int.MaxValue, x => projectIDs.Contains(x.Id)).ToList();
+            var tasklist = _taskListService.GetList<TaskListView>(int.MaxValue, x => !x.IsDeleted && projectIDs.Contains(x.ProjectId)).ToList();
             listEx.ForEach(w => {
                 var p = projects.FirstOrDefault(x => x.Id == w.ProjectId);
+                var task = tasklist.FirstOrDefault(x => x.ProjectId == w.ProjectId && x.DWGFile == w.DwgFile);
                 if(p!= null)
                 {
                     w.ProjectName = p.ProjectName;
+                    w.TaskStatus = task == null ? 0 : task.TaskStatus;
                 }
             });
             return this.GetPageResult(listEx, gridRequest);

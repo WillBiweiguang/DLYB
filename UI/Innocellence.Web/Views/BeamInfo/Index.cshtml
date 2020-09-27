@@ -106,7 +106,7 @@
         $('[data-toggle="tooltip"]').tooltip();
         var popMenu;
         var IdCur;
-
+        var tastStatus = { new: 0, pending: 1, approved: 2, rejected: 3 };
         $(document).ready(function () {
             LEAP.Common.MainPop.options.dataTable = $('.data-table').dataTable(jQuery.extend(true, datatableSetting, {
                 "ajax": {
@@ -126,12 +126,15 @@
                     {
                         "targets": 4,
                         "render": function (data, type, full, meta) {
-                            return '<a href="#" onclick="CategoryStat(\'' + full.Id + '\');return false;" class="artDailog btn btn-info  btn-xs" style="margin-right:4px;" data-toggle="tooltip" data-placement="top" title="焊缝类别统计"><i class="ace-icon glyphicon glyphicon-stats"></i></a>' +
-                                '<a href="#" onclick="weldcategory(\'' + full.Id + '\');return false;" class="artDailog btn btn-info  btn-xs" style="margin-right:4px;" data-toggle="tooltip" data-placement="top" title="焊缝类别标注"><i class="ace-icon glyphicon  glyphicon-credit-card"></i></a>' +
-                                '<a href="#" onclick="tasklist(\'' + full.Id + '\');return false;" class="artDailog btn btn-info  btn-xs" style="margin-right:4px;" data-toggle="tooltip" data-placement="top" title="审核列表"><i class="ace-icon glyphicon glyphicon-list"></i></a>' +
-                                '<a href="#" onclick="LEAP.Common.MainPop.RowClick(\'' + full.Id + '\',2);return false;" class="btn btn-danger btn-xs" id="btnDelete" data-toggle="tooltip" data-placement="top" title="删除">' +
-                                '<i class="fa fa-trash-o"></i></a>';
-                                //+ '<a href="#" onclick="weldcognize(\'' + full.DwgFile + '\');return false;" class="artDailog btn btn-info  btn-xs" style="margin-right:4px;" data-toggle="tooltip" data-placement="top" title="焊缝识别">焊缝识别</i></a>';
+                            var opstr = '<a href="#" onclick="CategoryStat(\'' + full.Id + '\');return false;" class="artDailog btn btn-info  btn-xs" style="margin-right:4px;" data-toggle="tooltip" data-placement="top" title="焊缝类别统计"><i class="ace-icon glyphicon glyphicon-stats"></i></a>' +
+                                '<a href="#" onclick="tasklist(\'' + full.Id + '\');return false;" class="artDailog btn btn-info  btn-xs" style="margin-right:4px;" data-toggle="tooltip" data-placement="top" title="审核列表"><i class="ace-icon glyphicon glyphicon-list"></i></a>';
+                            if (full.TaskStatus != tastStatus.pending && full.TaskStatus != tastStatus.approved) {
+                                opstr = opstr + '<a href="#" onclick="weldcategory(\'' + full.Id + '\');return false;" class="artDailog btn btn-info  btn-xs" style="margin-right:4px;" data-toggle="tooltip" data-placement="top" title="焊缝类别标注"><i class="ace-icon glyphicon  glyphicon-credit-card"></i></a>' +
+                                  '<a href="#" onclick="LEAP.Common.MainPop.RowClick(\'' + full.Id + '\',2);return false;" class="btn btn-danger btn-xs" id="btnDelete" data-toggle="tooltip" data-placement="top" title="删除">' +
+                                    '<i class="fa fa-trash-o"></i></a>';
+                            }
+                            //+ '<a href="#" onclick="weldcognize(\'' + full.DwgFile + '\');return false;" class="artDailog btn btn-info  btn-xs" style="margin-right:4px;" data-toggle="tooltip" data-placement="top" title="焊缝识别">焊缝识别</i></a>';
+                            return opstr;
                         }
                     }],
                 fnDrawCallback: function () {

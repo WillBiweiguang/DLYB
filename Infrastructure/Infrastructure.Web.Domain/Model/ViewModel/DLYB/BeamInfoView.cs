@@ -33,6 +33,7 @@ namespace Infrastructure.Web.Domain.ModelsView
                 }
                 return "";
             } }
+        public int TaskStatus { get; set; }
 
         public IViewModel ConvertAPIModel(object obj)
         {
