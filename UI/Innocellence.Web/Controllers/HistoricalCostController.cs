@@ -23,9 +23,11 @@ namespace DLYB.Web.Controllers
     public class HistoricalCostController : BaseController<HistoricalCost,HistoricalCostView>
     {
         private readonly IHistoricalCostService _service;
-        public HistoricalCostController(IHistoricalCostService service) : base(service)
+        private readonly ISysUserService _sysUserService;
+        public HistoricalCostController(IHistoricalCostService service,ISysUserService sysUserService) : base(service)
         {
-            _service = service;            
+            _service = service;
+            _sysUserService = sysUserService;
         }
         // GET: Address
         public override ActionResult Index()
@@ -106,6 +108,15 @@ namespace DLYB.Web.Controllers
             }
             int rowCount = gridRequest.PageCondition.RowCount;
             List<HistoricalCostView> listEx = GetListEx(expression, gridRequest.PageCondition);
+            var usersIds = listEx.Select(x => x.CreatedUserID).ToList();
+            var users = _sysUserService.Repository.Entities.Where(x => usersIds.Contains(x.Id)).ToList();
+            listEx.ForEach(x =>
+            {
+                if (users.Any(u => u.Id == x.CreatedUserID))
+                {
+                    x.CreatedUserName = users.FirstOrDefault(u => u.Id == x.CreatedUserID).UserName;
+                }
+            });
             return this.GetPageResult(listEx, gridRequest);
         }     
     }

@@ -29,14 +29,17 @@ namespace DLYB.Web.Controllers
         private readonly IWeldCategoryLabelingService _weldCategoryService;
         private readonly ISysUserRoleService _sysUserRoleService;
         private readonly IProjectService _projectService;
+        private readonly ISysUserService _sysUserService;
         public TaskListController(ITaskListService TaskListService,
             IWeldCategoryLabelingService weldCategoryService,
-            ISysUserRoleService sysUserRoleService,IProjectService projectService) : base(TaskListService)
+            ISysUserRoleService sysUserRoleService,IProjectService projectService,
+            ISysUserService sysUserService) : base(TaskListService)
         {
             _TaskListService = TaskListService;
             _weldCategoryService = weldCategoryService;
             _sysUserRoleService = sysUserRoleService;
             _projectService = projectService;
+            _sysUserService = sysUserService;
         }
         // GET: Address
         public override ActionResult Index()
@@ -64,11 +67,17 @@ namespace DLYB.Web.Controllers
             List<TaskListView> listEx = GetListEx(expression, gridRequest.PageCondition);
             var projectIDs = listEx.Select(x => x.ProjectId).ToList();
             var projects = _projectService.GetList<ProjectView>(int.MaxValue, x => projectIDs.Contains(x.Id)).ToList();
+            var usersIds = listEx.Select(x => x.CreatedUserID).ToList();
+            var users = _sysUserService.Repository.Entities.Where(x => usersIds.Contains(x.Id)).ToList();
             listEx.ForEach(w => {
                 var p = projects.FirstOrDefault(x => x.Id == w.ProjectId);
                 if (p != null)
                 {
                     w.ProjectName = p.ProjectName;
+                }
+                if (users.Any(u => u.Id == p.CreatedUserID))
+                {
+                    p.CreatedUserName = users.FirstOrDefault(u => u.Id == p.CreatedUserID).UserName;
                 }
             });
             return this.GetPageResult(listEx, gridRequest);

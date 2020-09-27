@@ -15,7 +15,7 @@ namespace Infrastructure.Web.Domain.ModelsView
         public DateTime? CreatedDate { get; set; }
 
         public int? CreatedUserID { get; set; }
-
+        public string CreatedUserName { get; set; }
         public DateTime? UpdatedDate { get; set; }
 
         public int? UpdatedUserID { get; set; }

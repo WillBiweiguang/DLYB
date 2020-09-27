@@ -21,7 +21,7 @@ namespace DLYB.Web.Controllers
             {
                 return Redirect("~/Account/Login");
             }
-            // return  Redirect("~/Course/Index");
+            return Redirect("~/Project/Index");
             return View();
         }
 
