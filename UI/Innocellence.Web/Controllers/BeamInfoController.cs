@@ -84,9 +84,9 @@ namespace Innocellence.Web.Controllers
             }
             if (Request.Files.Count > 0)
             {
-                var file = Request.Files[0];
+                var file = Request.Files[0];                
                 objModal = objModal ?? new BeamInfoView();
-                objModal.DwgFile = file.FileName;
+                objModal.DwgFile = System.IO.Path.GetFileName(file.FileName);
                 objModal.ProjectId = ProjectId;
                 var fileExtension = System.IO.Path.GetExtension(file.FileName);
                 if (fileExtension.ToLower() != ".dwg")
@@ -95,11 +95,12 @@ namespace Innocellence.Web.Controllers
                     result.Message = new JsonMessage(103, "请上传dwg文件");
                     return Json(result, JsonRequestBehavior.AllowGet);
                 }
+                
                 if (!System.IO.Directory.Exists(Server.MapPath("/Files/BeamInfo/")))
                 {
                     System.IO.Directory.CreateDirectory(Server.MapPath("/Files/BeamInfo/"));
                 }
-                string path = "/Files/BeamInfo/" + file.FileName;
+                string path = "/Files/BeamInfo/" + objModal.DwgFile;
                 file.SaveAs(Server.MapPath(path));
                 _beamInfoService.InsertView(objModal);
                 //if (string.IsNullOrEmpty(Id) || Id == "0")

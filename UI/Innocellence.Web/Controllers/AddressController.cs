@@ -30,8 +30,13 @@ namespace DLYB.Web.Controllers
         public override ActionResult Index()
         {
             //var list = _addressService.GetList<AddressView>(int.MaxValue, x => !x.IsDeleted).ToList();
-                 
+
             return View();
+        }
+
+        public ActionResult ListContent()
+        {
+            return PartialView();
         }
 
         public JsonResult GetDropdownList(string keyword = "")

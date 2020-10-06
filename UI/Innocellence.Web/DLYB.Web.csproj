@@ -979,6 +979,8 @@
     <Content Include="Views\WeldCognition\Index.cshtml" />
     <Content Include="Views\PlatformManage\Index.cshtml" />
     <Content Include="Views\PlatformManage\PasswordChange.cshtml" />
+    <Content Include="Views\Address\_ViewStart.cshtml" />
+    <Content Include="Views\Address\ListContent.cshtml" />
     <None Include="Views\WeldCategory\cadwelding.cshtml" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
@@ -1010,9 +1012,6 @@
     <Content Include="Views\Demoes\Edit.cshtml" />
     <Content Include="Views\Demoes\Index.cshtml" />
     <Content Include="Views\Address\Index.cshtml" />
-    <Content Include="Views\Address\Create.cshtml" />
-    <Content Include="Views\Address\Edit.cshtml" />
-    <Content Include="Views\Address\Details.cshtml" />
     <Content Include="Views\Project\Index.cshtml" />
     <Content Include="Views\WeldGeometry\Index.cshtml" />
     <Content Include="Views\Welding\Index.cshtml" />
