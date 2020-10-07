@@ -38,6 +38,12 @@ namespace Innocellence.Web.Controllers
         {
             //var list = _addressService.GetList<AddressView>(int.MaxValue, x => !x.IsDeleted).ToList();
             string projectId = Request["projectId"];
+            int pid = 0;
+            if (int.TryParse(projectId, out pid))
+            {
+                var project = _projectService.Repository.Entities.FirstOrDefault(x => x.Id == pid);
+                ViewBag.ProjectName = project?.ProjectName;
+            }
             ViewBag.ProjectId = projectId;
             return View();
         }

@@ -2,6 +2,7 @@
 @using Infrastructure.Web.Domain.Entity;
 @section easyui_css{
     <link rel="stylesheet" href="~/Style/EasyUI/easyui.css" />
+    
 }
 <style>
     .datagrid-mask-msg {
@@ -83,7 +84,7 @@
 </div>
 
 <div id="ModalTable" class="modal" tabindex="-1" aria-show="true">
-    <div class="modal-dialog" style="margin-right:0px">
+    <div class="modal-dialog" style="">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
@@ -280,9 +281,9 @@
     </div>
 </div>
 
-<div id="frameContainer" style="position: absolute; left: 0px; top: 90px; width: 100%; height: 100%; z-index: 9">
-    <div id="dragPanel" style="width:100%;height:20px;"></div>
-    <iframe id='iframei' src="javascript:false" style="position:absolute; border-top:20px solid red; visibility:inherit; top:20px; left:0px;  height:calc(100%-20px);width:100%; z-index:-1; filter: progid:DXImageTransform.Microsoft.Alpha(style=0,opacity=0);"></iframe>
+<div id="frameContainer" style="position: absolute; left: 0px; top: 90px; width: 100%; height: 100%; z-index: 9; display:none;">
+    @*<div id="dragPanel" style="width:100%;height:20px;"></div>*@
+    <iframe id='iframei' src="javascript:0" style="position:absolute; border:none; visibility:inherit; top:-20px; left:-20px;  height:300%; width:100%; z-index:-1; filter: progid:DXImageTransform.Microsoft.Alpha(style=0,opacity=0);"></iframe>
 </div>
 
 
@@ -370,6 +371,15 @@
             isDown = false;
             this.style.cursor = 'default';
         });
+        $('#ModalTable').on('hide.bs.modal', function () {
+            // 弹出框关闭动作
+            $('#frameContainer').hide();
+        });
+        $('#ModalTable').on('show.bs.modal', function () {
+            // 弹出框动作
+            $('#frameContainer').show();
+          
+        });
         $(document).on('change', '#WeldLengthSel', function () {
             var txt = $('#WeldLengthSel option:selected').val();
 
@@ -406,7 +416,7 @@
 
         });
 
-        function adddata(list) {
+        function saveWeldData(list) {
             if (!list) {
                 alert('未识别到焊缝');
             }
@@ -505,8 +515,8 @@
     }
 </SCRIPT>
 <script type="text/javascript">LoadMxDrawX("MxDrawXCtrl", "", "http://www.mxdraw.com/MxDrawX52.CAB#version=11,0,0,1", "http://www.mxcad.net:2080/MxChromex86Setup.exe");</script>
-
-<script>
+<script src="~/Scripts/util.cad.js"></script>
+@*<script>
 
     function myclick5() {
         FindWelding();
@@ -3062,4 +3072,4 @@
         }
         return resPolyLineArr;
     }
-</script>
+</script>*@

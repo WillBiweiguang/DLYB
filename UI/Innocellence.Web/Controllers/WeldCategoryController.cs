@@ -6,6 +6,7 @@ using Infrastructure.Web.Domain.ModelsView;
 using Infrastructure.Web.UI;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Web.Mvc;
@@ -28,6 +29,7 @@ namespace Innocellence.FaultSearch.Controllers
             _beamInfoService = beamInfoService;
             _weldGeometryService = weldGeometryService;
             _weldLocationService = weldLocationService;
+            baseUrl = ConfigurationManager.AppSettings["WebUrl"];
         }
         public override ActionResult Index()
         {
@@ -88,17 +90,29 @@ namespace Innocellence.FaultSearch.Controllers
                 return new JsonResult { Data = new { result = "failed" }, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
             }
             var existing = _weldCategoryService.Repository.Entities.Where(x => x.BeamId == beam.Id).ToList();
-            if (existing.Count > 0)
-            {
-                return new JsonResult { Data = new { result = "failed", message = "当前文件已识别，请不要重复识别" }, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
-            }
+            //if (existing.Count > 0)
+            //{
+            //    return new JsonResult { Data = new { result = "failed", message = "当前文件已识别，请不要重复识别" }, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
+            //}
             foreach (var weldInfo in weldList)
             {
                 if (weldInfo.HandleID != "0")
-                {                    
-                    weldInfo.BeamId = beam.Id;
-                    weldInfo.WeldType = GetWeldType(weldInfo.WeldType);
-                    _weldCategoryService.InsertView(weldInfo);
+                {
+                    var existedItem = existing.FirstOrDefault(x => x.BeamId == weldInfo.BeamId && x.HandleID == weldInfo.HandleID);
+                    if (existedItem != null)
+                    {
+                        if(existedItem.WeldType != weldInfo.WeldType)
+                        {
+                            existedItem.WeldType = weldInfo.WeldType;
+                            _weldCategoryService.UpdateView(existedItem);
+                        }
+                    }
+                    else
+                    {
+                        weldInfo.BeamId = beam.Id;
+                        weldInfo.WeldType = GetWeldType(weldInfo.WeldType);
+                        _weldCategoryService.InsertView(weldInfo);
+                    }
                 }
             }
             return new JsonResult { Data = new { result = "success" }, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
@@ -117,14 +131,28 @@ namespace Innocellence.FaultSearch.Controllers
                     return "1-不开坡口对接焊";
                 case "Y_DMDCPoKDuiJieH":
                     return "2-单面-单侧-坡口-背面封底-对接焊缝";
-                case "Y_SMDCPoKDuiJieH":
+                case "Y_DMSCPoKDuiJieH":
                     return "3-双面-单侧-坡口-对接焊缝";
-                //case "Y_SMDCPoKDuiJieH":
-                //    return "4-双面单侧坡口";
+                case "Y_SMDCPoKDuiJieH":
+                    return "4-双面单侧坡口";
+                case "Y_SMSCPoKDuiJieH":
+                    return "5-双面-双侧-坡口-对接焊缝";
+                case "Y_DMDCPoKJiaoH":
+                    return "6-单面-单侧-坡口-角焊缝";
+                case "Y_DMPoKGaiBJiaoH":
+                    return "7-单面-坡口-盖板-角焊缝";
+                case "Y_SMPoKBeiPJiaoH":
+                    return "8-双面-坡口-背面坡口-角焊缝";
+                case "Y_SMPoKRTH":
+                    return "10-双面-坡口-熔透";
+                case "Y_SMPoKGaiBRTH":
+                    return "11-双面坡口盖板熔透,有图形";
                 case "Y_SMDuiJieH":
                     return "12-双面角焊缝";
-                //case "Y_SMDuiJieH":
-                //    return "14-双面角焊缝";
+                case "Y_DMJiaoH":
+                    return "13-单面-角焊缝";
+                case "Y_SMJiaoH":
+                    return "14-双面角焊缝";
                 default:
                     return "其他";
             }

@@ -10,6 +10,10 @@
         width:100%;
         max-width : 362px;
     }
+    .progress{
+        width: 100%;
+        max-width: 362px;
+    }
 </style>
 <!--Action boxes-->
 <div class="row">
@@ -66,18 +70,21 @@
                     <div class="form-group">
                         <label class="col-sm-3 control-label">项目:</label>
                         <div class="col-sm-9">
-                            <select class="chosen-select form-control" id="ProjectName" name="ProjectId" style="display:none" data-bind="value:ProjectId" validate="{required:true}"></select>
-
+                            @*<select class="chosen-select form-control" id="ProjectName" name="ProjectId" style="" disabled="disabled" data-bind="value:ProjectId" validate="{required:true}"></select>*@
+                            <span class="form-control" style="max-width: 362px">@ViewBag.ProjectName</span>
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="col-sm-3 control-label">上传文件:</label>
                         <div class="col-sm-9">
                             @*<input type="file" id="upload-input" multiple="multiple" name="uploadfile" class="form-control" placeholder="请输入"
-                                accept="application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-                                validate="{required:true}" />*@
+        accept="application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        validate="{required:true}" />*@
                             <input id="upload-input" class="form-control " multiple="multiple" type="file" name="file" onchange="return uploadFile(this);"
                                    accept="*" />
+                            <div class="progress" style="margin-bottom: 0px">
+                                <div id="progress-bar" class="progress-bar" style="width:0">0</div>
+                            </div>
                         </div>
                     </div>
                 </form>
@@ -166,7 +173,7 @@
         });
         function uploadFile(obj) {
             //$('#btnSave').prop("disabled", true);
-            var strUrl = "PostFile?ProjectId=" + $('#ProjectName').val();
+            var strUrl = "PostFile?ProjectId=" + $('#project_id').val();
             $(obj).FileUpload({
                 self: obj,
                 url: strUrl,
@@ -203,16 +210,22 @@
             }).trigger('resize.chosen');
         }
         function BindChosen(url, select, callback, search) {
+            var pid = $('#project_id').val();
             $(select).children().remove();
             $(select).append('<option value></option>');
             $.ajax(url)
                 .done(function (data) {
                     $.each(data, function (i, op) {
-                        $(select).append('<option value="' + op.key + '">' + op.value + '</option>');
+                        if (op.key == pid) {
+                            $(select).append('<option selected="selected" value="' + op.key + '">' + op.value + '</option>');
+                        }
+                        else {
+                            $(select).append('<option value="' + op.key + '">' + op.value + '</option>');
+                        }
                     });
-                    if (callback) {
-                        callback(select);
-                    }
+                    //if (callback) {
+                    //    callback(select);
+                    //}
                 });
         }
     </script>

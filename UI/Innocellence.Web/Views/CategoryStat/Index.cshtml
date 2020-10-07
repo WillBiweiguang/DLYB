@@ -33,6 +33,12 @@
     .modal {
         z-index: 999;
     }
+    #rightPanel{
+        background-color:white;
+    }
+        #rightPanel .widget-box {
+            margin-top: 0px;
+        }
 </style>
 <!--Action boxes-->
 <div class="row">
@@ -184,7 +190,17 @@
             </div>
         </div>
     </div>
-    <div id="rightPanel" class="modal-dialog" style="z-index:1050; margin:30px 10px auto 615px;position:absolute; float:right; height:auto;width:600px;display:none;"></div>
+    <div id="rightPanel" class="modal-dialog" style="z-index:1050; top:10px;left:15%; position:absolute; float:right; height:100%;width:70%;display:none;">
+        <div class="widget-header">
+            <h4 class="widget-title"></h4>
+            <div class="widget-toolbar">
+                <a href="#" id="closePanel">
+                    <i class="ace-icon fa fa-times"></i>
+                </a>
+            </div>
+        </div>
+        <iframe id='iframei' src="javascript:0" style="position:absolute; border:none; visibility:inherit; top:38px; left:0px;  height:100%; width:100%; z-index:-1; filter: progid:DXImageTransform.Microsoft.Alpha(style=0,opacity=0);"></iframe>
+    </div>
 </div>
 
 <div id="ModalTableGrooveCalc" class="modal" tabindex="-1" style="z-index:9000">
@@ -433,15 +449,13 @@
                 }
             });
             $(document).on('click', '.redirect-btn', function () {
-                $('#leftPanel').css('margin', '30px 10px');
-                $('#leftPanel').css('float', 'left');
-                $('#rightPanel').show();
-                
+                //$('#leftPanel').css('margin', '30px 10px');
+                //$('#leftPanel').css('float', 'left');                
                 var url = $(this).attr('href');
-                //$.get(url).done(function (result) {
-                //    $('#rightPanel').append(result);
-                //});
-                $.ajax({
+                document.getElementById('iframei').src = url;
+                document.getElementById('iframei').contentWindow.location.reload();
+                $('#rightPanel').show(300);
+                @*$.ajax({
                     url: '@Url.Action("ListContent","Address")',
                     data: {  },
                     type: 'GET',
@@ -450,15 +464,17 @@
                         $('#rightPanel').empty().append(data);
                         docReady();
                     }
-                });
+                });*@
                 //window.location = url;
             });
             $('#ModalTable').on('hide.bs.modal', function () {
                 // 弹出框关闭动作
                 $('#leftPanel').css('margin', '30px auto');
                 $('#leftPanel').css('float', '');
-                $('#rightPanel').empty();
-                initDataTable();
+                $('#rightPanel').hide();
+                //if ($('#rightPanel').is(":visible")) {
+                //    initDataTable();
+                //}
             });
             $(document).on('click', '.pop-btn', function () {
                 $('#ModalTableGrooveCalc').modal(500);
@@ -578,6 +594,10 @@
 
             $('select[name=WeldGeometry]').val('');
             $('select[name=GrooveType]').val('');
+
+            $('#closePanel').on('click', function () {
+                $('#rightPanel').hide(300);
+            });
         });
 
         //应当出去js包

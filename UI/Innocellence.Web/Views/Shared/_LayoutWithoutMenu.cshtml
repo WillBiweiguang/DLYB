@@ -114,77 +114,7 @@
 
 <body class="no-skin">
     <!-- #section:basics/navbar.layout -->
-    <div id="navbar" class="navbar navbar-default">
-        <script type="text/javascript">
-            try { ace.settings.check('navbar', 'fixed');} catch (e) { }
-        </script>
-
-        <div class="navbar-container" id="navbar-container">
-            <!-- #section:basics/sidebar.mobile.toggle -->
-            <button type="button" class="navbar-toggle menu-toggler pull-left" id="menu-toggler" data-target="#sidebar">
-                <span class="sr-only">Toggle sidebar</span>
-
-                <span class="icon-bar"></span>
-
-                <span class="icon-bar"></span>
-
-                <span class="icon-bar"></span>
-            </button>
-
-            <!-- /section:basics/sidebar.mobile.toggle -->
-            <div class="navbar-header pull-left">
-                <!-- #section:basics/navbar.layout.brand -->
-                <a href="#" class="navbar-brand">
-                    <img src="~/Content/images/yb/left-logo.png" />
-
-                </a>
-
-                <!-- /section:basics/navbar.layout.brand -->
-                <!-- #section:basics/navbar.toggle -->
-                <!-- /section:basics/navbar.toggle -->
-            </div>
-
-            <div class="navbar-buttons navbar-header pull-left" role="navigation">
-                <ul class="layout-top">
-                    <li><a href="/Project/Index"><i class="ace-icon glyphicon glyphicon-folder-close"></i>项目管理</a></li>
-                    <li><a href="/beaminfo/Index"><i class="ace-icon glyphicon glyphicon-file"></i>文件管理</a></li>
-                    <li><a href="/CategoryStat/Index"><i class="ace-icon glyphicon glyphicon-stats"></i>焊缝类别统计</a></li>
-                    <li><a href="/weldcategory/index" target="_blank"><i class="ace-icon glyphicon  glyphicon-credit-card"></i>焊缝类别标注</a></li>
-                    <li><a href="/tasklist/index"><i class="ace-icon glyphicon glyphicon-list"></i>审核列表</a></li>
-                </ul>
-            </div>
-            <!-- #section:basics/navbar.dropdown -->
-            <div class="navbar-buttons navbar-header pull-right" role="navigation" style="margin-top:20px">
-                <ul class="nav ace-nav">
-
-                    <!-- #section:basics/navbar.user_menu -->
-                    <li class="light-blue">
-                        <a data-toggle="dropdown" href="#" class="dropdown-toggle" style="background-color:#009CDA;">
-                            <span class="user-info">
-                                <small>Welcome,</small>
-                                @HttpContext.Current.User.Identity.Name
-                            </span>
-
-                            <i class="ace-icon fa fa-caret-down"></i>
-                        </a>
-
-                        <ul class="user-menu dropdown-menu-right dropdown-menu dropdown-yellow dropdown-caret dropdown-close">
-                            <li>
-                                <a href="~/Account/LogOff">
-                                    <i class="ace-icon fa fa-power-off"></i>
-                                    Logout
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
-
-                    <!-- /section:basics/navbar.user_menu -->
-                </ul>
-            </div>
-
-            <!-- /section:basics/navbar.dropdown -->
-        </div><!-- /.navbar-container -->
-    </div>
+    
 
     <!-- /section:basics/navbar.layout -->
     <div class="main-container" id="main-container">
@@ -313,21 +243,6 @@
                 </div><!-- /.page-content -->
             </div>
         </div><!-- /.main-content -->
-
-        <div class="footer">
-            <div class="footer-inner">
-                <!-- #section:basics/footer -->
-                <div class="footer-content">
-                    <span class="bigger-120 pull-left">
-                        Copyright &copy; @DateTime.Now.Year.ToString() DLYB. All rights reserved.
-                    </span>
-
-                    <div class="clearfix"></div>
-                </div>
-
-                <!-- /section:basics/footer -->
-            </div>
-        </div>
 
         <a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">
             <i class="ace-icon fa fa-angle-double-up icon-only bigger-110"></i>

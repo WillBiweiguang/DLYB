@@ -414,6 +414,7 @@
     <Content Include="Scripts\dialogs\uploadimage\uploadimage.js" />
     <Content Include="Scripts\dropload\dropload.css" />
     <Content Include="Scripts\dropload\dropload.min.js" />
+    <Content Include="Scripts\jquery.mloading.js" />
     <Content Include="Scripts\jsviews.min.js" />
     <Content Include="Scripts\linq\FailureModeQuery.js" />
     <Content Include="Scripts\jquery.loadTemplate-1.4.4.js" />
@@ -483,6 +484,8 @@
     <Content Include="Scripts\dialogs\ivote\ivote.css" />
     <Content Include="Scripts\dialogs\ivote\ivote.html" />
     <Content Include="Scripts\dialogs\ivote\ivote.js" />
+    <Content Include="Scripts\util.cad.js" />
+    <Content Include="Scripts\util.common.js" />
     <Content Include="Scripts\util.js" />
     <Content Include="Scripts\ZeroClipboard\clipboard.js" />
     <Content Include="Scripts\ZeroClipboard\clipboard.min.js" />
@@ -959,6 +962,7 @@
     <Content Include="Style\jquery-ui.custom.css" />
     <Content Include="Style\jquery.fancybox.css" />
     <Content Include="Style\jquery.gritter.css" />
+    <Content Include="Style\jquery.mloading.css" />
     <Content Include="Style\layout\layout.css" />
     <Content Include="Style\prettify.css" />
     <Content Include="Style\select2-spinner.gif" />

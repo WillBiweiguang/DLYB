@@ -7,9 +7,14 @@
 <!--Action boxes-->
 <div class="row">
     <div class="col-sm-12">
+        <div class="form-group pull-right">
+            <a href="#" class="btn btn-success btn-sm" id="btnAdd2" data-toggle="tooltip" data-placement="top" title="添加">
+                <i class="fa fa-plus"></i>
+            </a>
+        </div>
         <div class="clearfix"></div>
 
-        <div class="widget-box">
+        <div class="widget-box" style="margin-top:0px;">
             <div class="widget-content nopadding">
                 <table id="listTable" class="table table-bordered table-hover data-table">
                     <thead>
@@ -69,9 +74,13 @@
         //$('[data-toggle="tooltip"]').tooltip();
         var popMenu;
         var IdCur;
-
+        
         var docReady = function () {
-            reinitMainPop('#ModalTable2');
+            LEAP.Common.MainPopRight = $("#ModalTable2").formPopup();
+            $('#btnAdd2').on('click', function () {
+                return LEAP.Common.MainPopRight.TableButtonClick(0, 0);
+            });
+            //reinitMainPop('#ModalTable2');
             datatableSetting = clearDatatableSetting();
             LEAP.Common.MainPop.options.dataTable = $('#listTable').dataTable(jQuery.extend(true, datatableSetting, {
                 "ajax": {
@@ -89,8 +98,8 @@
                     {
                         "targets": 4,
                         "render": function (data, type, full, meta) {
-                            return '<a href="#" onclick="LEAP.Common.MainPop.ShowUpdateInfo(\'' + full.Id + '\');return false;" class="artDailog btn btn-info  btn-xs" style="margin-right:4px;" data-toggle="tooltip" data-placement="top" title="编辑"><i class="fa fa-pencil"></i></a>' +
-                                '<a href="#" onclick="LEAP.Common.MainPop.RowClick(\'' + full.Id + '\',2);return false;" class="btn btn-danger btn-xs" id="btnDelete" data-toggle="tooltip" data-placement="top" title="删除">' +
+                            return '<a href="#" onclick="LEAP.Common.MainPopRight.ShowUpdateInfo(\'' + full.Id + '\');return false;" class="artDailog btn btn-info  btn-xs" style="margin-right:4px;" data-toggle="tooltip" data-placement="top" title="编辑"><i class="fa fa-pencil"></i></a>' +
+                                '<a href="#" onclick="LEAP.Common.MainPopRight.RowClick(\'' + full.Id + '\',2);return false;" class="btn btn-danger btn-xs" id="btnDelete" data-toggle="tooltip" data-placement="top" title="删除">' +
                                 '<i class="fa fa-trash-o"></i></a>';
                         }
                     }],
@@ -101,5 +110,5 @@
             }));
         };
     </script>
-}
+
 
