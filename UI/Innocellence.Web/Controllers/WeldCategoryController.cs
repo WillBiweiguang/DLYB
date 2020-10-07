@@ -89,7 +89,7 @@ namespace Innocellence.FaultSearch.Controllers
             {
                 return new JsonResult { Data = new { result = "failed" }, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
             }
-            var existing = _weldCategoryService.Repository.Entities.Where(x => x.BeamId == beam.Id).ToList();
+            var existing = _weldCategoryService.GetList<WeldCategoryLabelingView>(int.MaxValue, x => x.BeamId == beam.Id).ToList();
             //if (existing.Count > 0)
             //{
             //    return new JsonResult { Data = new { result = "failed", message = "当前文件已识别，请不要重复识别" }, JsonRequestBehavior = JsonRequestBehavior.AllowGet };

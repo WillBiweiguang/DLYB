@@ -97,7 +97,7 @@
                         <label class="col-sm-3 control-label">项目:</label>
                         <div class="col-sm-9">
                             <select class="chosen-select form-control" id="ProjectName" name="ProjectId" style="display:none" data-bind="value:ProjectId" validate="{required:true}"></select>
-                            <span class="func-btn redirect-btn" href="/Project/Index">项目管理</span>
+                            <span class="func-btn redirect-btn" href="/Project/Index?mode=1">项目管理</span>
                             @*<input type="text" name="GrooveType" class="form-control" placeholder="请输入" data-bind="value: ProjectName"
                 validate="{required:true}" />*@
                         </div>
@@ -448,12 +448,15 @@
                     GetWeldingModel(id);
                 }
             });
-            $(document).on('click', '.redirect-btn', function () {
+            $('.redirect-btn').on('click', function () {
                 //$('#leftPanel').css('margin', '30px 10px');
                 //$('#leftPanel').css('float', 'left');                
+                $('#rightPanel').remove('iframe');
                 var url = $(this).attr('href');
-                document.getElementById('iframei').src = url;
-                document.getElementById('iframei').contentWindow.location.reload();
+                var frame = '<iframe id="iframei" src="' + url + '" style="position:absolute; border:none; visibility:inherit; top:38px; left:0px;  height:100%; width:100%; z-index:-1; filter: progid:DXImageTransform.Microsoft.Alpha(style=0,opacity=0);"></iframe>';
+                $('#rightPanel').append(frame);
+                //document.getElementById('iframei').src = url;
+                //document.getElementById('iframei').contentWindow.location.reload();
                 $('#rightPanel').show(300);
                 @*$.ajax({
                     url: '@Url.Action("ListContent","Address")',
@@ -597,6 +600,8 @@
 
             $('#closePanel').on('click', function () {
                 $('#rightPanel').hide(300);
+                $('#iframei').remove();
+
             });
         });
 

@@ -31,8 +31,12 @@ namespace Innocellence.Web.Controllers
         // GET: Address
         public override ActionResult Index()
         {
+            var mode = Request["mode"];
             ViewBag.list= _objHistoricalCostService.GetList<HistoricalCostView>(int.MaxValue, x => !x.IsDeleted).ToList();
-                 
+            ViewBag.Layout = "~/Views/Shared/_Layout.cshtml";
+            if(!string.IsNullOrEmpty(mode) && mode == "1") {
+                ViewBag.Layout = "~/Views/Shared/_LayoutWithoutMenu.cshtml";
+            }
             return View();
         }
 

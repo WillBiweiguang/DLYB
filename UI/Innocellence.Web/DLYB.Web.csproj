@@ -985,6 +985,9 @@
     <Content Include="Views\PlatformManage\PasswordChange.cshtml" />
     <Content Include="Views\Address\_ViewStart.cshtml" />
     <Content Include="Views\Address\ListContent.cshtml" />
+    <Content Include="Views\Shared\_LayoutWithoutMenu.cshtml" />
+    <Content Include="Views\HanJieLocation\_ViewStart.cshtml" />
+    <Content Include="Views\GrooveType\_ViewStart.cshtml" />
     <None Include="Views\WeldCategory\cadwelding.cshtml" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
@@ -1026,6 +1029,9 @@
     <Content Include="Views\GrooveType\Index.cshtml" />
     <Content Include="Views\WeldCategory\Index.cshtml" />
     <Content Include="Views\TaskList\Index.cshtml" />
+    <Content Include="Views\WeldGeometry\_ViewStart.cshtml" />
+    <Content Include="Views\WeldLocation\_ViewStart.cshtml" />
+    <Content Include="Views\Welding\_ViewStart.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Domain\Models\Common\" />
