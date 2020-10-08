@@ -75,11 +75,28 @@ namespace DLYB.Web.Controllers
                 {
                     w.ProjectName = p.ProjectName;
                 }
-                if (users.Any(u => u.Id == p.CreatedUserID))
+                if (users.Any(u => u.Id == w.CreatedUserID))
                 {
-                    p.CreatedUserName = users.FirstOrDefault(u => u.Id == p.CreatedUserID).UserName;
+                    w.CreatedUserName = users.FirstOrDefault(u => u.Id == w.CreatedUserID).UserName;
                 }
             });
+            return this.GetPageResult(listEx, gridRequest);
+        }
+
+        public ActionResult WeldingDetail(int? beamId)
+        {
+            ViewBag.BeamId = beamId;
+            return View();
+        }
+
+        public ActionResult GetWeldingDetailList(int beamId)
+        {
+            GridRequest gridRequest = new GridRequest(Request);
+            string strCondition = Request["search_condition"];
+            Expression<Func<WeldCategoryLabeling, bool>> expression = FilterHelper.GetExpression<WeldCategoryLabeling>(gridRequest.FilterGroup);
+            expression = expression.AndAlso<WeldCategoryLabeling>(x => x.IsDeleted != true && x.BeamId == beamId);
+            int rowCount = gridRequest.PageCondition.RowCount;
+            List<WeldCategoryLabelingView> listEx = _weldCategoryService.GetList< WeldCategoryLabelingView>(expression, gridRequest.PageCondition);
             return this.GetPageResult(listEx, gridRequest);
         }
 
@@ -123,7 +140,7 @@ namespace DLYB.Web.Controllers
             }
             return Json(doJson(null), JsonRequestBehavior.AllowGet);
         }
-        public ActionResult ExportToExcel()
+        public ActionResult ExportToExcel(int beamId = 0)
         {
             string fileName =  "焊材_" + DateTime.Now.ToString("yyyyMMddHHmmssfff") + ".xlsx";
 
@@ -135,7 +152,7 @@ namespace DLYB.Web.Controllers
 
                 // 导出 答卷 
                 //var answer = _pollingResultService.GetList(Id);
-                var reportList1 = _weldCategoryService.Repository.Entities.Where(a => !a.IsDeleted).ToList();
+                var reportList1 = _weldCategoryService.Repository.Entities.Where(a => !a.IsDeleted && a.BeamId == beamId).ToList();
                 int i = 1;
                 foreach (var v in reportList1)
                 {

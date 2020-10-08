@@ -6,6 +6,7 @@
     .datagrid-mask-msg {
         height: 36px !important;
     }
+
     table.gridtable {
         font-family: verdana,arial,sans-serif;
         font-size: 11px;
@@ -30,6 +31,7 @@
             border-color: #666666;
             background-color: #ffffff;
         }
+
     .chosen-container {
         width: 100%;
         max-width: 362px;
@@ -45,15 +47,15 @@
                     文件上传
                 </a>
                 @*<input id="upload-input" class="form-control " multiple="multiple" type="file" name="file" onchange="return uploadFile(this);"
-        accept="image/vnd.dwg" />*@
+                    accept="image/vnd.dwg" />*@
                 @*@if (ViewBag.isApprover == 1)
-                {
-                <div style="float:right">
-                    <button type="button" id="btnAudit" class="btn btn-primary btn-sm" data-toggle="tooltip" data-placement="top" title="审核">审核</button>
-                </div>
-                }
-                </div>
-                }*@
+                    {
+                    <div style="float:right">
+                        <button type="button" id="btnAudit" class="btn btn-primary btn-sm" data-toggle="tooltip" data-placement="top" title="审核">审核</button>
+                    </div>
+                    }
+                    </div>
+                    }*@
             </div>
         </form>
         <div class="clearfix"></div>
@@ -76,6 +78,17 @@
             </div>
         </div>
     </div>
+</div>
+<div id="rightPanel" class="modal-dialog" style="z-index:1050; top:-30px;left:15%; position:absolute; float:right; height:100%;width:70%;display:none;">
+    <div class="widget-header">
+        <h4 class="widget-title"></h4>
+        <div class="widget-toolbar">
+            <a href="#" id="closePanel">
+                <i class="ace-icon fa fa-times"></i>
+            </a>
+        </div>
+    </div>
+    <iframe id='iframei' src="javascript:0" style="position:absolute; border:none; visibility:inherit; top:38px; left:0px;  height:100%; width:100%; z-index:-1; filter: progid:DXImageTransform.Microsoft.Alpha(style=0,opacity=0);"></iframe>
 </div>
 <div id="ModalTable" class="modal" tabindex="-1">
     <div class="modal-dialog">
@@ -116,9 +129,9 @@
                     </button>*@
 
                 @*<button class="btn btn-sm btn-primary" data-action="save" id="btnSave">
-                    <i class="ace-icon fa fa-check"></i>
-                    完成
-                </button>*@
+                        <i class="ace-icon fa fa-check"></i>
+                        完成
+                    </button>*@
             </div>
         </div>
     </div>
@@ -134,10 +147,10 @@
             </div>
 
             <div class="modal-body">
-                <form action="Post" id="ff" method="get" class="form-horizontal" datasource="Get">
-                    <input type="hidden" id="ID" name="ID" value="0" />
+                <form action="Post" id="ff2" method="get" class="form-horizontal" datasource="Get">
+
                     <div>
-                       
+
                         <div style="clear:both;padding-top:10px">
                             <table class="gridtable">
                                 <thead>
@@ -160,52 +173,52 @@
                                 </thead>
                                 @foreach (var item in ViewBag.list)
                                 {
-                                <tr>
-                                    <td>
-                                        @item.Id
-                                    </td>
+                                    <tr>
+                                        <td>
+                                            @item.Id
+                                        </td>
 
-                                    <td>
-                                        @item.FigureNumber
-                                    </td>
-                                    <td>
-                                        @item.BoardNumber
-                                    </td>
-                                    <td>
-                                        @item.WeldType
-                                    </td>
+                                        <td>
+                                            @item.FigureNumber
+                                        </td>
+                                        <td>
+                                            @item.BoardNumber
+                                        </td>
+                                        <td>
+                                            @item.WeldType
+                                        </td>
 
-                                    <td>
-                                        @item.Thickness
-                                    </td>
-                                    <td>
-                                        @item.WeldLocation
-                                    </td>
-                                    <td>
-                                        @item.ConsumeFactor
-                                    </td>
+                                        <td>
+                                            @item.Thickness
+                                        </td>
+                                        <td>
+                                            @item.WeldLocation
+                                        </td>
+                                        <td>
+                                            @item.ConsumeFactor
+                                        </td>
 
-                                    <td>
-                                        @item.SectionArea
-                                    </td>
-                                    <td>
-                                        @item.WeldLength
-                                    </td>
-                                    <td>
-                                        @item.WeldQuanlity
-                                    </td>
+                                        <td>
+                                            @item.SectionArea
+                                        </td>
+                                        <td>
+                                            @item.WeldLength
+                                        </td>
+                                        <td>
+                                            @item.WeldQuanlity
+                                        </td>
 
-                                    <td>
-                                        @item.WeldingNumber
-                                    </td>
-                                    <td>
-                                        @item.Quantity
-                                    </td>
-                                    <td>
-                                        @item.BeamNum
-                                    </td>
+                                        <td>
+                                            @item.WeldingNumber
+                                        </td>
+                                        <td>
+                                            @item.Quantity
+                                        </td>
+                                        <td>
+                                            @item.BeamNum
+                                        </td>
 
-                                </tr>
+                                    </tr>
                                 }
 
                             </table>
@@ -215,7 +228,7 @@
             </div>
 
             <div class="modal-footer">
-                <button class="btn btn-sm" id ='CancelBtn' data-dismiss="modal">
+                <button class="btn btn-sm" id='CancelBtn' data-dismiss="modal">
                     <i class="ace-icon fa fa-times"></i>
                     取消
                 </button>
@@ -250,14 +263,14 @@
                     { "mData": 'ProjectName' },
                     { "mData": 'DWGFile' },
                     { "mData": 'TaskStatusDes' },
-                    { "mData": 'CreatedUserID' },
+                    { "mData": 'CreatedUserName' },
                     { "mData": 'CreatedDate' },
                 ],
                 "columnDefs": [
                     {
                         "targets": 6,
                         "render": function (data, type, full, meta) {
-                            var opstr = '<a href="#" onclick="LEAP.Common.MainPop.ShowUpdateInfo(\'' + full.Id + '\');return false;" class="artDailog btn btn-info  btn-xs pop-btn" style="margin-right:4px;" data-toggle="tooltip" data-placement="top" title="焊材详情统计"><i class="ace-icon glyphicon glyphicon-align-left"></i></a>';
+                            var opstr = '<a href="#" onclick="ShowWeldingDetail(\'' + full.Id + '\');" class="artDailog btn btn-info  btn-xs pop-btn" style="margin-right:4px;" data-toggle="tooltip" data-placement="top" title="焊材详情统计"><i class="ace-icon glyphicon glyphicon-align-left"></i></a>';
                             if (isapprover == 1 && full.TaskStatus == tastStatus.pending) {
                                 opstr = opstr + '<a href="#" onclick="approveTask(\'' + full.Id + '\',1);return false;" class="artDailog btn btn-info  btn-xs" style="margin-right:4px;" data-toggle="tooltip" data-placement="top" title="审核"><i class="ace-icon glyphicon glyphicon-ok"></i></a>';
                                 opstr = opstr + '<a href="#" onclick="approveTask(\'' + full.Id + '\',0);return false;" class="artDailog btn btn-info  btn-xs" style="margin-right:4px;" data-toggle="tooltip" data-placement="top" title="驳回"><i class="ace-icon glyphicon glyphicon-remove"></i></a>';
@@ -277,11 +290,16 @@
             //删掉chosen的内联样式
             setTimeout(function () {
                 $('.chosen-container').removeAttr('style');
-            }, 3000);   
+            }, 3000);
         });
-        $(document).on('click', '.pop-btn', function () {
-            $('#ModalTableDetail').modal(500);
-            $('#ModalTable').modal('hide');
+        //$(document).on('click', '.pop-btn', function () {
+        //    $('#ModalTableDetail').modal(500);
+        //    $('#ModalTable').modal('hide');
+        //});
+        $('#closePanel').on('click', function () {
+            $('.modal-backdrop').remove();
+            $('#rightPanel').hide(300);
+            $('#iframei').remove();
         });
         $(document).on('click', '#CancelBtn', function () {
 
@@ -378,6 +396,14 @@
                     }
                 });
             }
+        }
+        function ShowWeldingDetail(id) {
+            $('#rightPanel').remove('iframe');
+            var url = '/tasklist/weldingdetail?beamid=' + id;
+            var frame = '<iframe id="iframei" src="' + url + '" style="position:absolute; border:none; visibility:inherit; top:38px; left:0px;  height:100%; width:100%; z-index:-1; filter: progid:DXImageTransform.Microsoft.Alpha(style=0,opacity=0);"></iframe>';
+            $('#rightPanel').append(frame);
+            $('#rightPanel').show(300);
+            $('body').append('<div class="modal-backdrop in"></div>');
         }
     </script>
 }

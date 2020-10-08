@@ -696,6 +696,7 @@
     <!--<Content Include="Content\wechatposter\QrCode" />-->
     <Content Include="Scripts\_parse\list.js" />
     <Content Include="Files\Template\历史消耗.xlsx" />
+    <Content Include="Content\焊材统计表.xlsx" />
     <None Include="Properties\PublishProfiles\Innocellence.We.pubxml" />
     <None Include="Properties\PublishProfiles\LillyChinaCAWechat.pubxml" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
@@ -989,6 +990,7 @@
     <Content Include="Views\Shared\_LayoutWithoutMenu.cshtml" />
     <Content Include="Views\HanJieLocation\_ViewStart.cshtml" />
     <Content Include="Views\GrooveType\_ViewStart.cshtml" />
+    <Content Include="Views\TaskList\WeldingDetail.cshtml" />
     <None Include="Views\WeldCategory\cadwelding.cshtml" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>

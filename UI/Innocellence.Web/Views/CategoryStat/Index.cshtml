@@ -455,26 +455,11 @@
                 }
             });
             $('.redirect-btn').on('click', function () {
-                //$('#leftPanel').css('margin', '30px 10px');
-                //$('#leftPanel').css('float', 'left');                
                 $('#rightPanel').remove('iframe');
                 var url = $(this).attr('href');
                 var frame = '<iframe id="iframei" src="' + url + '" style="position:absolute; border:none; visibility:inherit; top:38px; left:0px;  height:100%; width:100%; z-index:-1; filter: progid:DXImageTransform.Microsoft.Alpha(style=0,opacity=0);"></iframe>';
                 $('#rightPanel').append(frame);
-                //document.getElementById('iframei').src = url;
-                //document.getElementById('iframei').contentWindow.location.reload();
                 $('#rightPanel').show(300);
-                @*$.ajax({
-                    url: '@Url.Action("ListContent","Address")',
-                    data: {  },
-                    type: 'GET',
-                    dataType: 'html',
-                    success: function (data) {
-                        $('#rightPanel').empty().append(data);
-                        docReady();
-                    }
-                });*@
-                //window.location = url;
             });
             $('#ModalTable').on('hide.bs.modal', function () {
                 // 弹出框关闭动作
