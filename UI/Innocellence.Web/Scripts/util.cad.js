@@ -1,17 +1,25 @@
- var mxOcx = document.getElementById("MxDrawXCtrl");
+var mxOcx = document.getElementById("MxDrawXCtrl");
+var lastCircleHandle = 0;
+var isBrowner = false;
     // 执行控件命令
  function DoCmd(iCmd) {     
         mxOcx.DoCommand(iCmd);
 }
 function myclick5() {
+    $('#frameContainer').show();
     $("body").mLoading({ text: "识别中，请稍候" });
-    setTimeout(GetWelding(), 100);
-    $("body").mLoading("hide");
-    }
+    setTimeout(DoReg(), 100);
+}
 function DoCommandEventFunc(iCmd) {
     if (iCmd == 1) {
         JiaoWeldAdd();
     }
+}
+
+function DoReg() {
+    GetWelding();
+    $("body").mLoading("hide");
+    $('#frameContainer').hide();
 }
 //初始化
 
@@ -34,10 +42,38 @@ function InitMxDrawX() {
             } else {
                 mxOcx.OpenWebDwgFile(filePath);
             }
+            //隐藏菜单栏
+            
+            BrownerMode();
+
         }
     }
 }
-
+function BrownerMode() {
+    var isShow = false;
+    isBrowner = !isBrowner;
+    mxOcx.BrowseMode = isBrowner;
+    mxOcx.ShowMenuBar = !isBrowner;
+    mxOcx.ShowPropertyWindow = !isBrowner;
+    //隐藏工具条
+    mxOcx.ShowToolBar("常用工具", isShow);
+    mxOcx.ShowToolBar("绘图工具", isShow);
+    mxOcx.ShowToolBar("编辑工具", isShow);
+    mxOcx.ShowToolBar("特性", isShow);
+    mxOcx.ShowToolBar("ET工具", isShow);
+    //隐藏菜单栏
+    mxOcx.ShowMenuBar(isShow);
+    //隐藏标尺栏
+    mxOcx.ShowRulerWindow(isShow);
+    //隐藏属性栏
+    mxOcx.ShowPropertyWindow(isShow);
+    //隐藏命令栏
+    mxOcx.ShowCommandWindow(isShow);
+    //隐藏模型栏
+    mxOcx.ShowModelBar(isShow);
+    //隐藏状态栏
+    mxOcx.ShowStatusBar(isShow);
+}
 mxtime = setInterval(InitMxDrawX, 100);
 function GetWelding() {
     var myDate = new Date();
@@ -173,6 +209,14 @@ function DrawCircleOfArrow(m_handle) {
 
     //更新视区显示
     mxOcx.UpdateDisplay();
+}
+//删除绘制的圈
+function deleClrByID(myId) {
+    var mxOcx = document.all.item("MxDrawXCtrl");
+    var database = mxOcx.GetDatabase();
+    var ent;
+    ent = database.ObjectIdToObject(myId);
+    ent.Erase();
 }
 function GetWeldingType(myArrow) {
     var myWeld = new myWelding(null, null, null, 0,"", null, 0, null,null, null, null, null, 0, null, null, null, null, 0, null, null, null, "",

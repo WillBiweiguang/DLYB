@@ -109,7 +109,7 @@ namespace Innocellence.Web.Controllers
                 }
                 string path = "/Files/BeamInfo/" + ProjectId + SLASH + objModal.DwgFile;
                 file.SaveAs(Server.MapPath(path));
-                if (!_beamInfoService.Repository.Entities.Any(x => x.ProjectId == ProjectId && x.DwgFile == objModal.DwgFile))
+                if (!_beamInfoService.Repository.Entities.Any(x => x.ProjectId == ProjectId && x.DwgFile == objModal.DwgFile && !x.IsDeleted))
                 {
                     _beamInfoService.InsertView(objModal);
                 }

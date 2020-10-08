@@ -108,6 +108,11 @@
         .navbar-header .pull-right {
             margin-top: 20px;
         }
+        .layout-top li.layout-top-active {
+            border-top: 4px solid white;
+            padding: 16px 20px;
+            font-size: 15px;
+        }
     </style>
 </head>
 
@@ -500,7 +505,26 @@
             //    remText: '%n character%s remaining...',
             //    limitText: 'max allowed : %n.'
             //});
+            Layout.Load();
         });
+        var Layout = {
+            Load: function () {
+                Layout.Event.TopMenu();
+            },
+            Event:
+            {
+                TopMenu: function () {
+                    var pathname = window.location.pathname;
+                    $("#navbar .navbar-buttons ul li").removeClass("layout-top-active");
+
+                    $("#navbar .navbar-buttons ul li a").each(function () {
+                        if (this.pathname.toUpperCase() == pathname.toUpperCase() && this.className !== "dropdown-toggle") {
+                            $(this.parentNode).addClass("layout-top-active")
+                        }
+                    })
+                }
+            }
+        }
     </script>
 </body>
 </html>
