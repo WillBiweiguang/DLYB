@@ -66,112 +66,118 @@
                     <input type="hidden" id="ID" name="ID" value="0" />
                     @*<input type="hidden" id="CreatedDate" name="CreatedDate" data-bind="value: CreatedDate" validate="{required:false}" value="1970-01-01"/>
         <input type="hidden" id="CreatedUserID" name="CreatedUserID" data-bind="value: CreatedUserID" validate="{required:false}" value="0" />*@
-                    <div class="form-group">
-                        <label class="col-sm-3 control-label">接口形式:</label>
-                        <div class="col-sm-9">
-                            <input type="text" name="GrooveType" class="form-control" placeholder="请输入" data-bind="value: GrooveType"
-                                   validate="{required:true}" />
+                    <div class="row">
+                        <div class="form-group col-lg-6">
+                            <label class="col-sm-5 control-label">接口形式:</label>
+                            <div class="col-sm-7">
+                                <input type="text" name="GrooveType" class="form-control" placeholder="请输入" data-bind="value: GrooveType"
+                                       validate="{required:true}" />
+                            </div>
+                        </div>
+                        <div class="form-group col-lg-6">
+                            <label class="col-sm-5 control-label">焊缝类型:</label>
+                            <div class="col-sm-7">
+                                <input type="text" name="WeldGeometry" class="form-control" placeholder="请输入" data-bind="value: WeldGeometry"
+                                       validate="{required:true}" />
+                            </div>
                         </div>
                     </div>
-                    <div class="form-group">
-                        <label class="col-sm-3 control-label">焊缝类型:</label>
-                        <div class="col-sm-9">
-                            <input type="text" name="WeldGeometry" class="form-control" placeholder="请输入" data-bind="value: WeldGeometry"
-                                   validate="{required:true}" />
+                    <div class="row">
+                        <div class="form-group col-lg-6">
+                            <label class="col-sm-5 control-label">工件厚度1:</label>
+                            <div class="col-sm-7">
+                                <input type="text" name="WorksThickness1" class="form-control" placeholder="请输入" data-bind="value: WorksThickness1"
+                                       validate="{required:true}" />
+                            </div>
+                        </div>
+                        <div class="form-group col-lg-6">
+                            <label class="col-sm-5 control-label">工件厚度2:</label>
+                            <div class="col-sm-7">
+                                <input type="text" name="WorksThickness2" class="form-control" placeholder="请输入" data-bind="value: WorksThickness2"
+                                       validate="{required:true}" />
+                            </div>
                         </div>
                     </div>
-                    <div class="form-group">
-                        <label class="col-sm-3 control-label">工件厚度1:</label>
-                        <div class="col-sm-9">
-                            <input type="text" name="WorksThickness1" class="form-control" placeholder="请输入" data-bind="value: WorksThickness1"
-                                   validate="{required:true}" />
+                    <div class="row">
+                        <div class="form-group col-lg-6">
+                            <label class="col-sm-5 control-label">坡口深度h:</label>
+                            <div class="col-sm-7">
+                                <input type="text" name="WorksThicknessH1" class="form-control" placeholder="请输入" data-bind="value: WorksThicknessH1" />
+                            </div>
+                        </div>
+                        <div class="form-group col-lg-6">
+                            <label class="col-sm-5 control-label">余高H:</label>
+                            <div class="col-sm-7">
+                                <input type="text" name="WorksThicknessH2" class="form-control" placeholder="请输入" data-bind="value: WorksThicknessH2" />
+                            </div>
                         </div>
                     </div>
-                    <div class="form-group">
-                        <label class="col-sm-3 control-label">工件厚度2:</label>
-                        <div class="col-sm-9">
-                            <input type="text" name="WorksThickness2" class="form-control" placeholder="请输入" data-bind="value: WorksThickness2"
-                                   validate="{required:true}" />
+                    <div class="row">
+                        <div class="form-group col-lg-6">
+                            <label class="col-sm-5 control-label">组对间隙c:</label>
+                            <div class="col-sm-7">
+                                <input type="text" name="GrooveClearance" class="form-control" placeholder="请输入" data-bind="value: GrooveClearance" />
+                            </div>
+                        </div>
+                        <div class="form-group col-lg-6">
+                            <label class="col-sm-5 control-label">钝边高度p:</label>
+                            <div class="col-sm-7">
+                                <input type="text" name="BluntThickness" class="form-control" placeholder="请输入" data-bind="value: BluntThickness" />
+                            </div>
                         </div>
                     </div>
-                    <div class="form-group">
-                        <label class="col-sm-3 control-label">坡口深度h:</label>
-                        <div class="col-sm-9">
-                            <input type="text" name="WorksThicknessH1" class="form-control" placeholder="请输入" data-bind="value: WorksThicknessH1"
-                                    />
+                    <div class="row">
+                        <div class="form-group col-lg-6">
+                            <label class="col-sm-5 control-label">坡口角度a1:</label>
+                            <div class="col-sm-7">
+                                <input type="text" name="GrooveAngleA1" class="form-control" placeholder="请输入" data-bind="value: GrooveAngleA1" />
+                            </div>
+                        </div>
+                        <div class="form-group col-lg-6">
+                            <label class="col-sm-5 control-label">坡口角度a:</label>
+                            <div class="col-sm-7">
+                                <input type="text" name="GrooveAngleA2" class="form-control" placeholder="请输入" data-bind="value: GrooveAngleA2" />
+                            </div>
                         </div>
                     </div>
-                    <div class="form-group">
-                        <label class="col-sm-3 control-label">余高H:</label>
-                        <div class="col-sm-9">
-                            <input type="text" name="WorksThicknessH2" class="form-control" placeholder="请输入" data-bind="value: WorksThicknessH2"
-                                    />
+                    <div class="row">
+                        <div class="form-group col-lg-6">
+                            <label class="col-sm-5 control-label">熔宽l:</label>
+                            <div class="col-sm-7">
+                                <input type="text" name="GrooveArcR1" class="form-control" placeholder="请输入" data-bind="value: GrooveArcR1" />
+                            </div>
+                        </div>
+                        <div class="form-group col-lg-6">
+                            <label class="col-sm-5 control-label">焊脚尺寸K:</label>
+                            <div class="col-sm-7">
+                                <input type="text" name="GrooveArcR2" class="form-control" placeholder="请输入" data-bind="value: GrooveArcR2" />
+                            </div>
                         </div>
                     </div>
-                    <div class="form-group">
-                        <label class="col-sm-3 control-label">组对间隙c:</label>
-                        <div class="col-sm-9">
-                            <input type="text" name="GrooveClearance" class="form-control" placeholder="请输入" data-bind="value: GrooveClearance"
-                                   />
+                    <div class="row">
+                        <div class="form-group col-lg-6">
+                            <label class="col-sm-5 control-label">圆弧半径R:</label>
+                            <div class="col-sm-7">
+                                <input type="text" name="GrooveArcR1" class="form-control" placeholder="请输入" data-bind="value: GrooveArcR1" />
+                            </div>
+                        </div>
+                        <div class="form-group col-lg-6">
+                            <label class="col-sm-5 control-label">开坡口板厚t:</label>
+                            <div class="col-sm-7">
+                                <input type="text" name="GrooveArcR2" class="form-control" placeholder="请输入" data-bind="value: GrooveArcR2" />
+                            </div>
                         </div>
                     </div>
-                    <div class="form-group">
-                        <label class="col-sm-3 control-label">钝边高度p:</label>
-                        <div class="col-sm-9">
-                            <input type="text" name="BluntThickness" class="form-control" placeholder="请输入" data-bind="value: BluntThickness"
-                                    />
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="col-sm-3 control-label">坡口角度a1:</label>
-                        <div class="col-sm-9">
-                            <input type="text" name="GrooveAngleA1" class="form-control" placeholder="请输入" data-bind="value: GrooveAngleA1"
-                                   />
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="col-sm-3 control-label">坡口角度a:</label>
-                        <div class="col-sm-9">
-                            <input type="text" name="GrooveAngleA2" class="form-control" placeholder="请输入" data-bind="value: GrooveAngleA2"
-                                   />
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="col-sm-3 control-label">熔宽l:</label>
-                        <div class="col-sm-9">
-                            <input type="text" name="GrooveArcR1" class="form-control" placeholder="请输入" data-bind="value: GrooveArcR1"
-                                   />
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="col-sm-3 control-label">焊脚尺寸K:</label>
-                        <div class="col-sm-9">
-                            <input type="text" name="GrooveArcR2" class="form-control" placeholder="请输入" data-bind="value: GrooveArcR2"
-                                    />
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="col-sm-3 control-label">圆弧半径R:</label>
-                        <div class="col-sm-9">
-                            <input type="text" name="GrooveArcR1" class="form-control" placeholder="请输入" data-bind="value: GrooveArcR1"
-                                   />
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="col-sm-3 control-label">开坡口板厚t:</label>
-                        <div class="col-sm-9">
-                            <input type="text" name="GrooveArcR2" class="form-control" placeholder="请输入" data-bind="value: GrooveArcR2"
-                                   />
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="col-sm-3 control-label">图片预览:</label>
-                        <div class="col-sm-9">
-                            @*<input type="text" name="PreviewImage" class="form-control" placeholder="请输入" data-bind="value: PreviewImage"
-                                   validate="{required:true}" />*@
-                            <input id="upload-input" class="form-control " multiple="multiple" type="file" name="file" onchange="return uploadFile(this);"
-                                   accept="*" />
-                            <img src="" />
+                    <div class="row">
+                        <div class="form-group col-lg-9">
+                            <label class="col-sm-3 control-label">图片预览:</label>
+                            <div class="col-sm-9">
+                                @*<input type="text" name="PreviewImage" class="form-control" placeholder="请输入" data-bind="value: PreviewImage"
+                validate="{required:true}" />*@
+                                <input id="upload-input" class="form-control " multiple="multiple" type="file" name="file" onchange="return uploadFile(this);"
+                                       accept="*" />
+                                <img src="" />
+                            </div>
                         </div>
                     </div>
                 </form>
@@ -230,7 +236,7 @@
                     {
                         "targets": 15,
                         "render": function (data, type, full, meta) {
-                            return '<img src="' + full.PreviewImage+'" style="max-width:100px" />'
+                            return '<img src="' + full.PreviewImage + '" style="max-width:100px" />'
                                 ;
                         }
                     },

@@ -386,6 +386,7 @@
     <Content Include="Content\img\qrcode_lilly.jpg" />
     <Content Include="Content\img\smiley.png" />
     <Content Include="Content\img\user.jpg" />
+    <Content Include="Content\焊材统计表.xlsx" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
