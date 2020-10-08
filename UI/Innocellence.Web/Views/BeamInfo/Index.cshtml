@@ -44,8 +44,8 @@
                             <th>@T("项目")</th>
                             <th>@T("梁段名")</th>
                             <th>@T("文件名")</th>
-                            @*<th>@T("上传进度")</th>
-        <th>@T("上传状态")</th>*@
+                            @*<th>@T("上传进度")</th>*@
+                            <th>@T("状态")</th>
                             <th style="width:25%;">@T("操作")</th>
                         </tr>
 
@@ -127,11 +127,11 @@
                     { "mData": 'BridgeComponent' },      
                     { "mData": 'DwgFile' },                                  
                     //{ "mData": 'TheModel' },
-                    //{ "mData": 'Status' }
+                    { "mData": 'Status' }
                 ],
                 "columnDefs": [
                     {
-                        "targets": 4,
+                        "targets": 5,
                         "render": function (data, type, full, meta) {
                             var opstr = '<a href="#" onclick="CategoryStat(\'' + full.Id + '\');return false;" class="artDailog btn btn-info  btn-xs" style="margin-right:4px;" data-toggle="tooltip" data-placement="top" title="焊缝类别统计"><i class="ace-icon glyphicon glyphicon-stats"></i></a>' +
                                 '<a href="#" onclick="tasklist(\'' + full.Id + '\');return false;" class="artDailog btn btn-info  btn-xs" style="margin-right:4px;" data-toggle="tooltip" data-placement="top" title="审核列表"><i class="ace-icon glyphicon glyphicon-list"></i></a>';
