@@ -431,12 +431,18 @@
                 }
             }));
         };
-
+        var refreshSelect = function () {
+            BindChosen('/Project/GetDropdownList', $('#ProjectName'), InitChosen);
+            $.each($('.single-select '), function (i, obj) {
+                BindSelect(obj);
+            });
+        };
         $(document).ready(function () {
             initDataTable();
             //inital select2
             $('.select2').css("width", "362px").select2({ allowClear: true });
             //获取项目信息
+
             BindChosen('/Project/GetDropdownList', $('#ProjectName'), InitChosen);
             $.each($('.single-select '), function (i, obj) {
                 BindSelect(obj);
@@ -475,6 +481,7 @@
                 $('#leftPanel').css('margin', '30px auto');
                 $('#leftPanel').css('float', '');
                 $('#rightPanel').hide();
+                
                 //if ($('#rightPanel').is(":visible")) {
                 //    initDataTable();
                 //}
@@ -601,7 +608,7 @@
             $('#closePanel').on('click', function () {
                 $('#rightPanel').hide(300);
                 $('#iframei').remove();
-
+                refreshSelect();
             });
         });
 

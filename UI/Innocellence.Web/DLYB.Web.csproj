@@ -351,6 +351,7 @@
     <Content Include="Content\images\loaderror.png" />
     <Content Include="Content\images\loading.gif" />
     <Content Include="Content\images\lock.gif" />
+    <Content Include="Content\images\yb\login.png" />
     <Content Include="Content\images\yb\left-logo.png" />
     <Content Include="Content\images\yb\login-bg.png" />
     <Content Include="Content\images\neweditor-tab-bg.png" />
