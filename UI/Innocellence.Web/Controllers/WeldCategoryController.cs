@@ -42,7 +42,7 @@ namespace Innocellence.FaultSearch.Controllers
                     ViewBag.BeamId = beamId;
                     ViewBag.ProjectId = beam.ProjectId;
                     ViewBag.FileName = beam.DwgFile;
-                    ViewBag.FilePath = GetFilePath(beam.DwgFile);
+                    ViewBag.FilePath = GetFilePath(beam.ProjectId, beam.DwgFile);
                 }
             }
             ViewBag.weldCategorys = _weldCategoryService.Repository.Entities.Where(a => !a.IsDeleted).ToList();
@@ -117,14 +117,22 @@ namespace Innocellence.FaultSearch.Controllers
             }
             return new JsonResult { Data = new { result = "success" }, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
         }
-        private string GetFilePath(string dwgfile)
+        private string GetFilePath(int projectId, string dwgfile)
         {
-            var path = baseUrl + "Files/BeamInfo/" + dwgfile;
+            var path = baseUrl + "Files/BeamInfo/" + projectId + "/" + dwgfile;
+            if (!System.IO.File.Exists(Server.MapPath("/Files/BeamInfo/" + projectId + "/" + dwgfile)))
+            {
+                path = baseUrl + "Files/BeamInfo/" + dwgfile;
+            }
             return path;
         }
         //TODO 需要更改为按配置识别
         private string GetWeldType(string type)
         {
+            if (string.IsNullOrEmpty(type))
+            {
+                return "";
+            }
             switch (type.Trim())
             {
                 case "N_PoKDuiJieH":

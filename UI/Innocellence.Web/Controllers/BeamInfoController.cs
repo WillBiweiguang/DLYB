@@ -22,6 +22,7 @@ namespace Innocellence.Web.Controllers
 {
     public class BeamInfoController : BaseController<BeamInfo, BeamInfoView>
     {
+        private const string SLASH = "/";
         private readonly IBeamInfoService _beamInfoService;
         private readonly IProjectService _projectService;
         private readonly ITaskListService _taskListService;
@@ -102,13 +103,16 @@ namespace Innocellence.Web.Controllers
                     return Json(result, JsonRequestBehavior.AllowGet);
                 }
                 
-                if (!System.IO.Directory.Exists(Server.MapPath("/Files/BeamInfo/")))
+                if (!System.IO.Directory.Exists(Server.MapPath("/Files/BeamInfo/"+ ProjectId+ SLASH)))
                 {
-                    System.IO.Directory.CreateDirectory(Server.MapPath("/Files/BeamInfo/"));
+                    System.IO.Directory.CreateDirectory(Server.MapPath("/Files/BeamInfo/" + ProjectId + SLASH));
                 }
-                string path = "/Files/BeamInfo/" + objModal.DwgFile;
+                string path = "/Files/BeamInfo/" + ProjectId + SLASH + objModal.DwgFile;
                 file.SaveAs(Server.MapPath(path));
-                _beamInfoService.InsertView(objModal);
+                if (!_beamInfoService.Repository.Entities.Any(x => x.ProjectId == ProjectId && x.DwgFile == objModal.DwgFile))
+                {
+                    _beamInfoService.InsertView(objModal);
+                }
                 //if (string.IsNullOrEmpty(Id) || Id == "0")
                 //{
                 //    _service.InsertView(objModal);

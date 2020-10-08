@@ -26,10 +26,13 @@ function InitMxDrawX() {
             clearInterval(mxtime);
 
             var filename = $('#fileName').val();
+            var filePath = $('#filePath').val();
 
-            if (filename) {
+            if (!filePath) {
                 var path = "http://" + window.location.host + '/Files/BeamInfo/' + filename;
                 mxOcx.OpenWebDwgFile(path);
+            } else {
+                mxOcx.OpenWebDwgFile(filePath);
             }
         }
     }

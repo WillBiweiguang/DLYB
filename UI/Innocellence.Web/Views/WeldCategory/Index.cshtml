@@ -454,6 +454,7 @@
             ).done(function (r) {
                 //$('.data-table').trigger('');
                 LEAP.Common.MainPop.options.dataTable.fnDraw(false);
+                alert("识别完成");
             });
 
         }
@@ -471,7 +472,7 @@
 
             Sys.ie || Sys.ie9 ? (document.write("<!-- 用来产生编辑状态的ActiveX控件的JS脚本-->   "),
                 document.write("<!-- 因为微软的ActiveX新机制，需要一个外部引入的js-->   "),
-                document.write('<div id="cadContent" style="z-index:1" >'),
+                document.write('<div id="cadContent" style="z-index:1; margin-top:20px;" >'),
                 document.write('<object id="' + id + '" classid="clsid:' + classid + '" '),
                 //document.write('width="85%" height="85%" align="left">   '),
                 document.write('codebase="' + cabpath + '" width="900px" height="600px" align="left">   '),
@@ -495,7 +496,7 @@
                 document.write('</object>'),
                 document.write('</div>')) :
 
-                Sys.chrome ? (document.write('<div id="cadContent" >'),
+            Sys.chrome ? (document.write('<div id="cadContent"  style="z-index:1; margin-top:20px;" >'),
                     document.write('<object id="' + id + '" clsid="{' + classid + '}" '),
                     document.write('type="application/mxdraw-activex" width="85%" height="85%" align="left"> '),
                     document.write('<param name="_Version" value="65536">  '),
