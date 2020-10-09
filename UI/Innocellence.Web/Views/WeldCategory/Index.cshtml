@@ -51,11 +51,12 @@
             </div>
             <div class="form-group">
                 <input type="button" value="焊接符号识别" onclick="myclick5();">
+                <input type="button" value="添加焊缝" onclick="AddHanfeng();">
             </div>
             <div class="form-group pull-right">
-                <a href="#" class="btn btn-success btn-sm" id="btnAdd" data-toggle="tooltip" data-placement="top" title="添加">
+                @*<a href="#" class="btn btn-success btn-sm" id="btnAdd" data-toggle="tooltip" data-placement="top" title="添加">
                     <i class="fa fa-plus"></i>
-                </a>
+                </a>*@
                 <a href="#" class="btn btn-success btn-sm" id="btnCollapse" data-action="collapse" title="折叠">
                     <i class="ace-icon fa fa-chevron-up"></i>
                 </a>
@@ -109,9 +110,9 @@
                     <input type="hidden" id="beamId" name="beamId" value="@ViewBag.BeamId" />
                     <div class="row">
                         <div class="form-group col-lg-6">
-                            <label class="col-sm-5 control-label">图号:</label>
+                            <label for="FigureNumber" class="col-sm-5 control-label">图号:</label>
                             <div class="col-sm-7">
-                                <select class="single-select form-control" name="FigureNumber" id="FigureNumber" data-placeholder="请选择图号" data-bind="value: FigureNumber">
+                                <select class="single-select form-control" name="FigureNumber" id="FigureNumber" data-placeholder="请选择图号" data-bind="value: FigureNumber" title="图号">
                                     @foreach (WeldCategoryLabeling a in ViewBag.weldCategorys)
                                     {
                                         if (!string.IsNullOrEmpty(a.FigureNumber))
@@ -123,7 +124,7 @@
                             </div>
                         </div>
                         <div class="form-group col-lg-6">
-                            <label class="col-sm-5 control-label">板件号:</label>
+                            <label for="BoardNumber" class="col-sm-5 control-label">板件号:</label>
                             <div class="col-sm-7">
                                 <select class="single-select form-control" name="BoardNumber" id="BoardNumber" data-placeholder="请选择板件号" data-bind="value: BoardNumber">
                                     @foreach (WeldCategoryLabeling a in ViewBag.weldCategorys)
@@ -141,7 +142,7 @@
                         <div class="form-group col-lg-6">
                             <label class="col-sm-5 control-label">焊缝类型:</label>
                             <div class="col-sm-7">
-                                <select class="single-select form-control" id="WeldType" name="WeldTypeId" style="" data-bind="value:WeldTypeId" validate="{required:true}" data-geturl="/WeldGeometry/GetDropdownList">
+                                <select class="single-select form-control" id="WeldType" name="WeldType" style="" data-bind="value:WeldType" validate="{required:true}" data-geturl="/WeldGeometry/GetDropdownList">
                                     @foreach (WeldGeometry a in ViewBag.weldGeometries)
                                     {
                                         if (!string.IsNullOrEmpty(a.WeldType))
@@ -155,7 +156,7 @@
                         <div class="form-group col-lg-6">
                             <label class="col-sm-5 control-label">焊缝位置:</label>
                             <div class="col-sm-7">
-                                <select class="single-select form-control" name="WeldLocation" id="WeldLocation" data-placeholder="请选择焊缝位置" data-geturl="/WeldLocation/GetDropdownList">
+                                <select class="single-select form-control" name="WeldLocation" id="WeldLocation" data-placeholder="请选择焊缝位置" validate="{required:true}" data-geturl="/WeldLocation/GetDropdownList">
                                     @foreach (WeldLocation a in ViewBag.weldLocations)
                                     {
                                         if (!string.IsNullOrEmpty(a.WeldLocationType))
@@ -170,7 +171,7 @@
                         <div class="form-group col-lg-6">
                             <label class="col-sm-5 control-label">焊缝长度:</label>
                             <div class="col-sm-7">
-                                <select class="single-select form-control" name="WeldLengthSel" id="WeldLengthSel">
+                                <select class="single-select form-control" name="WeldLengthSel" validate="{required:true}" id="WeldLengthSel">
 
                                     <option value="长">长</option>
                                     <option value="宽">宽</option>
@@ -184,7 +185,7 @@
                         <div class="form-group col-lg-6">
                             <label class="col-sm-5 control-label">焊缝长度值:</label>
                             <div class="col-sm-7">
-                                <input type="text" name="WeldLength" id="WeldLength" class="form-control" data-bind="value: WeldLength" />
+                                <input type="text" name="WeldLength" id="WeldLength" class="form-control" validate="{required:true}" data-bind="value: WeldLength" />
                             </div>
                         </div>
                     </div>
@@ -193,14 +194,14 @@
                             <div class="form-group col-lg-6">
                                 <label class="col-sm-5 control-label">长度:</label>
                                 <div class="col-sm-7">
-                                    <input type="text" name="LengthVal" id="LengthVal" class="form-control" data-bind="value: LengthVal" />
+                                    <input type="text" name="LengthVal" id="LengthVal" class="form-control" validate="{required:true}" data-bind="value: LengthVal" />
                                 </div>
                             </div>
                             <div class="form-group col-lg-6">
                                 <label class="col-sm-5 control-label">板厚:</label>
                                 <div class="col-sm-7">
 
-                                    <input type="text" name="Thickness" id="Thickness" class="form-control" data-bind="value: Thickness" />
+                                    <input type="text" name="Thickness" id="Thickness" class="form-control" validate="{required:true}" data-bind="value: Thickness" />
                                 </div>
                             </div>
 
@@ -209,14 +210,14 @@
                             <div class="form-group col-lg-6">
                                 <label class="col-sm-5 control-label">熔敷金属密度:</label>
                                 <div class="col-sm-7">
-                                    <input type="text" name="MentalDensity" id="MentalDensity" class="form-control" data-bind="value: MentalDensity" />
+                                    <input type="text" name="MentalDensity" id="MentalDensity" class="form-control" validate="{required:true}" data-bind="value: MentalDensity" />
                                 </div>
                             </div>
                             <div class="form-group col-lg-6">
                                 <label class="col-sm-5 control-label">消耗系数:</label>
                                 <div class="col-sm-7">
 
-                                    <input type="text" name="ConsumeFactor" id="ConsumeFactor" class="form-control" data-bind="value: ConsumeFactor" />
+                                    <input type="text" name="ConsumeFactor" id="ConsumeFactor" class="form-control" validate="{required:true}" data-bind="value: ConsumeFactor" />
                                 </div>
                             </div>
 
@@ -225,7 +226,7 @@
                             <div class="form-group col-lg-6">
                                 <label class="col-sm-5 control-label">焊缝截面积:</label>
                                 <div class="col-sm-7">
-                                    <select class="single-select form-control" name="SectionArea" id="SectionArea" data-placeholder="请选择焊缝截面积" data-bind="value: SectionArea">
+                                    <select class="single-select form-control" name="SectionArea" id="SectionArea" validate="{required:true}" data-placeholder="请选择焊缝截面积" data-bind="value: SectionArea">
                                         @foreach (WeldCategoryLabeling a in ViewBag.weldCategorys)
                                         {
                                             <option value="@a.SectionArea">@a.SectionArea</option>
@@ -238,7 +239,7 @@
                                 <label class="col-sm-5 control-label">焊接边数:</label>
                                 <div class="col-sm-7">
 
-                                    <input type="text" name="WeldingNumber" id="WeldingNumber" class="form-control" data-bind="value: WeldingNumber" />
+                                    <input type="text" name="WeldingNumber" id="WeldingNumber" class="form-control" validate="{required:true}" data-bind="value: WeldingNumber" />
                                 </div>
                             </div>
                         </div>
@@ -247,14 +248,14 @@
                                 <label class="col-sm-5 control-label">梁段数量:</label>
                                 <div class="col-sm-7">
 
-                                    <input type="text" name="BeamNum" id="BeamNum" class="form-control" data-bind="value: BeamNum" />
+                                    <input type="text" name="BeamNum" id="BeamNum" class="form-control" validate="{required:true}" data-bind="value: BeamNum" />
                                 </div>
                             </div>
                             <div class="form-group col-lg-6">
                                 <label class="col-sm-5 control-label">焊缝数量:</label>
                                 <div class="col-sm-7">
 
-                                    <input type="text" name="Quantity" id="Quantity" class="form-control" data-bind="value: Quantity" />
+                                    <input type="text" name="Quantity" id="Quantity" class="form-control" validate="{required:true}" data-bind="value: Quantity" />
                                 </div>
                             </div>
                         </div>
@@ -263,14 +264,14 @@
                             <div class="form-group col-lg-6">
                                 <label class="col-sm-5 control-label">宽度:</label>
                                 <div class="col-sm-7">
-                                    <input type="text" name="WidthVal" id="WidthVal" class="form-control" data-bind="value: WidthVal" />
+                                    <input type="text" name="WidthVal" id="WidthVal" class="form-control" validate="{required:true}" data-bind="value: WidthVal" />
                                 </div>
                             </div>
                             <div class="form-group col-lg-6">
                                 <label class="col-sm-5 control-label">焊缝质量:</label>
                                 <div class="col-sm-7">
 
-                                    <input type="text" name="WeldQuanlity" id="WeldQuanlity" class="form-control" data-bind="value: WeldQuanlity" />
+                                    <input type="text" name="WeldQuanlity" id="WeldQuanlity" class="form-control" validate="{required:true}" data-bind="value: WeldQuanlity" />
                                 </div>
                             </div>
                         </div>
@@ -301,8 +302,8 @@
 
 @section scripts_Foot
 {
-    @*<script src="~/Scripts/EasyUI/jquery.easyui.min.js"></script>
-        <script src="http://static.runoob.com/assets/jquery-validation-1.14.0/dist/localization/messages_zh.js"></script>*@
+    <script src="~/Scripts/EasyUI/jquery.easyui.min.js"></script>
+    <script src="http://static.runoob.com/assets/jquery-validation-1.14.0/dist/localization/messages_zh.js"></script>
     <script type="text/javascript">
         //$('[data-toggle="tooltip"]').tooltip();
         var popMenu;
@@ -440,7 +441,7 @@
 
         });
 
-        function saveWeldData(list) {
+        function saveWeldData(list, mode) {
             if (!list) {
                 alert('未识别到焊缝');
             }
@@ -454,9 +455,18 @@
             ).done(function (r) {
                 //$('.data-table').trigger('');
                 LEAP.Common.MainPop.options.dataTable.fnDraw(false);
-                alert("识别完成");
+                if (mode === 2) { //手动添加焊缝操作
+                    alert("焊缝数据已添加");
+                } else { //全图识别操作
+                    alert("识别完成");
+                }                
             });
 
+        }
+
+        function AddHanfeng() {
+            window.alert('请点击CAD相应位置开始添加焊缝');
+            DoCmd(1);
         }
     </script>
 }
@@ -475,7 +485,7 @@
                 document.write('<div id="cadContent" style="z-index:1; margin-top:20px;" >'),
                 document.write('<object id="' + id + '" classid="clsid:' + classid + '" '),
                 //document.write('width="85%" height="85%" align="left">   '),
-                document.write('codebase="' + cabpath + '" width="1200px" height="800px" align="left">   '),
+                document.write('codebase="' + cabpath + '" width="100%" height="900px" align="left">   '),
                 document.write('<param name="_Version" value="65536">  '),
                 document.write('<param name="_ExtentX" value="24262">  '),
                 document.write('<param name="_ExtentY" value="16219">  '),

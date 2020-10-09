@@ -161,6 +161,8 @@ namespace Innocellence.FaultSearch.Controllers
                     return "13-单面-角焊缝";
                 case "Y_SMJiaoH":
                     return "14-双面角焊缝";
+                case "ManJiaoH":
+                    return "角焊缝";
                 default:
                     return "其他";
             }

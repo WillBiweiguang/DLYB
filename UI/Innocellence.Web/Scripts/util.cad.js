@@ -51,14 +51,14 @@ function InitMxDrawX() {
 }
 function BrownerMode() {
     var isShow = false;
-    isBrowner = !isBrowner;
-    mxOcx.BrowseMode = isBrowner;
-    mxOcx.ShowMenuBar = !isBrowner;
-    mxOcx.ShowPropertyWindow = !isBrowner;
+    //isBrowner = !isBrowner;
+    //mxOcx.BrowseMode = isBrowner;
+    //mxOcx.ShowMenuBar = !isBrowner;
+    //mxOcx.ShowPropertyWindow = !isBrowner;
     //隐藏工具条
-    mxOcx.ShowToolBar("常用工具", isShow);
+    //mxOcx.ShowToolBar("常用工具", isShow);
     mxOcx.ShowToolBar("绘图工具", isShow);
-    mxOcx.ShowToolBar("编辑工具", isShow);
+    //mxOcx.ShowToolBar("编辑工具", isShow);
     mxOcx.ShowToolBar("特性", isShow);
     mxOcx.ShowToolBar("ET工具", isShow);
     //隐藏菜单栏
@@ -206,7 +206,12 @@ function DrawCircleOfArrow(m_handle) {
 
     mxOcx.DrawColor = 255;
     lastCircleHandle = mxOcx.DrawCircle(pt1.x, pt1.y, 10);
-
+    var l1 = Math.pow((polyline.GetPointAt(0).x - polyline.GetPointAt(1).x), 2);
+    var l2 = Math.pow((polyline.GetPointAt(0).y - polyline.GetPointAt(1).y), 2);
+    var mtempL = Math.sqrt((l1 + l2));
+    var qt = 16 * mtempL;
+    //定位视图位置
+    mxOcx.ZoomWindow(pt1.x - qt, pt1.y - qt, pt1.x + qt, pt1.y + qt);
     //更新视区显示
     mxOcx.UpdateDisplay();
 }
@@ -2898,6 +2903,7 @@ function ChangeWeldColorbyHandle(myWeldArray, myColorID) {
 
 //角焊缝
 function JiaoWeldAdd() {
+    console.log("手动添加焊缝");
     // 创建一个与用户交互取点的对象。
     var getPt = mxOcx.NewComObject("IMxDrawUiPrPoint");
     getPt.message = "输入标注插入基点";
@@ -2932,6 +2938,10 @@ function JiaoWeldAdd() {
     //}
     var ent = ret.AtObject(0);
     var hd = ent.handle;
+    //绘制完成后保存焊缝到数据
+    var weldData = [];    
+    weldData.push({ WeldType: 'ManJiaoH', HandleID: hd });    
+    saveWeldData(weldData);
     return hd;
 }
 // 拖放动态绘制函数。
