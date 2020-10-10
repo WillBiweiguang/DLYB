@@ -7,7 +7,6 @@
     <link rel="stylesheet" href="~/style/EasyUI/easyui.css" />
     <link rel="stylesheet" href="~/style/layout/layout.css" />
     <link rel="stylesheet" href="~/style/webAdmin/style.css" />
-
 }
 <script src="/Scripts/jsviews.min.js"></script>
 <script src="/Scripts/p.list.bind.js"></script>
@@ -43,6 +42,7 @@
         {
             <li role="presentation" class="active"><a href="#partOne" role="tab" data-toggle="tab">用户权限管理</a></li>
             <li role="presentation"><a href="#partTwo" role="tab" data-toggle="tab">用户管理</a></li>
+            @*<li role="presentation"><a href="#partTwo" role="tab" data-toggle="tab">权限管理</a></li>*@
         }
         else if (ViewBag.IsRole)
         {
@@ -334,7 +334,7 @@
                         <input type="hidden"  name="ID" value="0" />
                         <input type="hidden" id="RoleID" name="RoleID" value="" />
                         <div class="form-group">
-                            <label class="col-sm-12 control-label" style="text-align: left">MenuName:</label>
+                            <label class="col-sm-12 control-label" style="text-align: left">权限名称:</label>
                             <div class="col-sm-12">
                                 <input type="hidden" name="Menus" id="Menus" />
                                 <ul id="addtree"></ul>
@@ -406,20 +406,20 @@
                             </div>
                         </div>
 
-                        @*<div class="form-group">
-                            <label class="col-sm-3 control-label">治疗领域:</label>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">所属机构:</label>
                             <div class="col-sm-9">
-                                <select class="form-control" name="sltTA" id="sltTA">
-                                    @if (ViewBag.TAs != null)
+                                <select class="form-control" name="Department" id="sltDe">
+                                    @if (ViewBag.Department != null)
                                     {
-                                        foreach (SelectListItem item in ViewBag.TAs)
+                                        foreach (SelectListItem item in ViewBag.Department)
                                         {
                                             <option value="@(item.Value+"_"+item.Text)">@item.Text</option>
                                         }
                                     }
                                 </select>
                             </div>
-                        </div>*@
+                        </div>
 
                         <div class="form-group">
                             <label class="col-sm-3 control-label">邮箱:</label>
@@ -496,7 +496,7 @@
                       '<td>{{: UserTrueName}}</td>' +
                       '<td>{{: UserId}}</td>' +
                       '<td>{{: Email}}</td>' +
-                      '<td><a href="#" onclick="EditUser(\'{{: Id}}\', \'{{: TAName}}\');return false;" class="artDailog btn btn-info  btn-xs" style="margin-right: 4px;" data-toggle="modal" data-placement="top" title="编辑"><i class="fa fa-pencil"></i></a><a href="#" onclick="DeleteUserBtnClick(\'{{: Id}}\');return false;" class="btn btn-danger btn-xs" data-toggle="modal" data-placement="top" title="删除"><i class="fa fa-trash-o"></i></a></td>' +
+                      '<td><a href="#" onclick="EditUser(\'{{: Id}}\', \'{{: Department}}\');return false;" class="artDailog btn btn-info  btn-xs" style="margin-right: 4px;" data-toggle="modal" data-placement="top" title="编辑"><i class="fa fa-pencil"></i></a><a href="#" onclick="DeleteUserBtnClick(\'{{: Id}}\');return false;" class="btn btn-danger btn-xs" data-toggle="modal" data-placement="top" title="删除"><i class="fa fa-trash-o"></i></a></td>' +
                       '</tr>';
 
         function InitImageList() {
@@ -599,7 +599,7 @@
             $('#UserModalTable input[name=ID]').val(0);
         }
 
-        function EditUser(id, ta) {
+        function EditUser(id, de) {
             $.ajax({
                 url: "/SysUser/Get",
                 data: { Id: id },
@@ -609,7 +609,7 @@
                     $('#UserModalTable input[name=UserName]').val(data.UserName);
                     $('#UserModalTable #UserPWDHash').val(data.PasswordHash);
                     $('#UserModalTable input[name=UserTrueName]').val(data.UserTrueName);
-                    $('#UserModalTable input[name=UserID]').val(data.UserID);
+                    $('#UserModalTable input[name=UserID]').val(data.UserId);
                     $('#UserModalTable input[name=Email]').val(data.Email);
                     $('#UserModalTable input[name=strRoles]').val(data.strRoles);
                     if (data.strRoles!=null) {
@@ -619,9 +619,9 @@
                     }
 
 
-                    //if (ta != null && ta != "") {
-                    //    $("#sltTA").find("option[value=" + ta + "]").attr("selected", true);
-                    //}
+                    if (de != null && de != "") {
+                        $("#sltDe").find("option[value=" + de + "]").attr("selected", true);
+                    }
                     $('#UserModalTable').modal('show');
                 },
             });
@@ -658,14 +658,14 @@
                     }
 
                 });
-
-                if (postData[6].value.length > 0) {
+                //验证是否选择角色
+                if (postData[7].value.length > 0) {
                     $.post("/SysUser/Post", postData, function (result) {
                         InitImageList();
                         $('#UserModalTable').modal('hide');
                     });
                 } else {
-                    alert("请选择Role.");
+                    alert("请选择角色.");
                 }
 
             }

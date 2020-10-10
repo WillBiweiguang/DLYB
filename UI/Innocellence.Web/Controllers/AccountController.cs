@@ -79,7 +79,6 @@ namespace Innocellence.Web.Controllers
             if (ModelState.IsValid)
             {
                 //暂时去掉用户登录
-                //var user = new SysUser { Id = 1, UserName = model.UserName };
                 var user = UserManager.UserLoginAsync(model.UserName, model.Password);
                 model.RememberMe = true;
                 await _authService.SignInNoDB(user, true);

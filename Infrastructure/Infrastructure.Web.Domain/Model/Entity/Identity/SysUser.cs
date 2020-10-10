@@ -147,6 +147,8 @@ namespace Infrastructure.Web.Domain.Entity
             set;
         }
         public String UserId { get; set; }
+
+        public string Department { get; set; }
         /// <summary>
         ///     Constructor
         /// </summary>

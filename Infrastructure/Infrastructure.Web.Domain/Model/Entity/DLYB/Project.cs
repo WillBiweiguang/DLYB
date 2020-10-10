@@ -32,5 +32,6 @@ namespace Infrastructure.Web.Domain.Entity
 
         public bool IsDeleted { get; set; }
 
+        public string DepartmentID { get; set; }
     }
 }
