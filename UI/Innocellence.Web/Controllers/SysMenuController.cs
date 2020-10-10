@@ -36,15 +36,6 @@ namespace DLYB.Web.Controllers
         }
 
 
-        public override ActionResult Index()
-        {
-
-            ViewBag.CateType = Request["CateType"];
-            ViewBag.Apps = CommonService.lstSysWeChatConfig.ToDictionary(x => x.WeixinAppId);
-            return base.Index();
-        }
-
-
         public ActionResult GetListTree()
         {
 
