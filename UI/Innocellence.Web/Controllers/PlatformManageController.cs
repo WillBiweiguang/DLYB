@@ -1,10 +1,14 @@
 ﻿using DLYB.Web.Controllers;
 using Infrastructure.Core.Data;
+using Infrastructure.Web.Domain.Common;
 using Infrastructure.Web.Domain.Contracts;
 using Infrastructure.Web.Domain.Entity;
 using Infrastructure.Web.Domain.ModelsView;
+using Infrastructure.Web.Domain.Service;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -15,6 +19,7 @@ namespace DLYB.Web.Controllers
     {
         ISysRoleService _roleService;
         ISysRoleMenuService ServiceRoleMenu;
+        readonly IList<KeyValuePair<int, string>> Departments;
 
         public PlatformManageController(
             ISysRoleService roleService,
@@ -22,18 +27,14 @@ namespace DLYB.Web.Controllers
         {
             _roleService = roleService;
             ServiceRoleMenu = serviceRoleMenu;
+            var deparments = CommonService.GetSysConfig(Consts.DepartmentConfigKey, Consts.DefaultDepartments);
+            Departments = JsonConvert.DeserializeObject<List<KeyValuePair<int, string>>>(deparments);
         }
 
         // GET: PlateformManage
         public override ActionResult Index()
         {
             var user = Session["UserInfo"] as SysUser;
-            //user 包含System Admin
-            //if (user != null && user.Apps.Contains(-1))
-            //{
-            //    ViewBag.NeedLoadRoels = true;
-            //    ViewBag.Roles = _roleService.Repository.Entities.Where(a => !a.IsDeleted.Value && a.Name != "Super Admin").ToList();
-            //}
             ViewBag.NeedLoadRoels = true;
             ViewBag.Roles = _roleService.Repository.Entities.Where(a => !a.IsDeleted.Value && a.Name != "Super Admin").ToList();
             ViewBag.IsRole = false;
@@ -54,6 +55,7 @@ namespace DLYB.Web.Controllers
                 ViewBag.IsRole = true;
                 ViewBag.IsUser = true;
             }
+            ViewBag.Department = Departments.Select(x => new SelectListItem { Value = x.Key.ToString(), Text = x.Value }).ToList();
             return View();
         }
 

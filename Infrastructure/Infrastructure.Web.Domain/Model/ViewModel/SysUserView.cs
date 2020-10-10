@@ -31,7 +31,7 @@ namespace Infrastructure.Web.Domain.ModelsView
 
         public String strRoles { get; set; }
 
-
+        public string Department { get; set; }
         public IViewModel ConvertAPIModel(object obj)
         {
             var entity = (SysUser)obj;
@@ -43,7 +43,7 @@ namespace Infrastructure.Web.Domain.ModelsView
             UserTrueName = entity.UserTrueName;
             PasswordHash = entity.PasswordHash;
             SecurityStamp = entity.SecurityStamp;
-
+            Department = entity.Department;
             return this;
         }
 	}

@@ -17,6 +17,9 @@ using Infrastructure.Utility.Filter;
 using System.Linq.Expressions;
 using DLYB.Web.Controllers;
 using Infrastructure.Web.Domain.Services;
+using Newtonsoft.Json;
+using Infrastructure.Web.Domain.Common;
+using Infrastructure.Web.Domain.Service;
 
 namespace Innocellence.Web.Controllers
 {
@@ -24,9 +27,12 @@ namespace Innocellence.Web.Controllers
     {
         private readonly IProjectService _projectService;
         private readonly IHistoricalCostService _objHistoricalCostService = new HistoricalCostService();
+        readonly IList<KeyValuePair<int, string>> Departments;
         public ProjectController(IProjectService projectService) : base(projectService)
         {
             _projectService = projectService;
+            var deparments = CommonService.GetSysConfig(Consts.DepartmentConfigKey, Consts.DefaultDepartments);
+            Departments = JsonConvert.DeserializeObject<List<KeyValuePair<int, string>>>(deparments);
         }
         // GET: Address
         public override ActionResult Index()
@@ -41,9 +47,10 @@ namespace Innocellence.Web.Controllers
         }
 
         public override ActionResult GetList()
-        {
+        {            
             GridRequest gridRequest = new GridRequest(Request);
             string strCondition = Request["search_condition"];
+            
             Expression<Func<Project, bool>> expression = FilterHelper.GetExpression<Project>(gridRequest.FilterGroup);
             if (!string.IsNullOrEmpty(strCondition))
             {
@@ -53,8 +60,18 @@ namespace Innocellence.Web.Controllers
             {
                 expression = expression.AndAlso<Project>(x => x.IsDeleted != true);
             }
+            if(!string.IsNullOrEmpty(objLoginInfo.Department))
+            {
+                var departmentId = objLoginInfo.Department.Split('_')[0];
+                expression = expression.AndAlso<Project>(x => x.DepartmentID == departmentId);
+            }
+            
             int rowCount = gridRequest.PageCondition.RowCount;
             List<ProjectView> listEx = GetListEx(expression, gridRequest.PageCondition);
+            listEx.ForEach(x => {
+                x.DepartmentName = Departments.Any(e => e.Key.ToString() == x.DepartmentID)
+                ? Departments.First(e => e.Key.ToString() == x.DepartmentID).Value : "";
+            });
             return this.GetPageResult(listEx, gridRequest);
         }
 

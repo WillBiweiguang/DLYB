@@ -205,7 +205,7 @@ function DrawCircleOfArrow(m_handle) {
     mxOcx.LayerName = "CircleLayer";
 
     mxOcx.DrawColor = 255;
-    lastCircleHandle = mxOcx.DrawCircle(pt1.x, pt1.y, 10);
+    lastCircleHandle = mxOcx.DrawCircle(pt1.x, pt1.y, 5);
     var l1 = Math.pow((polyline.GetPointAt(0).x - polyline.GetPointAt(1).x), 2);
     var l2 = Math.pow((polyline.GetPointAt(0).y - polyline.GetPointAt(1).y), 2);
     var mtempL = Math.sqrt((l1 + l2));
