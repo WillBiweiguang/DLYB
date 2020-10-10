@@ -85,6 +85,11 @@ namespace DLYB.Web.Controllers
         protected override void OnAuthorization(AuthorizationContext filterContext)
         {
             objLoginInfo = Session["UserInfo"] as SysUser;
+            if (filterContext.RequestContext.HttpContext.Request.IsAjaxRequest())
+            {
+                base.OnAuthorization(filterContext);
+                return;
+            }
             if (objLoginInfo != null && !_authorizationService.TryCheckAccess(filterContext, objLoginInfo))
             {
                 //filterContext.Result = Redirect("~/Error/AuthError");

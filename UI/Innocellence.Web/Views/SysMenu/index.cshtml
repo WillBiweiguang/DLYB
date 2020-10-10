@@ -134,11 +134,7 @@
                         <div class="col-sm-9">
                             @*<input type="text" name="AppId" class="form-control" id="AppId" />*@
                             <select id="appId" name="appId" data-bind='value:AppId' class="select2">
-                                <option value="-1">请选择APP</option>
-                                @foreach (var item in (Dictionary<string, SysWechatConfig>)ViewBag.Apps)
-                                {
-                                    <option value="@item.Key">@item.Value.AppName</option>
-                                }
+                                <option value="1">默认</option>                      
                             </select>
                         </div>
                     </div>
