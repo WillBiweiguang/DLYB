@@ -371,6 +371,7 @@
     <Content Include="Content\images\videologo.gif" />
     <Content Include="Content\images\word.gif" />
     <Content Include="Content\images\wordpaste.png" />
+    <Content Include="Content\images\yb\login1.png" />
     <Content Include="Content\img\attachment.jpg" />
     <Content Include="Content\img\avatar.png" />
     <Content Include="Content\img\avatar1.png" />

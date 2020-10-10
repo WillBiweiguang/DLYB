@@ -6,11 +6,13 @@
     .datagrid-mask-msg {
         height: 36px !important;
     }
+
     .chosen-container {
-        width:100%;
-        max-width : 362px;
+        width: 100%;
+        max-width: 362px;
     }
-    .progress{
+
+    .progress {
         width: 100%;
         max-width: 362px;
     }
@@ -21,16 +23,24 @@
         <form class="form-inline" id="SearchForm">
             <input type="hidden" id="project_id" name="project_id" value="@ViewBag.ProjectId" />
             <div>
-                @*<input type="text" name="UploadFile" id="UploadFile" />*@
-                @*<button type="button" id="btnSelect" class="btn btn-info btn-sm" data-toggle="tooltip" data-placement="top" title="选择文件">选择文件</button>*@
-                <a href="#" class="btn btn-info btn-sm" id="btnAdd" data-toggle="tooltip" data-placement="top" title="文件上传">
-                    文件上传
-                </a>
+                <input class="form-control" type="text" id="search_condition" name="search_condition" placeholder="文件名">
+                <a href="#" class="btn btn-sm" id="btnSearch" data-toggle="tooltip" data-placement="top" title="搜索条件"><i class="fa fa-search">搜索</i></a>
+                <div class="form-group pull-right">
+                    @*<a href="" class="btn btn-info btn-info" id="btnProject" data-toggle="tooltip" data-placement="top" title="项目管理">
+                        项目管理
+                    </a>*@
+                    <button id="btnProject" class="btn btn-info btn-info" onclick="ProjectPage()">
+                        项目管理
+                    </button>
+                    <a href="#" class="btn btn-info btn-info" id="btnAdd" data-toggle="tooltip" data-placement="top" title="文件上传">
+                        文件上传
+                    </a>
+                </div>
                 @*<div style="float:right">
-                <button type="button" id="btnDeleteAll" class="btn btn-info btn-sm" data-toggle="tooltip" data-placement="top" title="批量删除">批量删除</button>
-                <button type="button" id="btnFileAnalysis" class="btn btn-info btn-sm" data-toggle="tooltip" data-placement="top" title="归档分析">归档分析</button>
-                <button type="button" id="btnDownloadDWG" class="btn btn-info btn-sm" data-toggle="tooltip" data-placement="top" title="DWG下载">DWG下载</button>
-            </div>*@
+                        <button type="button" id="btnDeleteAll" class="btn btn-info btn-sm" data-toggle="tooltip" data-placement="top" title="批量删除">批量删除</button>
+                        <button type="button" id="btnFileAnalysis" class="btn btn-info btn-sm" data-toggle="tooltip" data-placement="top" title="归档分析">归档分析</button>
+                        <button type="button" id="btnDownloadDWG" class="btn btn-info btn-sm" data-toggle="tooltip" data-placement="top" title="DWG下载">DWG下载</button>
+                    </div>*@
             </div>
         </form>
         <div class="clearfix"></div>
@@ -72,11 +82,11 @@
                         <div class="col-sm-9">
                             @if (string.IsNullOrEmpty(ViewBag.ProjectId))
                             {
-                            <select class="chosen-select form-control" id="ProjectName" name="ProjectId" style="" data-bind="value:ProjectId" validate="{required:true}"></select>
+                                <select class="chosen-select form-control" id="ProjectName" name="ProjectId" style="" data-bind="value:ProjectId" validate="{required:true}"></select>
                             }
                             else
                             {
-                            <span class="form-control" style="max-width: 362px">@ViewBag.ProjectName</span>
+                                <span class="form-control" style="max-width: 362px">@ViewBag.ProjectName</span>
                             }
                         </div>
                     </div>
@@ -84,8 +94,10 @@
                         <label class="col-sm-3 control-label">上传文件:</label>
                         <div class="col-sm-9">
                             @*<input type="file" id="upload-input" multiple="multiple" name="uploadfile" class="form-control" placeholder="请输入"
-        accept="application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-        validate="{required:true}" />*@
+                                accept="application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                                validate="{required:true}" />*@<input type="file" id="upload-input" multiple="multiple" name="uploadfile" class="form-control" placeholder="请输入"
+                                                                      accept="application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                                                                      validate="{required:true}" />
                             <input id="upload-input" class="form-control " multiple="multiple" type="file" name="file" onchange="return uploadFile(this);"
                                    accept="*" />
                             <div class="progress" style="margin-bottom: 0px">
@@ -100,12 +112,15 @@
                 @*<button class="btn btn-sm" data-dismiss="modal">
                         <i class="ace-icon fa fa-times"></i>
                         取消
-                    </button>*@
-
+                    </button>*@<button class="btn btn-sm" data-dismiss="modal">
+                    <i class="ace-icon fa fa-times"></i>
+                </button>
                 @*<button class="btn btn-sm btn-info" data-action="save" id="btnSave">
+                        <i class="ace-icon fa fa-check"></i>
+                        完成
+                    </button>*@<button class="btn btn-sm btn-info" data-action="save" id="btnSave">
                     <i class="ace-icon fa fa-check"></i>
-                    完成
-                </button>*@
+                </button>
             </div>
         </div>
     </div>
@@ -129,9 +144,9 @@
                 "info": false,
                 "aoColumns": [
                     { "mData": 'Id' },
-                    { "mData": 'ProjectName' },      
-                    { "mData": 'BridgeComponent' },      
-                    { "mData": 'DwgFile' },                                  
+                    { "mData": 'ProjectName' },
+                    { "mData": 'BridgeComponent' },
+                    { "mData": 'DwgFile' },
                     //{ "mData": 'TheModel' },
                     { "mData": 'Status' }
                 ],
@@ -143,7 +158,7 @@
                                 '<a href="#" onclick="tasklist(\'' + full.Id + '\');return false;" class="artDailog btn btn-info  btn-xs" style="margin-right:4px;" data-toggle="tooltip" data-placement="top" title="审核列表"><i class="ace-icon glyphicon glyphicon-list"></i></a>';
                             if (full.TaskStatus != tastStatus.pending && full.TaskStatus != tastStatus.approved) {
                                 opstr = opstr + '<a href="#" onclick="weldcategory(\'' + full.Id + '\');return false;" class="artDailog btn btn-info  btn-xs" style="margin-right:4px;" data-toggle="tooltip" data-placement="top" title="焊缝类别标注"><i class="ace-icon glyphicon  glyphicon-credit-card"></i></a>' +
-                                  '<a href="#" onclick="LEAP.Common.MainPop.RowClick(\'' + full.Id + '\',2);return false;" class="btn btn-danger btn-xs" id="btnDelete" data-toggle="tooltip" data-placement="top" title="删除">' +
+                                    '<a href="#" onclick="LEAP.Common.MainPop.RowClick(\'' + full.Id + '\',2);return false;" class="btn btn-danger btn-xs" id="btnDelete" data-toggle="tooltip" data-placement="top" title="删除">' +
                                     '<i class="fa fa-trash-o"></i></a>';
                             }
                             //+ '<a href="#" onclick="weldcognize(\'' + full.DwgFile + '\');return false;" class="artDailog btn btn-info  btn-xs" style="margin-right:4px;" data-toggle="tooltip" data-placement="top" title="焊缝识别">焊缝识别</i></a>';
@@ -160,7 +175,7 @@
             $('.select2').css("width", "362px").select2({ allowClear: true });
             setTimeout(function () {
                 $('.chosen-container').removeAttr('style');
-            }, 3000);            
+            }, 3000);
         });
         function CategoryStat(pid) {
             window.location = '/CategoryStat/index?projectid=' + pid;
@@ -173,6 +188,9 @@
         }
         function tasklist(pid) {
             window.location = '/tasklist/index?projectid=' + pid;
+        }
+        function ProjectPage() {
+            window.location = '/Project/Index?projectid=' + $('#project_id').val();
         }
         $(document).on('click', '#btnSave', function (e) {
             $('.form-horizontal').submit();
@@ -208,7 +226,7 @@
                 var w = Math.min($('.chosen-select').parent().width(), 362);
                 $('.chosen-container').css('width', w)
             }, 1000);
-            
+
             //resize the chosen on window resize
             $(window).on('resize.chosen', function () {
                 var w = Math.min($('.chosen-select').parent().width(), 362);
@@ -234,5 +252,7 @@
                     }
                 });
         }
+        
+           
     </script>
 }

@@ -31,6 +31,8 @@ namespace Innocellence.Web.Controllers
         // GET: Address
         public override ActionResult Index()
         {
+            string projectId = Request["projectId"];
+            ViewBag.ProjectId = projectId;
             var mode = Request["mode"];
             ViewBag.list= _objHistoricalCostService.GetList<HistoricalCostView>(int.MaxValue, x => !x.IsDeleted).ToList();
             ViewBag.Layout = "~/Views/Shared/_Layout.cshtml";
@@ -42,12 +44,22 @@ namespace Innocellence.Web.Controllers
 
         public override ActionResult GetList()
         {
+            string projectId = Request["project_id"];
+            int pid = string.IsNullOrEmpty(projectId) ? 0 : int.Parse(projectId);
             GridRequest gridRequest = new GridRequest(Request);
             string strCondition = Request["search_condition"];
             Expression<Func<Project, bool>> expression = FilterHelper.GetExpression<Project>(gridRequest.FilterGroup);
-            if (!string.IsNullOrEmpty(strCondition))
+            if (!string.IsNullOrEmpty(strCondition)&& pid!=0)
             {
-                expression = expression.AndAlso<Project>(x => x.ProjectName.Contains(strCondition) && x.IsDeleted != true);
+                expression = expression.AndAlso<Project>(x => x.ProjectName.Contains(strCondition) && x.Id == pid && x.IsDeleted != true);
+            }
+            else if(pid != 0 &&string.IsNullOrEmpty(strCondition))
+            {
+                expression = expression.AndAlso<Project>(x => x.IsDeleted != true && x.Id == pid);
+            }
+            else if (!string.IsNullOrEmpty(strCondition))
+            {
+                expression = expression.AndAlso<Project>(x => x.IsDeleted != true && x.ProjectName.Contains(strCondition));
             }
             else
             {
