@@ -55,26 +55,16 @@ namespace Innocellence.Web.Controllers
             string projectId = Request["project_id"];
             int pid = string.IsNullOrEmpty(projectId) ? 0 : int.Parse(projectId);
             Expression<Func<BeamInfo, bool>> expression = FilterHelper.GetExpression<BeamInfo>(gridRequest.FilterGroup);
-            if (!string.IsNullOrEmpty(projectId) && !string.IsNullOrEmpty(strCondition))
+            expression = expression.AndAlso<BeamInfo>(x => x.IsDeleted != true);
+            if (!string.IsNullOrEmpty(projectId))
             {
-                expression = expression.AndAlso<BeamInfo>(x => x.ProjectId == pid && x.IsDeleted != true && x.DwgFile.Contains(strCondition));
+                expression = expression.AndAlso<BeamInfo>(x => x.ProjectId == pid );
             }
-            else if(!string.IsNullOrEmpty(projectId) && string.IsNullOrEmpty(strCondition))
-            {
-                expression = expression.AndAlso<BeamInfo>(x => x.IsDeleted != true && x.ProjectId == pid);
-            }
-            else if (!string.IsNullOrEmpty(strCondition)&& string.IsNullOrEmpty(projectId))
-            {
-                expression = expression.AndAlso<BeamInfo>(x => x.IsDeleted != true && x.DwgFile.Contains(strCondition));
-            }
-            else
-            {
-                expression = expression.AndAlso<BeamInfo>(x => x.IsDeleted != true);
-            }
-            if (!string.IsNullOrEmpty(strCondition))
+           if (!string.IsNullOrEmpty(strCondition))
             {
                 expression = expression.AndAlso<BeamInfo>(x => x.DwgFile.Contains(strCondition));
             }
+          
             int rowCount = gridRequest.PageCondition.RowCount;
             List<BeamInfoView> listEx = GetListEx(expression, gridRequest.PageCondition);
             var projectIDs = listEx.Select(x => x.ProjectId).ToList();

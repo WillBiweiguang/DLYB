@@ -60,22 +60,16 @@ namespace Innocellence.Web.Controllers
             string strCondition = Request["search_condition"];
             
             Expression<Func<Project, bool>> expression = FilterHelper.GetExpression<Project>(gridRequest.FilterGroup);
-            if (!string.IsNullOrEmpty(strCondition)&& pid!=0)
+            expression = expression.AndAlso<Project>(x => x.IsDeleted != true);
+            if (!string.IsNullOrEmpty(strCondition))
             {
-                expression = expression.AndAlso<Project>(x => x.ProjectName.Contains(strCondition) && x.Id == pid && x.IsDeleted != true);
+                expression = expression.AndAlso<Project>(x => x.ProjectName.Contains(strCondition));
             }
-            else if(pid != 0 &&string.IsNullOrEmpty(strCondition))
+            if(pid != 0)
             {
-                expression = expression.AndAlso<Project>(x => x.IsDeleted != true && x.Id == pid);
+                expression = expression.AndAlso<Project>(x =>  x.Id == pid);
             }
-            else if (!string.IsNullOrEmpty(strCondition))
-            {
-                expression = expression.AndAlso<Project>(x => x.IsDeleted != true && x.ProjectName.Contains(strCondition));
-            }
-            else
-            {
-                expression = expression.AndAlso<Project>(x => x.IsDeleted != true);
-            }
+            
             if(!string.IsNullOrEmpty(objLoginInfo.Department))
             {
                 var departmentId = objLoginInfo.Department.Split('_')[0];
