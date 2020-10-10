@@ -1,0 +1,8 @@
+
+"MxDrawMenuBarFile" "MxDraw.dll" (214 211 206) "top" "主菜单" "Y"
+
+"POPMENUS" "对象(&O)"
+
+"定位(&N)"  ""  ""  "local:1.png"  "" "99"
+"复制焊缝(&N)"  ""  ""  "local:1.png"  "" "101"
+"POPMENUE"

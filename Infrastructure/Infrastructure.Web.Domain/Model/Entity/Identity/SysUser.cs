@@ -99,7 +99,7 @@ namespace Infrastructure.Web.Domain.Entity
         public ICollection<SysUserRole> Roles
         {
             get;
-            private set;
+            set;
         }
         /// <summary>
         ///     Navigation property for user claims

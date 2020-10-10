@@ -84,13 +84,14 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="blue bigger">请填写以下内容</h4>
+                <h4 class="blue bigger">请填写统计信息</h4>
             </div>
 
             <div class="modal-body">
                 <form action="Post" id="ff" method="get" class="form-horizontal" datasource="Get">
                     <input type="hidden" id="ID" name="ID" value="0" />
                     <input type="hidden" id="ProjectId" data-bind="value: ProjectId" />
+                    <input type="hidden" id="BeamId" data-bind="value: BeamId" value="@ViewBag.BeamId" />
                     @*<input type="hidden" id="CreatedDate" name="CreatedDate" data-bind="value: CreatedDate" validate="{required:false}" value="1970-01-01"/>
         <input type="hidden" id="CreatedUserID" name="CreatedUserID" data-bind="value: CreatedUserID" validate="{required:false}" value="0" />*@
                     <div class="form-group">
@@ -456,6 +457,7 @@
             });
             $('.redirect-btn').on('click', function () {
                 $('#rightPanel').remove('iframe');
+                $('#rightPanel .widget-title').text($(this).text());
                 var url = $(this).attr('href');
                 var frame = '<iframe id="iframei" src="' + url + '" style="position:absolute; border:none; visibility:inherit; top:38px; left:0px;  height:100%; width:100%; z-index:-1; filter: progid:DXImageTransform.Microsoft.Alpha(style=0,opacity=0);"></iframe>';
                 $('#rightPanel').append(frame);

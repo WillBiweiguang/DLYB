@@ -37,7 +37,9 @@ namespace Infrastructure.Web.Domain.ModelsView
         public int? UpdatedUserID { get; set; }
 
         public bool IsDeleted { get; set; }
-        
+
+        public int BeamId { get; set; }
+
         public IViewModel ConvertAPIModel(object obj) {
             var entity = (WeldCategoryStatistics)obj;
             Id = entity.Id;
@@ -55,6 +57,7 @@ namespace Infrastructure.Web.Domain.ModelsView
             UpdatedDate = entity.UpdatedDate;
             UpdatedUserID = entity.UpdatedUserID;
             IsDeleted = entity.IsDeleted;
+            BeamId = entity.BeamId;
             return this;
         }
 	}

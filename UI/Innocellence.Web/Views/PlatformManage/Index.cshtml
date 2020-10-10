@@ -5,7 +5,7 @@
 
 @section easyui_css{
     <link rel="stylesheet" href="~/style/EasyUI/easyui.css" />
-    <link rel="stylesheet" href="~/style/layout/layout.css" />
+    @*<link rel="stylesheet" href="~/style/layout/layout.css" />*@
     <link rel="stylesheet" href="~/style/webAdmin/style.css" />
 }
 <script src="/Scripts/jsviews.min.js"></script>
@@ -42,7 +42,10 @@
         {
             <li role="presentation" class="active"><a href="#partOne" role="tab" data-toggle="tab">用户权限管理</a></li>
             <li role="presentation"><a href="#partTwo" role="tab" data-toggle="tab">用户管理</a></li>
-            @*<li role="presentation"><a href="#partTwo" role="tab" data-toggle="tab">权限管理</a></li>*@
+            if (ViewBag.IsSuperAdmin)
+            {
+            <li role="presentation"><a href="/SysMenu/Index">权限管理</a></li>
+            }
         }
         else if (ViewBag.IsRole)
         {

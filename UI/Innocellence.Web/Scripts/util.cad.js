@@ -12,9 +12,95 @@ function myclick5() {
 }
 function DoCommandEventFunc(iCmd) {
     if (iCmd == 1) {
-        JiaoWeldAdd();
+        var handleid = JiaoWeldAdd();
     }
+    if (iCmd == 2) {
+        SelectUserSelect();
+    }
+    //右键菜单选中实体，获取handle 用于定位
+    //需要编写testPOPMenu.mnu菜单文件，并在鼠标事件MouseEvent中添加响应函数
+    if (iCmd == 99) {
+        var ss = mxOcx.NewSelectionSet();
+        var filter = mxOcx.NewResbuf();
+        ss.CurrentSelect(filter);
+
+        for (var i = 0; i < ss.Count; i++) {
+            var ent = ss.Item(i);
+            var hd = ent.handle;
+            alert(hd);
+        }
+
+    }
+    if (iCmd == 3) {
+        var sLayerName = "Y_SMJiaoH";
+        HideLayerByName(sLayerName);
+    }
+    if (iCmd == 4) {
+        var sLayerName = "Y_SMJiaoH";
+        ShowLayerByName(sLayerName);
+    }
+    if (iCmd == 100) {
+        var handleid = JiaoWeldAdd();
+    }
+    //复制
+    if (iCmd == 5) {
+        var newEnt = CopyWeld()
+        Move(newEnt)
+    }
+    if (iCmd == 101) {
+        var handleArray = []
+        var ss = mxOcx.NewSelectionSet();
+        //构造一个过滤链表
+        var spFilte = mxOcx.NewResbuf();
+        spFilte.AddStringEx("HATCH", 5020);
+        //用户选择对象  得到用户选取的实体
+        ss.Select2(8, null, null, null, spFilte);
+        if (ss.Count > 1 || ss.Count == 0) {
+            alert("请选择一个焊缝标注的箭头");
+        }
+        var ent = ss.Item(i);
+        var entHandleID = ent.handle;
+        var newEnt
+        newEnt = ent.Copy();
+        var newEntHandleID = newEnt.handle;
+        handleArray[handleArray.length] = newEntHandleID
+
+
+
+        // 创建一个与用户交互取点的对象。
+        var getPt = mxOcx.NewComObject("IMxDrawUiPrPoint");
+        getPt.message = "输入标注插入基点";
+        // 开始取第一个点。
+        if (getPt.go() != 1)
+            return;
+        var pt = mxOcx.NewPoint();
+        if (newEnt.ObjectName == "McDbHatch") {
+            var PolylineArray = newEnt.GetPolylines();
+            var polyline = PolylineArray.AtObject(0);
+            pt = polyline.GetPointAt(0);
+        }
+        else if (newEnt.ObjectName == "McDbPolyline") {
+            pt = newEnt.GetPointAt(0)
+        }
+        newEnt.Move(pt, getPt.value());
+
+
+        var hdar = ["2E7B81", "2E7B82", "2E7B83", "2E7B84"];
+        //此处数组为试验用
+        //真正使用时，根据选中箭头的handle，到数据库中找对应的焊缝数据
+        //取到组成这个焊缝符号所有图元的handle
+        //通过循环将这些图元都复制出来
+        for (var i = 0; i < hdar.length; i++) {
+            var entItem = mxOcx.HandleToObject(hdar[i])
+            newEntItem = entItem.Copy();
+            newEntItem.Move(pt, getPt.value());
+            handleArray[handleArray.length] = newEntItem.handle
+        }
+        //handleArray---为焊缝符号所有图元的handle数组，第一个值为箭头的handle
+    }
+
 }
+
 
 function DoReg() {
     GetWelding();
@@ -152,6 +238,9 @@ function GetWelding() {
         //根据类型修改颜色
         ChangeColorByType(myWeld);
 
+        //根据类型修改图层
+        ChangeWeldLayerbyHandle(myWeld)
+
         //可在此处逐个获取识别到的焊缝符号的信息
 
         //myWeld——为识别到的焊缝符号，myWeld.myWelArrow.myArrowObjectID 保存的是箭头的handle
@@ -184,6 +273,7 @@ function GetWelding() {
     //var strtimesend = myDateEnd.toLocaleTimeString();
     //alert("开始时间：" + strtimestart + ",结束时间：" + strtimesend)
 }
+
 function DrawCircleOfArrow(m_handle) {
     //删掉上一个画圈的handleid
     if (lastCircleHandle > 0) {
@@ -1189,534 +1279,120 @@ function GetIntersectLineArray(myWeldArray, TwoP_PolyLArray, ThreeP_PolyLArray, 
 //---5------
 function FirstDivideWelding(myWeldArray, TwoP_PolyLArray, ThreeP_PolyLArray, FourMP_PolyLArray) {
 
-        var nG = myWeldArray.myWelGH_num;
-        var nW = myWeldArray.myWelWH_num;
-        var nS = myWeldArray.myWelMS_num;
-        var nX = myWeldArray.myWelMX_num;
-        var nM = myWeldArray.myWelMid_num;
-        if (nG == 0 && nW == 0 && nS == 1 && nX == 0 && nM == 1) {
+    var nG = myWeldArray.myWelGH_num;
+    var nW = myWeldArray.myWelWH_num;
+    var nS = myWeldArray.myWelMS_num;
+    var nX = myWeldArray.myWelMX_num;
+    var nM = myWeldArray.myWelMid_num;
+    if (nG == 0 && nW == 0 && nS == 1 && nX == 0 && nM == 1) {
 
-            if (myWeldArray.myWelMSline_1.myPolyPNum == 3 && myWeldArray.myWelMidline_1.myPolyPNum == 3) {
-                if (CheckAngleIn(myWeldArray.myWelMSline_1.myPolyMid, myWeldArray.myWelMSline_1.myPolyStartP, myWeldArray.myWelMSline_1.myPolyEndP, 47, 43)
-                    && CheckAngleIn(myWeldArray.myWelMidline_1.myPolyMid, myWeldArray.myWelMidline_1.myPolyStartP, myWeldArray.myWelMidline_1.myPolyEndP, 47, 43)) {
+        if (myWeldArray.myWelMSline_1.myPolyPNum == 3 && myWeldArray.myWelMidline_1.myPolyPNum == 3) {
+            if (CheckAngleIn(myWeldArray.myWelMSline_1.myPolyMid, myWeldArray.myWelMSline_1.myPolyStartP, myWeldArray.myWelMSline_1.myPolyEndP, 47, 43)
+                && CheckAngleIn(myWeldArray.myWelMidline_1.myPolyMid, myWeldArray.myWelMidline_1.myPolyStartP, myWeldArray.myWelMidline_1.myPolyEndP, 47, 43)) {
 
-                    myWeldArray.myWelType = "Y_SMJiaoH"
-                }
-            }
-
-            if (myWeldArray.myWelMSline_1.myPolyPNum == 2 && myWeldArray.myWelMidline_1.myPolyPNum == 3) {
-                if (CheckLineType(myWeldArray.myWelMSline_1.myPolyStartP, myWeldArray.myWelMSline_1.myPolyEndP) == "X"
-                    && CheckAngleIn(myWeldArray.myWelMidline_1.myPolyMid, myWeldArray.myWelMidline_1.myPolyStartP, myWeldArray.myWelMidline_1.myPolyEndP, 47, 38)) {
-                    myWeldArray.myWelType = "Y_SMJiaoH"
-                }
-            }
-        }
-        else if (nG == 0 && nW == 0 && nS == 0 && nX == 0 && nM == 2) {
-            if (myWeldArray.myWelMidline_1.myPolyPNum == 3 && myWeldArray.myWelMidline_2.myPolyPNum == 3) {
-                if (CheckAngleIn(myWeldArray.myWelMidline_1.myPolyMid, myWeldArray.myWelMidline_1.myPolyStartP, myWeldArray.myWelMidline_1.myPolyEndP, 110, 104)
-                    && CheckAngleIn(myWeldArray.myWelMidline_2.myPolyMid, myWeldArray.myWelMidline_2.myPolyStartP, myWeldArray.myWelMidline_2.myPolyEndP, 110, 104)) {
-                    myWeldArray.myWelType = "Y_SMSCPoKDuiJieH"
-                }
-            }
-            else if (myWeldArray.myWelMidline_1.myPolyPNum == 2 && myWeldArray.myWelMidline_2.myPolyPNum == 3) {
-                if (CheckAngleIn(myWeldArray.myWelMidline_2.myPolyMid, myWeldArray.myWelMidline_2.myPolyStartP, myWeldArray.myWelMidline_2.myPolyEndP, 83, 79)) {
-
-                    myWeldArray.myWelType = "Y_SMDCPoKDuiJieH"
-                }
-                if (CheckAngleIn(myWeldArray.myWelMidline_2.myPolyMid, myWeldArray.myWelMidline_2.myPolyStartP, myWeldArray.myWelMidline_2.myPolyEndP, 92, 88)) {
-                    myWeldArray.myWelType = "Y_SMJiaoH"
-                }
-            }
-            else if (myWeldArray.myWelMidline_1.myPolyPNum == 3 && myWeldArray.myWelMidline_2.myPolyPNum == 2) {
-                if (CheckAngleIn(myWeldArray.myWelMidline_1.myPolyMid, myWeldArray.myWelMidline_1.myPolyStartP, myWeldArray.myWelMidline_1.myPolyEndP, 83, 79)) {
-                    myWeldArray.myWelType = "Y_SMDCPoKDuiJieH"
-                }
-            }
-        }
-        else if (nG == 0 && nW == 1 && nS == 0 && nX == 0 && nM == 2) {
-            if (myWeldArray.myWelWHline_1.myPolyPNum == 3 && myWeldArray.myWelMidline_1.myPolyPNum == 3 && myWeldArray.myWelMidline_2.myPolyPNum == 3) {
-
-                if (CheckAngleIn(myWeldArray.myWelWHline_1.myPolyMid, myWeldArray.myWelWHline_1.myPolyStartP, myWeldArray.myWelWHline_1.myPolyEndP, 92, 88)
-                    && CheckAngleIn(myWeldArray.myWelMidline_1.myPolyMid, myWeldArray.myWelMidline_1.myPolyStartP, myWeldArray.myWelMidline_1.myPolyEndP, 138, 132)
-                    && CheckAngleIn(myWeldArray.myWelMidline_2.myPolyMid, myWeldArray.myWelMidline_2.myPolyStartP, myWeldArray.myWelMidline_2.myPolyEndP, 138, 132)) {
-                    myWeldArray.myWelType = "Y_SMPoKRTH" 
-                }
-            }
-            else if (myWeldArray.myWelWHline_1.myPolyPNum == 3 && myWeldArray.myWelMidline_1.myPolyPNum == 2 && myWeldArray.myWelMidline_2.myPolyPNum == 3) {
-                if (CheckAngleIn(myWeldArray.myWelWHline_1.myPolyMid, myWeldArray.myWelWHline_1.myPolyStartP, myWeldArray.myWelWHline_1.myPolyEndP, 92, 88)
-                   && CheckAngleIn(myWeldArray.myWelMidline_2.myPolyMid, myWeldArray.myWelMidline_2.myPolyStartP, myWeldArray.myWelMidline_2.myPolyEndP, 100, 92)
-                    && IsVertical(myWeldArray.myWelMidline_1.myPolyStartP, myWeldArray.myWelMidline_1.myPolyEndP)) {
-                    myWeldArray.myWelType = "Y_SMPoKRTH" 
-                }
-            }
-            else if (myWeldArray.myWelWHline_1.myPolyPNum == 3 && myWeldArray.myWelMidline_1.myPolyPNum == 3 && myWeldArray.myWelMidline_2.myPolyPNum == 2) {
-                if (CheckAngleIn(myWeldArray.myWelWHline_1.myPolyMid, myWeldArray.myWelWHline_1.myPolyStartP, myWeldArray.myWelWHline_1.myPolyEndP, 92, 88)
-                   && CheckAngleIn(myWeldArray.myWelMidline_1.myPolyMid, myWeldArray.myWelMidline_1.myPolyStartP, myWeldArray.myWelMidline_1.myPolyEndP, 100, 92)
-                    && IsVertical(myWeldArray.myWelMidline_2.myPolyStartP, myWeldArray.myWelMidline_2.myPolyEndP)) {
-                    myWeldArray.myWelType = "Y_SMPoKRTH" 
-                }
-            }
-
-        }
-        else if (nG == 0 && nW == 1 && nS == 1 && nX == 1 && nM == 0) {
-            if (myWeldArray.myWelMSline_1.myPolyPNum == 3 && myWeldArray.myWelMSStorEdorMd_1 == "Mid"
-                && myWeldArray.myWelMXline_1.myPolyPNum == 3 && myWeldArray.myWelMXStorEdorMd_1 == "Mid"
-                && myWeldArray.myWelWHline_1.myPolyPNum == 3) {
-                if (CheckAngleIn(myWeldArray.myWelWHline_1.myPolyMid, myWeldArray.myWelWHline_1.myPolyStartP, myWeldArray.myWelWHline_1.myPolyEndP, 92, 78)
-                    && CheckAngleIn(myWeldArray.myWelMSline_1.myPolyMid, myWeldArray.myWelMSline_1.myPolyStartP, myWeldArray.myWelMSline_1.myPolyEndP, 51, 43)
-                    && CheckAngleIn(myWeldArray.myWelMXline_1.myPolyMid, myWeldArray.myWelMXline_1.myPolyStartP, myWeldArray.myWelMXline_1.myPolyEndP, 51, 43)) {
-                    var dis;
-                    dis = GetDisFromTwoPoint(myWeldArray.myWelGUIP, myWeldArray.myWelWEIP);
-                    var res_PolyLineArr = [];
-                    res_PolyLineArr = GetGraphFromArea(myWeldArray.myWelMSline_1.myPolyStartP.x, myWeldArray.myWelMSline_1.myPolyEndP.x, myWeldArray.myWelMSline_1.myPolyStartP.y, dis, "up", TwoP_PolyLArray, ThreeP_PolyLArray)
-                    if (res_PolyLineArr.length == 2) {
-                        myWeldArray.myWelUP_num = 2;
-                        myWeldArray.myWelUPline_1 = res_PolyLineArr[0];
-                        myWeldArray.myWelUPline_2 = res_PolyLineArr[1];
-                    }
-                    else if (res_PolyLineArr.length == 1) {
-                        myWeldArray.myWelUP_num = 1;
-                        myWeldArray.myWelUPline_1 = res_PolyLineArr[0];
-                    }
-                    var res_XPolyLineArr = [];
-                    res_XPolyLineArr = GetGraphFromArea(myWeldArray.myWelMXline_1.myPolyStartP.x, myWeldArray.myWelMXline_1.myPolyEndP.x, myWeldArray.myWelMXline_1.myPolyStartP.y, dis, "down", TwoP_PolyLArray, ThreeP_PolyLArray)
-                    if (res_XPolyLineArr.length == 2) {
-                        myWeldArray.myWelDOWN_num = 2;
-                        myWeldArray.myWelDOWNline_1 = res_XPolyLineArr[0];
-                        myWeldArray.myWelDOWNline_2 = res_XPolyLineArr[1];
-                    }
-                    else if (res_XPolyLineArr.length == 1) {
-                        myWeldArray.myWelDOWN_num = 1;
-                        myWeldArray.myWelDOWNline_1 = res_XPolyLineArr[0];
-                    }
-                    if (myWeldArray.myWelUP_num == 0 && myWeldArray.myWelDOWN_num == 0) {
-                        myWeldArray.myWelType = "Y_SMPoKRTH" 
-                    }
-                    else if (myWeldArray.myWelUP_num != 0 && myWeldArray.myWelDOWN_num != 0) {
-                        myWeldArray.myWelType = "Y_SMPoKGaiBRTH" 
-                    }
-                }
-            }
-            else if (myWeldArray.myWelMSline_1.myPolyPNum == 2 && myWeldArray.myWelMSStorEdorMd_1 != "Mid"
-                && myWeldArray.myWelMXline_1.myPolyPNum == 2 && myWeldArray.myWelMXStorEdorMd_1 != "Mid"
-                && myWeldArray.myWelWHline_1.myPolyPNum == 3) {
-                if (CheckAngleIn(myWeldArray.myWelWHline_1.myPolyMid, myWeldArray.myWelWHline_1.myPolyStartP, myWeldArray.myWelWHline_1.myPolyEndP, 92, 88)) {
-                    if (IsVertical(myWeldArray.myWelMSline_1.myPolyStartP, myWeldArray.myWelMSline_1.myPolyEndP)
-                        && IsVertical(myWeldArray.myWelMXline_1.myPolyStartP, myWeldArray.myWelMXline_1.myPolyEndP)) {
-                        var mUpChaArr = [];
-                        var mDownChaArr = [];
-                        mUpChaArr = GetInterLineFromVerLine(myWeldArray.myWelMSline_1.myPolyStartP, myWeldArray.myWelMSline_1.myPolyEndP, TwoP_PolyLArray);
-                        mDownChaArr = GetInterLineFromVerLine(myWeldArray.myWelMXline_1.myPolyStartP, myWeldArray.myWelMXline_1.myPolyEndP, TwoP_PolyLArray);
-                        if (mUpChaArr.length == 1 && mDownChaArr.length == 1) {
-                            myWeldArray.myWelMSline_2 = mUpChaArr[0];
-                            myWeldArray.myWelMS_num = 2;
-                            myWeldArray.myWelMXline_2 = mDownChaArr[0];
-                            myWeldArray.myWelMX_num = 2;
-                            var dis;
-                            dis = GetDisFromTwoPoint(myWeldArray.myWelGUIP, myWeldArray.myWelWEIP)
-                            var mtempSP, mtemEP;
-                            if (myWeldArray.myWelMSStorEdorMd_1 == "Start") {
-                                mtempSP = myWeldArray.myWelMSline_1.myPolyEndP;
-                            }
-                            else {
-                                mtempSP = myWeldArray.myWelMSline_1.myPolyStartP;
-                            }
-                            if (myWeldArray.myWelMSline_2.myPolyCHSE == "Start") {
-                                mtemEP = myWeldArray.myWelMSline_2.myPolyEndP;
-                            }
-                            else {
-                                mtemEP = myWeldArray.myWelMSline_2.myPolyStartP;
-                            }
-                            var upGrapLine = [];
-                            upGrapLine = GetGraphFromArea(mtempSP.x, mtemEP.x, mtempSP.y, dis, "up", TwoP_PolyLArray, ThreeP_PolyLArray)
-                            if (upGrapLine.length == 2) {
-                                myWeldArray.myWelUP_num = 2;
-                                myWeldArray.myWelUPline_1 = upGrapLine[0];
-                                myWeldArray.myWelUPline_2 = upGrapLine[1];
-                            }
-                            else if (upGrapLine.length == 1) {
-                                myWeldArray.myWelUP_num = 1;
-                                myWeldArray.myWelUPline_1 = upGrapLine[0];
-                            }
-                            if (myWeldArray.myWelMXStorEdorMd_1 == "Start") {
-                                mtempSP = myWeldArray.myWelMXline_1.myPolyEndP;
-                            }
-                            else {
-                                mtempSP = myWeldArray.myWelMXline_1.myPolyStartP;
-                            }
-                            if (myWeldArray.myWelMXline_2.myPolyCHSE == "Start") {
-                                mtemEP = myWeldArray.myWelMXline_2.myPolyEndP;
-                            }
-                            else {
-                                mtemEP = myWeldArray.myWelMXline_2.myPolyStartP;
-                            }
-                            var DownGrapLine = [];
-                            DownGrapLine = GetGraphFromArea(mtempSP.x, mtemEP.x, mtempSP.y, dis, "down", TwoP_PolyLArray, ThreeP_PolyLArray)
-                            if (DownGrapLine.length == 2) {
-                                myWeldArray.myWelDOWN_num = 2;
-                                myWeldArray.myWelDOWNline_1 = DownGrapLine[0];
-                                myWeldArray.myWelDOWNline_2 = DownGrapLine[1];
-                            }
-                            else if (DownGrapLine.length == 1) {
-                                myWeldArray.myWelDOWN_num = 1;
-                                myWeldArray.myWelDOWNline_1 = DownGrapLine[0];
-                            }
-                            if (myWeldArray.myWelUP_num == 0 && myWeldArray.myWelDOWN_num == 0) {
-                                myWeldArray.myWelType = "Y_SMPoKRTH" 
-                            }
-                            else if (myWeldArray.myWelUP_num != 0 && myWeldArray.myWelDOWN_num != 0) {
-                                myWeldArray.myWelType = "Y_SMPoKGaiBRTH" 
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        else if (nG == 0 && nW == 0 && nS == 1 && nX == 0 && nM == 0) {
-            if (myWeldArray.myWelMSline_1.myPolyPNum == 3) {
-                var dis = GetDisFromTwoPoint(myWeldArray.myWelMSline_1.myPolyStartP, myWeldArray.myWelMSline_1.myPolyMid);
-                var m_XXPlLineArr = [];
-                m_XXPlLineArr = GetXXline(myWeldArray.myWelGUIP, myWeldArray.myWelWEIP, "down", dis, TwoP_PolyLArray)
-                if (m_XXPlLineArr.length >= 3 && m_XXPlLineArr.length <= 10) {
-                    if (m_XXPlLineArr.length == 3) {
-                        myWeldArray.m_XX_num = 3;
-                        myWeldArray.m_XXline_1 = m_XXPlLineArr[0];
-                        myWeldArray.m_XXline_2 = m_XXPlLineArr[1];
-                        myWeldArray.m_XXline_3 = m_XXPlLineArr[2];
-                    }
-                    else if (m_XXPlLineArr.length == 4) {
-                        myWeldArray.m_XX_num = 4;
-                        myWeldArray.m_XXline_1 = m_XXPlLineArr[0];
-                        myWeldArray.m_XXline_2 = m_XXPlLineArr[1];
-                        myWeldArray.m_XXline_3 = m_XXPlLineArr[2];
-                        myWeldArray.m_XXline_4 = m_XXPlLineArr[3];
-                    }
-                    else if (m_XXPlLineArr.length == 5) {
-                        myWeldArray.m_XX_num = 5;
-                        myWeldArray.m_XXline_1 = m_XXPlLineArr[0];
-                        myWeldArray.m_XXline_2 = m_XXPlLineArr[1];
-                        myWeldArray.m_XXline_3 = m_XXPlLineArr[2];
-                        myWeldArray.m_XXline_4 = m_XXPlLineArr[3];
-                        myWeldArray.m_XXline_5 = m_XXPlLineArr[4];
-                    }
-                    else if (m_XXPlLineArr.length == 6) {
-                        myWeldArray.m_XX_num = 6;
-                        myWeldArray.m_XXline_1 = m_XXPlLineArr[0];
-                        myWeldArray.m_XXline_2 = m_XXPlLineArr[1];
-                        myWeldArray.m_XXline_3 = m_XXPlLineArr[2];
-                        myWeldArray.m_XXline_4 = m_XXPlLineArr[3];
-                        myWeldArray.m_XXline_5 = m_XXPlLineArr[4];
-                        myWeldArray.m_XXline_6 = m_XXPlLineArr[5];
-                    }
-                    else if (m_XXPlLineArr.length == 7) {
-                        myWeldArray.m_XX_num = 7;
-                        myWeldArray.m_XXline_1 = m_XXPlLineArr[0];
-                        myWeldArray.m_XXline_2 = m_XXPlLineArr[1];
-                        myWeldArray.m_XXline_3 = m_XXPlLineArr[2];
-                        myWeldArray.m_XXline_4 = m_XXPlLineArr[3];
-                        myWeldArray.m_XXline_5 = m_XXPlLineArr[4];
-                        myWeldArray.m_XXline_6 = m_XXPlLineArr[5];
-                        myWeldArray.m_XXline_7 = m_XXPlLineArr[6];
-                    }
-                    else if (m_XXPlLineArr.length == 8) {
-                        myWeldArray.m_XX_num = 8;
-                        myWeldArray.m_XXline_1 = m_XXPlLineArr[0];
-                        myWeldArray.m_XXline_2 = m_XXPlLineArr[1];
-                        myWeldArray.m_XXline_3 = m_XXPlLineArr[2];
-                        myWeldArray.m_XXline_4 = m_XXPlLineArr[3];
-                        myWeldArray.m_XXline_5 = m_XXPlLineArr[4];
-                        myWeldArray.m_XXline_6 = m_XXPlLineArr[5];
-                        myWeldArray.m_XXline_7 = m_XXPlLineArr[6];
-                        myWeldArray.m_XXline_8 = m_XXPlLineArr[7];
-                    }
-                    else if (m_XXPlLineArr.length == 9) {
-                        myWeldArray.m_XX_num = 9;
-                        myWeldArray.m_XXline_1 = m_XXPlLineArr[0];
-                        myWeldArray.m_XXline_2 = m_XXPlLineArr[1];
-                        myWeldArray.m_XXline_3 = m_XXPlLineArr[2];
-                        myWeldArray.m_XXline_4 = m_XXPlLineArr[3];
-                        myWeldArray.m_XXline_5 = m_XXPlLineArr[4];
-                        myWeldArray.m_XXline_6 = m_XXPlLineArr[5];
-                        myWeldArray.m_XXline_7 = m_XXPlLineArr[6];
-                        myWeldArray.m_XXline_8 = m_XXPlLineArr[7];
-                        myWeldArray.m_XXline_9 = m_XXPlLineArr[8];
-                    }
-                    else if (m_XXPlLineArr.length == 10) {
-                        myWeldArray.m_XX_num = 10;
-                        myWeldArray.m_XXline_1 = m_XXPlLineArr[0];
-                        myWeldArray.m_XXline_2 = m_XXPlLineArr[1];
-                        myWeldArray.m_XXline_3 = m_XXPlLineArr[2];
-                        myWeldArray.m_XXline_4 = m_XXPlLineArr[3];
-                        myWeldArray.m_XXline_5 = m_XXPlLineArr[4];
-                        myWeldArray.m_XXline_6 = m_XXPlLineArr[5];
-                        myWeldArray.m_XXline_7 = m_XXPlLineArr[6];
-                        myWeldArray.m_XXline_8 = m_XXPlLineArr[7];
-                        myWeldArray.m_XXline_9 = m_XXPlLineArr[8];
-                        myWeldArray.m_XXline_10 = m_XXPlLineArr[9];
-                    }
-                    var m_mtlLineArr = [];
-                    m_mtlLineArr = GetMultiPointLineInterXX(myWeldArray.myWelGUIP, myWeldArray.myWelWEIP, myWeldArray.m_XXline_1.myPolyStartP.y, FourMP_PolyLArray)
-                    if (m_mtlLineArr.length == 1) {
-                        if (CheckAngleIn(myWeldArray.myWelMSline_1.myPolyMid, myWeldArray.myWelMSline_1.myPolyStartP, myWeldArray.myWelMSline_1.myPolyEndP, 47, 43)) {
-                            myWeldArray.myWelDOWN_num = 1;
-                            myWeldArray.myWelDOWNline_1 = m_mtlLineArr[0];
-                            myWeldArray.myWelType = "Y_DMDCPoKDuiJieH"
-                        }
-                        else if (CheckAngleIn(myWeldArray.myWelMSline_1.myPolyMid, myWeldArray.myWelMSline_1.myPolyStartP, myWeldArray.myWelMSline_1.myPolyEndP, 62, 58)) {
-                            myWeldArray.myWelDOWN_num = 1;
-                            myWeldArray.myWelDOWNline_1 = m_mtlLineArr[0];
-                            myWeldArray.myWelType = "Y_DMSCPoKDuiJieH"
-                        }
-                    }
-                    else if (m_mtlLineArr.length == 0) {
-                        if (CheckAngleIn(myWeldArray.myWelMSline_1.myPolyMid, myWeldArray.myWelMSline_1.myPolyStartP, myWeldArray.myWelMSline_1.myPolyEndP, 47, 43)) {
-                            if (myWeldArray.myWelMSStorEdorMd_1 == "Mid") {
-                                myWeldArray.myWelType = "Y_DMDCPoKJiaoH"
-                            }
-                            else {
-                                myWeldArray.myWelType = "Y_DMJiaoH"
-                            }
-                        }
-                    }
-                }
-            }
-            else if (myWeldArray.myWelMSline_1.myPolyPNum == 2) {
-                var mUpChaArr = [];
-                mUpChaArr = GetInterLineFromVerLine(myWeldArray.myWelMSline_1.myPolyStartP, myWeldArray.myWelMSline_1.myPolyEndP, TwoP_PolyLArray);
-                if (mUpChaArr.length == 1) {
-                    myWeldArray.myWelMSline_2 = mUpChaArr[0];
-                    myWeldArray.myWelMS_num = 2;
-
-                    var dis = GetDisFromTwoPoint(myWeldArray.myWelMSline_1.myPolyStartP, myWeldArray.myWelMSline_1.myPolyEndP);
-                    var m_XXPlLineArr = [];
-                    m_XXPlLineArr = GetXXline(myWeldArray.myWelGUIP, myWeldArray.myWelWEIP, "down", dis, TwoP_PolyLArray)
-                    if (m_XXPlLineArr.length >= 3 && m_XXPlLineArr.length <= 10) {
-                        if (m_XXPlLineArr.length == 3) {
-                            myWeldArray.m_XX_num = 3;
-                            myWeldArray.m_XXline_1 = m_XXPlLineArr[0];
-                            myWeldArray.m_XXline_2 = m_XXPlLineArr[1];
-                            myWeldArray.m_XXline_3 = m_XXPlLineArr[2];
-                        }
-                        else if (m_XXPlLineArr.length == 4) {
-                            myWeldArray.m_XX_num = 4;
-                            myWeldArray.m_XXline_1 = m_XXPlLineArr[0];
-                            myWeldArray.m_XXline_2 = m_XXPlLineArr[1];
-                            myWeldArray.m_XXline_3 = m_XXPlLineArr[2];
-                            myWeldArray.m_XXline_4 = m_XXPlLineArr[3];
-                        }
-                        else if (m_XXPlLineArr.length == 5) {
-                            myWeldArray.m_XX_num = 5;
-                            myWeldArray.m_XXline_1 = m_XXPlLineArr[0];
-                            myWeldArray.m_XXline_2 = m_XXPlLineArr[1];
-                            myWeldArray.m_XXline_3 = m_XXPlLineArr[2];
-                            myWeldArray.m_XXline_4 = m_XXPlLineArr[3];
-                            myWeldArray.m_XXline_5 = m_XXPlLineArr[4];
-                        }
-                        else if (m_XXPlLineArr.length == 6) {
-                            myWeldArray.m_XX_num = 6;
-                            myWeldArray.m_XXline_1 = m_XXPlLineArr[0];
-                            myWeldArray.m_XXline_2 = m_XXPlLineArr[1];
-                            myWeldArray.m_XXline_3 = m_XXPlLineArr[2];
-                            myWeldArray.m_XXline_4 = m_XXPlLineArr[3];
-                            myWeldArray.m_XXline_5 = m_XXPlLineArr[4];
-                            myWeldArray.m_XXline_6 = m_XXPlLineArr[5];
-                        }
-                        else if (m_XXPlLineArr.length == 7) {
-                            myWeldArray.m_XX_num = 7;
-                            myWeldArray.m_XXline_1 = m_XXPlLineArr[0];
-                            myWeldArray.m_XXline_2 = m_XXPlLineArr[1];
-                            myWeldArray.m_XXline_3 = m_XXPlLineArr[2];
-                            myWeldArray.m_XXline_4 = m_XXPlLineArr[3];
-                            myWeldArray.m_XXline_5 = m_XXPlLineArr[4];
-                            myWeldArray.m_XXline_6 = m_XXPlLineArr[5];
-                            myWeldArray.m_XXline_7 = m_XXPlLineArr[6];
-                        }
-                        else if (m_XXPlLineArr.length == 8) {
-                            myWeldArray.m_XX_num = 8;
-                            myWeldArray.m_XXline_1 = m_XXPlLineArr[0];
-                            myWeldArray.m_XXline_2 = m_XXPlLineArr[1];
-                            myWeldArray.m_XXline_3 = m_XXPlLineArr[2];
-                            myWeldArray.m_XXline_4 = m_XXPlLineArr[3];
-                            myWeldArray.m_XXline_5 = m_XXPlLineArr[4];
-                            myWeldArray.m_XXline_6 = m_XXPlLineArr[5];
-                            myWeldArray.m_XXline_7 = m_XXPlLineArr[6];
-                            myWeldArray.m_XXline_8 = m_XXPlLineArr[7];
-                        }
-                        else if (m_XXPlLineArr.length == 9) {
-                            myWeldArray.m_XX_num = 9;
-                            myWeldArray.m_XXline_1 = m_XXPlLineArr[0];
-                            myWeldArray.m_XXline_2 = m_XXPlLineArr[1];
-                            myWeldArray.m_XXline_3 = m_XXPlLineArr[2];
-                            myWeldArray.m_XXline_4 = m_XXPlLineArr[3];
-                            myWeldArray.m_XXline_5 = m_XXPlLineArr[4];
-                            myWeldArray.m_XXline_6 = m_XXPlLineArr[5];
-                            myWeldArray.m_XXline_7 = m_XXPlLineArr[6];
-                            myWeldArray.m_XXline_8 = m_XXPlLineArr[7];
-                            myWeldArray.m_XXline_9 = m_XXPlLineArr[8];
-                        }
-                        else if (m_XXPlLineArr.length == 10) {
-                            myWeldArray.m_XX_num = 10;
-                            myWeldArray.m_XXline_1 = m_XXPlLineArr[0];
-                            myWeldArray.m_XXline_2 = m_XXPlLineArr[1];
-                            myWeldArray.m_XXline_3 = m_XXPlLineArr[2];
-                            myWeldArray.m_XXline_4 = m_XXPlLineArr[3];
-                            myWeldArray.m_XXline_5 = m_XXPlLineArr[4];
-                            myWeldArray.m_XXline_6 = m_XXPlLineArr[5];
-                            myWeldArray.m_XXline_7 = m_XXPlLineArr[6];
-                            myWeldArray.m_XXline_8 = m_XXPlLineArr[7];
-                            myWeldArray.m_XXline_9 = m_XXPlLineArr[8];
-                            myWeldArray.m_XXline_10 = m_XXPlLineArr[9];
-                        }
-
-
-                        dis = GetDisFromTwoPoint(myWeldArray.myWelGUIP, myWeldArray.myWelWEIP);
-                        var mtempSP, mtemEP;
-                        if (myWeldArray.myWelMSStorEdorMd_1 == "Start") {
-                            mtempSP = myWeldArray.myWelMSline_1.myPolyEndP;
-                        }
-                        else {
-                            mtempSP = myWeldArray.myWelMSline_1.myPolyStartP;
-                        }
-                        if (myWeldArray.myWelMSline_2.myPolyCHSE == "Start") {
-                            mtemEP = myWeldArray.myWelMSline_2.myPolyEndP;
-                        }
-                        else {
-                            mtemEP = myWeldArray.myWelMSline_2.myPolyStartP;
-                        }
-                        var upGrapLine = [];
-                        upGrapLine = GetGraphFromArea(mtempSP.x, mtemEP.x, mtempSP.y, dis, "up", TwoP_PolyLArray, ThreeP_PolyLArray)
-                        if (upGrapLine.length == 2) {
-                            myWeldArray.myWelUP_num = 2;
-                            myWeldArray.myWelUPline_1 = upGrapLine[0];
-                            myWeldArray.myWelUPline_2 = upGrapLine[1];
-                        }
-                        else if (upGrapLine.length == 1) {
-                            myWeldArray.myWelUP_num = 1;
-                            myWeldArray.myWelUPline_1 = upGrapLine[0];
-                        }
-                        var m_mtlLineArr = [];
-                        m_mtlLineArr = GetMultiPointLineInterXX(myWeldArray.myWelGUIP, myWeldArray.myWelWEIP, myWeldArray.m_XXline_1.myPolyStartP.y, FourMP_PolyLArray)
-                        if (m_mtlLineArr.length == 1) {
-                            myWeldArray.myWelDOWN_num = 1;
-                            myWeldArray.myWelDOWNline_1 = m_mtlLineArr[0];
-                        }
-                        else if (m_mtlLineArr.length == 0) {
-                            var mTTwoLineArr = [];
-                            mTTwoLineArr = GetTwoPointLineInterXX(myWeldArray.myWelGUIP, myWeldArray.myWelWEIP, myWeldArray.m_XXline_1.myPolyStartP.y, TwoP_PolyLArray)
-                            if (mTTwoLineArr.length == 1) {
-                                myWeldArray.myWelMX_num = 1;
-                                myWeldArray.myWelMXline_1 = mTTwoLineArr[0];
-                                var mTDownChaArr = [];
-                                mTDownChaArr = GetInterLineFromVerLine(myWeldArray.myWelMXline_1.myPolyStartP, myWeldArray.myWelMXline_1.myPolyEndP, TwoP_PolyLArray)
-                                if (mTDownChaArr.length == 1) {
-                                    myWeldArray.myWelMXline_2 = mTDownChaArr[0];
-                                    myWeldArray.myWelMX_num = 2;
-                                }
-                                var mtempSP, mtemEP;
-                                if (myWeldArray.myWelMXStorEdorMd_1 == "Start") {
-                                    mtempSP = myWeldArray.myWelMXline_1.myPolyEndP;
-                                }
-                                else {
-                                    mtempSP = myWeldArray.myWelMXline_1.myPolyStartP;
-                                }
-                                if (myWeldArray.myWelMXline_2.myPolyCHSE == "Start") {
-                                    mtemEP = myWeldArray.myWelMXline_2.myPolyEndP;
-                                }
-                                else {
-                                    mtemEP = myWeldArray.myWelMXline_2.myPolyStartP;
-                                }
-                                var mtDLineArr = [];
-                                mtDLineArr = GetGraphFromArea(mtempSP.x, mtemEP.x, mtempSP.y, dis, "down", TwoP_PolyLArray, ThreeP_PolyLArray)
-                                if (mtDLineArr.length == 2) {
-                                    myWeldArray.myWelDOWN_num = 2;
-                                    myWeldArray.myWelDOWNline_1 = mtDLineArr[0];
-                                    myWeldArray.myWelDOWNline_2 = mtDLineArr[1];
-                                }
-                                else if (mtDLineArr.length == 1) {
-                                    myWeldArray.myWelDOWN_num = 1;
-                                    myWeldArray.myWelDOWNline_1 = mtDLineArr[0];
-                                }
-                            }
-                        }
-                        if (myWeldArray.myWelUP_num == 0 && myWeldArray.myWelDOWN_num == 1 && myWeldArray.myWelMX_num == 0) {
-                            myWeldArray.myWelType = "Y_DMDCPoKDuiJieH"
-                        }
-                        else if (myWeldArray.myWelUP_num != 0 && myWeldArray.myWelDOWN_num == 0 && myWeldArray.myWelMX_num == 0) {
-                            myWeldArray.myWelType = "Y_DMPoKGaiBJiaoH" 
-                        }
-                        else if (myWeldArray.myWelUP_num == 0 && myWeldArray.myWelDOWN_num == 0 && myWeldArray.myWelMX_num == 0) {
-                            myWeldArray.myWelType = "Y_DMDCPoKJiaoH"
-                        }
-                        else if (myWeldArray.myWelUP_num == 0 && myWeldArray.myWelDOWN_num == 0 && myWeldArray.myWelMX_num != 0) {
-                            myWeldArray.myWelType = "Y_SMPoKBeiPJiaoH"
-                        }
-                    }
-                }
-            }
-        }
-        else if (nG == 0 && nW == 0 && nS == 0 && nX == 0 && nM == 1) {
-            if (myWeldArray.myWelMidline_1.myPolyPNum == 6) {
-                var templine = FindLineFromArray(myWeldArray.myWelMidline_1.myPolyLineObjectID, FourMP_PolyLArray)
-                if (CheckAngleIn(templine.GetPointAt(2), templine.GetPointAt(1), templine.GetPointAt(4), 92, 88)) {
-                    myWeldArray.myWelType = "Y_SMJiaoH"
-                }
-            }
-            else if (myWeldArray.myWelMidline_1.myPolyPNum == 3 && myWeldArray.myWelMidline_1.myPolyCHSE != "Mid") {
-                if (CheckAngleIn(myWeldArray.myWelMidline_1.myPolyStartP, myWeldArray.myWelMidline_1.myPolyMid, myWeldArray.myWelMidline_1.myPolyEndP, 92, 88)
-                    || CheckAngleIn(myWeldArray.myWelMidline_1.myPolyEndP, myWeldArray.myWelMidline_1.myPolyStartP, myWeldArray.myWelMidline_1.myPolyMid, 92, 88)) {
-                    myWeldArray.myWelType = "Y_SMJiaoH"
-                }
+                myWeldArray.myWelType = "Y_SMJiaoH"
             }
         }
 
-        else if (nG == 0 && nW == 0 && nS == 1 && nX == 1 && nM == 0) {
-            if (myWeldArray.myWelMSline_1.myPolyPNum == 3 && myWeldArray.myWelMSStorEdorMd_1 != "Mid"
-                && myWeldArray.myWelMXline_1.myPolyPNum == 3 && myWeldArray.myWelMXStorEdorMd_1 != "Mid") {
-                if (CheckAngleIn(myWeldArray.myWelMSline_1.myPolyMid, myWeldArray.myWelMSline_1.myPolyStartP, myWeldArray.myWelMSline_1.myPolyEndP, 48, 43)
-                    && CheckAngleIn(myWeldArray.myWelMXline_1.myPolyMid, myWeldArray.myWelMXline_1.myPolyStartP, myWeldArray.myWelMXline_1.myPolyEndP, 48, 43)) {
-                    myWeldArray.myWelType = "Y_SMJiaoH"
+        if (myWeldArray.myWelMSline_1.myPolyPNum == 2 && myWeldArray.myWelMidline_1.myPolyPNum == 3) {
+            if (CheckLineType(myWeldArray.myWelMSline_1.myPolyStartP, myWeldArray.myWelMSline_1.myPolyEndP) == "X"
+                && CheckAngleIn(myWeldArray.myWelMidline_1.myPolyMid, myWeldArray.myWelMidline_1.myPolyStartP, myWeldArray.myWelMidline_1.myPolyEndP, 47, 38)) {
+                myWeldArray.myWelType = "Y_SMJiaoH"
+            }
+        }
+    }
+    else if (nG == 0 && nW == 0 && nS == 0 && nX == 0 && nM == 2) {
+        if (myWeldArray.myWelMidline_1.myPolyPNum == 3 && myWeldArray.myWelMidline_2.myPolyPNum == 3) {
+            if (CheckAngleIn(myWeldArray.myWelMidline_1.myPolyMid, myWeldArray.myWelMidline_1.myPolyStartP, myWeldArray.myWelMidline_1.myPolyEndP, 110, 104)
+                && CheckAngleIn(myWeldArray.myWelMidline_2.myPolyMid, myWeldArray.myWelMidline_2.myPolyStartP, myWeldArray.myWelMidline_2.myPolyEndP, 110, 104)) {
+                myWeldArray.myWelType = "Y_SMSCPoKDuiJieH"
+            }
+        }
+        else if (myWeldArray.myWelMidline_1.myPolyPNum == 2 && myWeldArray.myWelMidline_2.myPolyPNum == 3) {
+            if (CheckAngleIn(myWeldArray.myWelMidline_2.myPolyMid, myWeldArray.myWelMidline_2.myPolyStartP, myWeldArray.myWelMidline_2.myPolyEndP, 83, 79)) {
+
+                myWeldArray.myWelType = "Y_SMDCPoKDuiJieH"
+            }
+            if (CheckAngleIn(myWeldArray.myWelMidline_2.myPolyMid, myWeldArray.myWelMidline_2.myPolyStartP, myWeldArray.myWelMidline_2.myPolyEndP, 92, 88)) {
+                myWeldArray.myWelType = "Y_SMJiaoH"
+            }
+        }
+        else if (myWeldArray.myWelMidline_1.myPolyPNum == 3 && myWeldArray.myWelMidline_2.myPolyPNum == 2) {
+            if (CheckAngleIn(myWeldArray.myWelMidline_1.myPolyMid, myWeldArray.myWelMidline_1.myPolyStartP, myWeldArray.myWelMidline_1.myPolyEndP, 83, 79)) {
+                myWeldArray.myWelType = "Y_SMDCPoKDuiJieH"
+            }
+        }
+    }
+    else if (nG == 0 && nW == 1 && nS == 0 && nX == 0 && nM == 2) {
+        if (myWeldArray.myWelWHline_1.myPolyPNum == 3 && myWeldArray.myWelMidline_1.myPolyPNum == 3 && myWeldArray.myWelMidline_2.myPolyPNum == 3) {
+
+            if (CheckAngleIn(myWeldArray.myWelWHline_1.myPolyMid, myWeldArray.myWelWHline_1.myPolyStartP, myWeldArray.myWelWHline_1.myPolyEndP, 92, 88)
+                && CheckAngleIn(myWeldArray.myWelMidline_1.myPolyMid, myWeldArray.myWelMidline_1.myPolyStartP, myWeldArray.myWelMidline_1.myPolyEndP, 138, 132)
+                && CheckAngleIn(myWeldArray.myWelMidline_2.myPolyMid, myWeldArray.myWelMidline_2.myPolyStartP, myWeldArray.myWelMidline_2.myPolyEndP, 138, 132)) {
+                myWeldArray.myWelType = "Y_SMPoKRTH"
+            }
+        }
+        else if (myWeldArray.myWelWHline_1.myPolyPNum == 3 && myWeldArray.myWelMidline_1.myPolyPNum == 2 && myWeldArray.myWelMidline_2.myPolyPNum == 3) {
+            if (CheckAngleIn(myWeldArray.myWelWHline_1.myPolyMid, myWeldArray.myWelWHline_1.myPolyStartP, myWeldArray.myWelWHline_1.myPolyEndP, 92, 88)
+                && CheckAngleIn(myWeldArray.myWelMidline_2.myPolyMid, myWeldArray.myWelMidline_2.myPolyStartP, myWeldArray.myWelMidline_2.myPolyEndP, 100, 92)
+                && IsVertical(myWeldArray.myWelMidline_1.myPolyStartP, myWeldArray.myWelMidline_1.myPolyEndP)) {
+                myWeldArray.myWelType = "Y_SMPoKRTH"
+            }
+        }
+        else if (myWeldArray.myWelWHline_1.myPolyPNum == 3 && myWeldArray.myWelMidline_1.myPolyPNum == 3 && myWeldArray.myWelMidline_2.myPolyPNum == 2) {
+            if (CheckAngleIn(myWeldArray.myWelWHline_1.myPolyMid, myWeldArray.myWelWHline_1.myPolyStartP, myWeldArray.myWelWHline_1.myPolyEndP, 92, 88)
+                && CheckAngleIn(myWeldArray.myWelMidline_1.myPolyMid, myWeldArray.myWelMidline_1.myPolyStartP, myWeldArray.myWelMidline_1.myPolyEndP, 100, 92)
+                && IsVertical(myWeldArray.myWelMidline_2.myPolyStartP, myWeldArray.myWelMidline_2.myPolyEndP)) {
+                myWeldArray.myWelType = "Y_SMPoKRTH"
+            }
+        }
+
+    }
+    else if (nG == 0 && nW == 1 && nS == 1 && nX == 1 && nM == 0) {
+        if (myWeldArray.myWelMSline_1.myPolyPNum == 3 && myWeldArray.myWelMSStorEdorMd_1 == "Mid"
+            && myWeldArray.myWelMXline_1.myPolyPNum == 3 && myWeldArray.myWelMXStorEdorMd_1 == "Mid"
+            && myWeldArray.myWelWHline_1.myPolyPNum == 3) {
+            if (CheckAngleIn(myWeldArray.myWelWHline_1.myPolyMid, myWeldArray.myWelWHline_1.myPolyStartP, myWeldArray.myWelWHline_1.myPolyEndP, 92, 78)
+                && CheckAngleIn(myWeldArray.myWelMSline_1.myPolyMid, myWeldArray.myWelMSline_1.myPolyStartP, myWeldArray.myWelMSline_1.myPolyEndP, 51, 43)
+                && CheckAngleIn(myWeldArray.myWelMXline_1.myPolyMid, myWeldArray.myWelMXline_1.myPolyStartP, myWeldArray.myWelMXline_1.myPolyEndP, 51, 43)) {
+                var dis;
+                dis = GetDisFromTwoPoint(myWeldArray.myWelGUIP, myWeldArray.myWelWEIP);
+                var res_PolyLineArr = [];
+                res_PolyLineArr = GetGraphFromArea(myWeldArray.myWelMSline_1.myPolyStartP.x, myWeldArray.myWelMSline_1.myPolyEndP.x, myWeldArray.myWelMSline_1.myPolyStartP.y, dis, "up", TwoP_PolyLArray, ThreeP_PolyLArray)
+                if (res_PolyLineArr.length == 2) {
+                    myWeldArray.myWelUP_num = 2;
+                    myWeldArray.myWelUPline_1 = res_PolyLineArr[0];
+                    myWeldArray.myWelUPline_2 = res_PolyLineArr[1];
+                }
+                else if (res_PolyLineArr.length == 1) {
+                    myWeldArray.myWelUP_num = 1;
+                    myWeldArray.myWelUPline_1 = res_PolyLineArr[0];
+                }
+                var res_XPolyLineArr = [];
+                res_XPolyLineArr = GetGraphFromArea(myWeldArray.myWelMXline_1.myPolyStartP.x, myWeldArray.myWelMXline_1.myPolyEndP.x, myWeldArray.myWelMXline_1.myPolyStartP.y, dis, "down", TwoP_PolyLArray, ThreeP_PolyLArray)
+                if (res_XPolyLineArr.length == 2) {
+                    myWeldArray.myWelDOWN_num = 2;
+                    myWeldArray.myWelDOWNline_1 = res_XPolyLineArr[0];
+                    myWeldArray.myWelDOWNline_2 = res_XPolyLineArr[1];
+                }
+                else if (res_XPolyLineArr.length == 1) {
+                    myWeldArray.myWelDOWN_num = 1;
+                    myWeldArray.myWelDOWNline_1 = res_XPolyLineArr[0];
+                }
+                if (myWeldArray.myWelUP_num == 0 && myWeldArray.myWelDOWN_num == 0) {
+                    myWeldArray.myWelType = "Y_SMPoKRTH"
+                }
+                else if (myWeldArray.myWelUP_num != 0 && myWeldArray.myWelDOWN_num != 0) {
+                    myWeldArray.myWelType = "Y_SMPoKGaiBRTH"
                 }
             }
-            else if (myWeldArray.myWelMSline_1.myPolyPNum == 3 && myWeldArray.myWelMSStorEdorMd_1 == "Mid"
-                && myWeldArray.myWelMXline_1.myPolyPNum == 3 && myWeldArray.myWelMXStorEdorMd_1 == "Mid") {
-                if (CheckAngleIn(myWeldArray.myWelMSline_1.myPolyMid, myWeldArray.myWelMSline_1.myPolyStartP, myWeldArray.myWelMSline_1.myPolyEndP, 51, 43)
-                    && CheckAngleIn(myWeldArray.myWelMXline_1.myPolyMid, myWeldArray.myWelMXline_1.myPolyStartP, myWeldArray.myWelMXline_1.myPolyEndP, 51, 43)) {
-                    var dis;
-                    dis = GetDisFromTwoPoint(myWeldArray.myWelGUIP, myWeldArray.myWelWEIP);
-                    var res_PolyLineArr = [];
-                    res_PolyLineArr = GetGraphFromArea(myWeldArray.myWelMSline_1.myPolyStartP.x, myWeldArray.myWelMSline_1.myPolyEndP.x, myWeldArray.myWelMSline_1.myPolyStartP.y, dis, "up", TwoP_PolyLArray, ThreeP_PolyLArray)
-                    if (res_PolyLineArr.length == 2) {
-                        myWeldArray.myWelUP_num = 2;
-                        myWeldArray.myWelUPline_1 = res_PolyLineArr[0];
-                        myWeldArray.myWelUPline_2 = res_PolyLineArr[1];
-                    }
-                    else if (res_PolyLineArr.length == 1) {
-                        myWeldArray.myWelUP_num = 1;
-                        myWeldArray.myWelUPline_1 = res_PolyLineArr[0];
-                    }
-                    var res_XPolyLineArr = [];
-                    res_XPolyLineArr = GetGraphFromArea(myWeldArray.myWelMXline_1.myPolyStartP.x, myWeldArray.myWelMXline_1.myPolyEndP.x, myWeldArray.myWelMXline_1.myPolyStartP.y, dis, "down", TwoP_PolyLArray, ThreeP_PolyLArray)
-                    if (res_XPolyLineArr.length == 2) {
-                        myWeldArray.myWelDOWN_num = 2;
-                        myWeldArray.myWelDOWNline_1 = res_XPolyLineArr[0];
-                        myWeldArray.myWelDOWNline_2 = res_XPolyLineArr[1];
-                    }
-                    else if (res_XPolyLineArr.length == 1) {
-                        myWeldArray.myWelDOWN_num = 1;
-                        myWeldArray.myWelDOWNline_1 = res_XPolyLineArr[0];
-                    }
-                    if (myWeldArray.myWelUP_num == 0 && myWeldArray.myWelDOWN_num == 0) {
-                        myWeldArray.myWelType = "Y_SMDCPoKDuiJieH"
-                    }
-                }
-                else if (CheckAngleIn(myWeldArray.myWelMSline_1.myPolyMid, myWeldArray.myWelMSline_1.myPolyStartP, myWeldArray.myWelMSline_1.myPolyEndP, 62, 58)
-                    && CheckAngleIn(myWeldArray.myWelMXline_1.myPolyMid, myWeldArray.myWelMXline_1.myPolyStartP, myWeldArray.myWelMXline_1.myPolyEndP, 62, 58)) {
-                    myWeldArray.myWelType = "Y_SMSCPoKDuiJieH"
-                }
-            }
-            else if (myWeldArray.myWelMSline_1.myPolyPNum == 2 && myWeldArray.myWelMXline_1.myPolyPNum == 2) {
+        }
+        else if (myWeldArray.myWelMSline_1.myPolyPNum == 2 && myWeldArray.myWelMSStorEdorMd_1 != "Mid"
+            && myWeldArray.myWelMXline_1.myPolyPNum == 2 && myWeldArray.myWelMXStorEdorMd_1 != "Mid"
+            && myWeldArray.myWelWHline_1.myPolyPNum == 3) {
+            if (CheckAngleIn(myWeldArray.myWelWHline_1.myPolyMid, myWeldArray.myWelWHline_1.myPolyStartP, myWeldArray.myWelWHline_1.myPolyEndP, 92, 88)) {
                 if (IsVertical(myWeldArray.myWelMSline_1.myPolyStartP, myWeldArray.myWelMSline_1.myPolyEndP)
-					&& IsVertical(myWeldArray.myWelMXline_1.myPolyStartP, myWeldArray.myWelMXline_1.myPolyEndP)) {
+                    && IsVertical(myWeldArray.myWelMXline_1.myPolyStartP, myWeldArray.myWelMXline_1.myPolyEndP)) {
                     var mUpChaArr = [];
                     var mDownChaArr = [];
                     mUpChaArr = GetInterLineFromVerLine(myWeldArray.myWelMSline_1.myPolyStartP, myWeldArray.myWelMSline_1.myPolyEndP, TwoP_PolyLArray);
@@ -1726,7 +1402,6 @@ function FirstDivideWelding(myWeldArray, TwoP_PolyLArray, ThreeP_PolyLArray, Fou
                         myWeldArray.myWelMS_num = 2;
                         myWeldArray.myWelMXline_2 = mDownChaArr[0];
                         myWeldArray.myWelMX_num = 2;
-
                         var dis;
                         dis = GetDisFromTwoPoint(myWeldArray.myWelGUIP, myWeldArray.myWelWEIP)
                         var mtempSP, mtemEP;
@@ -1777,237 +1452,649 @@ function FirstDivideWelding(myWeldArray, TwoP_PolyLArray, ThreeP_PolyLArray, Fou
                             myWeldArray.myWelDOWNline_1 = DownGrapLine[0];
                         }
                         if (myWeldArray.myWelUP_num == 0 && myWeldArray.myWelDOWN_num == 0) {
-                            myWeldArray.myWelType = "Y_SMDCPoKDuiJieH"
+                            myWeldArray.myWelType = "Y_SMPoKRTH"
+                        }
+                        else if (myWeldArray.myWelUP_num != 0 && myWeldArray.myWelDOWN_num != 0) {
+                            myWeldArray.myWelType = "Y_SMPoKGaiBRTH"
                         }
                     }
                 }
             }
         }
-        else if (nG == 0 && nW == 0 && nS == 1 && nX == 1 && nM == 1) {
-            if (myWeldArray.myWelMSline_1.myPolyPNum == 2 && myWeldArray.myWelMXline_1.myPolyPNum == 2 && myWeldArray.myWelMidline_1.myPolyPNum == 2) {
-                if (CheckAngleIn(myWeldArray.myWelMidline_1.myPolyStartP, myWeldArray.myWelMidline_1.myPolyEndP, myWeldArray.myWelMSline_1.myPolyStartP, 47, 38)
-                    && CheckAngleIn(myWeldArray.myWelMidline_1.myPolyStartP, myWeldArray.myWelMidline_1.myPolyEndP, myWeldArray.myWelMSline_1.myPolyEndP, 47, 38)) {
-                    myWeldArray.myWelType = "Y_SMJiaoH"
+    }
+    else if (nG == 0 && nW == 0 && nS == 1 && nX == 0 && nM == 0) {
+        if (myWeldArray.myWelMSline_1.myPolyPNum == 3) {
+            var dis = GetDisFromTwoPoint(myWeldArray.myWelMSline_1.myPolyStartP, myWeldArray.myWelMSline_1.myPolyMid);
+            var m_XXPlLineArr = [];
+            m_XXPlLineArr = GetXXline(myWeldArray.myWelGUIP, myWeldArray.myWelWEIP, "down", dis, TwoP_PolyLArray)
+            if (m_XXPlLineArr.length >= 3 && m_XXPlLineArr.length <= 10) {
+                if (m_XXPlLineArr.length == 3) {
+                    myWeldArray.myWelXX_num = 3;
+                    myWeldArray.myWelXXline_1 = m_XXPlLineArr[0];
+                    myWeldArray.myWelXXline_2 = m_XXPlLineArr[1];
+                    myWeldArray.myWelXXline_3 = m_XXPlLineArr[2];
                 }
-            }
-            else if (myWeldArray.myWelMSline_1.myPolyPNum == 3 && myWeldArray.myWelMXline_1.myPolyPNum == 3 && myWeldArray.myWelMidline_1.myPolyPNum == 2) {
-                if (CheckAngleIn(myWeldArray.myWelMSline_1.myPolyMid, myWeldArray.myWelMSline_1.myPolyStartP, myWeldArray.myWelMSline_1.myPolyEndP, 52, 43)
-                    && CheckAngleIn(myWeldArray.myWelMXline_1.myPolyMid, myWeldArray.myWelMXline_1.myPolyStartP, myWeldArray.myWelMXline_1.myPolyEndP, 52, 43)) {
-                    myWeldArray.myWelType = "Y_SMJiaoH"
+                else if (m_XXPlLineArr.length == 4) {
+                    myWeldArray.myWelXX_num = 4;
+                    myWeldArray.myWelXXline_1 = m_XXPlLineArr[0];
+                    myWeldArray.myWelXXline_2 = m_XXPlLineArr[1];
+                    myWeldArray.myWelXXline_3 = m_XXPlLineArr[2];
+                    myWeldArray.myWelXXline_4 = m_XXPlLineArr[3];
                 }
-            }
-            else if (myWeldArray.myWelMSline_1.myPolyPNum == 3 && myWeldArray.myWelMXline_1.myPolyPNum == 2 && myWeldArray.myWelMidline_1.myPolyPNum == 2) {
-                if (CheckAngleIn(myWeldArray.myWelMSline_1.myPolyMid, myWeldArray.myWelMSline_1.myPolyStartP, myWeldArray.myWelMSline_1.myPolyEndP, 52, 43)) {
-                    myWeldArray.myWelType = "Y_SMJiaoH"
+                else if (m_XXPlLineArr.length == 5) {
+                    myWeldArray.myWelXX_num = 5;
+                    myWeldArray.myWelXXline_1 = m_XXPlLineArr[0];
+                    myWeldArray.myWelXXline_2 = m_XXPlLineArr[1];
+                    myWeldArray.myWelXXline_3 = m_XXPlLineArr[2];
+                    myWeldArray.myWelXXline_4 = m_XXPlLineArr[3];
+                    myWeldArray.myWelXXline_5 = m_XXPlLineArr[4];
                 }
-            }
-            else if (myWeldArray.myWelMSline_1.myPolyPNum == 2 && myWeldArray.myWelMXline_1.myPolyPNum == 3 && myWeldArray.myWelMidline_1.myPolyPNum == 2) {
-                if (CheckAngleIn(myWeldArray.myWelMXline_1.myPolyMid, myWeldArray.myWelMXline_1.myPolyStartP, myWeldArray.myWelMXline_1.myPolyEndP, 52, 43)) {
-                    myWeldArray.myWelType = "Y_SMJiaoH"
+                else if (m_XXPlLineArr.length == 6) {
+                    myWeldArray.myWelXX_num = 6;
+                    myWeldArray.myWelXXline_1 = m_XXPlLineArr[0];
+                    myWeldArray.myWelXXline_2 = m_XXPlLineArr[1];
+                    myWeldArray.myWelXXline_3 = m_XXPlLineArr[2];
+                    myWeldArray.myWelXXline_4 = m_XXPlLineArr[3];
+                    myWeldArray.myWelXXline_5 = m_XXPlLineArr[4];
+                    myWeldArray.myWelXXline_6 = m_XXPlLineArr[5];
+                }
+                else if (m_XXPlLineArr.length == 7) {
+                    myWeldArray.myWelXX_num = 7;
+                    myWeldArray.myWelXXline_1 = m_XXPlLineArr[0];
+                    myWeldArray.myWelXXline_2 = m_XXPlLineArr[1];
+                    myWeldArray.myWelXXline_3 = m_XXPlLineArr[2];
+                    myWeldArray.myWelXXline_4 = m_XXPlLineArr[3];
+                    myWeldArray.myWelXXline_5 = m_XXPlLineArr[4];
+                    myWeldArray.myWelXXline_6 = m_XXPlLineArr[5];
+                    myWeldArray.myWelXXline_7 = m_XXPlLineArr[6];
+                }
+                else if (m_XXPlLineArr.length == 8) {
+                    myWeldArray.myWelXX_num = 8;
+                    myWeldArray.myWelXXline_1 = m_XXPlLineArr[0];
+                    myWeldArray.myWelXXline_2 = m_XXPlLineArr[1];
+                    myWeldArray.myWelXXline_3 = m_XXPlLineArr[2];
+                    myWeldArray.myWelXXline_4 = m_XXPlLineArr[3];
+                    myWeldArray.myWelXXline_5 = m_XXPlLineArr[4];
+                    myWeldArray.myWelXXline_6 = m_XXPlLineArr[5];
+                    myWeldArray.myWelXXline_7 = m_XXPlLineArr[6];
+                    myWeldArray.myWelXXline_8 = m_XXPlLineArr[7];
+                }
+                else if (m_XXPlLineArr.length == 9) {
+                    myWeldArray.myWelXX_num = 9;
+                    myWeldArray.myWelXXline_1 = m_XXPlLineArr[0];
+                    myWeldArray.myWelXXline_2 = m_XXPlLineArr[1];
+                    myWeldArray.myWelXXline_3 = m_XXPlLineArr[2];
+                    myWeldArray.myWelXXline_4 = m_XXPlLineArr[3];
+                    myWeldArray.myWelXXline_5 = m_XXPlLineArr[4];
+                    myWeldArray.myWelXXline_6 = m_XXPlLineArr[5];
+                    myWeldArray.myWelXXline_7 = m_XXPlLineArr[6];
+                    myWeldArray.myWelXXline_8 = m_XXPlLineArr[7];
+                    myWeldArray.myWelXXline_9 = m_XXPlLineArr[8];
+                }
+                else if (m_XXPlLineArr.length == 10) {
+                    myWeldArray.myWelXX_num = 10;
+                    myWeldArray.myWelXXline_1 = m_XXPlLineArr[0];
+                    myWeldArray.myWelXXline_2 = m_XXPlLineArr[1];
+                    myWeldArray.myWelXXline_3 = m_XXPlLineArr[2];
+                    myWeldArray.myWelXXline_4 = m_XXPlLineArr[3];
+                    myWeldArray.myWelXXline_5 = m_XXPlLineArr[4];
+                    myWeldArray.myWelXXline_6 = m_XXPlLineArr[5];
+                    myWeldArray.myWelXXline_7 = m_XXPlLineArr[6];
+                    myWeldArray.myWelXXline_8 = m_XXPlLineArr[7];
+                    myWeldArray.myWelXXline_9 = m_XXPlLineArr[8];
+                    myWeldArray.myWelXXline_10 = m_XXPlLineArr[9];
+                }
+                var m_mtlLineArr = [];
+                m_mtlLineArr = GetMultiPointLineInterXX(myWeldArray.myWelGUIP, myWeldArray.myWelWEIP, myWeldArray.myWelXXline_1.myPolyStartP.y, FourMP_PolyLArray)
+                if (m_mtlLineArr.length == 1) {
+                    if (CheckAngleIn(myWeldArray.myWelMSline_1.myPolyMid, myWeldArray.myWelMSline_1.myPolyStartP, myWeldArray.myWelMSline_1.myPolyEndP, 47, 43)) {
+                        myWeldArray.myWelDOWN_num = 1;
+                        myWeldArray.myWelDOWNline_1 = m_mtlLineArr[0];
+                        myWeldArray.myWelType = "Y_DMDCPoKDuiJieH"
+                    }
+                    else if (CheckAngleIn(myWeldArray.myWelMSline_1.myPolyMid, myWeldArray.myWelMSline_1.myPolyStartP, myWeldArray.myWelMSline_1.myPolyEndP, 62, 58)) {
+                        myWeldArray.myWelDOWN_num = 1;
+                        myWeldArray.myWelDOWNline_1 = m_mtlLineArr[0];
+                        myWeldArray.myWelType = "Y_DMSCPoKDuiJieH"
+                    }
+                }
+                else if (m_mtlLineArr.length == 0) {
+                    if (CheckAngleIn(myWeldArray.myWelMSline_1.myPolyMid, myWeldArray.myWelMSline_1.myPolyStartP, myWeldArray.myWelMSline_1.myPolyEndP, 47, 43)) {
+                        if (myWeldArray.myWelMSStorEdorMd_1 == "Mid") {
+                            myWeldArray.myWelType = "Y_DMDCPoKJiaoH"
+                        }
+                        else {
+                            myWeldArray.myWelType = "Y_DMJiaoH"
+                        }
+                    }
                 }
             }
         }
+        else if (myWeldArray.myWelMSline_1.myPolyPNum == 2) {
+            var mUpChaArr = [];
+            mUpChaArr = GetInterLineFromVerLine(myWeldArray.myWelMSline_1.myPolyStartP, myWeldArray.myWelMSline_1.myPolyEndP, TwoP_PolyLArray);
+            if (mUpChaArr.length == 1) {
+                myWeldArray.myWelMSline_2 = mUpChaArr[0];
+                myWeldArray.myWelMS_num = 2;
 
-        else if (nG == 0 && nW == 0 && nS == 2 && nX == 0 && nM == 0) {
-            if (myWeldArray.myWelMSline_1.myPolyPNum == 2 && myWeldArray.myWelMSline_2.myPolyPNum == 2
-                && IsVertical(myWeldArray.myWelMSline_1.myPolyStartP, myWeldArray.myWelMSline_1.myPolyEndP)
-                && IsVertical(myWeldArray.myWelMSline_2.myPolyStartP, myWeldArray.myWelMSline_2.myPolyEndP)) {
-                myWeldArray.myWelType = "N_PoKDuiJieH"
-            }
-            if (myWeldArray.myWelMSline_1.myPolyPNum == 2 && myWeldArray.myWelMSline_2.m_PointNum == 2) {
-                var dis = GetDisFromTwoPoint(myWeldArray.myWelMSline_1.myPolyStartP, myWeldArray.myWelMSline_1.myPolyEndP)
+                var dis = GetDisFromTwoPoint(myWeldArray.myWelMSline_1.myPolyStartP, myWeldArray.myWelMSline_1.myPolyEndP);
                 var m_XXPlLineArr = [];
                 m_XXPlLineArr = GetXXline(myWeldArray.myWelGUIP, myWeldArray.myWelWEIP, "down", dis, TwoP_PolyLArray)
                 if (m_XXPlLineArr.length >= 3 && m_XXPlLineArr.length <= 10) {
                     if (m_XXPlLineArr.length == 3) {
-                        myWeldArray.m_XX_num = 3;
-                        myWeldArray.m_XXline_1 = m_XXPlLineArr[0];
-                        myWeldArray.m_XXline_2 = m_XXPlLineArr[1];
-                        myWeldArray.m_XXline_3 = m_XXPlLineArr[2];
+                        myWeldArray.myWelXX_num = 3;
+                        myWeldArray.myWelXXline_1 = m_XXPlLineArr[0];
+                        myWeldArray.myWelXXline_2 = m_XXPlLineArr[1];
+                        myWeldArray.myWelXXline_3 = m_XXPlLineArr[2];
                     }
                     else if (m_XXPlLineArr.length == 4) {
-                        myWeldArray.m_XX_num = 4;
-                        myWeldArray.m_XXline_1 = m_XXPlLineArr[0];
-                        myWeldArray.m_XXline_2 = m_XXPlLineArr[1];
-                        myWeldArray.m_XXline_3 = m_XXPlLineArr[2];
-                        myWeldArray.m_XXline_4 = m_XXPlLineArr[3];
+                        myWeldArray.myWelXX_num = 4;
+                        myWeldArray.myWelXXline_1 = m_XXPlLineArr[0];
+                        myWeldArray.myWelXXline_2 = m_XXPlLineArr[1];
+                        myWeldArray.myWelXXline_3 = m_XXPlLineArr[2];
+                        myWeldArray.myWelXXline_4 = m_XXPlLineArr[3];
                     }
                     else if (m_XXPlLineArr.length == 5) {
-                        myWeldArray.m_XX_num = 5;
-                        myWeldArray.m_XXline_1 = m_XXPlLineArr[0];
-                        myWeldArray.m_XXline_2 = m_XXPlLineArr[1];
-                        myWeldArray.m_XXline_3 = m_XXPlLineArr[2];
-                        myWeldArray.m_XXline_4 = m_XXPlLineArr[3];
-                        myWeldArray.m_XXline_5 = m_XXPlLineArr[4];
+                        myWeldArray.myWelXX_num = 5;
+                        myWeldArray.myWelXXline_1 = m_XXPlLineArr[0];
+                        myWeldArray.myWelXXline_2 = m_XXPlLineArr[1];
+                        myWeldArray.myWelXXline_3 = m_XXPlLineArr[2];
+                        myWeldArray.myWelXXline_4 = m_XXPlLineArr[3];
+                        myWeldArray.myWelXXline_5 = m_XXPlLineArr[4];
                     }
                     else if (m_XXPlLineArr.length == 6) {
-                        myWeldArray.m_XX_num = 6;
-                        myWeldArray.m_XXline_1 = m_XXPlLineArr[0];
-                        myWeldArray.m_XXline_2 = m_XXPlLineArr[1];
-                        myWeldArray.m_XXline_3 = m_XXPlLineArr[2];
-                        myWeldArray.m_XXline_4 = m_XXPlLineArr[3];
-                        myWeldArray.m_XXline_5 = m_XXPlLineArr[4];
-                        myWeldArray.m_XXline_6 = m_XXPlLineArr[5];
+                        myWeldArray.myWelXX_num = 6;
+                        myWeldArray.myWelXXline_1 = m_XXPlLineArr[0];
+                        myWeldArray.myWelXXline_2 = m_XXPlLineArr[1];
+                        myWeldArray.myWelXXline_3 = m_XXPlLineArr[2];
+                        myWeldArray.myWelXXline_4 = m_XXPlLineArr[3];
+                        myWeldArray.myWelXXline_5 = m_XXPlLineArr[4];
+                        myWeldArray.myWelXXline_6 = m_XXPlLineArr[5];
                     }
                     else if (m_XXPlLineArr.length == 7) {
-                        myWeldArray.m_XX_num = 7;
-                        myWeldArray.m_XXline_1 = m_XXPlLineArr[0];
-                        myWeldArray.m_XXline_2 = m_XXPlLineArr[1];
-                        myWeldArray.m_XXline_3 = m_XXPlLineArr[2];
-                        myWeldArray.m_XXline_4 = m_XXPlLineArr[3];
-                        myWeldArray.m_XXline_5 = m_XXPlLineArr[4];
-                        myWeldArray.m_XXline_6 = m_XXPlLineArr[5];
-                        myWeldArray.m_XXline_7 = m_XXPlLineArr[6];
+                        myWeldArray.myWelXX_num = 7;
+                        myWeldArray.myWelXXline_1 = m_XXPlLineArr[0];
+                        myWeldArray.myWelXXline_2 = m_XXPlLineArr[1];
+                        myWeldArray.myWelXXline_3 = m_XXPlLineArr[2];
+                        myWeldArray.myWelXXline_4 = m_XXPlLineArr[3];
+                        myWeldArray.myWelXXline_5 = m_XXPlLineArr[4];
+                        myWeldArray.myWelXXline_6 = m_XXPlLineArr[5];
+                        myWeldArray.myWelXXline_7 = m_XXPlLineArr[6];
                     }
                     else if (m_XXPlLineArr.length == 8) {
-                        myWeldArray.m_XX_num = 8;
-                        myWeldArray.m_XXline_1 = m_XXPlLineArr[0];
-                        myWeldArray.m_XXline_2 = m_XXPlLineArr[1];
-                        myWeldArray.m_XXline_3 = m_XXPlLineArr[2];
-                        myWeldArray.m_XXline_4 = m_XXPlLineArr[3];
-                        myWeldArray.m_XXline_5 = m_XXPlLineArr[4];
-                        myWeldArray.m_XXline_6 = m_XXPlLineArr[5];
-                        myWeldArray.m_XXline_7 = m_XXPlLineArr[6];
-                        myWeldArray.m_XXline_8 = m_XXPlLineArr[7];
+                        myWeldArray.myWelXX_num = 8;
+                        myWeldArray.myWelXXline_1 = m_XXPlLineArr[0];
+                        myWeldArray.myWelXXline_2 = m_XXPlLineArr[1];
+                        myWeldArray.myWelXXline_3 = m_XXPlLineArr[2];
+                        myWeldArray.myWelXXline_4 = m_XXPlLineArr[3];
+                        myWeldArray.myWelXXline_5 = m_XXPlLineArr[4];
+                        myWeldArray.myWelXXline_6 = m_XXPlLineArr[5];
+                        myWeldArray.myWelXXline_7 = m_XXPlLineArr[6];
+                        myWeldArray.myWelXXline_8 = m_XXPlLineArr[7];
                     }
                     else if (m_XXPlLineArr.length == 9) {
-                        myWeldArray.m_XX_num = 9;
-                        myWeldArray.m_XXline_1 = m_XXPlLineArr[0];
-                        myWeldArray.m_XXline_2 = m_XXPlLineArr[1];
-                        myWeldArray.m_XXline_3 = m_XXPlLineArr[2];
-                        myWeldArray.m_XXline_4 = m_XXPlLineArr[3];
-                        myWeldArray.m_XXline_5 = m_XXPlLineArr[4];
-                        myWeldArray.m_XXline_6 = m_XXPlLineArr[5];
-                        myWeldArray.m_XXline_7 = m_XXPlLineArr[6];
-                        myWeldArray.m_XXline_8 = m_XXPlLineArr[7];
-                        myWeldArray.m_XXline_9 = m_XXPlLineArr[8];
+                        myWeldArray.myWelXX_num = 9;
+                        myWeldArray.myWelXXline_1 = m_XXPlLineArr[0];
+                        myWeldArray.myWelXXline_1 = m_XXPlLineArr[1];
+                        myWeldArray.myWelXXline_3 = m_XXPlLineArr[2];
+                        myWeldArray.myWelXXline_4 = m_XXPlLineArr[3];
+                        myWeldArray.myWelXXline_5 = m_XXPlLineArr[4];
+                        myWeldArray.myWelXXline_6 = m_XXPlLineArr[5];
+                        myWeldArray.myWelXXline_7 = m_XXPlLineArr[6];
+                        myWeldArray.myWelXXline_8 = m_XXPlLineArr[7];
+                        myWeldArray.myWelXXline_9 = m_XXPlLineArr[8];
                     }
                     else if (m_XXPlLineArr.length == 10) {
-                        myWeldArray.m_XX_num = 10;
-                        myWeldArray.m_XXline_1 = m_XXPlLineArr[0];
-                        myWeldArray.m_XXline_2 = m_XXPlLineArr[1];
-                        myWeldArray.m_XXline_3 = m_XXPlLineArr[2];
-                        myWeldArray.m_XXline_4 = m_XXPlLineArr[3];
-                        myWeldArray.m_XXline_5 = m_XXPlLineArr[4];
-                        myWeldArray.m_XXline_6 = m_XXPlLineArr[5];
-                        myWeldArray.m_XXline_7 = m_XXPlLineArr[6];
-                        myWeldArray.m_XXline_8 = m_XXPlLineArr[7];
-                        myWeldArray.m_XXline_9 = m_XXPlLineArr[8];
-                        myWeldArray.m_XXline_10 = m_XXPlLineArr[9];
+                        myWeldArray.myWelXX_num = 10;
+                        myWeldArray.myWelXXline_1 = m_XXPlLineArr[0];
+                        myWeldArray.myWelXXline_2 = m_XXPlLineArr[1];
+                        myWeldArray.myWelXXline_3 = m_XXPlLineArr[2];
+                        myWeldArray.myWelXXline_4 = m_XXPlLineArr[3];
+                        myWeldArray.myWelXXline_5 = m_XXPlLineArr[4];
+                        myWeldArray.myWelXXline_6 = m_XXPlLineArr[5];
+                        myWeldArray.myWelXXline_7 = m_XXPlLineArr[6];
+                        myWeldArray.myWelXXline_8 = m_XXPlLineArr[7];
+                        myWeldArray.myWelXXline_9 = m_XXPlLineArr[8];
+                        myWeldArray.myWelXXline_10 = m_XXPlLineArr[9];
+                    }
+
+
+                    dis = GetDisFromTwoPoint(myWeldArray.myWelGUIP, myWeldArray.myWelWEIP);
+                    var mtempSP, mtemEP;
+                    if (myWeldArray.myWelMSStorEdorMd_1 == "Start") {
+                        mtempSP = myWeldArray.myWelMSline_1.myPolyEndP;
+                    }
+                    else {
+                        mtempSP = myWeldArray.myWelMSline_1.myPolyStartP;
+                    }
+                    if (myWeldArray.myWelMSline_2.myPolyCHSE == "Start") {
+                        mtemEP = myWeldArray.myWelMSline_2.myPolyEndP;
+                    }
+                    else {
+                        mtemEP = myWeldArray.myWelMSline_2.myPolyStartP;
+                    }
+                    var upGrapLine = [];
+                    upGrapLine = GetGraphFromArea(mtempSP.x, mtemEP.x, mtempSP.y, dis, "up", TwoP_PolyLArray, ThreeP_PolyLArray)
+                    if (upGrapLine.length == 2) {
+                        myWeldArray.myWelUP_num = 2;
+                        myWeldArray.myWelUPline_1 = upGrapLine[0];
+                        myWeldArray.myWelUPline_2 = upGrapLine[1];
+                    }
+                    else if (upGrapLine.length == 1) {
+                        myWeldArray.myWelUP_num = 1;
+                        myWeldArray.myWelUPline_1 = upGrapLine[0];
                     }
                     var m_mtlLineArr = [];
-                    m_mtlLineArr = GetMultiPointLineInterXX(myWeldArray.myWelGUIP, myWeldArray.myWelWEIP, myWeldArray.m_XXline_1.myPolyStartP.y, FourMP_PolyLArray)
+                    m_mtlLineArr = GetMultiPointLineInterXX(myWeldArray.myWelGUIP, myWeldArray.myWelWEIP, myWeldArray.myWelXXline_1.myPolyStartP.y, FourMP_PolyLArray)
                     if (m_mtlLineArr.length == 1) {
-                        var bj = FALSE;
-                        if (myWeldArray.myWelMSStorEdorMd_1 == "Start") {
-                            if (CheckAngleIn(myWeldArray.myWelMSline_1.myPolyStartP, myWeldArray.myWelMSline_1.myPolyEndP, myWeldArray.myWelMSline_2.myPolyStartP, 73, 65)
-                                || CheckAngleIn(myWeldArray.myWelMSline_1.myPolyStartP, myWeldArray.myWelMSline_1.myPolyEndP, myWeldArray.myWelMSline_2.myPolyEndP, 73, 65)) {
-                                bj = TRUE;
+                        myWeldArray.myWelDOWN_num = 1;
+                        myWeldArray.myWelDOWNline_1 = m_mtlLineArr[0];
+                    }
+                    else if (m_mtlLineArr.length == 0) {
+                        var mTTwoLineArr = [];
+                        mTTwoLineArr = GetTwoPointLineInterXX(myWeldArray.myWelGUIP, myWeldArray.myWelWEIP, myWeldArray.myWelXXline_1.myPolyStartP.y, TwoP_PolyLArray)
+                        if (mTTwoLineArr.length == 1) {
+                            myWeldArray.myWelMX_num = 1;
+                            myWeldArray.myWelMXline_1 = mTTwoLineArr[0];
+                            var mTDownChaArr = [];
+                            mTDownChaArr = GetInterLineFromVerLine(myWeldArray.myWelMXline_1.myPolyStartP, myWeldArray.myWelMXline_1.myPolyEndP, TwoP_PolyLArray)
+                            if (mTDownChaArr.length == 1) {
+                                myWeldArray.myWelMXline_2 = mTDownChaArr[0];
+                                myWeldArray.myWelMX_num = 2;
+                            }
+                            var mtempSP, mtemEP;
+                            if (myWeldArray.myWelMXStorEdorMd_1 == "Start") {
+                                mtempSP = myWeldArray.myWelMXline_1.myPolyEndP;
+                            }
+                            else {
+                                mtempSP = myWeldArray.myWelMXline_1.myPolyStartP;
+                            }
+                            if (myWeldArray.myWelMXline_2.myPolyCHSE == "Start") {
+                                mtemEP = myWeldArray.myWelMXline_2.myPolyEndP;
+                            }
+                            else {
+                                mtemEP = myWeldArray.myWelMXline_2.myPolyStartP;
+                            }
+                            var mtDLineArr = [];
+                            mtDLineArr = GetGraphFromArea(mtempSP.x, mtemEP.x, mtempSP.y, dis, "down", TwoP_PolyLArray, ThreeP_PolyLArray)
+                            if (mtDLineArr.length == 2) {
+                                myWeldArray.myWelDOWN_num = 2;
+                                myWeldArray.myWelDOWNline_1 = mtDLineArr[0];
+                                myWeldArray.myWelDOWNline_2 = mtDLineArr[1];
+                            }
+                            else if (mtDLineArr.length == 1) {
+                                myWeldArray.myWelDOWN_num = 1;
+                                myWeldArray.myWelDOWNline_1 = mtDLineArr[0];
                             }
                         }
-                        else if (myWeldArray.GetAt(i).m_MSStorEdorMd_1 == "End") {
-                            if (CheckAngleIn(myWeldArray.myWelMSline_1.myPolyEndP, myWeldArray.myWelMSline_1.myPolyStartP, myWeldArray.myWelMSline_2.myPolyStartP, 73, 65)
-                                || CheckAngleIn(myWeldArray.myWelMSline_1.myPolyEndP, myWeldArray.myWelMSline_1.myPolyStartP, myWeldArray.myWelMSline_2.myPolyEndP, 73, 65)) {
-                                bj = TRUE;
-                            }
+                    }
+                    if (myWeldArray.myWelUP_num == 0 && myWeldArray.myWelDOWN_num == 1 && myWeldArray.myWelMX_num == 0) {
+                        myWeldArray.myWelType = "Y_DMDCPoKDuiJieH"
+                    }
+                    else if (myWeldArray.myWelUP_num != 0 && myWeldArray.myWelDOWN_num == 0 && myWeldArray.myWelMX_num == 0) {
+                        myWeldArray.myWelType = "Y_DMPoKGaiBJiaoH"
+                    }
+                    else if (myWeldArray.myWelUP_num == 0 && myWeldArray.myWelDOWN_num == 0 && myWeldArray.myWelMX_num == 0) {
+                        myWeldArray.myWelType = "Y_DMDCPoKJiaoH"
+                    }
+                    else if (myWeldArray.myWelUP_num == 0 && myWeldArray.myWelDOWN_num == 0 && myWeldArray.myWelMX_num != 0) {
+                        myWeldArray.myWelType = "Y_SMPoKBeiPJiaoH"
+                    }
+                }
+            }
+        }
+    }
+    else if (nG == 0 && nW == 0 && nS == 0 && nX == 0 && nM == 1) {
+        if (myWeldArray.myWelMidline_1.myPolyPNum == 6) {
+            var templine = FindLineFromArray(myWeldArray.myWelMidline_1.myPolyLineObjectID, FourMP_PolyLArray)
+            if (CheckAngleIn(templine.GetPointAt(2), templine.GetPointAt(1), templine.GetPointAt(4), 92, 88)) {
+                myWeldArray.myWelType = "Y_SMJiaoH"
+            }
+        }
+        else if (myWeldArray.myWelMidline_1.myPolyPNum == 3 && myWeldArray.myWelMidline_1.myPolyCHSE != "Mid") {
+            if (CheckAngleIn(myWeldArray.myWelMidline_1.myPolyStartP, myWeldArray.myWelMidline_1.myPolyMid, myWeldArray.myWelMidline_1.myPolyEndP, 92, 88)
+                || CheckAngleIn(myWeldArray.myWelMidline_1.myPolyEndP, myWeldArray.myWelMidline_1.myPolyStartP, myWeldArray.myWelMidline_1.myPolyMid, 92, 88)) {
+                myWeldArray.myWelType = "Y_SMJiaoH"
+            }
+        }
+    }
+
+    else if (nG == 0 && nW == 0 && nS == 1 && nX == 1 && nM == 0) {
+        if (myWeldArray.myWelMSline_1.myPolyPNum == 3 && myWeldArray.myWelMSStorEdorMd_1 != "Mid"
+            && myWeldArray.myWelMXline_1.myPolyPNum == 3 && myWeldArray.myWelMXStorEdorMd_1 != "Mid") {
+            if (CheckAngleIn(myWeldArray.myWelMSline_1.myPolyMid, myWeldArray.myWelMSline_1.myPolyStartP, myWeldArray.myWelMSline_1.myPolyEndP, 48, 43)
+                && CheckAngleIn(myWeldArray.myWelMXline_1.myPolyMid, myWeldArray.myWelMXline_1.myPolyStartP, myWeldArray.myWelMXline_1.myPolyEndP, 48, 43)) {
+                myWeldArray.myWelType = "Y_SMJiaoH"
+            }
+        }
+        else if (myWeldArray.myWelMSline_1.myPolyPNum == 3 && myWeldArray.myWelMSStorEdorMd_1 == "Mid"
+            && myWeldArray.myWelMXline_1.myPolyPNum == 3 && myWeldArray.myWelMXStorEdorMd_1 == "Mid") {
+            if (CheckAngleIn(myWeldArray.myWelMSline_1.myPolyMid, myWeldArray.myWelMSline_1.myPolyStartP, myWeldArray.myWelMSline_1.myPolyEndP, 51, 43)
+                && CheckAngleIn(myWeldArray.myWelMXline_1.myPolyMid, myWeldArray.myWelMXline_1.myPolyStartP, myWeldArray.myWelMXline_1.myPolyEndP, 51, 43)) {
+                var dis;
+                dis = GetDisFromTwoPoint(myWeldArray.myWelGUIP, myWeldArray.myWelWEIP);
+                var res_PolyLineArr = [];
+                res_PolyLineArr = GetGraphFromArea(myWeldArray.myWelMSline_1.myPolyStartP.x, myWeldArray.myWelMSline_1.myPolyEndP.x, myWeldArray.myWelMSline_1.myPolyStartP.y, dis, "up", TwoP_PolyLArray, ThreeP_PolyLArray)
+                if (res_PolyLineArr.length == 2) {
+                    myWeldArray.myWelUP_num = 2;
+                    myWeldArray.myWelUPline_1 = res_PolyLineArr[0];
+                    myWeldArray.myWelUPline_2 = res_PolyLineArr[1];
+                }
+                else if (res_PolyLineArr.length == 1) {
+                    myWeldArray.myWelUP_num = 1;
+                    myWeldArray.myWelUPline_1 = res_PolyLineArr[0];
+                }
+                var res_XPolyLineArr = [];
+                res_XPolyLineArr = GetGraphFromArea(myWeldArray.myWelMXline_1.myPolyStartP.x, myWeldArray.myWelMXline_1.myPolyEndP.x, myWeldArray.myWelMXline_1.myPolyStartP.y, dis, "down", TwoP_PolyLArray, ThreeP_PolyLArray)
+                if (res_XPolyLineArr.length == 2) {
+                    myWeldArray.myWelDOWN_num = 2;
+                    myWeldArray.myWelDOWNline_1 = res_XPolyLineArr[0];
+                    myWeldArray.myWelDOWNline_2 = res_XPolyLineArr[1];
+                }
+                else if (res_XPolyLineArr.length == 1) {
+                    myWeldArray.myWelDOWN_num = 1;
+                    myWeldArray.myWelDOWNline_1 = res_XPolyLineArr[0];
+                }
+                if (myWeldArray.myWelUP_num == 0 && myWeldArray.myWelDOWN_num == 0) {
+                    myWeldArray.myWelType = "Y_SMDCPoKDuiJieH"
+                }
+            }
+            else if (CheckAngleIn(myWeldArray.myWelMSline_1.myPolyMid, myWeldArray.myWelMSline_1.myPolyStartP, myWeldArray.myWelMSline_1.myPolyEndP, 62, 58)
+                && CheckAngleIn(myWeldArray.myWelMXline_1.myPolyMid, myWeldArray.myWelMXline_1.myPolyStartP, myWeldArray.myWelMXline_1.myPolyEndP, 62, 58)) {
+                myWeldArray.myWelType = "Y_SMSCPoKDuiJieH"
+            }
+        }
+        else if (myWeldArray.myWelMSline_1.myPolyPNum == 2 && myWeldArray.myWelMXline_1.myPolyPNum == 2) {
+            if (IsVertical(myWeldArray.myWelMSline_1.myPolyStartP, myWeldArray.myWelMSline_1.myPolyEndP)
+                && IsVertical(myWeldArray.myWelMXline_1.myPolyStartP, myWeldArray.myWelMXline_1.myPolyEndP)) {
+                var mUpChaArr = [];
+                var mDownChaArr = [];
+                mUpChaArr = GetInterLineFromVerLine(myWeldArray.myWelMSline_1.myPolyStartP, myWeldArray.myWelMSline_1.myPolyEndP, TwoP_PolyLArray);
+                mDownChaArr = GetInterLineFromVerLine(myWeldArray.myWelMXline_1.myPolyStartP, myWeldArray.myWelMXline_1.myPolyEndP, TwoP_PolyLArray);
+                if (mUpChaArr.length == 1 && mDownChaArr.length == 1) {
+                    myWeldArray.myWelMSline_2 = mUpChaArr[0];
+                    myWeldArray.myWelMS_num = 2;
+                    myWeldArray.myWelMXline_2 = mDownChaArr[0];
+                    myWeldArray.myWelMX_num = 2;
+
+                    var dis;
+                    dis = GetDisFromTwoPoint(myWeldArray.myWelGUIP, myWeldArray.myWelWEIP)
+                    var mtempSP, mtemEP;
+                    if (myWeldArray.myWelMSStorEdorMd_1 == "Start") {
+                        mtempSP = myWeldArray.myWelMSline_1.myPolyEndP;
+                    }
+                    else {
+                        mtempSP = myWeldArray.myWelMSline_1.myPolyStartP;
+                    }
+                    if (myWeldArray.myWelMSline_2.myPolyCHSE == "Start") {
+                        mtemEP = myWeldArray.myWelMSline_2.myPolyEndP;
+                    }
+                    else {
+                        mtemEP = myWeldArray.myWelMSline_2.myPolyStartP;
+                    }
+                    var upGrapLine = [];
+                    upGrapLine = GetGraphFromArea(mtempSP.x, mtemEP.x, mtempSP.y, dis, "up", TwoP_PolyLArray, ThreeP_PolyLArray)
+                    if (upGrapLine.length == 2) {
+                        myWeldArray.myWelUP_num = 2;
+                        myWeldArray.myWelUPline_1 = upGrapLine[0];
+                        myWeldArray.myWelUPline_2 = upGrapLine[1];
+                    }
+                    else if (upGrapLine.length == 1) {
+                        myWeldArray.myWelUP_num = 1;
+                        myWeldArray.myWelUPline_1 = upGrapLine[0];
+                    }
+                    if (myWeldArray.myWelMXStorEdorMd_1 == "Start") {
+                        mtempSP = myWeldArray.myWelMXline_1.myPolyEndP;
+                    }
+                    else {
+                        mtempSP = myWeldArray.myWelMXline_1.myPolyStartP;
+                    }
+                    if (myWeldArray.myWelMXline_2.myPolyCHSE == "Start") {
+                        mtemEP = myWeldArray.myWelMXline_2.myPolyEndP;
+                    }
+                    else {
+                        mtemEP = myWeldArray.myWelMXline_2.myPolyStartP;
+                    }
+                    var DownGrapLine = [];
+                    DownGrapLine = GetGraphFromArea(mtempSP.x, mtemEP.x, mtempSP.y, dis, "down", TwoP_PolyLArray, ThreeP_PolyLArray)
+                    if (DownGrapLine.length == 2) {
+                        myWeldArray.myWelDOWN_num = 2;
+                        myWeldArray.myWelDOWNline_1 = DownGrapLine[0];
+                        myWeldArray.myWelDOWNline_2 = DownGrapLine[1];
+                    }
+                    else if (DownGrapLine.length == 1) {
+                        myWeldArray.myWelDOWN_num = 1;
+                        myWeldArray.myWelDOWNline_1 = DownGrapLine[0];
+                    }
+                    if (myWeldArray.myWelUP_num == 0 && myWeldArray.myWelDOWN_num == 0) {
+                        myWeldArray.myWelType = "Y_SMDCPoKDuiJieH"
+                    }
+                }
+            }
+        }
+    }
+    else if (nG == 0 && nW == 0 && nS == 1 && nX == 1 && nM == 1) {
+        if (myWeldArray.myWelMSline_1.myPolyPNum == 2 && myWeldArray.myWelMXline_1.myPolyPNum == 2 && myWeldArray.myWelMidline_1.myPolyPNum == 2) {
+            if (CheckAngleIn(myWeldArray.myWelMidline_1.myPolyStartP, myWeldArray.myWelMidline_1.myPolyEndP, myWeldArray.myWelMSline_1.myPolyStartP, 47, 38)
+                && CheckAngleIn(myWeldArray.myWelMidline_1.myPolyStartP, myWeldArray.myWelMidline_1.myPolyEndP, myWeldArray.myWelMSline_1.myPolyEndP, 47, 38)) {
+                myWeldArray.myWelType = "Y_SMJiaoH"
+            }
+        }
+        else if (myWeldArray.myWelMSline_1.myPolyPNum == 3 && myWeldArray.myWelMXline_1.myPolyPNum == 3 && myWeldArray.myWelMidline_1.myPolyPNum == 2) {
+            if (CheckAngleIn(myWeldArray.myWelMSline_1.myPolyMid, myWeldArray.myWelMSline_1.myPolyStartP, myWeldArray.myWelMSline_1.myPolyEndP, 52, 43)
+                && CheckAngleIn(myWeldArray.myWelMXline_1.myPolyMid, myWeldArray.myWelMXline_1.myPolyStartP, myWeldArray.myWelMXline_1.myPolyEndP, 52, 43)) {
+                myWeldArray.myWelType = "Y_SMJiaoH"
+            }
+        }
+        else if (myWeldArray.myWelMSline_1.myPolyPNum == 3 && myWeldArray.myWelMXline_1.myPolyPNum == 2 && myWeldArray.myWelMidline_1.myPolyPNum == 2) {
+            if (CheckAngleIn(myWeldArray.myWelMSline_1.myPolyMid, myWeldArray.myWelMSline_1.myPolyStartP, myWeldArray.myWelMSline_1.myPolyEndP, 52, 43)) {
+                myWeldArray.myWelType = "Y_SMJiaoH"
+            }
+        }
+        else if (myWeldArray.myWelMSline_1.myPolyPNum == 2 && myWeldArray.myWelMXline_1.myPolyPNum == 3 && myWeldArray.myWelMidline_1.myPolyPNum == 2) {
+            if (CheckAngleIn(myWeldArray.myWelMXline_1.myPolyMid, myWeldArray.myWelMXline_1.myPolyStartP, myWeldArray.myWelMXline_1.myPolyEndP, 52, 43)) {
+                myWeldArray.myWelType = "Y_SMJiaoH"
+            }
+        }
+    }
+
+    else if (nG == 0 && nW == 0 && nS == 2 && nX == 0 && nM == 0) {
+        if (myWeldArray.myWelMSline_1.myPolyPNum == 2 && myWeldArray.myWelMSline_2.myPolyPNum == 2
+            && IsVertical(myWeldArray.myWelMSline_1.myPolyStartP, myWeldArray.myWelMSline_1.myPolyEndP)
+            && IsVertical(myWeldArray.myWelMSline_2.myPolyStartP, myWeldArray.myWelMSline_2.myPolyEndP)) {
+            myWeldArray.myWelType = "N_PoKDuiJieH"
+        }
+        if (myWeldArray.myWelMSline_1.myPolyPNum == 2 && myWeldArray.myWelMSline_2.m_PointNum == 2) {
+            var dis = GetDisFromTwoPoint(myWeldArray.myWelMSline_1.myPolyStartP, myWeldArray.myWelMSline_1.myPolyEndP)
+            var m_XXPlLineArr = [];
+            m_XXPlLineArr = GetXXline(myWeldArray.myWelGUIP, myWeldArray.myWelWEIP, "down", dis, TwoP_PolyLArray)
+            if (m_XXPlLineArr.length >= 3 && m_XXPlLineArr.length <= 10) {
+                if (m_XXPlLineArr.length == 3) {
+                    myWeldArray.myWelXX_num = 3;
+                    myWeldArray.myWelXXline_1 = m_XXPlLineArr[0];
+                    myWeldArray.myWelXXline_2 = m_XXPlLineArr[1];
+                    myWeldArray.myWelXXline_3 = m_XXPlLineArr[2];
+                }
+                else if (m_XXPlLineArr.length == 4) {
+                    myWeldArray.myWelXX_num = 4;
+                    myWeldArray.myWelXXline_1 = m_XXPlLineArr[0];
+                    myWeldArray.myWelXXline_2 = m_XXPlLineArr[1];
+                    myWeldArray.myWelXXline_3 = m_XXPlLineArr[2];
+                    myWeldArray.myWelXXline_4 = m_XXPlLineArr[3];
+                }
+                else if (m_XXPlLineArr.length == 5) {
+                    myWeldArray.myWelXX_num = 5;
+                    myWeldArray.myWelXXline_1 = m_XXPlLineArr[0];
+                    myWeldArray.myWelXXline_2 = m_XXPlLineArr[1];
+                    myWeldArray.myWelXXline_3 = m_XXPlLineArr[2];
+                    myWeldArray.myWelXXline_4 = m_XXPlLineArr[3];
+                    myWeldArray.myWelXXline_5 = m_XXPlLineArr[4];
+                }
+                else if (m_XXPlLineArr.length == 6) {
+                    myWeldArray.myWelXX_num = 6;
+                    myWeldArray.myWelXXline_1 = m_XXPlLineArr[0];
+                    myWeldArray.myWelXXline_2 = m_XXPlLineArr[1];
+                    myWeldArray.myWelXXline_3 = m_XXPlLineArr[2];
+                    myWeldArray.myWelXXline_4 = m_XXPlLineArr[3];
+                    myWeldArray.myWelXXline_5 = m_XXPlLineArr[4];
+                    myWeldArray.myWelXXline_6 = m_XXPlLineArr[5];
+                }
+                else if (m_XXPlLineArr.length == 7) {
+                    myWeldArray.myWelXX_num = 7;
+                    myWeldArray.myWelXXline_1 = m_XXPlLineArr[0];
+                    myWeldArray.myWelXXline_2 = m_XXPlLineArr[1];
+                    myWeldArray.myWelXXline_3 = m_XXPlLineArr[2];
+                    myWeldArray.myWelXXline_4 = m_XXPlLineArr[3];
+                    myWeldArray.myWelXXline_5 = m_XXPlLineArr[4];
+                    myWeldArray.myWelXXline_6 = m_XXPlLineArr[5];
+                    myWeldArray.myWelXXline_7 = m_XXPlLineArr[6];
+                }
+                else if (m_XXPlLineArr.length == 8) {
+                    myWeldArray.myWelXX_num = 8;
+                    myWeldArray.myWelXXline_1 = m_XXPlLineArr[0];
+                    myWeldArray.myWelXXline_2 = m_XXPlLineArr[1];
+                    myWeldArray.myWelXXline_3 = m_XXPlLineArr[2];
+                    myWeldArray.myWelXXline_4 = m_XXPlLineArr[3];
+                    myWeldArray.myWelXXline_5 = m_XXPlLineArr[4];
+                    myWeldArray.myWelXXline_6 = m_XXPlLineArr[5];
+                    myWeldArray.myWelXXline_7 = m_XXPlLineArr[6];
+                    myWeldArray.myWelXXline_8 = m_XXPlLineArr[7];
+                }
+                else if (m_XXPlLineArr.length == 9) {
+                    myWeldArray.myWelXX_num = 9;
+                    myWeldArray.myWelXXline_1 = m_XXPlLineArr[0];
+                    myWeldArray.myWelXXline_2 = m_XXPlLineArr[1];
+                    myWeldArray.myWelXXline_3 = m_XXPlLineArr[2];
+                    myWeldArray.myWelXXline_4 = m_XXPlLineArr[3];
+                    myWeldArray.myWelXXline_5 = m_XXPlLineArr[4];
+                    myWeldArray.myWelXXline_6 = m_XXPlLineArr[5];
+                    myWeldArray.myWelXXline_7 = m_XXPlLineArr[6];
+                    myWeldArray.myWelXXline_8 = m_XXPlLineArr[7];
+                    myWeldArray.myWelXXline_9 = m_XXPlLineArr[8];
+                }
+                else if (m_XXPlLineArr.length == 10) {
+                    myWeldArray.myWelXX_num = 10;
+                    myWeldArray.myWelXXline_1 = m_XXPlLineArr[0];
+                    myWeldArray.myWelXXline_2 = m_XXPlLineArr[1];
+                    myWeldArray.myWelXXline_3 = m_XXPlLineArr[2];
+                    myWeldArray.myWelXXline_4 = m_XXPlLineArr[3];
+                    myWeldArray.myWelXXline_5 = m_XXPlLineArr[4];
+                    myWeldArray.myWelXXline_6 = m_XXPlLineArr[5];
+                    myWeldArray.myWelXXline_7 = m_XXPlLineArr[6];
+                    myWeldArray.myWelXXline_8 = m_XXPlLineArr[7];
+                    myWeldArray.myWelXXline_9 = m_XXPlLineArr[8];
+                    myWeldArray.myWelXXline_10 = m_XXPlLineArr[9];
+                }
+                var m_mtlLineArr = [];
+                m_mtlLineArr = GetMultiPointLineInterXX(myWeldArray.myWelGUIP, myWeldArray.myWelWEIP, myWeldArray.myWelXXline_1.myPolyStartP.y, FourMP_PolyLArray)
+                if (m_mtlLineArr.length == 1) {
+                    var bj = FALSE;
+                    if (myWeldArray.myWelMSStorEdorMd_1 == "Start") {
+                        if (CheckAngleIn(myWeldArray.myWelMSline_1.myPolyStartP, myWeldArray.myWelMSline_1.myPolyEndP, myWeldArray.myWelMSline_2.myPolyStartP, 73, 65)
+                            || CheckAngleIn(myWeldArray.myWelMSline_1.myPolyStartP, myWeldArray.myWelMSline_1.myPolyEndP, myWeldArray.myWelMSline_2.myPolyEndP, 73, 65)) {
+                            bj = TRUE;
                         }
-                        if (bj == TRUE) {
+                    }
+                    else if (myWeldArray.GetAt(i).m_MSStorEdorMd_1 == "End") {
+                        if (CheckAngleIn(myWeldArray.myWelMSline_1.myPolyEndP, myWeldArray.myWelMSline_1.myPolyStartP, myWeldArray.myWelMSline_2.myPolyStartP, 73, 65)
+                            || CheckAngleIn(myWeldArray.myWelMSline_1.myPolyEndP, myWeldArray.myWelMSline_1.myPolyStartP, myWeldArray.myWelMSline_2.myPolyEndP, 73, 65)) {
+                            bj = TRUE;
+                        }
+                    }
+                    if (bj == TRUE) {
+                        myWeldArray.myWelDOWN_num = 1;
+                        myWeldArray.myWelDOWNline_1 = m_mtlLineArr[0];
+                        myWeldArray.myWelType = "Y_DMSCPoKDuiJieH"
+                    }
+                }
+            }
+        }
+    }
+    else if (nG == 0 && nW == 1 && nS == 1 && nX == 1 && nM == 1) {
+        if (myWeldArray.myWelMSline_1.myPolyPNum == 2 && myWeldArray.myWelMSStorEdorMd_1 != "Mid"
+            && myWeldArray.myWelMXline_1.myPolyPNum == 2 && myWeldArray.myWelMXStorEdorMd_1 != "Mid"
+            && myWeldArray.myWelMidline_1.myPolyPNum == 2
+            && myWeldArray.myWelWHline_1.myPolyPNum == 3) {
+            if (CheckAngleIn(myWeldArray.myWelWHline_1.myPolyMid, myWeldArray.myWelWHline_1.myPolyStartP, myWeldArray.myWelWHline_1.myPolyEndP, 92, 78)) {
+
+                if (myWeldArray.myWelMidline_1.myPolyStartP.y > myWeldArray.myWelMidline_1.myPolyEndP.y) {
+                    if ((CheckAngleIn(myWeldArray.myWelMSline_1.myPolyStartP, myWeldArray.myWelMSline_1.myPolyEndP, myWeldArray.myWelMidline_1.myPolyStartP, 51, 43) ||
+                        CheckAngleIn(myWeldArray.myWelMSline_1.myPolyEndP, myWeldArray.myWelMSline_1.myPolyStartP, myWeldArray.myWelMidline_1.myPolyStartP, 51, 43))
+                        && (CheckAngleIn(myWeldArray.myWelMXline_1.myPolyStartP, myWeldArray.myWelMXline_1.myPolyEndP, myWeldArray.myWelMidline_1.myPolyEndP, 51, 43) ||
+                            CheckAngleIn(myWeldArray.myWelMXline_1.myPolyEndP, myWeldArray.myWelMXline_1.myPolyStartP, myWeldArray.myWelMidline_1.myPolyEndP, 51, 43))) {
+                        var dis;
+                        dis = GetDisFromTwoPoint(myWeldArray.myWelGUIP, myWeldArray.myWelWEIP);
+                        var res_PolyLineArr = [];
+                        res_PolyLineArr = GetGraphFromArea(myWeldArray.myWelMSline_1.myPolyStartP.x, myWeldArray.myWelMSline_1.myPolyEndP.x, myWeldArray.myWelMidline_1.myPolyStartP.y, dis, "up", TwoP_PolyLArray, ThreeP_PolyLArray)
+                        if (res_PolyLineArr.length == 2) {
+                            myWeldArray.myWelUP_num = 2;
+                            myWeldArray.myWelUPline_1 = res_PolyLineArr[0];
+                            myWeldArray.myWelUPline_2 = res_PolyLineArr[1];
+                        }
+                        else if (res_PolyLineArr.length == 1) {
+                            myWeldArray.myWelUP_num = 1;
+                            myWeldArray.myWelUPline_1 = res_PolyLineArr[0];
+                        }
+                        var res_XPolyLineArr = [];
+                        res_XPolyLineArr = GetGraphFromArea(myWeldArray.myWelMXline_1.myPolyStartP.x, myWeldArray.myWelMXline_1.myPolyEndP.x, myWeldArray.myWelMidline_1.myPolyEndP.y, dis, "down", TwoP_PolyLArray, ThreeP_PolyLArray)
+                        if (res_XPolyLineArr.length == 2) {
+                            myWeldArray.myWelDOWN_num = 2;
+                            myWeldArray.myWelDOWNline_1 = res_XPolyLineArr[0];
+                            myWeldArray.myWelDOWNline_2 = res_XPolyLineArr[1];
+                        }
+                        else if (res_XPolyLineArr.length == 1) {
                             myWeldArray.myWelDOWN_num = 1;
-                            myWeldArray.myWelDOWNline_1 = m_mtlLineArr[0];
-                            myWeldArray.myWelType = "Y_DMSCPoKDuiJieH"
+                            myWeldArray.myWelDOWNline_1 = res_XPolyLineArr[0];
+                        }
+                        if (myWeldArray.myWelUP_num == 0 && myWeldArray.myWelDOWN_num == 0) {
+                            myWeldArray.myWelType = "Y_SMPoKRTH"
+                        }
+                        else if (myWeldArray.myWelUP_num != 0 && myWeldArray.myWelDOWN_num != 0) {
+                            myWeldArray.myWelType = "Y_SMPoKGaiBRTH"
+                        }
+                    }
+                }
+                else {
+                    if ((CheckAngleIn(myWeldArray.myWelMSline_1.myPolyStartP, myWeldArray.myWelMSline_1.myPolyEndP, myWeldArray.myWelMidline_1.myPolyEndP, 51, 43) ||
+                        CheckAngleIn(myWeldArray.myWelMSline_1.myPolyEndP, myWeldArray.myWelMSline_1.myPolyStartP, myWeldArray.myWelMidline_1.myPolyEndP, 51, 43))
+                        && (CheckAngleIn(myWeldArray.myWelMXline_1.myPolyStartP, myWeldArray.myWelMXline_1.myPolyEndP, myWeldArray.myWelMidline_1.myPolyStartP, 51, 43) ||
+                            CheckAngleIn(myWeldArray.myWelMXline_1.myPolyEndP, myWeldArray.myWelMXline_1.myPolyStartP, myWeldArray.myWelMidline_1.myPolyStartP, 51, 43))) {
+                        var dis;
+                        dis = GetDisFromTwoPoint(myWeldArray.myWelGUIP, myWeldArray.myWelWEIP);
+                        var res_PolyLineArr = [];
+                        res_PolyLineArr = GetGraphFromArea(myWeldArray.myWelMSline_1.myPolyStartP.x, myWeldArray.myWelMSline_1.myPolyEndP.x, myWeldArray.myWelMidline_1.myPolyEndP.y, dis, "up", TwoP_PolyLArray, ThreeP_PolyLArray)
+                        if (res_PolyLineArr.length == 2) {
+                            myWeldArray.myWelUP_num = 2;
+                            myWeldArray.myWelUPline_1 = res_PolyLineArr[0];
+                            myWeldArray.myWelUPline_2 = res_PolyLineArr[1];
+                        }
+                        else if (res_PolyLineArr.length == 1) {
+                            myWeldArray.myWelUP_num = 1;
+                            myWeldArray.myWelUPline_1 = res_PolyLineArr[0];
+                        }
+                        var res_XPolyLineArr = [];
+                        res_XPolyLineArr = GetGraphFromArea(myWeldArray.myWelMXline_1.myPolyStartP.x, myWeldArray.myWelMXline_1.myPolyEndP.x, myWeldArray.myWelMidline_1.myPolyStartP.y, dis, "down", TwoP_PolyLArray, ThreeP_PolyLArray)
+                        if (res_XPolyLineArr.length == 2) {
+                            myWeldArray.myWelDOWN_num = 2;
+                            myWeldArray.myWelDOWNline_1 = res_XPolyLineArr[0];
+                            myWeldArray.myWelDOWNline_2 = res_XPolyLineArr[1];
+                        }
+                        else if (res_XPolyLineArr.length == 1) {
+                            myWeldArray.myWelDOWN_num = 1;
+                            myWeldArray.myWelDOWNline_1 = res_XPolyLineArr[0];
+                        }
+                        if (myWeldArray.myWelUP_num == 0 && myWeldArray.myWelDOWN_num == 0) {
+                            myWeldArray.myWelType = "Y_SMPoKRTH"
+                        }
+                        else if (myWeldArray.myWelUP_num != 0 && myWeldArray.myWelDOWN_num != 0) {
+                            myWeldArray.myWelType = "Y_SMPoKGaiBRTH"
                         }
                     }
                 }
             }
         }
-        else if (nG == 0 && nW == 1 && nS == 1 && nX == 1 && nM == 1) {
-            if (myWeldArray.myWelMSline_1.myPolyPNum == 2 && myWeldArray.myWelMSStorEdorMd_1 != "Mid"
-                && myWeldArray.myWelMXline_1.myPolyPNum == 2&&myWeldArray.myWelMXStorEdorMd_1!="Mid"
-                && myWeldArray.myWelMidline_1.myPolyPNum == 2
-                && myWeldArray.myWelWHline_1.myPolyPNum == 3) {
-                if (CheckAngleIn(myWeldArray.myWelWHline_1.myPolyMid, myWeldArray.myWelWHline_1.myPolyStartP, myWeldArray.myWelWHline_1.myPolyEndP, 92, 78)) {
-
-                    if(myWeldArray.myWelMidline_1.myPolyStartP.y>myWeldArray.myWelMidline_1.myPolyEndP.y)
-                    {
-                        if ((CheckAngleIn(myWeldArray.myWelMSline_1.myPolyStartP, myWeldArray.myWelMSline_1.myPolyEndP, myWeldArray.myWelMidline_1.myPolyStartP, 51, 43)||
-                            CheckAngleIn(myWeldArray.myWelMSline_1.myPolyEndP, myWeldArray.myWelMSline_1.myPolyStartP, myWeldArray.myWelMidline_1.myPolyStartP, 51, 43))
-                           &&(CheckAngleIn(myWeldArray.myWelMXline_1.myPolyStartP, myWeldArray.myWelMXline_1.myPolyEndP, myWeldArray.myWelMidline_1.myPolyEndP, 51, 43)||
-                            CheckAngleIn(myWeldArray.myWelMXline_1.myPolyEndP, myWeldArray.myWelMXline_1.myPolyStartP, myWeldArray.myWelMidline_1.myPolyEndP, 51, 43)))
-                        {
-                            var dis;
-                            dis = GetDisFromTwoPoint(myWeldArray.myWelGUIP, myWeldArray.myWelWEIP);
-                            var res_PolyLineArr = [];
-                            res_PolyLineArr = GetGraphFromArea(myWeldArray.myWelMSline_1.myPolyStartP.x, myWeldArray.myWelMSline_1.myPolyEndP.x, myWeldArray.myWelMidline_1.myPolyStartP.y, dis, "up", TwoP_PolyLArray, ThreeP_PolyLArray)
-                            if (res_PolyLineArr.length == 2) {
-                                myWeldArray.myWelUP_num = 2;
-                                myWeldArray.myWelUPline_1 = res_PolyLineArr[0];
-                                myWeldArray.myWelUPline_2 = res_PolyLineArr[1];
-                            }
-                            else if (res_PolyLineArr.length == 1) {
-                                myWeldArray.myWelUP_num = 1;
-                                myWeldArray.myWelUPline_1 = res_PolyLineArr[0];
-                            }
-                            var res_XPolyLineArr = [];
-                            res_XPolyLineArr = GetGraphFromArea(myWeldArray.myWelMXline_1.myPolyStartP.x, myWeldArray.myWelMXline_1.myPolyEndP.x, myWeldArray.myWelMidline_1.myPolyEndP.y, dis, "down", TwoP_PolyLArray, ThreeP_PolyLArray)
-                            if (res_XPolyLineArr.length == 2) {
-                                myWeldArray.myWelDOWN_num = 2;
-                                myWeldArray.myWelDOWNline_1 = res_XPolyLineArr[0];
-                                myWeldArray.myWelDOWNline_2 = res_XPolyLineArr[1];
-                            }
-                            else if (res_XPolyLineArr.length == 1) {
-                                myWeldArray.myWelDOWN_num = 1;
-                                myWeldArray.myWelDOWNline_1 = res_XPolyLineArr[0];
-                            }
-                            if (myWeldArray.myWelUP_num == 0 && myWeldArray.myWelDOWN_num == 0) {
-                                myWeldArray.myWelType = "Y_SMPoKRTH"
-                            }
-                            else if (myWeldArray.myWelUP_num != 0 && myWeldArray.myWelDOWN_num != 0) {
-                                myWeldArray.myWelType = "Y_SMPoKGaiBRTH"
-                            }
-                        }
-                }
-                else 
-                {
-                        if ((CheckAngleIn(myWeldArray.myWelMSline_1.myPolyStartP, myWeldArray.myWelMSline_1.myPolyEndP, myWeldArray.myWelMidline_1.myPolyEndP, 51, 43) ||
-                            CheckAngleIn(myWeldArray.myWelMSline_1.myPolyEndP, myWeldArray.myWelMSline_1.myPolyStartP, myWeldArray.myWelMidline_1.myPolyEndP, 51, 43))
-                           && (CheckAngleIn(myWeldArray.myWelMXline_1.myPolyStartP, myWeldArray.myWelMXline_1.myPolyEndP, myWeldArray.myWelMidline_1.myPolyStartP, 51, 43) ||
-                            CheckAngleIn(myWeldArray.myWelMXline_1.myPolyEndP, myWeldArray.myWelMXline_1.myPolyStartP, myWeldArray.myWelMidline_1.myPolyStartP, 51, 43))) {
-                            var dis;
-                            dis = GetDisFromTwoPoint(myWeldArray.myWelGUIP, myWeldArray.myWelWEIP);
-                            var res_PolyLineArr = [];
-                            res_PolyLineArr = GetGraphFromArea(myWeldArray.myWelMSline_1.myPolyStartP.x, myWeldArray.myWelMSline_1.myPolyEndP.x, myWeldArray.myWelMidline_1.myPolyEndP.y, dis, "up", TwoP_PolyLArray, ThreeP_PolyLArray)
-                            if (res_PolyLineArr.length == 2) {
-                                myWeldArray.myWelUP_num = 2;
-                                myWeldArray.myWelUPline_1 = res_PolyLineArr[0];
-                                myWeldArray.myWelUPline_2 = res_PolyLineArr[1];
-                            }
-                            else if (res_PolyLineArr.length == 1) {
-                                myWeldArray.myWelUP_num = 1;
-                                myWeldArray.myWelUPline_1 = res_PolyLineArr[0];
-                            }
-                            var res_XPolyLineArr = [];
-                            res_XPolyLineArr = GetGraphFromArea(myWeldArray.myWelMXline_1.myPolyStartP.x, myWeldArray.myWelMXline_1.myPolyEndP.x, myWeldArray.myWelMidline_1.myPolyStartP.y, dis, "down", TwoP_PolyLArray, ThreeP_PolyLArray)
-                            if (res_XPolyLineArr.length == 2) {
-                                myWeldArray.myWelDOWN_num = 2;
-                                myWeldArray.myWelDOWNline_1 = res_XPolyLineArr[0];
-                                myWeldArray.myWelDOWNline_2 = res_XPolyLineArr[1];
-                            }
-                            else if (res_XPolyLineArr.length == 1) {
-                                myWeldArray.myWelDOWN_num = 1;
-                                myWeldArray.myWelDOWNline_1 = res_XPolyLineArr[0];
-                            }
-                            if (myWeldArray.myWelUP_num == 0 && myWeldArray.myWelDOWN_num == 0) {
-                                myWeldArray.myWelType = "Y_SMPoKRTH" 
-                            }
-                            else if (myWeldArray.myWelUP_num != 0 && myWeldArray.myWelDOWN_num != 0) {
-                                myWeldArray.myWelType = "Y_SMPoKGaiBRTH" 
-                            }
-                        }
-                    }                                    
-                }
-            }
-        }
-        return myWeldArray;  
+    }
+    return myWeldArray;
 }
 
 function myArrow(m_ObjectID, m_DingP, m_DiA, m_DiB, m_Mid) {
@@ -2903,7 +2990,12 @@ function ChangeWeldColorbyHandle(myWeldArray, myColorID) {
 
 //角焊缝
 function JiaoWeldAdd() {
-    console.log("手动添加焊缝");
+
+    //创建一个图层,名为"CircleLayer"
+    mxOcx.AddLayer("JiaoLayer");
+    //设置当前图层为"CircleLayer"
+    mxOcx.LayerName = "JiaoLayer";
+
     // 创建一个与用户交互取点的对象。
     var getPt = mxOcx.NewComObject("IMxDrawUiPrPoint");
     getPt.message = "输入标注插入基点";
@@ -2929,21 +3021,64 @@ function JiaoWeldAdd() {
 
 
     var ret = spDrawData.Draw();
+    //------用多段线画箭头
+    //var pl = mxOcx.NewEntity("IMxDrawPolyline");
+    //var pt = mxOcx.NewPoint();
+    //pt.x = getPt.value().x;
+    //pt.y = getPt.value().y;
+    //pl.AddVertexAt(pt, 0, 0, 0.5);
+    //var ll=Math.sqrt((Math.pow((getSecondPt.value().x-getPt.value().x),2)+Math.pow((getSecondPt.value().y-getPt.value().y),2)),2)
+    //pt.x =getPt.value().x+ 1.5*(getSecondPt.value().x - getPt.value().x) / ll;
+    //pt.y =getPt.value().y+ 1.5 * (getSecondPt.value().y - getPt.value().y) / ll;
+    //pl.AddVertexAt(pt, 0, 0.5, 0);
+    //var d = mxOcx.DrawEntity(pl)
+    //var database = mxOcx.GetDatabase();
+    //var ent;
+    //ent = database.ObjectIdToObject(d);
+    //var hd = ent.handle;
+    //alert(hd);
 
-    // 设置绘制的批注文字样式。
-    //for (var i = 0; i < ret.Count; i++) {
-    //    var ent = ret.AtObject(i);
-    //    var hd = ent.handle;
-    //    var type = ent.ObjectName;
-    //}
-    var ent = ret.AtObject(0);
+    //用填充画箭头
+    mxOcx.AddPatternDefinition("SOLID", "((0, 0,0, 0,0.125))");
+    //把路径变成一个填充对象
+    mxOcx.PatternDefinition = "SOLID";
+    mxOcx.PathMoveTo(getPt.value().x, getPt.value().y);
+    var pt = mxOcx.NewPoint();
+    var pt_e = mxOcx.NewPoint();
+    var ll = Math.sqrt((Math.pow((getSecondPt.value().x - getPt.value().x), 2) + Math.pow((getSecondPt.value().y - getPt.value().y), 2)), 2)
+    pt.x = getPt.value().x + 1.5 * (getSecondPt.value().x - getPt.value().x) / ll;
+    pt.y = getPt.value().y + 1.5 * (getSecondPt.value().y - getPt.value().y) / ll;
+    pt_e.x = pt.x - (pt.y - getPt.value().y) / 3
+    pt_e.y = pt.y + (pt.x - getPt.value().x) / 3
+    //路径的一下个点
+    mxOcx.PathLineTo(pt_e.x, pt_e.y);
+    //路径的一下个点
+    pt_e.x = pt.x + (pt.y - getPt.value().y) / 3
+    pt_e.y = pt.y - (pt.x - getPt.value().x) / 3
+    mxOcx.PathLineTo(pt_e.x, pt_e.y);
+    //路径的一下个点
+    mxOcx.PathLineTo(getPt.value().x, getPt.value().y);
+
+    mxOcx.AddLinetype("MLineType1", "");
+    mxOcx.LineType = "MLineType1";
+    var id = mxOcx.DrawPathToHatch(1);
+    var database = mxOcx.GetDatabase();
+    var ent;
+    ent = database.ObjectIdToObject(id);
     var hd = ent.handle;
-    //绘制完成后保存焊缝到数据
-    var weldData = [];    
-    weldData.push({ WeldType: 'ManJiaoH', HandleID: hd });    
-    saveWeldData(weldData);
-    return hd;
+    var hdArray = [];
+    hdArray[hdArray.length] = hd;
+    // 设置绘制的批注文字样式。
+    for (var i = 0; i < ret.Count; i++) {
+        ent = ret.AtObject(i);
+        hd = ent.handle;
+        hdArray[hdArray.length] = hd;
+    }
+    //var ent = ret.AtObject(0);
+    //var hd = ent.handle;
+    return hdArray;
 }
+
 // 拖放动态绘制函数。
 function DoDynWorldDrawFun(dX, dY, pWorldDraw, pData) {
     var sGuid = pData.Guid;
@@ -3110,12 +3245,27 @@ function MouseEvent(dX, dY, lType) {
             mxOcx.UpdateDisplay();
 
         }
+    }
+    if (lType == 3) {
+        // 鼠标右键按下 后选中鼠标附件实体，并显示右键菜单
+        var filter = mxOcx.NewResbuf();
+        var ent = mxOcx.FindEntAtPoint(dX, dY, filter);
 
+        var sPopMenu;
+        if (ent != null) {
+            mxOcx.ClearCurrentSelect();
+            mxOcx.AddCurrentSelect(ent.ObjectID, true, true);
+            
+            sPopMenu = "http://" + window.location.host + "/Content/testPOPMenu.mnu"; //mxOcx.GetOcxAppPath() + "\\testPOPMenu.mnu";
+        }
+        else {
+            sPopMenu = "http://" + window.location.host + "/Content/testPOPMenuWeld.mnu";  //mxOcx.GetOcxAppPath() + "\\testPOPMenuWeld.mnu";
+        }
+        console.log(sPopMenu);
 
-
-
-
-
+        mxOcx.TrackPopupMenu(dX, dY, sPopMenu);
+        // 设置1，表示鼠标事件，不再往下传递.
+        mxOcx.SetEventRet(1);
     }
 }
 // 移动自定义实体夹点
@@ -3238,6 +3388,472 @@ function ExplodeFun(pCustomEntity, pWorldDraw, txt) {
 
     }
 }
+
+//获取焊缝符号所有图元的handle数组
+function GetWeldHandle(myWeldArray) {
+    var handleArray = [];
+    var mxOcx = document.all.item("MxDrawXCtrl");
+    var database = mxOcx.GetDatabase();
+    var ent;
+
+    if (myWeldArray.myWelYINnum == 1) {
+        handleArray[handleArray.length] = myWeldArray.myWelYINline1.myPolyLineObjectID
+    }
+    else if (myWeldArray.myWelYINnum == 2) {
+        handleArray[handleArray.length] = myWeldArray.myWelYINline1.myPolyLineObjectID;
+        handleArray[handleArray.length] = myWeldArray.myWelYINline2.myPolyLineObjectID;
+    }
+
+    if (myWeldArray.myWelGH_num == 1) {
+        ent = database.HandleToObject(myWeldArray.myWelGHline1.myPolyLineObjectID);
+        ent.ColorIndex = myColorID
+    }
+    else if (myWeldArray.myWelGH_num == 2) {
+        handleArray[handleArray.length] = myWeldArray.myWelGHline1.myPolyLineObjectID;
+        handleArray[handleArray.length] = myWeldArray.myWelGHline2.myPolyLineObjectID;
+    }
+
+    if (myWeldArray.myWelWH_num == 1) {
+        handleArray[handleArray.length] = myWeldArray.myWelWHline_1.myPolyLineObjectID;
+    }
+    else if (myWeldArray.myWelWH_num == 2) {
+        handleArray[handleArray.length] = myWeldArray.myWelWHline_1.myPolyLineObjectID;
+        handleArray[handleArray.length] = myWeldArray.myWelWHline_2.myPolyLineObjectID;
+    }
+
+    if (myWeldArray.myWelMS_num == 1) {
+        handleArray[handleArray.length] = myWeldArray.myWelMSline_1.myPolyLineObjectID;
+    }
+    else if (myWeldArray.myWelMS_num == 2) {
+        handleArray[handleArray.length] = myWeldArray.myWelMSline_1.myPolyLineObjectID;
+        handleArray[handleArray.length] = myWeldArray.myWelMSline_2.myPolyLineObjectID;
+    }
+    else if (myWeldArray.myWelMS_num == 3) {
+        handleArray[handleArray.length] = myWeldArray.myWelMSline_1.myPolyLineObjectID;
+        handleArray[handleArray.length] = myWeldArray.myWelMSline_2.myPolyLineObjectID;
+        handleArray[handleArray.length] = myWeldArray.myWelMSline_3.myPolyLineObjectID;
+    }
+
+    if (myWeldArray.myWelMX_num == 1) {
+        handleArray[handleArray.length] = myWeldArray.myWelMXline_1.myPolyLineObjectID;
+    }
+    else if (myWeldArray.myWelMX_num == 2) {
+        handleArray[handleArray.length] = myWeldArray.myWelMXline_1.myPolyLineObjectID;
+        handleArray[handleArray.length] = myWeldArray.myWelMXline_2.myPolyLineObjectID;
+    }
+    else if (myWeldArray.myWelMX_num == 3) {
+        handleArray[handleArray.length] = myWeldArray.myWelMXline_1.myPolyLineObjectID;
+        handleArray[handleArray.length] = myWeldArray.myWelMXline_2.myPolyLineObjectID;
+        handleArray[handleArray.length] = myWeldArray.myWelMXline_3.myPolyLineObjectID;
+    }
+
+    if (myWeldArray.myWelMid_num == 1) {
+        handleArray[handleArray.length] = myWeldArray.myWelMidline_1.myPolyLineObjectID;
+    }
+    else if (myWeldArray.myWelMid_num == 2) {
+        handleArray[handleArray.length] = myWeldArray.myWelMidline_1.myPolyLineObjectID;
+        handleArray[handleArray.length] = myWeldArray.myWelMidline_2.myPolyLineObjectID;
+    }
+
+    if (myWeldArray.myWelUP_num == 1) {
+        handleArray[handleArray.length] = myWeldArray.myWelUPline_1.myPolyLineObjectID;
+    }
+    else if (myWeldArray.myWelUP_num == 2) {
+        handleArray[handleArray.length] = myWeldArray.myWelUPline_1.myPolyLineObjectID;
+        handleArray[handleArray.length] = myWeldArray.myWelUPline_2.myPolyLineObjectID;
+    }
+    else if (myWeldArray.myWelUP_num == 3) {
+        handleArray[handleArray.length] = myWeldArray.myWelUPline_1.myPolyLineObjectID;
+        handleArray[handleArray.length] = myWeldArray.myWelUPline_2.myPolyLineObjectID;
+        handleArray[handleArray.length] = myWeldArray.myWelUPline_3.myPolyLineObjectID;
+    }
+
+    if (myWeldArray.myWelXX_num == 1) {
+        handleArray[handleArray.length] = myWeldArray.myWelXXline_1.myPolyLineObjectID;
+    }
+    else if (myWeldArray.myWelXX_num == 2) {
+        handleArray[handleArray.length] = myWeldArray.myWelXXline_1.myPolyLineObjectID;
+        handleArray[handleArray.length] = myWeldArray.myWelXXline_2.myPolyLineObjectID;
+    }
+    else if (myWeldArray.myWelXX_num == 3) {
+        handleArray[handleArray.length] = myWeldArray.myWelXXline_1.myPolyLineObjectID;
+        handleArray[handleArray.length] = myWeldArray.myWelXXline_2.myPolyLineObjectID;
+        handleArray[handleArray.length] = myWeldArray.myWelXXline_3.myPolyLineObjectID;
+    }
+    else if (myWeldArray.myWelXX_num == 4) {
+        handleArray[handleArray.length] = myWeldArray.myWelXXline_1.myPolyLineObjectID;
+        handleArray[handleArray.length] = myWeldArray.myWelXXline_2.myPolyLineObjectID;
+        handleArray[handleArray.length] = myWeldArray.myWelXXline_3.myPolyLineObjectID;
+        handleArray[handleArray.length] = myWeldArray.myWelXXline_4.myPolyLineObjectID;
+    }
+    else if (myWeldArray.myWelXX_num == 5) {
+        handleArray[handleArray.length] = myWeldArray.myWelXXline_1.myPolyLineObjectID;
+        handleArray[handleArray.length] = myWeldArray.myWelXXline_2.myPolyLineObjectID;
+        handleArray[handleArray.length] = myWeldArray.myWelXXline_3.myPolyLineObjectID;
+        handleArray[handleArray.length] = myWeldArray.myWelXXline_4.myPolyLineObjectID;
+        handleArray[handleArray.length] = myWeldArray.myWelXXline_5.myPolyLineObjectID;
+    }
+    else if (myWeldArray.myWelXX_num == 6) {
+        handleArray[handleArray.length] = myWeldArray.myWelXXline_1.myPolyLineObjectID;
+        handleArray[handleArray.length] = myWeldArray.myWelXXline_2.myPolyLineObjectID;
+        handleArray[handleArray.length] = myWeldArray.myWelXXline_3.myPolyLineObjectID;
+        handleArray[handleArray.length] = myWeldArray.myWelXXline_4.myPolyLineObjectID;
+        handleArray[handleArray.length] = myWeldArray.myWelXXline_5.myPolyLineObjectID;
+        handleArray[handleArray.length] = myWeldArray.myWelXXline_6.myPolyLineObjectID;
+    }
+    else if (myWeldArray.myWelXX_num == 7) {
+        handleArray[handleArray.length] = myWeldArray.myWelXXline_1.myPolyLineObjectID;
+        handleArray[handleArray.length] = myWeldArray.myWelXXline_2.myPolyLineObjectID;
+        handleArray[handleArray.length] = myWeldArray.myWelXXline_3.myPolyLineObjectID;
+        handleArray[handleArray.length] = myWeldArray.myWelXXline_4.myPolyLineObjectID;
+        handleArray[handleArray.length] = myWeldArray.myWelXXline_5.myPolyLineObjectID;
+        handleArray[handleArray.length] = myWeldArray.myWelXXline_6.myPolyLineObjectID;
+        handleArray[handleArray.length] = myWeldArray.myWelXXline_7.myPolyLineObjectID;
+    }
+    else if (myWeldArray.myWelXX_num == 8) {
+        handleArray[handleArray.length] = myWeldArray.myWelXXline_1.myPolyLineObjectID;
+        handleArray[handleArray.length] = myWeldArray.myWelXXline_2.myPolyLineObjectID;
+        handleArray[handleArray.length] = myWeldArray.myWelXXline_3.myPolyLineObjectID;
+        handleArray[handleArray.length] = myWeldArray.myWelXXline_4.myPolyLineObjectID;
+        handleArray[handleArray.length] = myWeldArray.myWelXXline_5.myPolyLineObjectID;
+        handleArray[handleArray.length] = myWeldArray.myWelXXline_6.myPolyLineObjectID;
+        handleArray[handleArray.length] = myWeldArray.myWelXXline_7.myPolyLineObjectID;
+        handleArray[handleArray.length] = myWeldArray.myWelXXline_8.myPolyLineObjectID;
+    }
+    else if (myWeldArray.myWelXX_num == 9) {
+        handleArray[handleArray.length] = myWeldArray.myWelXXline_1.myPolyLineObjectID;
+        handleArray[handleArray.length] = myWeldArray.myWelXXline_2.myPolyLineObjectID;
+        handleArray[handleArray.length] = myWeldArray.myWelXXline_3.myPolyLineObjectID;
+        handleArray[handleArray.length] = myWeldArray.myWelXXline_4.myPolyLineObjectID;
+        handleArray[handleArray.length] = myWeldArray.myWelXXline_5.myPolyLineObjectID;
+        handleArray[handleArray.length] = myWeldArray.myWelXXline_6.myPolyLineObjectID;
+        handleArray[handleArray.length] = myWeldArray.myWelXXline_7.myPolyLineObjectID;
+        handleArray[handleArray.length] = myWeldArray.myWelXXline_8.myPolyLineObjectID;
+        handleArray[handleArray.length] = myWeldArray.myWelXXline_9.myPolyLineObjectID;
+    }
+    else if (myWeldArray.myWelXX_num == 10) {
+        handleArray[handleArray.length] = myWeldArray.myWelXXline_1.myPolyLineObjectID;
+        handleArray[handleArray.length] = myWeldArray.myWelXXline_2.myPolyLineObjectID;
+        handleArray[handleArray.length] = myWeldArray.myWelXXline_3.myPolyLineObjectID;
+        handleArray[handleArray.length] = myWeldArray.myWelXXline_4.myPolyLineObjectID;
+        handleArray[handleArray.length] = myWeldArray.myWelXXline_5.myPolyLineObjectID;
+        handleArray[handleArray.length] = myWeldArray.myWelXXline_6.myPolyLineObjectID;
+        handleArray[handleArray.length] = myWeldArray.myWelXXline_7.myPolyLineObjectID;
+        handleArray[handleArray.length] = myWeldArray.myWelXXline_8.myPolyLineObjectID;
+        handleArray[handleArray.length] = myWeldArray.myWelXXline_9.myPolyLineObjectID;
+        handleArray[handleArray.length] = myWeldArray.myWelXXline_10.myPolyLineObjectID;
+    }
+
+    if (myWeldArray.myWelDOWN_num == 1) {
+        handleArray[handleArray.length] = myWeldArray.myWelDOWNline_1.myPolyLineObjectID;
+    }
+    else if (myWeldArray.myWelDOWN_num == 2) {
+        handleArray[handleArray.length] = myWeldArray.myWelDOWNline_1.myPolyLineObjectID;
+        handleArray[handleArray.length] = myWeldArray.myWelDOWNline_2.myPolyLineObjectID;
+    }
+    else if (myWeldArray.myWelDOWN_num == 3) {
+        handleArray[handleArray.length] = myWeldArray.myWelDOWNline_1.myPolyLineObjectID;
+        handleArray[handleArray.length] = myWeldArray.myWelDOWNline_2.myPolyLineObjectID;
+        handleArray[handleArray.length] = myWeldArray.myWelDOWNline_3.myPolyLineObjectID;
+    }
+    return handleArray;
+}
+
+//根据焊接符号类型修改其所在图层
+function ChangeWeldLayerbyHandle(myWeldArray) {
+    if (myWeldArray.myWelType == "") {
+        return;
+    }
+    var mxOcx = document.all.item("MxDrawXCtrl");
+    var database = mxOcx.GetDatabase();
+    // 得到层表.
+    var layerTable = database.GetLayerTable();
+    var sLayerName = myWeldArray.myWelType;
+    // 得到层。
+    var layer = layerTable.GetAt(sLayerName, true);
+    if (layer == null) {
+        // 如果没有层，就新建一个层。
+        var layerId = mxOcx.AddLayer(sLayerName);
+    }
+    var ent;
+    ent = database.HandleToObject(myWeldArray.myWelArrow.myArrowObjectID);
+    ent.Layer = sLayerName;
+    if (myWeldArray.myWelYINnum == 1) {
+        ent = database.HandleToObject(myWeldArray.myWelYINline1.myPolyLineObjectID);
+        ent.Layer = sLayerName;
+    }
+    else if (myWeldArray.myWelYINnum == 2) {
+        ent = database.HandleToObject(myWeldArray.myWelYINline1.myPolyLineObjectID);
+        ent.Layer = sLayerName;
+        ent = database.HandleToObject(myWeldArray.myWelYINline2.myPolyLineObjectID);
+        ent.Layer = sLayerName;
+    }
+
+    if (myWeldArray.myWelGH_num == 1) {
+        ent = database.HandleToObject(myWeldArray.myWelGHline1.myPolyLineObjectID);
+        ent.Layer = sLayerName;
+    }
+    else if (myWeldArray.myWelGH_num == 2) {
+        ent = database.HandleToObject(myWeldArray.myWelGHline1.myPolyLineObjectID);
+        ent.Layer = sLayerName;
+        ent = database.HandleToObject(myWeldArray.myWelGHline2.myPolyLineObjectID);
+        ent.Layer = sLayerName;
+    }
+
+    if (myWeldArray.myWelWH_num == 1) {
+        ent = database.HandleToObject(myWeldArray.myWelWHline_1.myPolyLineObjectID);
+        ent.Layer = sLayerName;
+    }
+    else if (myWeldArray.myWelWH_num == 2) {
+        ent = database.HandleToObject(myWeldArray.myWelWHline_1.myPolyLineObjectID);
+        ent.Layer = sLayerName;
+        ent = database.HandleToObject(myWeldArray.myWelWHline_2.myPolyLineObjectID);
+        ent.Layer = sLayerName;
+    }
+
+    if (myWeldArray.myWelMS_num == 1) {
+        ent = database.HandleToObject(myWeldArray.myWelMSline_1.myPolyLineObjectID);
+        ent.Layer = sLayerName;
+    }
+    else if (myWeldArray.myWelMS_num == 2) {
+        ent = database.HandleToObject(myWeldArray.myWelMSline_1.myPolyLineObjectID);
+        ent.Layer = sLayerName;
+        ent = database.HandleToObject(myWeldArray.myWelMSline_2.myPolyLineObjectID);
+        ent.Layer = sLayerName;
+    }
+    else if (myWeldArray.myWelMS_num == 3) {
+        ent = database.HandleToObject(myWeldArray.myWelMSline_1.myPolyLineObjectID);
+        ent.Layer = sLayerName;
+        ent = database.HandleToObject(myWeldArray.myWelMSline_2.myPolyLineObjectID);
+        ent.Layer = sLayerName;
+        ent = database.HandleToObject(myWeldArray.myWelMSline_3.myPolyLineObjectID);
+        ent.Layer = sLayerName;
+    }
+
+    if (myWeldArray.myWelMX_num == 1) {
+        ent = database.HandleToObject(myWeldArray.myWelMXline_1.myPolyLineObjectID);
+        ent.Layer = sLayerName;
+    }
+    else if (myWeldArray.myWelMX_num == 2) {
+        ent = database.HandleToObject(myWeldArray.myWelMXline_1.myPolyLineObjectID);
+        ent.Layer = sLayerName;
+        ent = database.HandleToObject(myWeldArray.myWelMXline_2.myPolyLineObjectID);
+        ent.Layer = sLayerName;
+    }
+    else if (myWeldArray.myWelMX_num == 3) {
+        ent = database.HandleToObject(myWeldArray.myWelMXline_1.myPolyLineObjectID);
+        ent.Layer = sLayerName;
+        ent = database.HandleToObject(myWeldArray.myWelMXline_2.myPolyLineObjectID);
+        ent.Layer = sLayerName;
+        ent = database.HandleToObject(myWeldArray.myWelMXline_3.myPolyLineObjectID);
+        ent.Layer = sLayerName;
+    }
+
+    if (myWeldArray.myWelMid_num == 1) {
+        ent = database.HandleToObject(myWeldArray.myWelMidline_1.myPolyLineObjectID);
+        ent.Layer = sLayerName;
+    }
+    else if (myWeldArray.myWelMid_num == 2) {
+        ent = database.HandleToObject(myWeldArray.myWelMidline_1.myPolyLineObjectID);
+        ent.Layer = sLayerName;
+        ent = database.HandleToObject(myWeldArray.myWelMidline_2.myPolyLineObjectID);
+        ent.Layer = sLayerName;
+    }
+
+    if (myWeldArray.myWelUP_num == 1) {
+        ent = database.HandleToObject(myWeldArray.myWelUPline_1.myPolyLineObjectID);
+        ent.Layer = sLayerName;
+    }
+    else if (myWeldArray.myWelUP_num == 2) {
+        ent = database.HandleToObject(myWeldArray.myWelUPline_1.myPolyLineObjectID);
+        ent.Layer = sLayerName;
+        ent = database.HandleToObject(myWeldArray.myWelUPline_2.myPolyLineObjectID);
+        ent.Layer = sLayerName;
+    }
+    else if (myWeldArray.myWelUP_num == 3) {
+        ent = database.HandleToObject(myWeldArray.myWelUPline_1.myPolyLineObjectID);
+        ent.Layer = sLayerName;
+        ent = database.HandleToObject(myWeldArray.myWelUPline_2.myPolyLineObjectID);
+        ent.Layer = sLayerName;
+        ent = database.HandleToObject(myWeldArray.myWelUPline_3.myPolyLineObjectID);
+        ent.Layer = sLayerName;
+    }
+
+    if (myWeldArray.myWelXX_num == 1) {
+        ent = database.HandleToObject(myWeldArray.myWelXXline_1.myPolyLineObjectID);
+        ent.Layer = sLayerName;
+    }
+    else if (myWeldArray.myWelXX_num == 2) {
+        ent = database.HandleToObject(myWeldArray.myWelXXline_1.myPolyLineObjectID);
+        ent.Layer = sLayerName;
+        ent = database.HandleToObject(myWeldArray.myWelXXline_2.myPolyLineObjectID);
+        ent.Layer = sLayerName;
+    }
+    else if (myWeldArray.myWelXX_num == 3) {
+        ent = database.HandleToObject(myWeldArray.myWelXXline_1.myPolyLineObjectID);
+        ent.Layer = sLayerName;
+        ent = database.HandleToObject(myWeldArray.myWelXXline_2.myPolyLineObjectID);
+        ent.Layer = sLayerName;
+        ent = database.HandleToObject(myWeldArray.myWelXXline_3.myPolyLineObjectID);
+        ent.Layer = sLayerName;
+    }
+    else if (myWeldArray.myWelXX_num == 4) {
+        ent = database.HandleToObject(myWeldArray.myWelXXline_1.myPolyLineObjectID);
+        ent.Layer = sLayerName;
+        ent = database.HandleToObject(myWeldArray.myWelXXline_2.myPolyLineObjectID);
+        ent.Layer = sLayerName;
+        ent = database.HandleToObject(myWeldArray.myWelXXline_3.myPolyLineObjectID);
+        ent.Layer = sLayerName;
+        ent = database.HandleToObject(myWeldArray.myWelXXline_4.myPolyLineObjectID);
+        ent.Layer = sLayerName;
+    }
+    else if (myWeldArray.myWelXX_num == 5) {
+        ent = database.HandleToObject(myWeldArray.myWelXXline_1.myPolyLineObjectID);
+        ent.Layer = sLayerName;
+        ent = database.HandleToObject(myWeldArray.myWelXXline_2.myPolyLineObjectID);
+        ent.Layer = sLayerName;
+        ent = database.HandleToObject(myWeldArray.myWelXXline_3.myPolyLineObjectID);
+        ent.Layer = sLayerName;
+        ent = database.HandleToObject(myWeldArray.myWelXXline_4.myPolyLineObjectID);
+        ent.Layer = sLayerName;
+        ent = database.HandleToObject(myWeldArray.myWelXXline_5.myPolyLineObjectID);
+        ent.Layer = sLayerName;
+    }
+    else if (myWeldArray.myWelXX_num == 6) {
+        ent = database.HandleToObject(myWeldArray.myWelXXline_1.myPolyLineObjectID);
+        ent.Layer = sLayerName;
+        ent = database.HandleToObject(myWeldArray.myWelXXline_2.myPolyLineObjectID);
+        ent.Layer = sLayerName;
+        ent = database.HandleToObject(myWeldArray.myWelXXline_3.myPolyLineObjectID);
+        ent.Layer = sLayerName;
+        ent = database.HandleToObject(myWeldArray.myWelXXline_4.myPolyLineObjectID);
+        ent.Layer = sLayerName;
+        ent = database.HandleToObject(myWeldArray.myWelXXline_5.myPolyLineObjectID);
+        ent.Layer = sLayerName;
+        ent = database.HandleToObject(myWeldArray.myWelXXline_6.myPolyLineObjectID);
+        ent.Layer = sLayerName;
+    }
+    else if (myWeldArray.myWelXX_num == 7) {
+        ent = database.HandleToObject(myWeldArray.myWelXXline_1.myPolyLineObjectID);
+        ent.Layer = sLayerName;
+        ent = database.HandleToObject(myWeldArray.myWelXXline_2.myPolyLineObjectID);
+        ent.Layer = sLayerName;
+        ent = database.HandleToObject(myWeldArray.myWelXXline_3.myPolyLineObjectID);
+        ent.Layer = sLayerName;
+        ent = database.HandleToObject(myWeldArray.myWelXXline_4.myPolyLineObjectID);
+        ent.Layer = sLayerName;
+        ent = database.HandleToObject(myWeldArray.myWelXXline_5.myPolyLineObjectID);
+        ent.Layer = sLayerName;
+        ent = database.HandleToObject(myWeldArray.myWelXXline_6.myPolyLineObjectID);
+        ent.Layer = sLayerName;
+        ent = database.HandleToObject(myWeldArray.myWelXXline_7.myPolyLineObjectID);
+        ent.Layer = sLayerName;
+    }
+    else if (myWeldArray.myWelXX_num == 8) {
+        ent = database.HandleToObject(myWeldArray.myWelXXline_1.myPolyLineObjectID);
+        ent.Layer = sLayerName;
+        ent = database.HandleToObject(myWeldArray.myWelXXline_2.myPolyLineObjectID);
+        ent.Layer = sLayerName;
+        ent = database.HandleToObject(myWeldArray.myWelXXline_3.myPolyLineObjectID);
+        ent.Layer = sLayerName;
+        ent = database.HandleToObject(myWeldArray.myWelXXline_4.myPolyLineObjectID);
+        ent.Layer = sLayerName;
+        ent = database.HandleToObject(myWeldArray.myWelXXline_5.myPolyLineObjectID);
+        ent.Layer = sLayerName;
+        ent = database.HandleToObject(myWeldArray.myWelXXline_6.myPolyLineObjectID);
+        ent.Layer = sLayerName;
+        ent = database.HandleToObject(myWeldArray.myWelXXline_7.myPolyLineObjectID);
+        ent.Layer = sLayerName;
+        ent = database.HandleToObject(myWeldArray.myWelXXline_8.myPolyLineObjectID);
+        ent.Layer = sLayerName;
+    }
+    else if (myWeldArray.myWelXX_num == 9) {
+        ent = database.HandleToObject(myWeldArray.myWelXXline_1.myPolyLineObjectID);
+        ent.Layer = sLayerName;
+        ent = database.HandleToObject(myWeldArray.myWelXXline_2.myPolyLineObjectID);
+        ent.Layer = sLayerName;
+        ent = database.HandleToObject(myWeldArray.myWelXXline_3.myPolyLineObjectID);
+        ent.Layer = sLayerName;
+        ent = database.HandleToObject(myWeldArray.myWelXXline_4.myPolyLineObjectID);
+        ent.Layer = sLayerName;
+        ent = database.HandleToObject(myWeldArray.myWelXXline_5.myPolyLineObjectID);
+        ent.Layer = sLayerName;
+        ent = database.HandleToObject(myWeldArray.myWelXXline_6.myPolyLineObjectID);
+        ent.Layer = sLayerName;
+        ent = database.HandleToObject(myWeldArray.myWelXXline_7.myPolyLineObjectID);
+        ent.Layer = sLayerName;
+        ent = database.HandleToObject(myWeldArray.myWelXXline_8.myPolyLineObjectID);
+        ent.Layer = sLayerName;
+        ent = database.HandleToObject(myWeldArray.myWelXXline_9.myPolyLineObjectID);
+        ent.Layer = sLayerName;
+    }
+    else if (myWeldArray.myWelXX_num == 10) {
+        ent = database.HandleToObject(myWeldArray.myWelXXline_1.myPolyLineObjectID);
+        ent.Layer = sLayerName;
+        ent = database.HandleToObject(myWeldArray.myWelXXline_2.myPolyLineObjectID);
+        ent.Layer = sLayerName;
+        ent = database.HandleToObject(myWeldArray.myWelXXline_3.myPolyLineObjectID);
+        ent.Layer = sLayerName;
+        ent = database.HandleToObject(myWeldArray.myWelXXline_4.myPolyLineObjectID);
+        ent.Layer = sLayerName;
+        ent = database.HandleToObject(myWeldArray.myWelXXline_5.myPolyLineObjectID);
+        ent.Layer = sLayerName;
+        ent = database.HandleToObject(myWeldArray.myWelXXline_6.myPolyLineObjectID);
+        ent.Layer = sLayerName;
+        ent = database.HandleToObject(myWeldArray.myWelXXline_7.myPolyLineObjectID);
+        ent.Layer = sLayerName;
+        ent = database.HandleToObject(myWeldArray.myWelXXline_8.myPolyLineObjectID);
+        ent.Layer = sLayerName;
+        ent = database.HandleToObject(myWeldArray.myWelXXline_9.myPolyLineObjectID);
+        ent.Layer = sLayerName;
+        ent = database.HandleToObject(myWeldArray.myWelXXline_10.myPolyLineObjectID);
+        ent.Layer = sLayerName;
+    }
+
+    if (myWeldArray.myWelDOWN_num == 1) {
+        ent = database.HandleToObject(myWeldArray.myWelDOWNline_1.myPolyLineObjectID);
+        ent.Layer = sLayerName;
+    }
+    else if (myWeldArray.myWelDOWN_num == 2) {
+        ent = database.HandleToObject(myWeldArray.myWelDOWNline_1.myPolyLineObjectID);
+        ent.Layer = sLayerName;
+        ent = database.HandleToObject(myWeldArray.myWelDOWNline_2.myPolyLineObjectID);
+        ent.Layer = sLayerName;
+    }
+    else if (myWeldArray.myWelDOWN_num == 3) {
+        ent = database.HandleToObject(myWeldArray.myWelDOWNline_1.myPolyLineObjectID);
+        ent.Layer = sLayerName;
+        ent = database.HandleToObject(myWeldArray.myWelDOWNline_2.myPolyLineObjectID);
+        ent.Layer = sLayerName;
+        ent = database.HandleToObject(myWeldArray.myWelDOWNline_3.myPolyLineObjectID);
+        ent.Layer = sLayerName;
+    }
+}
+
+//根据名称显示图层
+function ShowLayerByName(sLayerName) {
+    var database = mxOcx.GetDatabase();
+    var layerTable = database.GetLayerTable();
+    var layerTableRec = layerTable.GetAt(sLayerName, false);
+
+    if (layerTable != null) {
+        layerTableRec.IsOff = false;
+    }
+}
+
+//根据图层名称隐藏图层
+function HideLayerByName(sLayerName) {
+
+    var database = mxOcx.GetDatabase();
+    var layerTable = database.GetLayerTable();
+    var layerTableRec = layerTable.GetAt(sLayerName, false);
+
+    if (layerTable != null) {
+        layerTableRec.IsOff = true;
+    }
+}
+
+
 document.getElementById("MxDrawXCtrl").ImplementCommandEventFun = DoCommandEventFunc;
 document.getElementById("MxDrawXCtrl").ImpDynWorldDrawFun = DoDynWorldDrawFun;
 document.getElementById("MxDrawXCtrl").ImpExplodeFun = ExplodeFun;

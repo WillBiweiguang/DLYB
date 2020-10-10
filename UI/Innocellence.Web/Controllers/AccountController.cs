@@ -22,8 +22,9 @@ namespace Innocellence.Web.Controllers
     public class AccountController : ParentController<SysUser, SysUserView>
     {
         private readonly ILoginService _loginService;
+        private readonly ISysUserRoleService _sysUserRoleService;
         public AccountController(ISysUserService userManager, IAuthenticationService authService, IOauthClientDataService clientDataService
-            ,ILoginService loginService)
+            ,ILoginService loginService, ISysUserRoleService sysUserRoleService)
             : base(userManager)
         {
             UserManager = userManager;
@@ -31,6 +32,7 @@ namespace Innocellence.Web.Controllers
             _authService = authService;
             _clientDataService = clientDataService;
             _loginService = loginService;
+            _sysUserRoleService = sysUserRoleService;
         }
 
         private readonly IAuthenticationService _authService;
@@ -81,7 +83,9 @@ namespace Innocellence.Web.Controllers
                 //暂时去掉用户登录
                 var user = UserManager.UserLoginAsync(model.UserName, model.Password);
                 model.RememberMe = true;
+                user.Roles = _sysUserRoleService.Repository.Entities.Where(x => x.UserId == user.Id).ToList();
                 await _authService.SignInNoDB(user, true);
+                
                 return Json(doJson(null, returnUrl), JsonRequestBehavior.AllowGet);
                 // BaseService<SysUserClaim> a = new BaseService<SysUserClaim>();
 

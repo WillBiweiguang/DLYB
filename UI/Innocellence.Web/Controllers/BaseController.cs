@@ -21,6 +21,8 @@ using DLYB.Web.Service;
 using Infrastructure.Web.Domain.Entity;
 using Infrastructure.Web.Domain.Services;
 using Infrastructure.Web.MVC.Attribute;
+using Infrastructure.Web.Identity;
+using Infrastructure.Core.Infrastructure;
 //using DLYB.Authentication.Attribute;
 //using DLYB.Web.Services;
 
@@ -51,6 +53,7 @@ namespace DLYB.Web.Controllers
         /// 当前的DBService
         /// </summary>
         public IBaseService<T> _objService;
+        private readonly IAuthorizationService _authorizationService;
 
         //全局用户对象，当前的登录用户
         public SysUser objLoginInfo;
@@ -70,21 +73,31 @@ namespace DLYB.Web.Controllers
             //= Newtonsoft.Json.DateFormatHandling.MicrosoftDateFormat;
 
             _objService = newsService;
+            _authorizationService = EngineContext.Current.Resolve<IAuthorizationService>();
             //if (objLoginInfo != null)
             //{
             //    _newsService.LoginUsrID = objLoginInfo.UserID;
             //}
 
-          
+
         }
 
+        protected override void OnAuthorization(AuthorizationContext filterContext)
+        {
+            objLoginInfo = Session["UserInfo"] as SysUser;
+            if (objLoginInfo != null && !_authorizationService.TryCheckAccess(filterContext, objLoginInfo))
+            {
+                //filterContext.Result = Redirect("~/Error/AuthError");
+            }
+            base.OnAuthorization(filterContext);
+        }
         /// <summary>
         /// 重新基类在Action执行之前的事情
         /// </summary>
         /// <param name="filterContext">重写方法的参数</param>
         protected override void OnActionExecuting(ActionExecutingContext filterContext)
         {
-
+            
             ////得到用户登录的信息
             objLoginInfo = Session["UserInfo"] as SysUser;
 
@@ -107,28 +120,34 @@ namespace DLYB.Web.Controllers
 
             //}
 
-            //if (objLoginInfo == null) { 
-            //if (filterContext.RequestContext.HttpContext.Request.IsAjaxRequest())
-            //{
-            //    AjaxResult<int> result = new AjaxResult<int>();
-            //    result.Message = new JsonMessage((int)HttpStatusCode.Unauthorized, "Please login");
-            //    filterContext.Result = Json(result, JsonRequestBehavior.AllowGet);
+            if (objLoginInfo == null)
+            {
+                if (filterContext.RequestContext.HttpContext.Request.IsAjaxRequest())
+                {
+                    AjaxResult<int> result = new AjaxResult<int>();
+                    result.Message = new JsonMessage((int)HttpStatusCode.Unauthorized, "Please login");
+                    filterContext.Result = Json(result, JsonRequestBehavior.AllowGet);
 
-            //} 
-            //else
-            //{
-            //    //Redirect()
-            //    filterContext.Result =  Redirect("~/Account/Login");
-            //}
-            //}
+                }
+                else
+                {
+                    //Redirect()
+                    filterContext.Result = Redirect("~/Account/Login");
+                }
+            }
             // return;
 
 
-            //if (objLoginInfo != null)
+            if (objLoginInfo != null)
+            {
+                _BaseService.Repository.LoginUserID = objLoginInfo.Id;
+                _BaseService.Repository.LoginUserName = objLoginInfo.UserName;
+                //SetLanguage("EN");
+            }
+            //进行权限验证
+            //if (!objLoginInfo.Menus.Any(x => x.NavigateUrl.Contains(filterContext.ActionDescriptor.ControllerDescriptor.ControllerName)))
             //{
-            //    _BaseService.Repository.LoginUserID = objLoginInfo.Id;
-            //    _BaseService.Repository.LoginUserName = objLoginInfo.LillyId;
-            //    SetLanguage("EN");
+            //filterContext.Result = Redirect("~/Error/AuthError");
             //}
 
             // System.Threading.Thread.Sleep(5000);
@@ -138,6 +157,12 @@ namespace DLYB.Web.Controllers
 
             //lstMenus=Session["UserMenus"] as List<BASE_SYSMENU>;
 
+            //主菜单控制
+            ViewBag.IsManager = objLoginInfo?.Roles.Any(x => x.RoleId == 1); //主任
+            ViewBag.IsAdmin = objLoginInfo?.Roles.Any(x => x.RoleId == 3 || x.RoleId == 4); //管理员
+
+            //用户信息
+            ViewBag.CurUserId = objLoginInfo?.Id;
             base.OnActionExecuting(filterContext);
         }
 

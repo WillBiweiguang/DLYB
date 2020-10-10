@@ -26,6 +26,8 @@ namespace Infrastructure.Web.Domain.ModelsView
         public int? UpdatedUserID { get; set; }
 
         public bool IsDeleted { get; set; }
+        public int ProcessStatus { get; set; }
+        //·Ç´æ´¢×Ö¶Î
         public string ProjectName { get; set; }
         public string BridgeComponent { get {
                 if (this.DwgFile.IndexOf("dwg") > -1)
@@ -35,7 +37,7 @@ namespace Infrastructure.Web.Domain.ModelsView
                 return "";
             } }
         public int TaskStatus { get; set; }
-
+        
         public IViewModel ConvertAPIModel(object obj)
         {
             var entity = (BeamInfo)obj;
@@ -50,6 +52,7 @@ namespace Infrastructure.Web.Domain.ModelsView
             UpdatedDate = entity.UpdatedDate;
             UpdatedUserID = entity.UpdatedUserID;
             IsDeleted = entity.IsDeleted;
+            ProcessStatus = entity.ProcessStatus;
             return this;
         }
 	}

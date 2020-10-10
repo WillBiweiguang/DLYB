@@ -19,6 +19,10 @@ namespace DLYB.WeChatMain.Controllers
         {
             return View("Error");
         }
+        public ActionResult AuthError()
+        {
+            return View("AuthError");
+        }
         public ActionResult Index()
         {
             return RedirectToAction("Index", "Home");

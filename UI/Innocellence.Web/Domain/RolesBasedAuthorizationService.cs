@@ -89,7 +89,6 @@ namespace Infrastructure.Web.Service.Common
                 else
                 {
                     return UrlCompare(filterContext.HttpContext.Request.Url, a.NavigateUrl);// strUrl.Equals(a.NavigateUrl, StringComparison.OrdinalIgnoreCase);
-
                 }
             });
             // return true;

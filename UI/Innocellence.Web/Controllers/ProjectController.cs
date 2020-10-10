@@ -27,10 +27,12 @@ namespace Innocellence.Web.Controllers
     {
         private readonly IProjectService _projectService;
         private readonly IHistoricalCostService _objHistoricalCostService = new HistoricalCostService();
+        private readonly ISysUserService _sysUserService;
         readonly IList<KeyValuePair<int, string>> Departments;
-        public ProjectController(IProjectService projectService) : base(projectService)
+        public ProjectController(IProjectService projectService,ISysUserService sysUserService) : base(projectService)
         {
             _projectService = projectService;
+            _sysUserService = sysUserService;
             var deparments = CommonService.GetSysConfig(Consts.DepartmentConfigKey, Consts.DefaultDepartments);
             Departments = JsonConvert.DeserializeObject<List<KeyValuePair<int, string>>>(deparments);
         }
@@ -68,9 +70,12 @@ namespace Innocellence.Web.Controllers
             
             int rowCount = gridRequest.PageCondition.RowCount;
             List<ProjectView> listEx = GetListEx(expression, gridRequest.PageCondition);
+            var userIds = listEx.Select(x => x.UpdatedUserID).ToArray();
+            var users = _sysUserService.GetList<SysUserView>(10, x => userIds.Contains(x.Id)).ToList();
             listEx.ForEach(x => {
                 x.DepartmentName = Departments.Any(e => e.Key.ToString() == x.DepartmentID)
                 ? Departments.First(e => e.Key.ToString() == x.DepartmentID).Value : "";
+                x.UpdateUserName = users.FirstOrDefault(e => e.Id == x.UpdatedUserID)?.UserTrueName;
             });
             return this.GetPageResult(listEx, gridRequest);
         }

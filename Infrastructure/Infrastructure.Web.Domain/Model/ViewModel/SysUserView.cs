@@ -32,6 +32,7 @@ namespace Infrastructure.Web.Domain.ModelsView
         public String strRoles { get; set; }
 
         public string Department { get; set; }
+
         public IViewModel ConvertAPIModel(object obj)
         {
             var entity = (SysUser)obj;

@@ -24,18 +24,30 @@ namespace DLYB.Web.Controllers
         private readonly IWeldCategoryStatisticsService _service;
         private readonly IWeldCategoryStatisticsVService _wcsvService;
         private readonly IGrooveTypeService _GrooveTypeService;
+        private readonly IBeamInfoService _beamInfoService;
+        private readonly IProjectService _projectService;
         public CategoryStatController(IWeldCategoryStatisticsService service,
             IWeldCategoryStatisticsVService wcsvService,
-            IGrooveTypeService grooveTypeService) : base(wcsvService)
+            IGrooveTypeService grooveTypeService, IBeamInfoService beamInfoService,
+            IProjectService projectService) : base(wcsvService)
         {
             _service = service;
             _wcsvService = wcsvService;
             _GrooveTypeService = grooveTypeService;
+            _beamInfoService = beamInfoService;
+            _projectService = projectService;                
         }
         // GET: Address
         public override ActionResult Index()
         {
             ViewBag.GrooveTypes = _GrooveTypeService.GetGrooveTypeQuerys();
+            ViewBag.BeamId = Request["beamId"];
+            ViewBag.ProjectId = Request["ProjectId"];
+            int pid = 0;
+            if (int.TryParse(Request["ProjectId"], out pid)){
+                var project = _projectService.Repository.Entities.FirstOrDefault(x => x.Id == pid);
+                ViewBag.ProjectName = project.ProjectName;
+            }
             return View();
         }
 
@@ -43,6 +55,8 @@ namespace DLYB.Web.Controllers
         {
             GridRequest gridRequest = new GridRequest(Request);
             string strCondition = Request["search_condition"];
+            int beamId = 0;
+            int.TryParse(Request["beamId"] ?? "", out beamId);
             Expression<Func<WeldCategoryStatisticsV, bool>> expression = FilterHelper.GetExpression<WeldCategoryStatisticsV>(gridRequest.FilterGroup);
             if (!string.IsNullOrEmpty(strCondition))
             {
@@ -51,6 +65,10 @@ namespace DLYB.Web.Controllers
             else
             {
                 expression = expression.AndAlso<WeldCategoryStatisticsV>(x => !x.IsDeleted);
+            }
+            if(beamId > 0)
+            {
+                expression = expression.AndAlso<WeldCategoryStatisticsV>(x => x.BeamId == beamId);
             }
             int rowCount = gridRequest.PageCondition.RowCount;
             List<WeldCategoryStatisticsViewModel> listEx = GetListEx(expression, gridRequest.PageCondition);
@@ -115,6 +133,13 @@ namespace DLYB.Web.Controllers
             else
             {
                 _service.UpdateView(entity);
+            }
+            //更新文件状态
+            var beam = _beamInfoService.GetList<BeamInfoView>(1, x => !x.IsDeleted && x.Id == entity.BeamId).FirstOrDefault();
+            if (beam != null && beam.ProcessStatus == 0)
+            {
+                beam.ProcessStatus = 1;
+                _beamInfoService.UpdateView(beam);
             }
             return Json(doJson(null), JsonRequestBehavior.AllowGet);
         }

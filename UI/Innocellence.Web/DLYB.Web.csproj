@@ -993,6 +993,7 @@
     <Content Include="Views\HanJieLocation\_ViewStart.cshtml" />
     <Content Include="Views\GrooveType\_ViewStart.cshtml" />
     <Content Include="Views\TaskList\WeldingDetail.cshtml" />
+    <Content Include="Views\Shared\AuthError.cshtml" />
     <None Include="Views\WeldCategory\cadwelding.cshtml" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
@@ -1048,6 +1049,7 @@
     <Folder Include="Scripts\WeChat\" />
     <Folder Include="Style\images\gallery\" />
     <Folder Include="Style\images\ie6\" />
+    <Folder Include="Views\Error\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />

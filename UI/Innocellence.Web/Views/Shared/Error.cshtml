@@ -12,10 +12,10 @@
 
 @model System.Web.Mvc.HandleErrorInfo
 @{
-    ViewBag.Title = "General Site Error";
+    ViewBag.Title = "发生了错误";
 }
 
-<h2>A General Error Has Occurred</h2>
+<h2>站点发生错误</h2>
 
 @if (Model != null)
 {
@@ -23,7 +23,7 @@
         @Model.Exception.GetType().Name<br />
     thrown in @Model.ControllerName @Model.ActionName
 </p>
-    <p>Error Details:</p>
+    <p>错误信息:</p>
     <p>@Model.Exception.Message</p>
     
 #if DEBUG

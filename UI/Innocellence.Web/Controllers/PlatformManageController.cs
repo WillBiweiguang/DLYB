@@ -1,5 +1,6 @@
 ﻿using DLYB.Web.Controllers;
 using Infrastructure.Core.Data;
+using Infrastructure.Core.Infrastructure;
 using Infrastructure.Web.Domain.Common;
 using Infrastructure.Web.Domain.Contracts;
 using Infrastructure.Web.Domain.Entity;
@@ -49,13 +50,19 @@ namespace DLYB.Web.Controllers
                 {
                     ViewBag.IsUser = true;
                 }
+                if (user.UserName == EngineContext.Current.WebConfig.SupperUser)
+                {
+                    ViewBag.IsSuperAdmin = true;
+                }
             }
             if (user != null && user.UserName == "administrator")
             {
                 ViewBag.IsRole = true;
                 ViewBag.IsUser = true;
             }
-            ViewBag.Department = Departments.Select(x => new SelectListItem { Value = x.Key.ToString(), Text = x.Value }).ToList();
+            var departmentList = Departments.Select(x => new SelectListItem { Value = x.Key.ToString(), Text = x.Value }).ToList();
+            //departmentList.Insert(0, new SelectListItem { Value = "0", Text = "" });
+            ViewBag.Department = departmentList;
             return View();
         }
 
@@ -68,7 +75,7 @@ namespace DLYB.Web.Controllers
         public ActionResult SetMenu(string Menus, int RoleID)
         {
             ServiceRoleMenu.SetRoleMenu(RoleID, Menus);
-            Session.Clear();
+            //Session.Clear();
             return SuccessNotification("OK");
         }
     }

@@ -42,5 +42,7 @@ namespace Infrastructure.Web.Domain.Entity
         public int? UpdatedUserID { get; set; }
 
         public bool IsDeleted { get; set; }
+
+        public int BeamId { get; set; }
     }
 }

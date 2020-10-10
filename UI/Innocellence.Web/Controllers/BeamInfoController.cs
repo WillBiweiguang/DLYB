@@ -37,7 +37,6 @@ namespace Innocellence.Web.Controllers
         // GET: Address
         public override ActionResult Index()
         {
-            //var list = _addressService.GetList<AddressView>(int.MaxValue, x => !x.IsDeleted).ToList();
             string projectId = Request["projectId"];
             int pid = 0;
             if (int.TryParse(projectId, out pid))
@@ -63,6 +62,10 @@ namespace Innocellence.Web.Controllers
             else
             {
                 expression = expression.AndAlso<BeamInfo>(x => x.IsDeleted != true);
+            }
+            if (!string.IsNullOrEmpty(strCondition))
+            {
+                expression = expression.AndAlso<BeamInfo>(x => x.DwgFile.Contains(strCondition));
             }
             int rowCount = gridRequest.PageCondition.RowCount;
             List<BeamInfoView> listEx = GetListEx(expression, gridRequest.PageCondition);

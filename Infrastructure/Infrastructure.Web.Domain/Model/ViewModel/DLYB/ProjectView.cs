@@ -25,6 +25,8 @@ namespace Infrastructure.Web.Domain.ModelsView
 
         public int? UpdatedUserID { get; set; }
 
+        public string UpdateUserName { get; set; }
+
         public bool IsDeleted { get; set; }
 
         public string DepartmentID { get; set; }
