@@ -43,6 +43,7 @@ namespace Innocellence.FaultSearch.Controllers
                     ViewBag.ProjectId = beam.ProjectId;
                     ViewBag.FileName = beam.DwgFile;
                     ViewBag.FilePath = GetFilePath(beam.ProjectId, beam.DwgFile);
+                    ViewBag.FileServerPath = GetFileAbsolutePath(beam.ProjectId, beam.DwgFile);
                 }
             }
             ViewBag.weldCategorys = _weldCategoryService.Repository.Entities.Where(a => !a.IsDeleted).ToList();
@@ -89,25 +90,10 @@ namespace Innocellence.FaultSearch.Controllers
             return View(model);
         }
 
-        //public ActionResult Edit(string handleId, int beamId = 0)
-        //{
-        //    WeldCategoryLabelingView model = new WeldCategoryLabelingView
-        //    {
-        //        HandleID = handleId,
-        //        BeamId = beamId
-        //    };
-        //    if (beamId > 0 && string.IsNullOrEmpty(handleId))
-        //    {
-        //        model = _weldCategoryService.GetList<WeldCategoryLabelingView>(1, x => !x.IsDeleted && x.BeamId == beamId && x.HandleID.Contains(handleId)).FirstOrDefault();
-        //    }        
-        //    return View(model);
-        //}
-
         public ActionResult cadwelding()
         {
             return View();
         }
-
 
         public override ActionResult GetList()
         {
@@ -152,10 +138,7 @@ namespace Innocellence.FaultSearch.Controllers
                 return new JsonResult { Data = new { result = "failed" }, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
             }
             var existing = _weldCategoryService.GetList<WeldCategoryLabelingView>(int.MaxValue, x => x.BeamId == beam.Id).ToList();
-            //if (existing.Count > 0)
-            //{
-            //    return new JsonResult { Data = new { result = "failed", message = "当前文件已识别，请不要重复识别" }, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
-            //}
+
             foreach (var weldInfo in weldList)
             {
                 if (!string.IsNullOrEmpty( weldInfo.HandleID) && !string.IsNullOrEmpty(weldInfo.WeldType))
@@ -203,11 +186,20 @@ namespace Innocellence.FaultSearch.Controllers
         private string GetFilePath(int projectId, string dwgfile)
         {
             var path = baseUrl + "Files/BeamInfo/" + projectId + "/" + dwgfile;
-            if (!System.IO.File.Exists(Server.MapPath("/Files/BeamInfo/" + projectId + "/" + dwgfile)))
+            if (!System.IO.File.Exists(Server.MapPath("~/Files/BeamInfo/" + projectId + "/" + dwgfile)))
             {
                 path = baseUrl + "Files/BeamInfo/" + dwgfile;
             }
             return path;
+        }
+        private string GetFileAbsolutePath(int projectId, string dwgfile)
+        {
+            var path = "~/Files/BeamInfo/" + projectId + "/" + dwgfile;
+            if (!System.IO.File.Exists(Server.MapPath("~/Files/BeamInfo/" + projectId + "/" + dwgfile)))
+            {
+                path = "~/Files/BeamInfo/" + dwgfile;
+            }
+            return Server.MapPath(path);
         }
         //TODO 需要更改为按配置识别
         private string GetWeldType(string type)
