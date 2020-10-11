@@ -1,5 +1,9 @@
 ﻿@using Infrastructure.Web.Domain.ModelsView;
 @using Infrastructure.Web.Domain.Entity;
+
+@{ 
+    ViewBag.Title = "焊缝标注";
+}
 @section easyui_css{
     <link rel="stylesheet" href="~/Style/EasyUI/easyui.css" />
 
@@ -50,13 +54,16 @@
                 <a href="#" class="btn btn-info btn-sm" id="btnSearch" data-toggle="tooltip" data-placement="top" title="查询条件"><i class="fa fa-search">查询</i></a>
             </div>
             <div class="form-group">
-                <input type="button" value="焊接符号识别" onclick="myclick5();">
-                <input type="button" value="添加焊缝" onclick="AddHanfeng();">
+                <input type="button" class="btn btn-sm" value="焊接符号识别" onclick="myclick5();">
+                <input type="button" class="btn btn-sm" value="提交审核" onclick="requestApprove();">
             </div>
             <div class="form-group pull-right">
+                <a href="~/CategoryStat/index?ProjectId=@ViewBag.ProjectId&beamId=@ViewBag.BeamId" class="btn btn-sm"  data-toggle="tooltip" data-placement="top" title="保存文件">
+                    返回类别统计
+                </a>
                 <a href="#" class="btn btn-sm" id="btnSaveFile" data-toggle="tooltip" data-placement="top" title="保存文件">
-                        保存文件
-                    </a>
+                    保存文件
+                </a>
                 <a href="#" class="btn btn-info btn-sm" id="btnCollapse" data-action="collapse" title="折叠">
                     <i class="ace-icon fa fa-chevron-up">折叠</i>
                 </a>
@@ -373,6 +380,8 @@
                 if (window.confirm("确定保存当前文件到服务器？")) {
                     if (mxOcx.SaveDwgFile($('#fileServerPath').val())) {
                         alert('保存成功');
+                    } else {
+                        alert('保存文件失败');
                     }
                 }
             });
@@ -505,6 +514,20 @@
             if ($('#tableDiv').is(':visible')) {
                 $('#btnCollapse').click();
             }
+        }
+        function requestApprove() {
+            if (!confirm('确认提交审核？')) {
+                return;
+            }
+            var beamId = $('#beamId').val();
+            $.get('RequestApproval?beamId=' + beamId).done(function (r) {
+                if (r.result == 'success') {
+                    alert('提交成功')
+                    window.location = window.location.protocol + '//' + window.location.host + '/Project/Index';
+                } else {
+                    alert(r.msg);
+                }
+            });
         }
     </script>
 }
