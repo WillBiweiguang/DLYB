@@ -53,7 +53,7 @@ namespace Infrastructure.Core
         /// </summary>
         /// <param name="entity">实体对象</param>
         /// <returns>操作影响的行数</returns>
-        int Insert(TEntity entity);
+        TKey Insert(TEntity entity);
 
         /// <summary>
         /// 批量插入实体

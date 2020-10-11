@@ -11,8 +11,11 @@ function myclick5() {
     setTimeout(DoReg(), 100);
 }
 function DoCommandEventFunc(iCmd) {
-    if (iCmd == 1) {
+    if (iCmd === 1) {
         var handleid = JiaoWeldAdd();
+        var weldData = [];
+        weldData.push({ WeldType: 'ManJiaoH', HandleID: handleid.toString() });
+        saveWeldData(weldData, 2);
     }
     if (iCmd == 2) {
         SelectUserSelect();
@@ -20,6 +23,7 @@ function DoCommandEventFunc(iCmd) {
     //右键菜单选中实体，获取handle 用于定位
     //需要编写testPOPMenu.mnu菜单文件，并在鼠标事件MouseEvent中添加响应函数
     if (iCmd == 99) {
+        //定位
         var ss = mxOcx.NewSelectionSet();
         var filter = mxOcx.NewResbuf();
         ss.CurrentSelect(filter);
@@ -27,9 +31,9 @@ function DoCommandEventFunc(iCmd) {
         for (var i = 0; i < ss.Count; i++) {
             var ent = ss.Item(i);
             var hd = ent.handle;
-            alert(hd);
+            //alert(hd);
+            LocateWelding(hd);
         }
-
     }
     if (iCmd == 3) {
         var sLayerName = "Y_SMJiaoH";
@@ -40,15 +44,19 @@ function DoCommandEventFunc(iCmd) {
         ShowLayerByName(sLayerName);
     }
     if (iCmd == 100) {
+        //添加角焊缝
         var handleid = JiaoWeldAdd();
+        var weldData = [];
+        weldData.push({ WeldType: 'ManJiaoH', HandleID: handleid.toString() });
+        saveWeldData(weldData, 2);
     }
     //复制
     if (iCmd == 5) {
-        var newEnt = CopyWeld()
-        Move(newEnt)
+        var newEnt = CopyWeld();
+        Move(newEnt);
     }
     if (iCmd == 101) {
-        var handleArray = []
+        var handleArray = [];
         var ss = mxOcx.NewSelectionSet();
         //构造一个过滤链表
         var spFilte = mxOcx.NewResbuf();
@@ -60,11 +68,10 @@ function DoCommandEventFunc(iCmd) {
         }
         var ent = ss.Item(i);
         var entHandleID = ent.handle;
-        var newEnt
+        var newEnt;
         newEnt = ent.Copy();
         var newEntHandleID = newEnt.handle;
-        handleArray[handleArray.length] = newEntHandleID
-
+        //handleArray[handleArray.length] = newEntHandleID;
 
 
         // 创建一个与用户交互取点的对象。
@@ -84,18 +91,25 @@ function DoCommandEventFunc(iCmd) {
         }
         newEnt.Move(pt, getPt.value());
 
+        LocateWelding(entHandleID, function (handles, Id) {
+            //var hdar = ["2E7B81", "2E7B82", "2E7B83", "2E7B84"];
+            var hdar = handles.split(',');
+            //此处数组为试验用
+            //真正使用时，根据选中箭头的handle，到数据库中找对应的焊缝数据
+            //取到组成这个焊缝符号所有图元的handle
+            //通过循环将这些图元都复制出来
+            for (var i = 0; i < hdar.length; i++) {
+                var entItem = mxOcx.HandleToObject(hdar[i]);
+                newEntItem = entItem.Copy();
+                newEntItem.Move(pt, getPt.value());
+                handleArray.push(newEntItem.handle);
+            }
+            //保存复制的焊缝到数据库
+            var weldData = [];
+            weldData.push({ WeldType: 'ManJiaoH', HandleID: handleArray.toString(), CopyOriginId: Id });
+            saveWeldData(weldData, 2);
+        });
 
-        var hdar = ["2E7B81", "2E7B82", "2E7B83", "2E7B84"];
-        //此处数组为试验用
-        //真正使用时，根据选中箭头的handle，到数据库中找对应的焊缝数据
-        //取到组成这个焊缝符号所有图元的handle
-        //通过循环将这些图元都复制出来
-        for (var i = 0; i < hdar.length; i++) {
-            var entItem = mxOcx.HandleToObject(hdar[i])
-            newEntItem = entItem.Copy();
-            newEntItem.Move(pt, getPt.value());
-            handleArray[handleArray.length] = newEntItem.handle
-        }
         //handleArray---为焊缝符号所有图元的handle数组，第一个值为箭头的handle
     }
 
@@ -135,6 +149,7 @@ function InitMxDrawX() {
         }
     }
 }
+
 function BrownerMode() {
     var isShow = false;
     //isBrowner = !isBrowner;
@@ -160,7 +175,7 @@ function BrownerMode() {
     //隐藏状态栏
     mxOcx.ShowStatusBar(isShow);
 }
-mxtime = setInterval(InitMxDrawX, 100);
+mxtime = setInterval(InitMxDrawX, 1000);
 function GetWelding() {
     var myDate = new Date();
     var strtimestart = myDate.toLocaleString();
@@ -239,7 +254,7 @@ function GetWelding() {
         ChangeColorByType(myWeld);
 
         //根据类型修改图层
-        ChangeWeldLayerbyHandle(myWeld)
+        ChangeWeldLayerbyHandle(myWeld);
 
         //可在此处逐个获取识别到的焊缝符号的信息
 
@@ -264,17 +279,21 @@ function GetWelding() {
         alert('未识别到焊缝');
         return;
     }
+    //获取整个焊缝的handleid列表
+    
     var weldData = [];
     for (var i = 0; i < m_ResWeldArr.length; i++) {
-        weldData.push({ WeldType: m_ResWeldArr[i].myWelType, HandleID: m_ResWeldArr[i].myWelArrow.myArrowObjectID });
+        var handleArray = GetWeldHandle(m_ResWeldArr[i]);
+        weldData.push({ WeldType: m_ResWeldArr[i].myWelType, HandleID: m_ResWeldArr[i].myWelArrow.myArrowObjectID + ',' + handleArray.toString() });
     }
     saveWeldData(weldData);
-    //var myDateEnd = new Date();
-    //var strtimesend = myDateEnd.toLocaleTimeString();
-    //alert("开始时间：" + strtimestart + ",结束时间：" + strtimesend)
 }
 
 function DrawCircleOfArrow(m_handle) {
+    if (m_handle.indexOf(',') > -1) {
+        var handles = m_handle.split(',');
+        m_handle = handles[0];
+    }
     //删掉上一个画圈的handleid
     if (lastCircleHandle > 0) {
         deleClrByID(lastCircleHandle);

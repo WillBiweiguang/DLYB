@@ -1,0 +1,388 @@
+﻿@using Infrastructure.Web.Domain.ModelsView;
+@using Infrastructure.Web.Domain.Entity;
+
+@model Infrastructure.Web.Domain.ModelsView.WeldCategoryLabelingView
+    @{ 
+        Layout = "~/Views/Shared/_LayoutWithoutMenu.cshtml";
+    }
+@section easyui_css{
+    <link rel="stylesheet" href="~/Style/EasyUI/easyui.css" />
+
+}
+<style>
+    .datagrid-mask-msg {
+        height: 36px !important;
+    }
+
+    .main-container {
+        overflow: scroll;
+        min-height: 700px;
+        height: auto;
+    }
+
+    #cadContent {
+        margin-left: 0px;
+        position: relative;
+        /*margin-right: 20px;*/
+    }
+</style>
+<!--Action boxes-->
+
+    <input type="hidden" id="beamId" name="beamId" value="@ViewBag.BeamId" />
+    <input type="hidden" id="projectId" name="projectId" value="@ViewBag.ProjectId" />
+    <input type="hidden" id="fileName" name="fileName" value="@ViewBag.FileName" />
+
+<div id="ModalTable" class="modal" tabindex="-1" aria-show="true">
+        <div class="modal-dialog" style="">
+            <div class="modal-content">
+                <div class="modal-header">
+                    @*<button type="button" class="close" data-dismiss="modal">&times;</button>*@
+                    <h4 class="blue bigger">请填写以下内容</h4>
+                </div>
+
+                <div class="modal-body">
+                    <form action="Post" id="ff" method="get" class="form-horizontal" datasource="Get">
+                        <input type="hidden" id="ID" name="ID" value="0" />
+                        <input type="hidden" id="beamId" name="beamId" value="@ViewBag.BeamId" />
+                        <input type="hidden" id="HandleID" name="HandleID" value="" data-bind="value: HandleID" />
+                        <div class="row">
+                            <div class="form-group col-lg-6">
+                                <label for="FigureNumber" class="col-sm-5 control-label">图号:</label>
+                                <div class="col-sm-7">
+                                    <select class="single-select form-control" name="FigureNumber" id="FigureNumber" data-placeholder="请选择图号" data-bind="value: FigureNumber" title="图号">
+                                        @foreach (WeldCategoryLabeling a in ViewBag.weldCategorys)
+                                        {
+                                            if (!string.IsNullOrEmpty(a.FigureNumber))
+                                            {
+                                                <option value="@a.FigureNumber">@a.FigureNumber</option>
+                                            }
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group col-lg-6">
+                                <label for="BoardNumber" class="col-sm-5 control-label">板件号:</label>
+                                <div class="col-sm-7">
+                                    <select class="single-select form-control" name="BoardNumber" id="BoardNumber" data-placeholder="请选择板件号" data-bind="value: BoardNumber">
+                                        @foreach (WeldCategoryLabeling a in ViewBag.weldCategorys)
+                                        {
+                                            if (!string.IsNullOrEmpty(a.BoardNumber))
+                                            {
+                                                <option value="@a.BoardNumber">@a.BoardNumber</option>
+                                            }
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-lg-6">
+                                <label class="col-sm-5 control-label">焊缝类型:</label>
+                                <div class="col-sm-7">
+                                    <select class="single-select form-control" id="WeldType" name="WeldType" style="" data-bind="value:WeldType" validate="{required:true}" data-geturl="/WeldGeometry/GetDropdownList">
+                                        @foreach (WeldGeometry a in ViewBag.weldGeometries)
+                                        {
+                                            if (!string.IsNullOrEmpty(a.WeldType))
+                                            {
+                                                <option value="@a.WeldType">@a.WeldType</option>}
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group col-lg-6">
+                                <label class="col-sm-5 control-label">焊缝位置:</label>
+                                <div class="col-sm-7">
+                                    <select class="single-select form-control" name="WeldLocation" id="WeldLocation" data-placeholder="请选择焊缝位置" validate="{required:true}" data-geturl="/WeldLocation/GetDropdownList">
+                                        @foreach (WeldLocation a in ViewBag.weldLocations)
+                                        {
+                                            if (!string.IsNullOrEmpty(a.WeldLocationType))
+                                            {
+                                                <option value="@a.WeldLocationType">@a.WeldLocationType</option>}
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-lg-6">
+                                <label class="col-sm-5 control-label">焊缝长度:</label>
+                                <div class="col-sm-7">
+                                    <select class="single-select form-control" name="WeldLengthSel" validate="{required:true}" id="WeldLengthSel">
+
+                                        <option value="长">长</option>
+                                        <option value="宽">宽</option>
+                                        <option value="长+宽">长+宽</option>
+                                        <option value="2*宽+长">2*宽+长</option>
+                                        <option value="2*长+宽">2*长+宽</option>
+                                        <option value="2*(长+宽)">2*(长+宽)</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group col-lg-6">
+                                <label class="col-sm-5 control-label">焊缝长度值:</label>
+                                <div class="col-sm-7">
+                                    <input type="text" name="WeldLength" id="WeldLength" class="form-control" validate="{required:true}" data-bind="value: WeldLength" />
+                                </div>
+                            </div>
+                        </div>
+                        <div style="border:1px solid;padding-top:3px;clear:both">
+                            <div class="row">
+                                <div class="form-group col-lg-6">
+                                    <label class="col-sm-5 control-label">长度:</label>
+                                    <div class="col-sm-7">
+                                        <input type="text" name="LengthVal" id="LengthVal" class="form-control" validate="{required:true}" data-bind="value: LengthVal" />
+                                    </div>
+                                </div>
+                                <div class="form-group col-lg-6">
+                                    <label class="col-sm-5 control-label">板厚:</label>
+                                    <div class="col-sm-7">
+
+                                        <input type="text" name="Thickness" id="Thickness" class="form-control" validate="{required:true}" data-bind="value: Thickness" />
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-lg-6">
+                                    <label class="col-sm-5 control-label">熔敷金属密度:</label>
+                                    <div class="col-sm-7">
+                                        <input type="text" name="MentalDensity" id="MentalDensity" class="form-control" validate="{required:true}" data-bind="value: MentalDensity" />
+                                    </div>
+                                </div>
+                                <div class="form-group col-lg-6">
+                                    <label class="col-sm-5 control-label">消耗系数:</label>
+                                    <div class="col-sm-7">
+
+                                        <input type="text" name="ConsumeFactor" id="ConsumeFactor" class="form-control" validate="{required:true}" data-bind="value: ConsumeFactor" />
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-lg-6">
+                                    <label class="col-sm-5 control-label">焊缝截面积:</label>
+                                    <div class="col-sm-7">
+                                        <select class="single-select form-control" name="SectionArea" id="SectionArea" validate="{required:true}" data-placeholder="请选择焊缝截面积" data-bind="value: SectionArea">
+                                            @foreach (WeldCategoryLabeling a in ViewBag.weldCategorys)
+                                            {
+                                                <option value="@a.SectionArea">@a.SectionArea</option>
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="form-group col-lg-6">
+                                    <label class="col-sm-5 control-label">焊接边数:</label>
+                                    <div class="col-sm-7">
+
+                                        <input type="text" name="WeldingNumber" id="WeldingNumber" class="form-control" validate="{required:true}" data-bind="value: WeldingNumber" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-lg-6">
+                                    <label class="col-sm-5 control-label">梁段数量:</label>
+                                    <div class="col-sm-7">
+
+                                        <input type="text" name="BeamNum" id="BeamNum" class="form-control" validate="{required:true}" data-bind="value: BeamNum" />
+                                    </div>
+                                </div>
+                                <div class="form-group col-lg-6">
+                                    <label class="col-sm-5 control-label">焊缝数量:</label>
+                                    <div class="col-sm-7">
+
+                                        <input type="text" name="Quantity" id="Quantity" class="form-control" validate="{required:true}" data-bind="value: Quantity" />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="form-group col-lg-6">
+                                    <label class="col-sm-5 control-label">宽度:</label>
+                                    <div class="col-sm-7">
+                                        <input type="text" name="WidthVal" id="WidthVal" class="form-control" validate="{required:true}" data-bind="value: WidthVal" />
+                                    </div>
+                                </div>
+                                <div class="form-group col-lg-6">
+                                    <label class="col-sm-5 control-label">焊缝质量:</label>
+                                    <div class="col-sm-7">
+
+                                        <input type="text" name="WeldQuanlity" id="WeldQuanlity" class="form-control" validate="{required:true}" data-bind="value: WeldQuanlity" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="modal-footer">
+                    <button class="btn btn-sm" id="btnCancel">
+                        <i class="ace-icon fa fa-times"></i>
+                        取消
+                    </button>
+
+                    <button class="btn btn-sm btn-primary" id="btnSave" data-action="save">
+                        <i class="ace-icon fa fa-check"></i>
+                        保存
+                    </button>
+                </div>
+            </div>
+        </div>    
+</div>
+
+<div id="frameContainer" style="position: absolute; left: 0px; top: 90px; width: 100%; height: 200%; z-index: 9; display:none;">
+    <iframe id='iframei' src="javascript:0" style="position:absolute; border:none; visibility:inherit; top:-20px; left:-20px;  height:300%; width:100%; z-index:-1; filter: progid:DXImageTransform.Microsoft.Alpha(style=0,opacity=0);"></iframe>
+</div>
+
+
+@section scripts_Foot
+{
+    <script src="~/Scripts/EasyUI/jquery.easyui.min.js"></script>
+    <script src="http://static.runoob.com/assets/jquery-validation-1.14.0/dist/localization/messages_zh.js"></script>
+    <script type="text/javascript">
+        //$('[data-toggle="tooltip"]').tooltip();
+        var popMenu;
+        var IdCur;
+        var lastCircleHandle;
+
+        $(document).ready(function () {
+            var beamId = $('')
+            
+            //inital select2
+            $('.select2').css("width", "362px").select2({ allowClear: true });
+            $('#btnCollapse').on('click', function () {
+                if ($('#tableDiv').is(':visible')) {
+                    $('#tableDiv').hide(300);
+                    $(this).find('i').removeClass('fa-chevron-up');
+                    $(this).find('i').addClass('fa-chevron-down');
+                    $(this).attr('title', '展开');
+                } else {
+                    $('#tableDiv').show(300);
+                    $(this).find('i').removeClass('fa-chevron-down');
+                    $(this).find('i').addClass('fa-chevron-up');
+                    $(this).attr('title', '折叠');
+                }
+            });
+
+            LEAP.Common.MainPop = $("#ModalTable").formPopup({
+                fnAfterSuccess: function (r) {
+                    alert('保存成功');
+                    window.close();
+                },
+                fnAfterPostError: function (r) {
+                    alert('保存失败');
+                }
+            });
+            LEAP.Common.MainPop.ShowUpdateInfo(@Model.Id);
+            //$('#ModalTable').show();
+        });
+        $('#iframei').on('mousedown', function (e) {
+            //获取x坐标和y坐标
+            x = e.clientX;
+            y = e.clientY;
+
+            //获取左部和顶部的偏移量
+            l = this.offsetLeft;
+            t = this.offsetTop;
+            //开关打开
+            isDown = true;
+            //设置样式
+            this.style.cursor = 'move';
+        });
+        $('#iframei').on('mousemove', function (e) {
+            if (isDown == false) {
+                return;
+            }
+            //获取x和y
+            var nx = e.clientX;
+            var ny = e.clientY;
+            //计算移动后的左偏移量和顶部的偏移量
+            var nl = nx - (x - l);
+            var nt = ny - (y - t);
+
+            this.style.left = nl + 'px';
+            this.style.top = nt + 'px';
+        });
+        //$('#iframei').on('mouseup', function (e) {
+        //    //开关关闭
+        //    isDown = false;
+        //    this.style.cursor = 'default';
+        //});
+        $('#ModalTable').on('hide.bs.modal', function () {
+            // 不要让弹出框关闭
+            return false;
+            $('#ModalTable').modal('show');
+        });
+        //$('#ModalTable').on('show.bs.modal', function () {
+        //    // 弹出框动作
+        //    $('#frameContainer').show();
+        //});
+        $(document).on('change', '#WeldLengthSel', function () {
+            var txt = $('#WeldLengthSel option:selected').val();
+
+            if (txt == '长') {
+                $("#WeldLength").val($("#LengthVal").val());
+                $("#WeldQuanlity").val($("#WeldLength").val() * $("#BeamNum").val()
+                    * $("#Quantity").val() * $("#SectionArea").val() * 7.85 / 1000000)
+            }
+            if (txt == '宽') {
+                $("#WeldLength").val($("#WidthVal").val());
+                $("#WeldQuanlity").val($("#WeldLength").val() * $("#BeamNum").val()
+                    * $("#Quantity").val() * $("#SectionArea").val() * 7.85 / 1000000)
+            }
+            if (txt == '长+宽') {
+                $("#WeldLength").val(parseInt($("#LengthVal").val()) + parseInt($("#WidthVal").val()));
+                $("#WeldQuanlity").val($("#WeldLength").val() * $("#BeamNum").val()
+                    * $("#Quantity").val() * $("#SectionArea").val() * 7.85 / 1000000)
+            }
+            if (txt == '2*宽+长') {
+                $("#WeldLength").val(2 * parseInt($("#WidthVal").val()) + parseInt($("#LengthVal").val()));
+                $("#WeldQuanlity").val($("#WeldLength").val() * $("#BeamNum").val()
+                    * $("#Quantity").val() * $("#SectionArea").val() * 7.85 / 1000000)
+            }
+            if (txt == '2*长+宽') {
+                $("#WeldLength").val(2 * parseInt($("#LengthVal").val()) + parseInt($("#WidthVal").val()));
+                $("#WeldQuanlity").val($("#WeldLength").val() * $("#BeamNum").val()
+                    * $("#Quantity").val() * $("#SectionArea").val() * 7.85 / 1000000)
+            }
+            if (txt == '2*(长+宽)') {
+                $("#WeldLength").val(2 * (parseInt($("#LengthVal").val()) + parseInt($("#WidthVal").val())));
+                $("#WeldQuanlity").val($("#WeldLength").val() * $("#BeamNum").val()
+                    * $("#Quantity").val() * $("#SectionArea").val() * 7.85 / 1000000)
+            }
+
+        });
+
+        function saveWeldData(list, mode) {
+            if (!list) {
+                alert('未识别到焊缝');
+            }
+            var filename = $('#filename').val();
+            if (!filename) {
+                filename = 'sample1.dwg';
+            }
+
+            $.post('/WeldCategory/PostWeld',
+                { beamId: $('#beamId').val(), dwgfile: filename, weldList: list }
+            ).done(function (r) {
+                //$('.data-table').trigger('');
+                LEAP.Common.MainPop.options.dataTable.fnDraw(false);
+                if (mode === 2) { //手动添加焊缝操作
+                    alert("焊缝数据已添加");
+                } else { //全图识别操作
+                    alert("识别完成");
+                }
+            });
+        }
+
+        function AddHanfeng() {
+            window.alert('请点击CAD相应位置开始添加焊缝');
+            DoCmd(1);
+        }
+        $('#btnCancel').on('click', function () {
+            window.close();
+        });
+    </script>
+
+    }

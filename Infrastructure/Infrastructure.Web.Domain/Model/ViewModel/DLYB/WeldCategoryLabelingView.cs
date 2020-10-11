@@ -38,6 +38,8 @@ namespace Infrastructure.Web.Domain.ModelsView
 
         public string HandleID { get; set; }
 
+        public int? CopyOriginId { get; set; }
+
         public IViewModel ConvertAPIModel(object obj) {
             var entity = (WeldCategoryLabeling)obj;
             Id = entity.Id;

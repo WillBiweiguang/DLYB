@@ -109,13 +109,14 @@ namespace Infrastructure.Core.Data
         /// 插入实体
         /// </summary>
         /// <param name="entity">实体对象</param>
-        /// <returns>操作影响的行数</returns>
-        public virtual int Insert(TEntity entity)
+        /// <returns>返回插入实体的ID</returns>
+        public virtual TKey Insert(TEntity entity)
         {
             entity.CheckNotNull("entity");
             SetAddEntity(entity);
             _dbSet.Add(entity);
-            return SaveChanges();
+            SaveChanges();
+            return entity.Id;
         }
 
         /// <summary>

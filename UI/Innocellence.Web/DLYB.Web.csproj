@@ -1039,6 +1039,8 @@
     <Content Include="Views\WeldGeometry\_ViewStart.cshtml" />
     <Content Include="Views\WeldLocation\_ViewStart.cshtml" />
     <Content Include="Views\Welding\_ViewStart.cshtml" />
+    <Content Include="Views\WeldCategory\WeldDataTable.cshtml" />
+    <Content Include="Views\WeldCategory\Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Domain\Models\Common\" />

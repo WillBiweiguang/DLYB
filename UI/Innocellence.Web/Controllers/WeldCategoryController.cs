@@ -50,6 +50,59 @@ namespace Innocellence.FaultSearch.Controllers
             ViewBag.weldLocations = _weldLocationService.Repository.Entities.Where(x => !x.IsDeleted).ToList();
             return View();
         }
+
+        public ActionResult WeldDataTable(int beamId = 0)
+        {
+            if (beamId > 0)
+            {
+                var beam = _beamInfoService.GetList<BeamInfoView>(1, x => x.Id == beamId).FirstOrDefault();
+                if (beam != null)
+                {
+                    ViewBag.BeamId = beamId;
+                    ViewBag.ProjectId = beam.ProjectId;
+                    ViewBag.FileName = beam.DwgFile;
+                }
+            }
+            ViewBag.weldCategorys = _weldCategoryService.Repository.Entities.Where(a => !a.IsDeleted).ToList();
+            ViewBag.weldGeometries = _weldGeometryService.Repository.Entities.Where(x => !x.IsDeleted).ToList();
+            ViewBag.weldLocations = _weldLocationService.Repository.Entities.Where(x => !x.IsDeleted).ToList();
+            return View();
+        }
+
+        public override ActionResult Edit(string Id)
+        {
+            WeldCategoryLabelingView model = new WeldCategoryLabelingView();
+            if (!string.IsNullOrEmpty(Id))
+            {
+                model = GetObject(Id);
+                var beam = _beamInfoService.GetList<BeamInfoView>(1, x => x.Id == model.BeamId).FirstOrDefault();
+                if (beam != null)
+                {
+                    ViewBag.BeamId = beam.Id;
+                    ViewBag.ProjectId = beam.ProjectId;
+                    ViewBag.FileName = beam.DwgFile;
+                }
+                ViewBag.weldCategorys = _weldCategoryService.Repository.Entities.Where(a => !a.IsDeleted).ToList();
+                ViewBag.weldGeometries = _weldGeometryService.Repository.Entities.Where(x => !x.IsDeleted).ToList();
+                ViewBag.weldLocations = _weldLocationService.Repository.Entities.Where(x => !x.IsDeleted).ToList();
+            }
+            return View(model);
+        }
+
+        //public ActionResult Edit(string handleId, int beamId = 0)
+        //{
+        //    WeldCategoryLabelingView model = new WeldCategoryLabelingView
+        //    {
+        //        HandleID = handleId,
+        //        BeamId = beamId
+        //    };
+        //    if (beamId > 0 && string.IsNullOrEmpty(handleId))
+        //    {
+        //        model = _weldCategoryService.GetList<WeldCategoryLabelingView>(1, x => !x.IsDeleted && x.BeamId == beamId && x.HandleID.Contains(handleId)).FirstOrDefault();
+        //    }        
+        //    return View(model);
+        //}
+
         public ActionResult cadwelding()
         {
             return View();
@@ -78,6 +131,15 @@ namespace Innocellence.FaultSearch.Controllers
             return this.GetPageResult(listEx, gridRequest);
         }
 
+        public JsonResult GetWeldingByHandle(int beamId, string handleId)
+        {
+            var item = _weldCategoryService.GetList<WeldCategoryLabelingView>(1, x => !x.IsDeleted && x.BeamId == beamId && x.HandleID.Contains(handleId)).FirstOrDefault();
+            if (item != null) {
+                return new JsonResult { Data = new { result = "success", data = item.HandleID, item.Id }, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
+            }
+            return new JsonResult { Data = new { result = "failed" }, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
+        }
+
         public JsonResult PostWeld(int? beamId, string dwgfile, List<WeldCategoryLabelingView> weldList)
         {
             if (string.IsNullOrEmpty(dwgfile) || !beamId.HasValue || weldList == null || weldList.Count == 0)
@@ -96,26 +158,47 @@ namespace Innocellence.FaultSearch.Controllers
             //}
             foreach (var weldInfo in weldList)
             {
-                if (weldInfo.HandleID != "0")
+                if (!string.IsNullOrEmpty( weldInfo.HandleID) && !string.IsNullOrEmpty(weldInfo.WeldType))
                 {
-                    var existedItem = existing.FirstOrDefault(x => x.BeamId == weldInfo.BeamId && x.HandleID == weldInfo.HandleID);
+                    var existedItem = existing.FirstOrDefault(x => x.BeamId == weldInfo.BeamId && x.HandleID.Contains(weldInfo.HandleID));
                     if (existedItem != null)
                     {
-                        if(existedItem.WeldType != weldInfo.WeldType)
+                        if (existedItem.WeldType != weldInfo.WeldType)
                         {
                             existedItem.WeldType = weldInfo.WeldType;
-                            _weldCategoryService.UpdateView(existedItem);
+                            weldInfo.Id = _weldCategoryService.UpdateView(existedItem);
                         }
                     }
                     else
                     {
+                        if (weldInfo.CopyOriginId.HasValue && weldInfo.CopyOriginId > 0) //用于复制焊缝
+                        {
+                            var entity = _weldCategoryService.GetList<WeldCategoryLabelingView>(int.MaxValue, x => x.BeamId == beam.Id && x.Id == weldInfo.CopyOriginId).FirstOrDefault();
+
+                            weldInfo.FigureNumber = entity.FigureNumber;
+                            weldInfo.BoardNumber = entity.BoardNumber;
+                            weldInfo.Thickness = entity.Thickness;
+                            weldInfo.WeldType = entity.WeldType;
+                            weldInfo.Thickness = entity.Thickness;
+                            weldInfo.WeldLocation = entity.WeldLocation;
+                            weldInfo.ConsumeFactor = entity.ConsumeFactor;
+                            weldInfo.MentalDensity = entity.MentalDensity;
+                            weldInfo.SectionArea = entity.SectionArea;
+                            weldInfo.WeldLength = entity.WeldLength;
+                            weldInfo.WeldQuanlity = entity.WeldQuanlity;
+                            weldInfo.WeldingNumber = entity.WeldingNumber;
+                            weldInfo.BeamNum = entity.BeamNum;
+                            weldInfo.Quantity = entity.Quantity;
+                            weldInfo.LengthVal = entity.LengthVal;
+                            weldInfo.WidthVal = entity.WidthVal;
+                        }
                         weldInfo.BeamId = beam.Id;
                         weldInfo.WeldType = GetWeldType(weldInfo.WeldType);
-                        _weldCategoryService.InsertView(weldInfo);
+                        weldInfo.Id = _weldCategoryService.InsertView(weldInfo);
                     }
                 }
             }
-            return new JsonResult { Data = new { result = "success" }, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
+            return new JsonResult { Data = new { result = "success", data = weldList.Count > 0 ? weldList[0].Id : 0 }, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
         }
         private string GetFilePath(int projectId, string dwgfile)
         {
