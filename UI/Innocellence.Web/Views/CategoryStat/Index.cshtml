@@ -58,9 +58,15 @@
                 <a href="#" class="btn btn-info btn-sm" id="btnSearch" data-toggle="tooltip" data-placement="top" title="查询条件"><i class="fa fa-search">查询</i></a>
             </div>
             <div class="form-group pull-right">
+
+                <a href="/BeamInfo/Index?projectid=@ViewBag.ProjectId" class="btn btn-info btn-sm" id="btnReturn" data-toggle="tooltip" data-placement="top" title="返回">
+                    文件管理
+                </a>
+
                 @*<a href="~/weldcategory/index?beamId=@ViewBag.BeamId" class="btn btn-info btn-sm"  data-toggle="tooltip" data-placement="top" title="焊缝类型标注">
                     焊缝类型标注
                 </a>*@
+
                 <a href="#" class="btn btn-info btn-sm" id="btnAdd" data-toggle="tooltip" data-placement="top" title="添加">
                     <i class="fa fa-plus">添加</i>
                 </a>
@@ -115,7 +121,7 @@
                             }
                             else
                             {
-                                <span class="form-control" style="max-width: 362px">@ViewBag.ProjectName</span>
+                                <input type="text" class="form-control" value="@ViewBag.ProjectName" readonly/>
                             }
 
                             @*<span class="func-btn redirect-btn" href="/Project/Index?mode=1">项目管理</span>*@
@@ -132,7 +138,7 @@
                             }
                             else
                             {
-                                <span class="form-control" style="max-width: 362px">@ViewBag.BeamName</span>
+                                <input type="text" class="form-control" value="@ViewBag.BeamName" readonly/>
                             }
 
                             @*<span class="func-btn redirect-btn" href="/Project/Index?mode=1">项目管理</span>*@
