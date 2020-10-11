@@ -6,10 +6,12 @@
     .datagrid-mask-msg {
         height: 36px !important;
     }
-    .form-control{
+
+    .form-control {
         display: inline;
         max-width: 300px;
     }
+
     .func-btn {
         border-radius: 0 !important;
         background-color: #fff;
@@ -27,15 +29,19 @@
         text-align: center;
         cursor: pointer;
     }
-    .modal-backdrop{
+
+    .modal-backdrop {
         z-index: 998;
     }
+
     .modal {
         z-index: 999;
     }
-    #rightPanel{
-        background-color:white;
+
+    #rightPanel {
+        background-color: white;
     }
+
         #rightPanel .widget-box {
             margin-top: 0px;
         }
@@ -91,16 +97,41 @@
                 <form action="Post" id="ff" method="get" class="form-horizontal" datasource="Get">
                     <input type="hidden" id="ID" name="ID" value="0" />
                     <input type="hidden" id="ProjectId" data-bind="value: ProjectId" />
-                    <input type="hidden" id="BeamId" data-bind="value: BeamId" value="@ViewBag.BeamId" />
+                    <input type="hidden" id="BeamId" name="BeamId" data-bind="value: BeamId" value="@ViewBag.BeamId" />
                     @*<input type="hidden" id="CreatedDate" name="CreatedDate" data-bind="value: CreatedDate" validate="{required:false}" value="1970-01-01"/>
-        <input type="hidden" id="CreatedUserID" name="CreatedUserID" data-bind="value: CreatedUserID" validate="{required:false}" value="0" />*@
+                        <input type="hidden" id="CreatedUserID" name="CreatedUserID" data-bind="value: CreatedUserID" validate="{required:false}" value="0" />*@
                     <div class="form-group">
                         <label class="col-sm-3 control-label">项目:</label>
                         <div class="col-sm-9">
-                            <select class="chosen-select form-control" id="ProjectName" name="ProjectId" style="display:none" data-bind="value:ProjectId" validate="{required:true}"></select>
-                            <span class="func-btn redirect-btn" href="/Project/Index?mode=1">项目管理</span>
+                            @if (string.IsNullOrEmpty(ViewBag.ProjectId))
+                            {
+                                <select class="chosen-select form-control" id="ProjectName" name="ProjectId" style="display:none" data-bind="value:ProjectId" validate="{required:true}"></select>
+                            }
+                            else
+                            {
+                                <span class="form-control" style="max-width: 362px">@ViewBag.ProjectName</span>
+                            }
+
+                            @*<span class="func-btn redirect-btn" href="/Project/Index?mode=1">项目管理</span>*@
                             @*<input type="text" name="GrooveType" class="form-control" placeholder="请输入" data-bind="value: ProjectName"
-                validate="{required:true}" />*@
+                                validate="{required:true}" />*@
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">梁段:</label>
+                        <div class="col-sm-9">
+                            @if (string.IsNullOrEmpty(ViewBag.BeamId))
+                            {
+                                <select class="chosen-select form-control" id="beamName" name="BeamId" style="display:none" data-bind="value:BeamId"></select>
+                            }
+                            else
+                            {
+                                <span class="form-control" style="max-width: 362px">@ViewBag.BeamName</span>
+                            }
+
+                            @*<span class="func-btn redirect-btn" href="/Project/Index?mode=1">项目管理</span>*@
+                            @*<input type="text" name="GrooveType" class="form-control" placeholder="请输入" data-bind="value: ProjectName"
+                                validate="{required:true}" />*@
                         </div>
                     </div>
                     <div class="form-group">
@@ -109,52 +140,52 @@
                             <select class="single-select form-control" id="AddressName" name="AddressId" style="" data-bind="value:AddressId" validate="{required:true}" data-geturl="/Address/GetDropdownList"></select>
                             <span class="func-btn redirect-btn" href="/Address/Index">厂址管理</span>
                             @*<input type="text" name="GrooveType" class="form-control" placeholder="请输入" data-bind="value: AddressName"
-        validate="{required:true}" />*@
+                                validate="{required:true}" />*@
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="col-sm-3 control-label">焊缝类型:</label>
                         <div class="col-sm-9">
                             <select class="single-select form-control" id="WeldType" name="WeldTypeId" style="" data-bind="value:WeldTypeId" validate="{required:true}" data-geturl="/WeldGeometry/GetDropdownList"></select>
-                            <span class="func-btn redirect-btn" href="/WeldGeometry/Index">焊缝类型管理</span>                        
-    @*<input type="text" name="Thickness" class="form-control" placeholder="请输入" data-bind="value: Thickness"
-                validate="{required:true}" />*@
+                            <span class="func-btn redirect-btn" href="/WeldGeometry/Index">焊缝类型管理</span>
+                            @*<input type="text" name="Thickness" class="form-control" placeholder="请输入" data-bind="value: Thickness"
+                                validate="{required:true}" />*@
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="col-sm-3 control-label">焊缝位置:</label>
                         <div class="col-sm-9">
                             <select class="single-select form-control" id="WeldLocationType" name="WeldLocationId" style="" data-bind="value: WeldLocationId" validate="{required:true}" data-geturl="/WeldLocation/GetDropdownList"></select>
-                            <span class="func-btn redirect-btn" href="/WeldLocation/Index">焊缝位置管理</span>                        
-    @*<input type="text" name="WeldLocationType" class="form-control" placeholder="请输入" data-bind="value: WorksThicknessH1"
-        validate="{required:true}" />*@
+                            <span class="func-btn redirect-btn" href="/WeldLocation/Index">焊缝位置管理</span>
+                            @*<input type="text" name="WeldLocationType" class="form-control" placeholder="请输入" data-bind="value: WorksThicknessH1"
+                                validate="{required:true}" />*@
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="col-sm-3 control-label">焊接位置:</label>
                         <div class="col-sm-9">
                             <select class="single-select form-control" id="HanJieType" name="HanjieId" style="" data-bind="value: HanjieId" validate="{required:true}" data-geturl="/HanjieLocation/GetDropdownList"></select>
-                            <span class="func-btn redirect-btn" href="/HanJieLocation/Index">焊接位置管理</span>                        
-    @*<input type="text" name="WeldGeometry" class="form-control" placeholder="请输入" data-bind="value: WeldGeometry"
-                validate="{required:true}" />*@
+                            <span class="func-btn redirect-btn" href="/HanJieLocation/Index">焊接位置管理</span>
+                            @*<input type="text" name="WeldGeometry" class="form-control" placeholder="请输入" data-bind="value: WeldGeometry"
+                                validate="{required:true}" />*@
                         </div>
                     </div>
                     @*<div class="form-group">
-                        <label class="col-sm-3 control-label">板厚(mm):</label>
-                        <div class="col-sm-9">
-                            <select class="single-select form-control" id="ThickType" name="ThicknessId" style="" data-bind="value: ThicknessId" validate="{required:true}" data-geturl="/Thickness/GetDropdownList"></select>
-                            <button class="func-btn redirect-btn" href="/Thickness/Index">板厚管理</button>                        
-    @*<input type="text" name="WorksThicknessH2" class="form-control" placeholder="请输入" data-bind="value: WorksThicknessH2"
-        validate="{required:true}" />*@
-                        @*</div>*@
+                                            <label class="col-sm-3 control-label">板厚(mm):</label>
+                                            <div class="col-sm-9">
+                                                <select class="single-select form-control" id="ThickType" name="ThicknessId" style="" data-bind="value: ThicknessId" validate="{required:true}" data-geturl="/Thickness/GetDropdownList"></select>
+                                                <button class="func-btn redirect-btn" href="/Thickness/Index">板厚管理</button>
+                        @*<input type="text" name="WorksThicknessH2" class="form-control" placeholder="请输入" data-bind="value: WorksThicknessH2"
+                            validate="{required:true}" />*@
+                    @*</div>*@
                     @*</div>*@
                     <div class="form-group">
                         <label class="col-sm-3 control-label">坡口形式:</label>
                         <div class="col-sm-9">
                             <select class="single-select form-control" id="GrooveTypeId" name="GrooveTypeId" style="" data-bind="value: GrooveTypeId" validate="{required:true}" data-geturl="/GrooveType/GetDropdownList"></select>
                             <span class="func-btn redirect-btn" href="/GrooveType/Index">坡口形式管理</span>
-    @*<input type="text" name="GrooveClearance" class="form-control" placeholder="请输入" data-bind="value: GrooveClearance"
-        validate="{required:true}" />*@
+                            @*<input type="text" name="GrooveClearance" class="form-control" placeholder="请输入" data-bind="value: GrooveClearance"
+                                validate="{required:true}" />*@
                         </div>
                     </div>
                     <div class="form-group">
@@ -162,9 +193,9 @@
                         <div class="col-sm-9">
                             <select class="single-select form-control" id="WeldingType" name="WeldingId" style="width:100px;display: inline;" data-bind="value: WeldingId" validate="{required:true}" data-geturl="/Welding/GetDropdownList"></select>
                             <input id="WeldingModel" name="WeldingModel" data-bind="value: WeldingModel" class="form-control" style="width: calc(100% - 140px);max-width: 179px; display: inline;" />
-                            <span class="func-btn redirect-btn" href="/Welding/Index">焊材类型管理</span>                        
-    @*<input type="text" name="WeldingType" class="form-control" placeholder="请输入" data-bind="value: BluntThickness"
-        validate="{required:true}" />*@
+                            <span class="func-btn redirect-btn" href="/Welding/Index">焊材类型管理</span>
+                            @*<input type="text" name="WeldingType" class="form-control" placeholder="请输入" data-bind="value: BluntThickness"
+                                validate="{required:true}" />*@
                         </div>
                     </div>
                     <div class="form-group">
@@ -172,7 +203,7 @@
                         <div class="col-sm-9">
                             <input type="text" id="SectionalArea" name="SectionalArea" class="form-control" placeholder="请输入" data-bind="value: SectionalArea"
                                    validate="{required:true}" />
-                            <span class="func-btn pop-btn" >焊缝截面积管理</span>
+                            <span class="func-btn pop-btn">焊缝截面积管理</span>
                         </div>
                     </div>
                 </form>
@@ -468,7 +499,7 @@
                 $('#leftPanel').css('margin', '30px auto');
                 $('#leftPanel').css('float', '');
                 $('#rightPanel').hide();
-                
+
                 //if ($('#rightPanel').is(":visible")) {
                 //    initDataTable();
                 //}
@@ -609,8 +640,8 @@
                 var pwidth = Math.min($(select).parent().width(), 300);
                 $(select).next().css({ 'width': pwidth });
             }, 1000);
-            
-            //resize the chosen on window resize            
+
+            //resize the chosen on window resize
             $(window).on('resize.chosen', function () {
                 var w = Math.min($('.chosen-select').parent().width(), 300);
                 $('.chosen-select').next().css({ 'width': w });

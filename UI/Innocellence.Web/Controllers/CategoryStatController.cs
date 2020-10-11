@@ -48,6 +48,12 @@ namespace DLYB.Web.Controllers
                 var project = _projectService.Repository.Entities.FirstOrDefault(x => x.Id == pid);
                 ViewBag.ProjectName = project.ProjectName;
             }
+            int bid = 0;
+            if (int.TryParse(Request["beamId"], out bid))
+            {
+                var beam = _beamInfoService.Repository.Entities.FirstOrDefault(x => x.Id == bid);
+                ViewBag.BeamName = beam.DwgFile.Substring(0, beam.DwgFile.IndexOf("dwg") - 1);
+            }
             return View();
         }
 

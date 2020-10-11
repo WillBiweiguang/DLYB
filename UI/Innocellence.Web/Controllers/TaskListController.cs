@@ -27,16 +27,19 @@ namespace DLYB.Web.Controllers
         private readonly ITaskListService _TaskListService;
         const string templateExcelFilename = "/content/焊材统计表.xlsx";
         private readonly IWeldCategoryLabelingService _weldCategoryService;
+        private readonly IWeldCategoryStatisticsService _weldCateStatService;
         private readonly ISysUserRoleService _sysUserRoleService;
         private readonly IProjectService _projectService;
         private readonly ISysUserService _sysUserService;
         public TaskListController(ITaskListService TaskListService,
             IWeldCategoryLabelingService weldCategoryService,
-            ISysUserRoleService sysUserRoleService,IProjectService projectService,
+            IWeldCategoryStatisticsService weldCateStatService,
+        ISysUserRoleService sysUserRoleService,IProjectService projectService,
             ISysUserService sysUserService) : base(TaskListService)
         {
             _TaskListService = TaskListService;
             _weldCategoryService = weldCategoryService;
+            _weldCateStatService = weldCateStatService;
             _sysUserRoleService = sysUserRoleService;
             _projectService = projectService;
             _sysUserService = sysUserService;
@@ -52,6 +55,7 @@ namespace DLYB.Web.Controllers
             ViewBag.isApprover = role != null && role.RoleId == 1 ? 1 : 0;
             ViewBag.UserId = objLoginInfo.Id;
             ViewBag.list = _weldCategoryService.Repository.Entities.Where(a => !a.IsDeleted).ToList();
+            ViewBag.Stat= _weldCateStatService.Repository.Entities.Where(a => !a.IsDeleted).ToList();
             return View();
         }
 
