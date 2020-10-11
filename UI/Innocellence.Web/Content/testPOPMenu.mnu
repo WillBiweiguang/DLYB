@@ -4,5 +4,6 @@
 "POPMENUS" "对象(&O)"
 
 "定位(&N)"  ""  ""  "local:1.png"  "" "99"
+"编辑信息(&N)"  ""  ""  "local:1.png"  "" "102"
 "复制焊缝(&N)"  ""  ""  "local:1.png"  "" "101"
 "POPMENUE"

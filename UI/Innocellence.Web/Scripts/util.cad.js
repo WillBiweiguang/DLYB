@@ -112,7 +112,21 @@ function DoCommandEventFunc(iCmd) {
 
         //handleArray---为焊缝符号所有图元的handle数组，第一个值为箭头的handle
     }
+    //编辑
+    if (iCmd == 102) {
+        var ss = mxOcx.NewSelectionSet();
+        var filter = mxOcx.NewResbuf();
+        ss.CurrentSelect(filter);
 
+        for (var i = 0; i < ss.Count; i++) {
+            var ent = ss.Item(i);
+            var hd = ent.handle;
+            //alert(hd);
+            LocateWelding(hd, function (handles, id) {
+                showEditForm(id);
+            });
+        }
+    }
 }
 
 

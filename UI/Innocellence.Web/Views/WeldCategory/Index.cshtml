@@ -317,7 +317,7 @@
         var popMenu;
         var IdCur;
         var lastCircleHandle;
-        var editModalSetting = 'dialogHeight:600px;dialogWidth:600px;dialogTop:' + ((screen.height - 600) / 2 - 20) + 'px;dialogLeft:'
+        var editModalSetting = 'dialogHeight:800px;dialogWidth:700px;dialogTop:' + ((screen.height - 600) / 2 - 20) + 'px;dialogLeft:'
             + ((screen.width - 600) / 2) + 'px;resizable:yes;center:yes;status:no;'
 ; //编辑模态窗口参数
         var tableModalSetting = {}; //数据列表窗口参数
@@ -487,6 +487,11 @@
                 }                
             });
 
+        }
+
+        function showEditForm(id) {
+            var rt = window.showModelessDialog('Edit?Id=' + id + '&v=' + Math.random(), "编辑焊缝信息", editModalSetting);
+            LEAP.Common.MainPop.options.dataTable.fnDraw(false);
         }
 
         function AddHanfeng() {

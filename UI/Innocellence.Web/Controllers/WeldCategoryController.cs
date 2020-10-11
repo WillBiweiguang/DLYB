@@ -152,7 +152,7 @@ namespace Innocellence.FaultSearch.Controllers
                     {
                         if (existedItem.WeldType != weldInfo.WeldType)
                         {
-                            existedItem.WeldType = weldInfo.WeldType;
+                            existedItem.WeldType = GetWeldType(weldInfo.WeldType);
                             weldInfo.Id = _weldCategoryService.UpdateView(existedItem);
                         }
                     }
@@ -178,9 +178,14 @@ namespace Innocellence.FaultSearch.Controllers
                             weldInfo.Quantity = entity.Quantity;
                             weldInfo.LengthVal = entity.LengthVal;
                             weldInfo.WidthVal = entity.WidthVal;
+                            weldInfo.BeamId = beam.Id;
+                            weldInfo.WeldType = entity.WeldType;
                         }
-                        weldInfo.BeamId = beam.Id;
-                        weldInfo.WeldType = GetWeldType(weldInfo.WeldType);
+                        else
+                        {
+                            weldInfo.BeamId = beam.Id;
+                            weldInfo.WeldType = GetWeldType(weldInfo.WeldType);
+                        }
                         weldInfo.Id = _weldCategoryService.InsertView(weldInfo);
                     }
                 }
