@@ -190,6 +190,11 @@ namespace Innocellence.FaultSearch.Controllers
                     }
                 }
             }
+            if (beam.ProcessStatus == 0)
+            {
+                beam.ProcessStatus = (int)BeamProcessStatus.InProcessing;
+                _beamInfoService.UpdateView(beam);
+            }
             return new JsonResult { Data = new { result = "success", data = weldList.Count > 0 ? weldList[0].Id : 0 }, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
         }
 
@@ -222,6 +227,12 @@ namespace Innocellence.FaultSearch.Controllers
                     else
                     {
                         _taskListService.UpdateView(task);
+                    }
+
+                    if (beam.ProcessStatus != (int)BeamProcessStatus.Complete)
+                    {
+                        beam.ProcessStatus = (int)BeamProcessStatus.Complete;
+                        _beamInfoService.UpdateView(beam);
                     }
                 }
                 return new JsonResult { Data = new { result = "success" }, JsonRequestBehavior = JsonRequestBehavior.AllowGet };

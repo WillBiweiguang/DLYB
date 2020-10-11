@@ -17,6 +17,8 @@ using Infrastructure.Utility.Filter;
 using System.Linq.Expressions;
 using DLYB.Web.Controllers;
 using Infrastructure.Web.Domain.Services;
+using Infrastructure.Web.Domain.Common;
+using Infrastructure.Utility.Extensions;
 
 namespace Innocellence.Web.Controllers
 {
@@ -48,6 +50,17 @@ namespace Innocellence.Web.Controllers
             return View();
         }
 
+        public JsonResult NextBeam(int projectId, int beamId)
+        {
+            var beam = _beamInfoService.GetList<BeamInfoView>(1, x => !x.IsDeleted && x.ProjectId == projectId && x.Id != beamId
+            && x.ProcessStatus != (int)BeamProcessStatus.Complete).FirstOrDefault();
+            if(beam == null)
+            {
+                return new JsonResult { Data = new { result = "failed", msg = "没有未完成的梁段" }, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
+            }
+            return new JsonResult { Data = new { result = "success", data = beam.Id }, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
+        }
+
         public override ActionResult GetList()
         {
             GridRequest gridRequest = new GridRequest(Request);
@@ -73,10 +86,11 @@ namespace Innocellence.Web.Controllers
             listEx.ForEach(w => {
                 var p = projects.FirstOrDefault(x => x.Id == w.ProjectId);
                 var task = tasklist.FirstOrDefault(x => x.ProjectId == w.ProjectId && x.DWGFile == w.DwgFile);
-                if(p!= null)
+                if (p != null)
                 {
                     w.ProjectName = p.ProjectName;
                     w.TaskStatus = task == null ? 0 : task.TaskStatus;
+                    w.Status = task == null ? ((BeamProcessStatus)w.ProcessStatus).ToDescription() : ((TaskStatus)task.TaskStatus).ToDescription();
                 }
             });
             return this.GetPageResult(listEx, gridRequest);

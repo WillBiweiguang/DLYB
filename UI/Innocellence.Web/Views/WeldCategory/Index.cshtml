@@ -58,8 +58,14 @@
                 <input type="button" class="btn btn-sm" value="提交审核" onclick="requestApprove();">
             </div>
             <div class="form-group pull-right">
-                <a href="~/CategoryStat/index?ProjectId=@ViewBag.ProjectId&beamId=@ViewBag.BeamId" class="btn btn-sm"  data-toggle="tooltip" data-placement="top" title="保存文件">
+                <a href="~/beaminfo/index?ProjectId=@ViewBag.ProjectId" class="btn btn-sm" data-toggle="tooltip" data-placement="top" title="保存文件">
+                    返回文件列表
+                </a>
+                <a href="~/CategoryStat/index?ProjectId=@ViewBag.ProjectId&beamId=@ViewBag.BeamId" class="btn btn-sm" data-toggle="tooltip" data-placement="top" title="保存文件">
                     返回类别统计
+                </a>
+                <a href="#" class="btn btn-sm" id="nextBeam" onclick="nextBeam(@ViewBag.ProjectId,@ViewBag.BeamId); return false;" data-toggle="tooltip" data-placement="top" title="进行下一梁段">
+                    进行下一梁段
                 </a>
                 <a href="#" class="btn btn-sm" id="btnSaveFile" data-toggle="tooltip" data-placement="top" title="保存文件">
                     保存文件
@@ -521,16 +527,28 @@
             }
         }
         function requestApprove() {
-            if (!confirm('确认提交审核？')) {
+            if (!confirm('提交将自动保存当前文件到服务器，确认提交审核？')) {
                 return;
+            }
+            if (!mxOcx.SaveDwgFile($('#fileServerPath').val())) {
+                alert('保存文件失败，请保存文件到本地，并在审核列表上传文件');
             }
             var beamId = $('#beamId').val();
             $.get('RequestApproval?beamId=' + beamId).done(function (r) {
                 if (r.result == 'success') {
-                    alert('提交成功')
+                    alert('提交成功');
                     window.location = window.location.protocol + '//' + window.location.host + '/Project/Index';
                 } else {
                     alert(r.msg);
+                }
+            });
+        }
+        function nextBeam(projectid, beamid) {
+            $.get('/Beaminfo/NextBeam', { projectId: projectid, beamId: beamid }).done(function (r) {
+                if (r.result == 'success') {
+                    window.location = '/CategoryStat/index?beamId=' + r.data;
+                } else {
+                    alert('没有未完成的梁段');
                 }
             });
         }

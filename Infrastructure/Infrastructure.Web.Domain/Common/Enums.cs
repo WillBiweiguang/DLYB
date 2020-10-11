@@ -11,11 +11,11 @@ namespace Infrastructure.Web.Domain.Common
     {
         [Description("未提交")]
         NotRequest,
-        [Description("审核中")]
+        [Description("待审核")]
         PendingApproval,
-        [Description("已审核")]
+        [Description("通过")]
         Approved,
-        [Description("已驳回")]
+        [Description("驳回")]
         Rejected
     }
 
@@ -26,9 +26,9 @@ namespace Infrastructure.Web.Domain.Common
     {
         [Description("未开始")]
         NotStart = 0,
-        [Description("焊缝类别统计中")]
-        InStatistics = 1,
-        [Description("焊缝类别识别中")]
-        Recognizing = 2
+        [Description("进行中")]
+        InProcessing = 1,
+        [Description("已完成")]
+        Complete = 2
     }
 }
