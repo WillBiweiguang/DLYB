@@ -78,6 +78,15 @@ namespace DLYB.Web.Controllers
             }
             int rowCount = gridRequest.PageCondition.RowCount;
             List<WeldCategoryStatisticsViewModel> listEx = GetListEx(expression, gridRequest.PageCondition);
+            var projectIDs = listEx.Select(x => x.ProjectId).ToList();
+            var projects = _projectService.GetList<ProjectView>(int.MaxValue, x => projectIDs.Contains(x.Id)).ToList();
+            listEx.ForEach(w => {
+                var p = projects.FirstOrDefault(x => x.Id == w.ProjectId);
+                if (p != null)
+                {
+                    w.ProjectName = p.ProjectName;
+                }
+            });
             return this.GetPageResult(listEx, gridRequest);
         }
 

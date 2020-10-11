@@ -1,5 +1,6 @@
 ﻿using DLYB.Web.Controllers;
 using Infrastructure.Utility.Filter;
+using Infrastructure.Web.Domain.Common;
 using Infrastructure.Web.Domain.Contracts;
 using Infrastructure.Web.Domain.Entity;
 using Infrastructure.Web.Domain.ModelsView;
@@ -19,17 +20,19 @@ namespace Innocellence.FaultSearch.Controllers
         private readonly IBeamInfoService _beamInfoService;
         private readonly IWeldGeometryService _weldGeometryService;
         private readonly IWeldLocationService _weldLocationService;
+        private readonly ITaskListService _taskListService;
 
         private readonly string baseUrl = "http://42.202.130.245:3001/";
         public WeldCategoryController(IWeldCategoryLabelingService weldCategoryService,
             IBeamInfoService beamInfoService,IWeldGeometryService weldGeometryService,
-            IWeldLocationService weldLocationService) : base(weldCategoryService)
+            IWeldLocationService weldLocationService, ITaskListService taskListService) : base(weldCategoryService)
         {
             _weldCategoryService = weldCategoryService;
             _beamInfoService = beamInfoService;
             _weldGeometryService = weldGeometryService;
             _weldLocationService = weldLocationService;
             baseUrl = ConfigurationManager.AppSettings["WebUrl"];
+            _taskListService = taskListService;
         }
         public override ActionResult Index()
         {
@@ -52,6 +55,7 @@ namespace Innocellence.FaultSearch.Controllers
             return View();
         }
 
+        //弹出层列表，目前暂时没有用
         public ActionResult WeldDataTable(int beamId = 0)
         {
             if (beamId > 0)
@@ -69,7 +73,7 @@ namespace Innocellence.FaultSearch.Controllers
             ViewBag.weldLocations = _weldLocationService.Repository.Entities.Where(x => !x.IsDeleted).ToList();
             return View();
         }
-
+        //弹出层编辑
         public override ActionResult Edit(string Id)
         {
             WeldCategoryLabelingView model = new WeldCategoryLabelingView();
@@ -143,7 +147,7 @@ namespace Innocellence.FaultSearch.Controllers
             {
                 if (!string.IsNullOrEmpty( weldInfo.HandleID) && !string.IsNullOrEmpty(weldInfo.WeldType))
                 {
-                    var existedItem = existing.FirstOrDefault(x => x.BeamId == weldInfo.BeamId && x.HandleID.Contains(weldInfo.HandleID));
+                    var existedItem = existing.FirstOrDefault(x => x.BeamId == beamId && x.HandleID.Contains(weldInfo.HandleID));
                     if (existedItem != null)
                     {
                         if (existedItem.WeldType != weldInfo.WeldType)
@@ -182,6 +186,42 @@ namespace Innocellence.FaultSearch.Controllers
                 }
             }
             return new JsonResult { Data = new { result = "success", data = weldList.Count > 0 ? weldList[0].Id : 0 }, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
+        }
+
+        public JsonResult RequestApproval(int beamId)
+        {
+            if (beamId > 0)
+            {
+                var beam = _beamInfoService.GetList<BeamInfoView>(1, x => x.Id == beamId).FirstOrDefault();
+                if (beam != null)
+                {
+                    var task = _taskListService.GetList<TaskListView>(1, x => !x.IsDeleted && x.ProjectId == beam.ProjectId && x.BeamId == beam.Id).FirstOrDefault();
+                    if (task != null && (task.TaskStatus == (int)TaskStatus.PendingApproval || task.TaskStatus == (int)TaskStatus.Approved))
+                    {
+                        return new JsonResult { Data = new { result = "failed", msg = "本文件已提交，请勿重复提交" }, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
+                    }
+                    else if (task == null)
+                    {
+                        task = new TaskListView
+                        {
+                            ProjectId = beam.ProjectId,
+                            BeamId = beam.Id,
+                            DWGFile = beam.DwgFile
+                        };
+                    }
+                    task.TaskStatus = (int)TaskStatus.PendingApproval;
+                    if (task.Id == 0)
+                    {
+                        _taskListService.InsertView(task);
+                    }
+                    else
+                    {
+                        _taskListService.UpdateView(task);
+                    }
+                }
+                return new JsonResult { Data = new { result = "success" }, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
+            }
+            return new JsonResult { Data = new { result = "failed", msg="提交失败" }, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
         }
         private string GetFilePath(int projectId, string dwgfile)
         {
