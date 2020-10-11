@@ -46,16 +46,21 @@
                 <a href="#" class="btn btn-info btn-sm" id="btnAdd" data-toggle="tooltip" data-placement="top" title="文件上传">
                     文件上传
                 </a>
+                <div class="form-group pull-right">
+                    <a href="#" class="btn btn-info btn-sm" id="btnDownload" data-toggle="tooltip" data-placement="top" title="下载">
+                        <i class="glyphicon glyphicon-arrow-down">批量下载</i>
+                    </a>
+                </div>
                 @*<input id="upload-input" class="form-control " multiple="multiple" type="file" name="file" onchange="return uploadFile(this);"
-                    accept="image/vnd.dwg" />*@
+        accept="image/vnd.dwg" />*@
                 @*@if (ViewBag.isApprover == 1)
-                    {
-                    <div style="float:right">
-                        <button type="button" id="btnAudit" class="btn btn-primary btn-sm" data-toggle="tooltip" data-placement="top" title="审核">审核</button>
-                    </div>
-                    }
-                    </div>
-                    }*@
+        {
+        <div style="float:right">
+            <button type="button" id="btnAudit" class="btn btn-primary btn-sm" data-toggle="tooltip" data-placement="top" title="审核">审核</button>
+        </div>
+        }
+        </div>
+        }*@
             </div>
         </form>
         <div class="clearfix"></div>
@@ -238,6 +243,83 @@
         </div>
     </div>
 </div>
+<div id="ModalDownload" class="modal" tabindex="-1" style="z-index:9000">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <a href="javascript:void(0);" class="btn btn-sm btn-success" data-toggle="tooltip" data-placement="top" title="导出Excel" id="btnDownloadExport">
+                    <i class="fa fa-download"></i> 导出Excel
+                </a>
+            </div>
+
+            <div class="modal-body">
+                <form action="Post" id="ff2" method="get" class="form-horizontal" datasource="Get">
+
+                    <div>
+
+                        <div style="clear:both;padding-top:10px">
+                            <table class="gridtable">
+                                <thead>
+                                    <tr>
+                                        <th style="width:5%;text-align:center;">@T("序号")</th>
+
+                                        <th>@T("项目名称")</th>
+                                        <th>@T("厂址")</th>
+                                        <th>@T("焊材类型")</th>
+                                        <th>@T("焊材型号")</th>
+                                        <th>@T("焊材规格")</th>
+                                        <th>@T("焊材重量")</th>
+                                        <th>@T("单位")</th>
+                                    </tr>
+                                </thead>
+                                @foreach (var item in ViewBag.Stat)
+                                {
+                                    @*<tr>*@
+                                        @*<td>
+                                            @item.ProjectName
+                                        </td>
+
+                                        <td>
+                                            @item.AddressName
+                                        </td>
+                                        <td>
+                                            @item.WeldingType
+                                        </td>
+                                        <td>
+                                            @item.WeldingModel
+                                        </td>
+
+                                        <td>
+                                            @item.WeldLocation
+                                        </td>
+                                       
+                                        <td>
+                                            @item.WeldQuanlity
+                                        </td>
+                                        <td>
+                                            @item.BeamNum
+                                        </td>
+
+                                    </tr>*@
+                                }
+
+                            </table>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-sm" id='CancelBtn1' data-dismiss="modal">
+                    <i class="ace-icon fa fa-times"></i>
+                    取消
+                </button>
+
+
+            </div>
+        </div>
+    </div>
+</div>
 @section scripts_Foot
 {
     <script src="~/Scripts/EasyUI/jquery.easyui.min.js"></script>
@@ -300,6 +382,15 @@
             $('.modal-backdrop').remove();
             $('#rightPanel').hide(300);
             $('#iframei').remove();
+        });
+        
+        $('#btnDownload').on('click', function () {
+           
+            $('#ModalDownload').show(300);
+        });
+        $(document).on('click', '#CancelBtn1', function () {
+
+            $('#ModalDownload').hide(300);
         });
         $(document).on('click', '#CancelBtn', function () {
 
