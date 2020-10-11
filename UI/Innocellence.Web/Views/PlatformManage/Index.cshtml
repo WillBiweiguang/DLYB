@@ -40,7 +40,7 @@
     <ul class="nav nav-tabs" role="tablist">
         @if (ViewBag.IsRole && ViewBag.IsUser)
         {
-            <li role="presentation" class="active"><a href="#partOne" role="tab" data-toggle="tab">用户权限管理</a></li>
+            <li role="presentation" class="active"><a href="#partOne" role="tab" data-toggle="tab">用户角色管理</a></li>
             <li role="presentation"><a href="#partTwo" role="tab" data-toggle="tab">用户管理</a></li>
             if (ViewBag.IsSuperAdmin)
             {
@@ -380,17 +380,11 @@
                                        validate="{required:true}" />
                             </div>
                         </div>
+                       
                         <div class="form-group">
-                            <label class="col-sm-3 control-label">员工ID:</label>
+                            <label class="col-sm-3 control-label">密码:</label>
                             <div class="col-sm-9">
-                                <input type="text" name="UserID" class="form-control" placeholder="输入员工ID" data-bind="value: UserID"
-                                       validate="{required:true}" />
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-sm-3 control-label">新密码:</label>
-                            <div class="col-sm-9">
-                                <input type="password" name="PasswordHash" id="new-password" class="form-control" placeholder="请输入新密码" data-bind="value: PasswordHash"
+                                <input type="password" name="PasswordHash" id="new-password" class="form-control" placeholder="请输入密码" data-bind="value: PasswordHash"
                                        validate="{required:true}" />
                             </div>
                         </div>
@@ -424,13 +418,13 @@
                             </div>
                         </div>
 
-                        <div class="form-group">
+                        @*<div class="form-group">
                             <label class="col-sm-3 control-label">邮箱:</label>
                             <div class="col-sm-9">
                                 <input type="text" name="Email" class="form-control" placeholder="请输入邮箱" data-bind="value: Email"
                                        validate="{required:true}" />
                             </div>
-                        </div>
+                        </div>*@
                         @if (ViewBag.IsRole)
                         {
                             <div class="form-group">
@@ -662,7 +656,7 @@
 
                 });
                 //验证是否选择角色
-                if (postData[7].value.length > 0) {
+                if (postData[5].value.length > 0) {
                     $.post("/SysUser/Post", postData, function (result) {
                         InitImageList();
                         $('#UserModalTable').modal('hide');
