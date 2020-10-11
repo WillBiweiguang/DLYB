@@ -95,6 +95,17 @@
     </div>
     <iframe id='iframei' src="javascript:0" style="position:absolute; border:none; visibility:inherit; top:38px; left:0px;  height:100%; width:100%; z-index:-1; filter: progid:DXImageTransform.Microsoft.Alpha(style=0,opacity=0);"></iframe>
 </div>
+<div id="downloadPanel" class="modal-dialog" style="z-index:1050; top:-30px;left:15%; position:absolute; float:right; height:100%;width:70%;display:none;">
+    <div class="widget-header">
+        <h4 class="widget-title"></h4>
+        <div class="widget-toolbar">
+            <a href="#" id="closePaneldownload">
+                <i class="ace-icon fa fa-times"></i>
+            </a>
+        </div>
+    </div>
+    <iframe id='iframe2' src="javascript:0" style="position:absolute; border:none; visibility:inherit; top:38px; left:0px;  height:100%; width:100%; z-index:-1; filter: progid:DXImageTransform.Microsoft.Alpha(style=0,opacity=0);"></iframe>
+</div>
 <div id="ModalTable" class="modal" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -267,40 +278,29 @@
                                         <th>@T("厂址")</th>
                                         <th>@T("焊材类型")</th>
                                         <th>@T("焊材型号")</th>
-                                        <th>@T("焊材规格")</th>
-                                        <th>@T("焊材重量")</th>
-                                        <th>@T("单位")</th>
                                     </tr>
                                 </thead>
                                 @foreach (var item in ViewBag.Stat)
                                 {
-                                    @*<tr>*@
-                                        @*<td>
-                                            @item.ProjectName
-                                        </td>
+                                <tr>
+                                    <td>
+                                        @item.Id
+                                    </td>
+                                    <td>
+                                        @item.ProjectName
+                                    </td>
+                                    <td>
+                                        @item.AddressName
+                                    </td>
+                                    <td>
+                                        @item.WeldType
+                                    </td>
+                                    <td>
+                                        @item.WeldingModel
+                                    </td>
 
-                                        <td>
-                                            @item.AddressName
-                                        </td>
-                                        <td>
-                                            @item.WeldingType
-                                        </td>
-                                        <td>
-                                            @item.WeldingModel
-                                        </td>
 
-                                        <td>
-                                            @item.WeldLocation
-                                        </td>
-                                       
-                                        <td>
-                                            @item.WeldQuanlity
-                                        </td>
-                                        <td>
-                                            @item.BeamNum
-                                        </td>
-
-                                    </tr>*@
+                                </tr>
                                 }
 
                             </table>
@@ -383,11 +383,11 @@
             $('#rightPanel').hide(300);
             $('#iframei').remove();
         });
-        
-        $('#btnDownload').on('click', function () {
-           
-            $('#ModalDownload').show(300);
+        $('#closePaneldownload').on('click', function () {
+            $('#downloadPanel').hide(300);
+            $('#iframe2').remove();
         });
+        
         $(document).on('click', '#CancelBtn1', function () {
 
             $('#ModalDownload').hide(300);
@@ -398,6 +398,23 @@
         });
         $(document).on('click', '#btnSave', function (e) {
             $('.form-horizontal').submit();
+        });
+        
+        $('#btnDownloadExport').on('click', function () {
+
+            var para = '';
+            var dSearch = $("#SearchForm").serializeArray();
+            if (!BeforeExport(dSearch)) {
+                return false;
+            }
+
+            $.each(dSearch, function (key, val) {
+                para += val.name + '=' + val.value + '&';
+            });
+
+            // $.download("ExportAnswer", para + "t=" + (new Date()).getTime());
+            $.download("ExportToExcelDownload", para + "t=" + (new Date()).getTime());
+            return true;
         });
         $('#btnScoreExport').on('click', function () {
 
@@ -496,6 +513,15 @@
             $('#rightPanel').show(300);
             $('body').append('<div class="modal-backdrop in"></div>');
         }
+        $('#btnDownload').on('click', function () {
+
+            $('#downloadPanel').remove('iframe');
+            var url = '/tasklist/WeldingDownload';
+            var frame = '<iframe id="iframe2" src="' + url + '" style="position:absolute; border:none; visibility:inherit; top:38px; left:0px;  height:100%; width:100%; z-index:-1; filter: progid:DXImageTransform.Microsoft.Alpha(style=0,opacity=0);"></iframe>';
+            $('#downloadPanel').append(frame);
+            $('#downloadPanel').show(300);
+            $('body').append('<div class="modal-backdrop in"></div>');
+        });
     </script>
 }
 

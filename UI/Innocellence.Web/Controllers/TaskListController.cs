@@ -26,20 +26,21 @@ namespace DLYB.Web.Controllers
     {
         private readonly ITaskListService _TaskListService;
         const string templateExcelFilename = "/content/焊材统计表.xlsx";
+        const string templateExcelFilenameDownload = "/content/焊材批量统计表.xlsx";
         private readonly IWeldCategoryLabelingService _weldCategoryService;
-        private readonly IWeldCategoryStatisticsService _weldCateStatService;
+        private readonly IWeldCategoryStatisticsVService _wcsvService;
         private readonly ISysUserRoleService _sysUserRoleService;
         private readonly IProjectService _projectService;
         private readonly ISysUserService _sysUserService;
         public TaskListController(ITaskListService TaskListService,
             IWeldCategoryLabelingService weldCategoryService,
-            IWeldCategoryStatisticsService weldCateStatService,
+            IWeldCategoryStatisticsVService wcsvService,
         ISysUserRoleService sysUserRoleService,IProjectService projectService,
             ISysUserService sysUserService) : base(TaskListService)
         {
             _TaskListService = TaskListService;
             _weldCategoryService = weldCategoryService;
-            _weldCateStatService = weldCateStatService;
+            _wcsvService = wcsvService;
             _sysUserRoleService = sysUserRoleService;
             _projectService = projectService;
             _sysUserService = sysUserService;
@@ -55,7 +56,7 @@ namespace DLYB.Web.Controllers
             ViewBag.isApprover = role != null && role.RoleId == 1 ? 1 : 0;
             ViewBag.UserId = objLoginInfo.Id;
             ViewBag.list = _weldCategoryService.Repository.Entities.Where(a => !a.IsDeleted).ToList();
-            ViewBag.Stat= _weldCateStatService.Repository.Entities.Where(a => !a.IsDeleted).ToList();
+            ViewBag.Stat= _wcsvService.Repository.Entities.Where(a => !a.IsDeleted).ToList();
             return View();
         }
 
@@ -90,6 +91,10 @@ namespace DLYB.Web.Controllers
         public ActionResult WeldingDetail(int? beamId)
         {
             ViewBag.BeamId = beamId;
+            return View();
+        }
+        public ActionResult WeldingDownload()
+        {
             return View();
         }
 
@@ -195,7 +200,46 @@ namespace DLYB.Web.Controllers
             }
 
         }
+        public ActionResult ExportToExcelDownload(int beamId = 0)
+        {
+            string fileName = "批量焊材_" + DateTime.Now.ToString("yyyyMMddHHmmssfff") + ".xlsx";
 
+            string templateFilename = Server.MapPath(templateExcelFilenameDownload);
+            using (FileStream file = new FileStream(templateFilename, FileMode.Open, FileAccess.Read))
+            {
+                var workbook = new XSSFWorkbook(file);
+                var sheet1 = workbook.GetSheet("焊材");
+                
+                //var answer = _pollingResultService.GetList(Id);
+                var reportList1 = _wcsvService.GetList<WeldCategoryStatisticsVView>(1,x => !x.IsDeleted ).ToList();
+                int i = 1;
+                foreach (var v in reportList1)
+                {
+                    int j = 0;
+                    var row = sheet1.CreateRow(i++);
+                    row.CreateCell(j++).SetCellValue(i - 1);
+                    row.CreateCell(j++).SetCellValue(v.BeamId);
+                    row.CreateCell(j++).SetCellValue(v.AddressName);
+                    row.CreateCell(j++).SetCellValue(v.WeldType);
+                    row.CreateCell(j++).SetCellValue(v.WeldingModel);
+                    row.CreateCell(j++).SetCellValue(v.SectionalArea);
+
+                }
+
+                using (MemoryStream ms = new MemoryStream())
+                {
+                    workbook.Write(ms);
+                    ms.Flush();
+                    ms.Position = 0;
+                    //sheet = null;
+                    //workbook = null;
+                    //workbook.Close();//一般只用写这一个就OK了，他会遍历并释放所有资源，但当前版本有问题所以只释放sheet
+                    return File(ms.ToArray(), "application/vnd-excel", fileName);
+                }
+
+            }
+
+        }
         public ActionResult ApproveTask(int Id, int option) {
             var task = _TaskListService.GetList<TaskListView>(1, x => !x.IsDeleted && x.Id == Id).FirstOrDefault();
             if (task == null || (task.TaskStatus != (int)TaskStatus.PendingApproval && task.TaskStatus != (int)TaskStatus.Rejected))
