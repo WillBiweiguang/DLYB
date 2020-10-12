@@ -352,7 +352,7 @@
                     {
                         "targets": 6,
                         "render": function (data, type, full, meta) {
-                            var opstr = '<a href="#" onclick="ShowWeldingDetail(\'' + full.Id + '\');" class="artDailog btn btn-info  btn-xs pop-btn" style="margin-right:4px;" data-toggle="tooltip" data-placement="top" title="焊材详情统计"><i class="ace-icon glyphicon glyphicon-align-left"></i></a>';
+                            var opstr = '<a href="#" onclick="ShowWeldingDetail(\'' + full.BeamId + '\');" class="artDailog btn btn-info  btn-xs pop-btn" style="margin-right:4px;" data-toggle="tooltip" data-placement="top" title="焊材详情统计"><i class="ace-icon glyphicon glyphicon-align-left"></i></a>';
                             if (isapprover == 1 && full.TaskStatus == tastStatus.pending) {
                                 opstr = opstr + '<a href="#" onclick="approveTask(\'' + full.Id + '\',1);return false;" class="artDailog btn btn-info  btn-xs" style="margin-right:4px;" data-toggle="tooltip" data-placement="top" title="审核"><i class="ace-icon glyphicon glyphicon-ok"></i></a>';
                                 opstr = opstr + '<a href="#" onclick="approveTask(\'' + full.Id + '\',0);return false;" class="artDailog btn btn-info  btn-xs" style="margin-right:4px;" data-toggle="tooltip" data-placement="top" title="驳回"><i class="ace-icon glyphicon glyphicon-remove"></i></a>';

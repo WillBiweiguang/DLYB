@@ -382,8 +382,6 @@
     <Content Include="Content\img\icon_avatar_default.png" />
     <Content Include="Content\img\icon_party_default.png" />
     <Content Include="Content\img\loading.gif" />
-    <Content Include="Content\img\logo_icon.ico" />
-    <Content Include="Content\img\Poster.png" />
     <Content Include="Content\img\profile-pic.jpg" />
     <Content Include="Content\img\qrcode_lilly.jpg" />
     <Content Include="Content\img\smiley.png" />
@@ -468,9 +466,6 @@
     <Content Include="Scripts\bootstrap-wysiwyg.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
-    <Content Include="Scripts\build\dist\chart\bar.js" />
-    <Content Include="Scripts\build\dist\chart\pie.js" />
-    <Content Include="Scripts\build\dist\echarts.js" />
     <Content Include="Scripts\Common\Html5Upload.js" />
     <Content Include="Scripts\Common\ImgPreview.js" />
     <Content Include="Scripts\Common\lang\zh.js" />
@@ -702,6 +697,7 @@
     <Content Include="Content\焊材统计表.xlsx" />
     <Content Include="Content\testPOPMenu.mnu" />
     <Content Include="Content\testPOPMenuWeld.mnu" />
+    <Content Include="Content\焊材批量统计表.xlsx" />
     <None Include="Properties\PublishProfiles\Innocellence.We.pubxml" />
     <None Include="Properties\PublishProfiles\LillyChinaCAWechat.pubxml" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
@@ -1048,6 +1044,7 @@
     <Folder Include="Domain\Models\Common\" />
     <Folder Include="filemanage\image\" />
     <Folder Include="Plugins\bin\" />
+    <Folder Include="Scripts\build\dist\chart\" />
     <Folder Include="Scripts\third-party\highcharts\themes\" />
     <Folder Include="Scripts\third-party\snapscreen\" />
     <Folder Include="Scripts\third-party\video-js\font\" />

@@ -29,7 +29,7 @@ namespace Innocellence.Web.Controllers
         private readonly IHistoricalCostService _objHistoricalCostService = new HistoricalCostService();
         private readonly ISysUserService _sysUserService;
         readonly IList<KeyValuePair<int, string>> Departments;
-        public ProjectController(IProjectService projectService,ISysUserService sysUserService) : base(projectService)
+        public ProjectController(IProjectService projectService, ISysUserService sysUserService) : base(projectService)
         {
             _projectService = projectService;
             _sysUserService = sysUserService;
@@ -42,9 +42,14 @@ namespace Innocellence.Web.Controllers
             string projectId = Request["projectId"];
             ViewBag.ProjectId = projectId;
             var mode = Request["mode"];
-            ViewBag.list= _objHistoricalCostService.GetList<HistoricalCostView>(int.MaxValue, x => !x.IsDeleted).ToList();
+            if (!string.IsNullOrEmpty(objLoginInfo.Department))
+            {
+                ViewBag.departmentId = objLoginInfo.Department.Split('_')[0];
+            }
+            ViewBag.list = _objHistoricalCostService.GetList<HistoricalCostView>(int.MaxValue, x => !x.IsDeleted).ToList();
             ViewBag.Layout = "~/Views/Shared/_Layout.cshtml";
-            if(!string.IsNullOrEmpty(mode) && mode == "1") {
+            if (!string.IsNullOrEmpty(mode) && mode == "1")
+            {
                 ViewBag.Layout = "~/Views/Shared/_LayoutWithoutMenu.cshtml";
             }
             return View();
@@ -58,29 +63,30 @@ namespace Innocellence.Web.Controllers
 
             GridRequest gridRequest = new GridRequest(Request);
             string strCondition = Request["search_condition"];
-            
+
             Expression<Func<Project, bool>> expression = FilterHelper.GetExpression<Project>(gridRequest.FilterGroup);
             expression = expression.AndAlso<Project>(x => x.IsDeleted != true);
             if (!string.IsNullOrEmpty(strCondition))
             {
                 expression = expression.AndAlso<Project>(x => x.ProjectName.Contains(strCondition));
             }
-            if(pid != 0)
+            if (pid != 0)
             {
-                expression = expression.AndAlso<Project>(x =>  x.Id == pid);
+                expression = expression.AndAlso<Project>(x => x.Id == pid);
             }
-            
-            if(!string.IsNullOrEmpty(objLoginInfo.Department))
+
+            if (!string.IsNullOrEmpty(objLoginInfo.Department))
             {
                 var departmentId = objLoginInfo.Department.Split('_')[0];
                 expression = expression.AndAlso<Project>(x => x.DepartmentID == departmentId);
             }
-            
+
             int rowCount = gridRequest.PageCondition.RowCount;
             List<ProjectView> listEx = GetListEx(expression, gridRequest.PageCondition);
             var userIds = listEx.Select(x => x.UpdatedUserID).ToArray();
             var users = _sysUserService.GetList<SysUserView>(10, x => userIds.Contains(x.Id)).ToList();
-            listEx.ForEach(x => {
+            listEx.ForEach(x =>
+            {
                 x.DepartmentName = Departments.Any(e => e.Key.ToString() == x.DepartmentID)
                 ? Departments.First(e => e.Key.ToString() == x.DepartmentID).Value : "";
                 x.UpdateUserName = users.FirstOrDefault(e => e.Id == x.UpdatedUserID)?.UserTrueName;
@@ -89,9 +95,9 @@ namespace Innocellence.Web.Controllers
         }
 
         public JsonResult GetDropdownList(string keyword = "")
-        {           
+        {
             var list = _projectService.GetList<ProjectView>(int.MaxValue, x => !x.IsDeleted && x.ProjectName.Contains(keyword.Trim()))
-    .Select(x => new { key = x.Id, value = x.ProjectName }).ToList();
+        .Select(x => new { key = x.Id, value = x.ProjectName }).ToList();
             return new JsonResult { Data = list, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
         }
         //public override ActionResult GetList()

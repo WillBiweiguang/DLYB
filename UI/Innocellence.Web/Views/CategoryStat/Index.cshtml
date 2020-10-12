@@ -63,9 +63,9 @@
                     文件管理
                 </a>
 
-                @*<a href="~/weldcategory/index?beamId=@ViewBag.BeamId" class="btn btn-info btn-sm"  data-toggle="tooltip" data-placement="top" title="焊缝类型标注">
+                <a href="~/weldcategory/index?beamId=@ViewBag.BeamId" class="btn btn-info btn-sm"  data-toggle="tooltip" data-placement="top" title="焊缝类型标注">
                     焊缝类型标注
-                </a>*@
+                </a>
 
                 <a href="#" class="btn btn-info btn-sm" id="btnAdd" data-toggle="tooltip" data-placement="top" title="添加">
                     <i class="fa fa-plus">添加</i>
@@ -518,6 +518,8 @@
             //Groove Calc
             var WeldGeometry = document.getElementById('WeldGeometry');
             var GrooveType = document.getElementById('GrooveType');
+            var WorksThickness1 = document.getElementById('WorksThickness1');
+            var WorksThickness2 = document.getElementById('WorksThickness2');
             $("#WeldGeometry").change(function () {
                 $('#GrooveType').empty();
                 $('#WorksThickness1').empty();

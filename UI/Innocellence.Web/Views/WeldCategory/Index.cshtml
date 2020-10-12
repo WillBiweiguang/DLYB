@@ -59,14 +59,14 @@
             </div>
             <div class="form-group pull-right">
                 <a href="~/beaminfo/index?ProjectId=@ViewBag.ProjectId" class="btn btn-sm" data-toggle="tooltip" data-placement="top" title="保存文件">
-                    返回文件列表
+                    进行下一梁段
                 </a>
                 <a href="~/CategoryStat/index?ProjectId=@ViewBag.ProjectId&beamId=@ViewBag.BeamId" class="btn btn-sm" data-toggle="tooltip" data-placement="top" title="保存文件">
                     返回类别统计
                 </a>
-                <a href="#" class="btn btn-sm" id="nextBeam" onclick="nextBeam(@ViewBag.ProjectId,@ViewBag.BeamId); return false;" data-toggle="tooltip" data-placement="top" title="进行下一梁段">
+                @*<a href="#" class="btn btn-sm" id="nextBeam" onclick="nextBeam(@ViewBag.ProjectId,@ViewBag.BeamId); return false;" data-toggle="tooltip" data-placement="top" title="进行下一梁段">
                     进行下一梁段
-                </a>
+                </a>*@
                 <a href="#" class="btn btn-sm" id="btnSaveFile" data-toggle="tooltip" data-placement="top" title="保存文件">
                     保存文件
                 </a>
@@ -532,6 +532,7 @@
             }
             if (!mxOcx.SaveDwgFile($('#fileServerPath').val())) {
                 alert('保存文件失败，请保存文件到本地，并在审核列表上传文件');
+                return;
             }
             var beamId = $('#beamId').val();
             $.get('RequestApproval?beamId=' + beamId).done(function (r) {
