@@ -52,7 +52,15 @@ namespace DLYB.Web.Controllers
             if (int.TryParse(Request["beamId"], out bid))
             {
                 var beam = _beamInfoService.Repository.Entities.FirstOrDefault(x => x.Id == bid);
-                ViewBag.BeamName = beam.DwgFile.Substring(0, beam.DwgFile.IndexOf("dwg") - 1);
+                if (beam.DwgFile.IndexOf("dwg")>0)
+                {
+                    ViewBag.BeamName = beam.DwgFile.Substring(0, beam.DwgFile.IndexOf("dwg") - 1);
+                }
+                else if(beam.DwgFile.IndexOf("dxf") > 0)
+                {
+                    ViewBag.BeamName = beam.DwgFile.Substring(0, beam.DwgFile.IndexOf("dxf") - 1);
+                }
+               
             }
             return View();
         }

@@ -145,10 +145,10 @@ namespace DLYB.Web.Controllers
                 objModal.DWGFile = file.FileName;
                 objModal.ProjectId = ProjectName;
                 var fileExtension = System.IO.Path.GetExtension(file.FileName);
-                if (fileExtension.ToLower() != ".dwg")
+                if (fileExtension.ToLower() != ".dwg" || fileExtension.ToLower() != ".dxf")
                 {
                     var result = GetErrorJson();
-                    result.Message = new JsonMessage(103, "请上传dwg文件");
+                    result.Message = new JsonMessage(103, "请上传dwg/dxf文件");
                     return Json(result, JsonRequestBehavior.AllowGet);
                 }
                 if (!System.IO.Directory.Exists(Server.MapPath("/Files/TaskList/")))
