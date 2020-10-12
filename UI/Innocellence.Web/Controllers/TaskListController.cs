@@ -67,7 +67,18 @@ namespace DLYB.Web.Controllers
             Expression<Func<TaskList, bool>> expression = FilterHelper.GetExpression<TaskList>(gridRequest.FilterGroup);
 
             expression = expression.AndAlso<TaskList>(x => x.IsDeleted != true);
-
+            //过滤机构
+            if (!string.IsNullOrEmpty(objLoginInfo.Department))
+            {
+                var departmentid = objLoginInfo.Department.Split('_').First();
+                var projectIds = _projectService.GetList<ProjectView>(int.MaxValue, x => !x.IsDeleted && x.DepartmentID == departmentid).Select(x => x.Id).ToArray();
+                expression = expression.AndAlso<TaskList>(x => projectIds.Contains(x.ProjectId));
+            }
+            //过滤角色
+            if (objLoginInfo.Menus != null && !objLoginInfo.Menus.Any(x => x.Id == (int)EnumMenuId.TaskApprove))
+            {
+                expression = expression.AndAlso<TaskList>(x => x.CreatedUserID == objLoginInfo.Id);
+            }
             int rowCount = gridRequest.PageCondition.RowCount;
             List<TaskListView> listEx = GetListEx(expression, gridRequest.PageCondition);
             var projectIDs = listEx.Select(x => x.ProjectId).ToList();

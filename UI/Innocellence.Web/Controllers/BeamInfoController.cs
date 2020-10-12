@@ -77,7 +77,12 @@ namespace Innocellence.Web.Controllers
             {
                 expression = expression.AndAlso<BeamInfo>(x => x.DwgFile.Contains(strCondition));
             }
-          
+            if (!string.IsNullOrEmpty(objLoginInfo.Department))
+            {
+                var departmentid = objLoginInfo.Department.Split('_').First();
+                var projectIds = _projectService.GetList<ProjectView>(int.MaxValue, x => !x.IsDeleted && x.DepartmentID == departmentid).Select(x => x.Id).ToArray();
+                expression = expression.AndAlso<BeamInfo>(x => projectIds.Contains(x.ProjectId));
+            }
             int rowCount = gridRequest.PageCondition.RowCount;
             List<BeamInfoView> listEx = GetListEx(expression, gridRequest.PageCondition);
             var projectIDs = listEx.Select(x => x.ProjectId).ToList();

@@ -103,8 +103,8 @@ namespace Innocellence.FaultSearch.Controllers
         {
             GridRequest gridRequest = new GridRequest(Request);
             string strCondition = Request["search_condition"];
-            int beamId = 0;
-            
+            string locatedId = Request["locatedId"];
+            int beamId = 0;            
             Expression<Func<WeldCategoryLabeling, bool>> expression = FilterHelper.GetExpression<WeldCategoryLabeling>(gridRequest.FilterGroup);
             
             if (int.TryParse(Request["beamId"], out beamId))
@@ -115,7 +115,15 @@ namespace Innocellence.FaultSearch.Controllers
             {
                 expression = expression.AndAlso<WeldCategoryLabeling>(x => x.IsDeleted != true);
             }
-           
+            if (!string.IsNullOrEmpty(locatedId))
+            {
+                int id = 0;
+                int.TryParse(locatedId, out id);
+                if (id > 0)
+                {
+                    expression = expression.AndAlso<WeldCategoryLabeling>(x => x.Id == id);
+                }
+            }
             int rowCount = gridRequest.PageCondition.RowCount;
             List<WeldCategoryLabelingView> listEx = GetListEx(expression, gridRequest.PageCondition);
             return this.GetPageResult(listEx, gridRequest);

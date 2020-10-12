@@ -19,17 +19,6 @@
         height: auto;
     }
 
-    /*.listContaner {
-        float: right;
-        top: 132px;
-        right: 0;
-        display: block;
-        z-index: 9999;
-        width: 500px;
-        margin-left: 940px;
-        min-height: 800px;
-    }*/
-
     #cadContent {
         margin-left: 0px;
         position: relative;
@@ -51,6 +40,7 @@
         <form class="form-inline" id="SearchForm">
             <div class="form-group">
                 <input class="form-control" type="text" id="search_condition" name="search_condition" placeholder="名称">
+                <input id="locatedId" name="locatedId" type="hidden" value="0" />
                 <a href="#" class="btn btn-info btn-sm" id="btnSearch" data-toggle="tooltip" data-placement="top" title="查询条件"><i class="fa fa-search">查询</i></a>
             </div>
             <div class="form-group">
@@ -517,6 +507,9 @@
                     else {
                         DrawCircleOfArrow(r.data);
                     }
+                    $('#locatedId').val(r.Id);
+                    $('#btnSearch').click();
+                    setTimeout(function () { $('#locatedId').val('0'); }, 300);
                 } else {
                     alert('未获取到焊缝位置或点击的元素不是焊缝');
                 }

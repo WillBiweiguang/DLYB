@@ -6,7 +6,7 @@ var isBrowner = false;
         mxOcx.DoCommand(iCmd);
 }
 function myclick5() {
-    $('#frameContainer').show();
+    //$('#frameContainer').show();
     $("body").mLoading({ text: "识别中，请稍候" });
     setTimeout(DoReg(), 100);
 }
