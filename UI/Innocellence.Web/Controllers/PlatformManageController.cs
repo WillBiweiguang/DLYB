@@ -40,6 +40,7 @@ namespace DLYB.Web.Controllers
             ViewBag.Roles = _roleService.Repository.Entities.Where(a => !a.IsDeleted.Value && a.Name != "Super Admin").ToList();
             ViewBag.IsRole = false;
             ViewBag.IsUser = false;
+            ViewBag.IsSuperAdmin = false;
             if (user != null && user.Menus != null)
             {
                 if (user.Menus.Where(p => p.MenuName == "权限管理" & p.MenuGroup == "System Admin").Count() > 0)
@@ -55,7 +56,7 @@ namespace DLYB.Web.Controllers
                     ViewBag.IsSuperAdmin = true;
                 }
             }
-            if (user != null && user.UserName == "administrator")
+            if (user != null && user.UserName == EngineContext.Current.WebConfig.SupperUser)
             {
                 ViewBag.IsRole = true;
                 ViewBag.IsUser = true;

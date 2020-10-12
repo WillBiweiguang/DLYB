@@ -31,4 +31,12 @@ namespace Infrastructure.Web.Domain.Common
         [Description("已完成")]
         Complete = 2
     }
+
+    public enum EnumMenuId
+    {
+        Admin = 3,
+        Manager = 1,
+        TaskView = 6,
+        TaskApprove = 7
+    }
 }

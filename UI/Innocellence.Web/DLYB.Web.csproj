@@ -416,6 +416,7 @@
     <Content Include="Scripts\dialogs\uploadimage\uploadimage.js" />
     <Content Include="Scripts\dropload\dropload.css" />
     <Content Include="Scripts\dropload\dropload.min.js" />
+    <Content Include="Scripts\jquery.dataTables.zh.js" />
     <Content Include="Scripts\jquery.mloading.js" />
     <Content Include="Scripts\jsviews.min.js" />
     <Content Include="Scripts\linq\FailureModeQuery.js" />
