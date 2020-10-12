@@ -6,7 +6,7 @@ using Infrastructure.Web.Domain.Entity;
 
 namespace Infrastructure.Web.Domain.ModelsView
 {
-    public partial class WeldCategoryLabelingView : IViewModel
+    public partial class WeldCategoryLabelingView : ViewModelBase, IViewModel
 	{	
 		public Int32 Id { get;set; }
 

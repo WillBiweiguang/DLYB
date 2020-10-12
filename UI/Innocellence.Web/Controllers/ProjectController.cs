@@ -96,22 +96,15 @@ namespace Innocellence.Web.Controllers
 
         public JsonResult GetDropdownList(string keyword = "")
         {
-            var list = _projectService.GetList<ProjectView>(int.MaxValue, x => !x.IsDeleted && x.ProjectName.Contains(keyword.Trim()))
+            Expression<Func<Project, bool>> expression = x => !x.IsDeleted && x.ProjectName.Contains(keyword.Trim());
+            if (!string.IsNullOrEmpty(objLoginInfo.Department))
+            {
+                var departmentId = objLoginInfo.Department.Split('_')[0];
+                expression = expression.AndAlso<Project>(x => x.DepartmentID == departmentId);
+            }
+            var list = _projectService.GetList<ProjectView>(int.MaxValue, expression)
         .Select(x => new { key = x.Id, value = x.ProjectName }).ToList();
             return new JsonResult { Data = list, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
         }
-        //public override ActionResult GetList()
-        //{
-        //    GridRequest gridRequest = new GridRequest(Request);
-        //    string strCondition = Request["search_condition"];
-        //    Expression<Func<Project, bool>> expression = FilterHelper.GetExpression<Project>(gridRequest.FilterGroup);
-        //    if (!string.IsNullOrEmpty(strCondition))
-        //    {
-        //        expression = expression.AndAlso<Project>(x => x.WeldLocationType.Contains(strCondition));
-        //    }
-        //    int rowCount = gridRequest.PageCondition.RowCount;
-        //    List<ProjectView> listEx = GetListEx(expression, gridRequest.PageCondition);
-        //    return this.GetPageResult(listEx, gridRequest);
-        //}
     }
 }

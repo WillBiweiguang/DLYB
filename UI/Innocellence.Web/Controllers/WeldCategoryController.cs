@@ -47,6 +47,20 @@ namespace Innocellence.FaultSearch.Controllers
                     ViewBag.FileName = beam.DwgFile;
                     ViewBag.FilePath = GetFilePath(beam.ProjectId, beam.DwgFile);
                     ViewBag.FileServerPath = GetFileAbsolutePath(beam.ProjectId, beam.DwgFile);
+                    var isView = Request["viewMode"];                    
+                    ViewBag.ViewModel = 0;
+                    if (!string.IsNullOrEmpty(isView) && isView == "1")
+                    {
+                        ViewBag.ViewModel = 1;
+                    }
+                    else if (beam.ProcessStatus == (int)BeamProcessStatus.Complete)
+                    {
+                        var task = _taskListService.GetList<TaskListView>(1, x => !x.IsDeleted && x.ProjectId == beam.ProjectId && x.BeamId == beam.Id).FirstOrDefault();
+                        if (task == null || task.TaskStatus == (int)TaskStatus.NotRequest || task.TaskStatus == (int)TaskStatus.Rejected)
+                        {
+                            ViewBag.ViewModel = 1;
+                        }
+                    }
                 }
             }
             ViewBag.weldCategorys = _weldCategoryService.Repository.Entities.Where(a => !a.IsDeleted).ToList();

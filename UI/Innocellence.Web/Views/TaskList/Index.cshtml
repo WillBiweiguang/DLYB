@@ -47,9 +47,9 @@
                     文件上传
                 </a>
                 <div class="form-group pull-right">
-                    @*<a href="#" class="btn btn-info btn-sm" id="btnDownload" data-toggle="tooltip" data-placement="top" title="下载">
+                    <a href="#" class="btn btn-info btn-sm" id="btnDownload" data-toggle="tooltip" data-placement="top" title="下载">
                         <i class="glyphicon glyphicon-arrow-down">批量下载</i>
-                    </a>*@
+                    </a>
                 </div>
                 @*<input id="upload-input" class="form-control " multiple="multiple" type="file" name="file" onchange="return uploadFile(this);"
         accept="image/vnd.dwg" />*@
@@ -111,7 +111,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="blue bigger">请填写以下内容</h4>
+                <h4 class="blue bigger">请选择文件上传</h4>
             </div>
 
 
@@ -129,10 +129,13 @@
                         <label class="col-sm-3 control-label">上传文件:</label>
                         <div class="col-sm-9">
                             @*<input type="file" id="upload-input" multiple="multiple" name="uploadfile" class="form-control" placeholder="请输入"
-                                accept="application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-                                validate="{required:true}" />*@
+        accept="application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        validate="{required:true}" />*@
                             <input id="upload-input" class="form-control " multiple="multiple" type="file" name="file" onchange="return uploadFile(this);"
                                    accept="*" />
+                            <div class="progress" style="margin-bottom: 0px;margin-top:5px;">
+                                <div id="progress-bar" class="progress-bar" style="width:0">0</div>
+                            </div>
                         </div>
                     </div>
                 </form>
@@ -360,6 +363,7 @@
                             if ((full.TaskStatus == tastStatus.new || full.TaskStatus == tastStatus.rejected) && userId == full.CreatedUserID) {
                                 opstr = opstr + '<a href="#" onclick="raiseApproval(\'' + full.Id + '\');return false;" class="artDailog btn btn-info  btn-xs" style="margin-right:4px;" data-toggle="tooltip" data-placement="top" title="提交审核"><i class="ace-icon glyphicon glyphicon-cog"></i></a>';
                             }
+                            opstr = opstr + '<a href="#" onclick="weldcategory(' + full.ProjectId + ',' + full.BeamId + ', 1);return false;" class="artDailog btn btn-info  btn-xs" style="margin-right:4px;" data-toggle="tooltip" data-placement="top" title="查看焊缝标注"><i class="ace-icon glyphicon  glyphicon-eye-open"></i></a>';
                             return opstr;
                         }
                     }],
@@ -386,6 +390,7 @@
         $('#closePaneldownload').on('click', function () {
             $('#downloadPanel').hide(300);
             $('#iframe2').remove();
+            $('.modal-backdrop').remove();
         });
         
         $(document).on('click', '#CancelBtn1', function () {
@@ -445,8 +450,10 @@
                     if (data.error) {
                         bootbox.alert(data.error.message);
                     } else {
+                        alert("上传成功");
                         location.reload();
                         //bootbox.alert("上传成功");
+                        //LEAP.Common.MainPop.options.dataTable.fnDraw(false);
                     }
                 }
             });
@@ -522,6 +529,10 @@
             $('#downloadPanel').show(300);
             $('body').append('<div class="modal-backdrop in"></div>');
         });
+        function weldcategory(pid, id, view) {
+            var url = view ? '/weldcategory/index?beamId=' + id + '&viewMode=1' : '/weldcategory/index?beamId=' + id;
+            window.location = url;
+        }
     </script>
 }
 

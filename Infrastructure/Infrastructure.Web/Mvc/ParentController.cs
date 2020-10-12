@@ -171,7 +171,16 @@ namespace Infrastructure.Web.UI
         /// <returns></returns>
         public virtual List<T1> GetListEx(Expression<Func<T0, bool>> predicate, PageCondition con)
         {
-            return _BaseService.GetList<T1>(predicate, con);
+            var list = _BaseService.GetList<T1>(predicate, con);
+            if (typeof(T1).GetProperties().Any(p => p.Name == "Index"))
+            {
+                
+                for (int i = 1; i <= list.Count; i++)
+                {
+                    typeof(T1).GetProperty("Index").SetValue(list[i - 1], (con.PageIndex - 1) * con.PageSize + i);
+                }
+            }
+            return list;
         }
 
         /// <summary>

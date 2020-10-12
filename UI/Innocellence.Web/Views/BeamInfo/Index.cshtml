@@ -177,6 +177,8 @@
                                 //opstr = opstr + '<a href="#" onclick="weldcategory(\'' + full.Id + '\');return false;" class="artDailog btn btn-info  btn-xs" style="margin-right:4px;" data-toggle="tooltip" data-placement="top" title="焊缝类别标注"><i class="ace-icon glyphicon  glyphicon-credit-card"></i></a>' +
                                 //    '<a href="#" onclick="LEAP.Common.MainPop.RowClick(\'' + full.Id + '\',2);return false;" class="btn btn-danger btn-xs" id="btnDelete" data-toggle="tooltip" data-placement="top" title="删除">' +
                                 //    '<i class="fa fa-trash-o"></i></a>';
+                            } else {
+                                opstr = opstr + '<a href="#" onclick="weldcategory(' + full.ProjectId + ',' + full.Id + ', 1);return false;" class="artDailog btn btn-info  btn-xs" style="margin-right:4px;" data-toggle="tooltip" data-placement="top" title="查看焊缝标注"><i class="ace-icon glyphicon  glyphicon-eye-open"></i></a>';
                             }
                             return opstr;
                         }
@@ -196,8 +198,9 @@
         function CategoryStat(pid, id) {
             window.location = '/CategoryStat/index?ProjectId=' + pid + '&beamId=' + id;
         }
-        function weldcategory(pid, id) {
-            window.location = '/weldcategory/index?beamId=' + id;
+        function weldcategory(pid, id, view) {
+            var url = view ? '/weldcategory/index?beamId=' + id + '&viewMode=1' : '/weldcategory/index?beamId=' + id;
+            window.location = url;
         }
         function weldcognize(dwgfile) {
             window.location = '/WeldCognition/index?fileName=' + dwgfile;
@@ -224,8 +227,9 @@
                     if (data.error) {
                         bootbox.alert(data.error.message);
                     } else {
+                        alert("上传成功");
                         location.reload();
-                        //bootbox.alert("上传成功");
+                        //bootbox.alert("上传成功");                        
                     }
                 }
             });
