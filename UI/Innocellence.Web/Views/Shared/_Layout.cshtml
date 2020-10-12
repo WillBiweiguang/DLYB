@@ -152,14 +152,14 @@
             <div class="navbar-buttons navbar-header pull-left" role="navigation">
                 <ul class="layout-top">
                     <li><a href="/Project/Index"><i class="ace-icon glyphicon glyphicon-folder-close"></i>项目管理</a></li>
-                    @if (ViewBag.IsManager)
+                    @if (ViewBag.IsManager!=null&& ViewBag.IsManager==true)
                     {
                         <li><a href="/beaminfo/Index"><i class="ace-icon glyphicon glyphicon-file"></i>文件管理</a></li>
                         @*<li><a href="/CategoryStat/Index"><i class="ace-icon glyphicon glyphicon-stats"></i>焊缝类别统计</a></li>*@
                         @*<li><a href="/weldcategory/index" target="_blank"><i class="ace-icon glyphicon  glyphicon-credit-card"></i>焊缝类别标注</a></li>*@
                     }
                     <li><a href="/tasklist/index"><i class="ace-icon glyphicon glyphicon-list"></i>审核列表</a></li>
-                    @if (ViewBag.IsAdmin)
+                    @if (ViewBag.IsAdmin!=null&& ViewBag.IsAdmin==true)
                     {
                         <li><a href = "/PlatformManage/index" ><i class="ace-icon glyphicon glyphicon-adjust"></i>系统管理 </a></li>
                     }
