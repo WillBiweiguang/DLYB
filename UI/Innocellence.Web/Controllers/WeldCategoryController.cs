@@ -115,6 +115,10 @@ namespace Innocellence.FaultSearch.Controllers
             {
                 expression = expression.AndAlso<WeldCategoryLabeling>(x => x.IsDeleted != true);
             }
+            if (!string.IsNullOrEmpty(strCondition))
+            {
+                expression = expression.AndAlso<WeldCategoryLabeling>(x => x.FigureNumber.Contains(strCondition));
+            }
             if (!string.IsNullOrEmpty(locatedId))
             {
                 int id = 0;
