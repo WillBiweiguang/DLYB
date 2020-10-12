@@ -994,6 +994,7 @@
     <Content Include="Views\GrooveType\_ViewStart.cshtml" />
     <Content Include="Views\TaskList\WeldingDetail.cshtml" />
     <Content Include="Views\Shared\AuthError.cshtml" />
+    <Content Include="Views\TaskList\WeldingDownload.cshtml" />
     <None Include="Views\WeldCategory\cadwelding.cshtml" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>

@@ -119,7 +119,16 @@ namespace DLYB.Web.Controllers
             List<WeldCategoryLabelingView> listEx = _weldCategoryService.GetList< WeldCategoryLabelingView>(expression, gridRequest.PageCondition);
             return this.GetPageResult(listEx, gridRequest);
         }
-
+        public ActionResult GetWeldingDownloadList()
+        {
+            GridRequest gridRequest = new GridRequest(Request);
+            string strCondition = Request["search_condition"];
+            Expression<Func<WeldCategoryStatisticsV, bool>> expression = FilterHelper.GetExpression<WeldCategoryStatisticsV>(gridRequest.FilterGroup);
+            expression = expression.AndAlso<WeldCategoryStatisticsV>(x => x.IsDeleted != true );
+            int rowCount = gridRequest.PageCondition.RowCount;
+            List<WeldCategoryStatisticsVView> listEx = _wcsvService.GetList<WeldCategoryStatisticsVView>(expression, gridRequest.PageCondition);
+            return this.GetPageResult(listEx, gridRequest);
+        }
         [HttpPost]
         [ValidateInput(true)]
         public ActionResult PostFile(TaskListView objModal,int ProjectName)
@@ -222,7 +231,7 @@ namespace DLYB.Web.Controllers
                 var sheet1 = workbook.GetSheet("焊材");
                 
                 //var answer = _pollingResultService.GetList(Id);
-                var reportList1 = _wcsvService.GetList<WeldCategoryStatisticsVView>(1,x => !x.IsDeleted ).ToList();
+                var reportList1 = _wcsvService.Repository.Entities.Where(a => !a.IsDeleted).ToList();
                 int i = 1;
                 foreach (var v in reportList1)
                 {

@@ -1,0 +1,138 @@
+﻿@model IEnumerable<Infrastructure.Web.Domain.ModelsView.WeldingView>
+@{
+    Layout = "~/Views/Shared/_LayoutWithoutMenu.cshtml";
+}
+@section easyui_css{
+    <link rel="stylesheet" href="~/Style/EasyUI/easyui.css" />
+}
+<style>
+    .datagrid-mask-msg {
+        height: 36px !important;
+    }
+
+    table.gridtable {
+        font-family: verdana,arial,sans-serif;
+        font-size: 11px;
+        color: #333333;
+        border-width: 1px;
+        border-color: #666666;
+        border-collapse: collapse;
+    }
+
+        table.gridtable th {
+            border-width: 1px;
+            padding: 8px;
+            border-style: solid;
+            border-color: #666666;
+            background-color: #dedede;
+        }
+
+        table.gridtable td {
+            border-width: 1px;
+            padding: 8px;
+            border-style: solid;
+            border-color: #666666;
+            background-color: #ffffff;
+        }
+
+    .chosen-container {
+        width: 100%;
+        max-width: 362px;
+    }
+</style>
+<!--Action boxes-->
+<div class="row">
+    <input type="hidden" id="isApprover" value="@ViewBag.isApprover" />
+    <input type="hidden" id="beamId" value="@ViewBag.BeamId" />
+    <form class="form-inline" id="SearchForm">
+        <a href="ExportToExcelDownload" class="btn btn-sm btn-success" data-toggle="tooltip" data-placement="top" title="导出Excel" id="btnDownloadExport">
+            <i class="fa fa-download"></i> 导出Excel
+        </a>
+    </form>
+    <div class="clearfix"></div>
+    <div class="col-sm-12">
+
+        <div class="widget-box">
+            <div class="widget-content nopadding">
+                <table class="table table-bordered table-hover data-table">
+                    <thead>
+                        <tr>
+                            <th style="width:5%;text-align:center;">@T("序号")</th>
+                            <th>@T("项目名称")</th>
+                            <th>@T("厂址")</th>
+                            <th>@T("焊材类型")</th>
+                            <th>@T("焊材型号")</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts_Foot
+{
+    <script src="~/Scripts/EasyUI/jquery.easyui.min.js"></script>
+    <script src="http://static.runoob.com/assets/jquery-validation-1.14.0/dist/localization/messages_zh.js"></script>
+
+    <script src="~/Scripts/ace/chosen.jquery.js"></script>
+    <script type="text/javascript">
+        //$('[data-toggle="tooltip"]').tooltip();
+        var popMenu;
+        var IdCur;
+        @*var isapprover = @ViewBag.isApprover;
+        var userId = @ViewBag.UserId;
+        var tastStatus = { new: 0, pending: 1, approved: 2, rejected: 3 };*@
+        $(document).ready(function () {
+            LEAP.Common.MainPop.options.dataTable = $('.data-table').dataTable(jQuery.extend(true, datatableSetting, {
+                "ajax": {
+                    "url": "GetWeldingDownloadList"
+                },
+                "paging": true,
+                "info": false,
+                "aoColumns": [
+                    { "mData": 'Id' },
+                    { "mData": 'ProjectName' },
+                    { "mData": 'AddressName' },
+                    { "mData": 'WeldType' },
+                    { "mData": 'WeldingModel' }
+                ],
+
+                fnDrawCallback: function () {
+                    $('[data-toggle="tooltip"]').tooltip();
+                }
+            }));
+            //inital select2
+            $('.select2').css("width", "362px").select2({ allowClear: true });
+            //删掉chosen的内联样式
+            setTimeout(function () {
+                $('.chosen-container').removeAttr('style');
+            }, 3000);
+        });
+        //$(document).on('click', '.pop-btn', function () {
+        //    $('#ModalTableDetail').modal(500);
+        //    $('#ModalTable').modal('hide');
+        //});
+
+
+        $('#btnDownloadExport').on('click', function () {
+
+            var para = '';
+            var dSearch = $("#SearchForm").serializeArray();
+            if (!BeforeExport(dSearch)) {
+                return false;
+            }
+
+            $.each(dSearch, function (key, val) {
+                para += val.name + '=' + val.value + '&';
+            });
+
+            // $.download("ExportAnswer", para + "t=" + (new Date()).getTime());
+            $.download("ExportToExcelDownload", para + "t=" + (new Date()).getTime());
+            return true;
+        });
+
+
+    </script>
+}
+

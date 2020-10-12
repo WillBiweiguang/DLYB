@@ -37,13 +37,13 @@
 <div class="row">
     <div class="col-sm-12">
         @*<div class="widget-header">
-            <h4 class="widget-title">已识别焊缝列表</h4>
-            <div class="widget-toolbar">
-                <a href="#" data-action="collapse">
-                    <i class="ace-icon fa fa-chevron-up"></i>
-                </a>
-            </div>
-        </div>*@
+                <h4 class="widget-title">已识别焊缝列表</h4>
+                <div class="widget-toolbar">
+                    <a href="#" data-action="collapse">
+                        <i class="ace-icon fa fa-chevron-up"></i>
+                    </a>
+                </div>
+            </div>*@
         <form class="form-inline" id="SearchForm">
             <div class="form-group">
                 <input class="form-control" type="text" id="search_condition" name="search_condition" placeholder="名称">
@@ -55,8 +55,8 @@
             </div>
             <div class="form-group pull-right">
                 @*<a href="#" class="btn btn-success btn-sm" id="btnAdd" data-toggle="tooltip" data-placement="top" title="添加">
-                    <i class="fa fa-plus"></i>
-                </a>*@
+                        <i class="fa fa-plus"></i>
+                    </a>*@
                 <a href="#" class="btn btn-info btn-sm" id="btnCollapse" data-action="collapse" title="折叠">
                     <i class="ace-icon fa fa-chevron-up">折叠</i>
                 </a>
@@ -76,7 +76,7 @@
                             <th>@T("板厚(mm)")</th>
                             <th>@T("焊缝位置")</th>
                             <th>@T("消耗系数")</th>
-                            <th>@T("熔敷金属密度")</th>
+                            <th>@T("熔敷密度")</th>
                             <th>@T("焊缝截面积(mm^2)")</th>
                             <th>@T("焊缝长度")</th>
                             <th>@T("焊缝质量")</th>
@@ -167,6 +167,93 @@
                             </div>
                         </div>
                     </div>
+
+
+                    <div class="row">
+                        <div class="form-group col-lg-6">
+                            <label class="col-sm-5 control-label">长度:</label>
+                            <div class="col-sm-7">
+                                <input type="text" name="LengthVal" id="LengthVal" class="form-control" validate="{required:true}" data-bind="value: LengthVal" />
+                            </div>
+                        </div>
+                        <div class="form-group col-lg-6">
+                            <label class="col-sm-5 control-label">板厚:</label>
+                            <div class="col-sm-7">
+
+                                <input type="text" name="Thickness" id="Thickness" class="form-control" validate="{required:true}" data-bind="value: Thickness" />
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-lg-6">
+                            <label class="col-sm-5 control-label">熔敷密度:</label>
+                            <div class="col-sm-7">
+                                <input type="text" name="MentalDensity" id="MentalDensity" class="form-control" validate="{required:true}" data-bind="value: MentalDensity" />
+                            </div>
+                        </div>
+                        <div class="form-group col-lg-6">
+                            <label class="col-sm-5 control-label">消耗系数:</label>
+                            <div class="col-sm-7">
+
+                                <input type="text" name="ConsumeFactor" id="ConsumeFactor" class="form-control" validate="{required:true}" data-bind="value: ConsumeFactor" />
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-lg-6">
+                            <label class="col-sm-5 control-label">焊缝截面积:</label>
+                            <div class="col-sm-7">
+                                <select class="single-select form-control" name="SectionArea" id="SectionArea" validate="{required:true}" data-placeholder="请选择焊缝截面积" data-bind="value: SectionArea">
+                                    @foreach (WeldCategoryLabeling a in ViewBag.weldCategorys)
+                                    {
+                                        <option value="@a.SectionArea">@a.SectionArea</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group col-lg-6">
+                            <label class="col-sm-5 control-label">焊接边数:</label>
+                            <div class="col-sm-7">
+
+                                <input type="text" name="WeldingNumber" id="WeldingNumber" class="form-control" validate="{required:true}" data-bind="value: WeldingNumber" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-lg-6">
+                            <label class="col-sm-5 control-label">梁段数量:</label>
+                            <div class="col-sm-7">
+
+                                <input type="text" name="BeamNum" id="BeamNum" class="form-control" validate="{required:true}" data-bind="value: BeamNum" />
+                            </div>
+                        </div>
+                        <div class="form-group col-lg-6">
+                            <label class="col-sm-5 control-label">焊缝数量:</label>
+                            <div class="col-sm-7">
+
+                                <input type="text" name="Quantity" id="Quantity" class="form-control" validate="{required:true}" data-bind="value: Quantity" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group col-lg-6">
+                            <label class="col-sm-5 control-label">宽度:</label>
+                            <div class="col-sm-7">
+                                <input type="text" name="WidthVal" id="WidthVal" class="form-control" validate="{required:true}" data-bind="value: WidthVal" />
+                            </div>
+                        </div>
+                        <div class="form-group col-lg-6">
+                            <label class="col-sm-5 control-label">焊缝质量:</label>
+                            <div class="col-sm-7">
+
+                                <input type="text" name="WeldQuanlity" id="WeldQuanlity" class="form-control" validate="{required:true}" data-bind="value: WeldQuanlity" />
+                            </div>
+                        </div>
+                    </div>
                     <div class="row">
                         <div class="form-group col-lg-6">
                             <label class="col-sm-5 control-label">焊缝长度:</label>
@@ -189,90 +276,12 @@
                             </div>
                         </div>
                     </div>
-                    <div style="border:1px solid;padding-top:3px;clear:both">
-                        <div class="row">
-                            <div class="form-group col-lg-6">
-                                <label class="col-sm-5 control-label">长度:</label>
-                                <div class="col-sm-7">
-                                    <input type="text" name="LengthVal" id="LengthVal" class="form-control" validate="{required:true}" data-bind="value: LengthVal" />
-                                </div>
-                            </div>
-                            <div class="form-group col-lg-6">
-                                <label class="col-sm-5 control-label">板厚:</label>
-                                <div class="col-sm-7">
+                    <div class="row">
+                        <div class="form-group col-lg-6">
+                            <label class="col-sm-5 control-label">焊缝质量:</label>
+                            <div class="col-sm-7">
 
-                                    <input type="text" name="Thickness" id="Thickness" class="form-control" validate="{required:true}" data-bind="value: Thickness" />
-                                </div>
-                            </div>
-
-                        </div>
-                        <div class="row">
-                            <div class="form-group col-lg-6">
-                                <label class="col-sm-5 control-label">熔敷金属密度:</label>
-                                <div class="col-sm-7">
-                                    <input type="text" name="MentalDensity" id="MentalDensity" class="form-control" validate="{required:true}" data-bind="value: MentalDensity" />
-                                </div>
-                            </div>
-                            <div class="form-group col-lg-6">
-                                <label class="col-sm-5 control-label">消耗系数:</label>
-                                <div class="col-sm-7">
-
-                                    <input type="text" name="ConsumeFactor" id="ConsumeFactor" class="form-control" validate="{required:true}" data-bind="value: ConsumeFactor" />
-                                </div>
-                            </div>
-
-                        </div>
-                        <div class="row">
-                            <div class="form-group col-lg-6">
-                                <label class="col-sm-5 control-label">焊缝截面积:</label>
-                                <div class="col-sm-7">
-                                    <select class="single-select form-control" name="SectionArea" id="SectionArea" validate="{required:true}" data-placeholder="请选择焊缝截面积" data-bind="value: SectionArea">
-                                        @foreach (WeldCategoryLabeling a in ViewBag.weldCategorys)
-                                        {
-                                            <option value="@a.SectionArea">@a.SectionArea</option>
-                                        }
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div class="form-group col-lg-6">
-                                <label class="col-sm-5 control-label">焊接边数:</label>
-                                <div class="col-sm-7">
-
-                                    <input type="text" name="WeldingNumber" id="WeldingNumber" class="form-control" validate="{required:true}" data-bind="value: WeldingNumber" />
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="form-group col-lg-6">
-                                <label class="col-sm-5 control-label">梁段数量:</label>
-                                <div class="col-sm-7">
-
-                                    <input type="text" name="BeamNum" id="BeamNum" class="form-control" validate="{required:true}" data-bind="value: BeamNum" />
-                                </div>
-                            </div>
-                            <div class="form-group col-lg-6">
-                                <label class="col-sm-5 control-label">焊缝数量:</label>
-                                <div class="col-sm-7">
-
-                                    <input type="text" name="Quantity" id="Quantity" class="form-control" validate="{required:true}" data-bind="value: Quantity" />
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="form-group col-lg-6">
-                                <label class="col-sm-5 control-label">宽度:</label>
-                                <div class="col-sm-7">
-                                    <input type="text" name="WidthVal" id="WidthVal" class="form-control" validate="{required:true}" data-bind="value: WidthVal" />
-                                </div>
-                            </div>
-                            <div class="form-group col-lg-6">
-                                <label class="col-sm-5 control-label">焊缝质量:</label>
-                                <div class="col-sm-7">
-
-                                    <input type="text" name="WeldQuanlity" id="WeldQuanlity" class="form-control" validate="{required:true}" data-bind="value: WeldQuanlity" />
-                                </div>
+                                <input type="text" name="WeldQuanlity" id="WeldQuanlity" class="form-control" validate="{required:true}" data-bind="value: WeldQuanlity" />
                             </div>
                         </div>
                     </div>
@@ -459,7 +468,7 @@
                     alert("焊缝数据已添加");
                 } else { //全图识别操作
                     alert("识别完成");
-                }                
+                }
             });
 
         }
@@ -506,7 +515,7 @@
                 document.write('</object>'),
                 document.write('</div>')) :
 
-            Sys.chrome ? (document.write('<div id="cadContent"  style="z-index:1; margin-top:20px;" >'),
+                Sys.chrome ? (document.write('<div id="cadContent"  style="z-index:1; margin-top:20px;" >'),
                     document.write('<object id="' + id + '" clsid="{' + classid + '}" '),
                     document.write('type="application/mxdraw-activex" width="85%" height="85%" align="left"> '),
                     document.write('<param name="_Version" value="65536">  '),
