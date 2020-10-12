@@ -165,6 +165,7 @@ namespace DLYB.Web.Controllers
             //主菜单控制
             ViewBag.IsManager = objLoginInfo?.Roles.Any(x => x.RoleId == 1); //主任
             ViewBag.IsAdmin = objLoginInfo?.Roles.Any(x => x.RoleId == 3 || x.RoleId == 4); //管理员
+            ViewBag.UserTrueName = objLoginInfo?.UserTrueName;
 
             //用户信息
             ViewBag.CurUserId = objLoginInfo?.Id;

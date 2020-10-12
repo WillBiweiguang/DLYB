@@ -3280,6 +3280,7 @@ function MouseEvent(dX, dY, lType) {
         }
     }
     if (lType == 3) {
+        if (isViewModel) { return; }
         // 鼠标右键按下 后选中鼠标附件实体，并显示右键菜单
         var filter = mxOcx.NewResbuf();
         var ent = mxOcx.FindEntAtPoint(dX, dY, filter);

@@ -44,22 +44,29 @@
                 <a href="#" class="btn btn-info btn-sm" id="btnSearch" data-toggle="tooltip" data-placement="top" title="查询条件"><i class="fa fa-search">查询</i></a>
             </div>
             <div class="form-group">
+                @if (ViewBag.ViewModel == 0)
+                {
                 <input type="button" class="btn btn-sm" value="焊接符号识别" onclick="myclick5();">
                 <input type="button" class="btn btn-sm" value="提交审核" onclick="requestApprove();">
+                }
             </div>
             <div class="form-group pull-right">
-                <a href="~/beaminfo/index?ProjectId=@ViewBag.ProjectId" class="btn btn-sm" data-toggle="tooltip" data-placement="top" title="保存文件">
+
+                @*<a href="~/beaminfo/index?ProjectId=@ViewBag.ProjectId" class="btn btn-sm" data-toggle="tooltip" data-placement="top" title="保存文件">
+            进行下一梁段
+        </a>*@
+                @if (ViewBag.ViewModel == 0)
+                {
+                    <a href="~/CategoryStat/index?ProjectId=@ViewBag.ProjectId&beamId=@ViewBag.BeamId" class="btn btn-sm" data-toggle="tooltip" data-placement="top" title="保存文件">
+                        返回类别统计
+                    </a>
+                <a href="#" class="btn btn-sm" id="nextBeam" onclick="nextBeam(@ViewBag.ProjectId,@ViewBag.BeamId); return false;" data-toggle="tooltip" data-placement="top" title="进行下一梁段">
                     进行下一梁段
-                </a>
-                <a href="~/CategoryStat/index?ProjectId=@ViewBag.ProjectId&beamId=@ViewBag.BeamId" class="btn btn-sm" data-toggle="tooltip" data-placement="top" title="保存文件">
-                    返回类别统计
-                </a>
-                @*<a href="#" class="btn btn-sm" id="nextBeam" onclick="nextBeam(@ViewBag.ProjectId,@ViewBag.BeamId); return false;" data-toggle="tooltip" data-placement="top" title="进行下一梁段">
-                        进行下一梁段
-                    </a>*@
+                </a>                
                 <a href="#" class="btn btn-sm" id="btnSaveFile" data-toggle="tooltip" data-placement="top" title="保存文件">
                     保存文件
                 </a>
+                }
                 <a href="#" class="btn btn-info btn-sm" id="btnCollapse" data-action="collapse" title="折叠">
                     <i class="ace-icon fa fa-chevron-up">折叠</i>
                 </a>
@@ -320,6 +327,7 @@
             + ((screen.width - 600) / 2) + 'px;resizable:yes;center:yes;status:no;'
             ; //编辑模态窗口参数
         var tableModalSetting = {}; //数据列表窗口参数
+        var isViewModel = @ViewBag.ViewModel;
 
         $(document).ready(function () {
             var beamId = $('')
@@ -349,11 +357,15 @@
                     {
                         "targets": 14,
                         "render": function (data, type, full, meta) {
-                            return '<a href="#" onclick="LEAP.Common.MainPop.ShowUpdateInfo(\'' + full.Id + '\');return false;" class="artDailog btn btn-info  btn-xs" style="margin-right:4px;" data-toggle="tooltip" data-placement="top" title="编辑"><i class="fa fa-pencil"></i></a>' +
-                                '<a href="#" onclick="DingWei(\'' + full.HandleID + '\');return false;" class="artDailog btn btn-info  btn-xs" style="margin-right:4px;" data-toggle="tooltip" data-placement="top" title="定位">定位</a>' +
-                                '</a>' +
-                                '<a href="#" onclick="LEAP.Common.MainPop.RowClick(\'' + full.Id + '\',2);return false;" class="btn btn-danger btn-xs" id="btnDelete" data-toggle="tooltip" data-placement="top" title="删除">' +
-                                '<i class="fa fa-trash-o"></i></a>';
+                            var oprStr = '';
+                            if (!isViewModel) {
+                                oprStr += '<a href="#" onclick="LEAP.Common.MainPop.ShowUpdateInfo(\'' + full.Id + '\');return false;" class="artDailog btn btn-info  btn-xs" style="margin-right:4px;" data-toggle="tooltip" data-placement="top" title="编辑"><i class="fa fa-pencil"></i></a>';
+                            }
+                            oprStr += '<a href="#" onclick="DingWei(\'' + full.HandleID + '\');return false;" class="artDailog btn btn-info  btn-xs" style="margin-right:4px;" data-toggle="tooltip" data-placement="top" title="定位">定位</a>';
+                            if (!isViewModel) {
+                                oprStr += '<a href="#" onclick="LEAP.Common.MainPop.RowClick(\'' + full.Id + '\',2);return false;" class="btn btn-danger btn-xs" id="btnDelete" data-toggle="tooltip" data-placement="top" title="删除"><i class="fa fa-trash-o"></i></a>';
+                            }
+                            return oprStr;
                         }
                     }],
                 fnDrawCallback: function () {
