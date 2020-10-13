@@ -389,11 +389,7 @@
             });
             $('#btnSaveFile').click(function () {
                 if (window.confirm("确定保存当前文件到服务器？")) {
-                    if (mxOcx.SaveDwgFile($('#fileServerPath').val())) {
-                        alert('保存成功');
-                    } else {
-                        saveFile();                        
-                    }
+                    saveFile();
                 }
             });
         });
@@ -538,19 +534,17 @@
             if (!confirm('提交将自动保存当前文件到服务器，确认提交审核？')) {
                 return;
             }
-            if (!mxOcx.SaveDwgFile($('#fileServerPath').val())) {
-                alert('保存文件失败，请保存文件到本地，并在审核列表上传文件');
-                return;
+            if (saveFile()) {
+                var beamId = $('#beamId').val();
+                $.get('RequestApproval?beamId=' + beamId).done(function (r) {
+                    if (r.result == 'success') {
+                        alert('提交成功');
+                        window.location = window.location.protocol + '//' + window.location.host + '/Project/Index';
+                    } else {
+                        alert(r.msg);
+                    }
+                });
             }
-            var beamId = $('#beamId').val();
-            $.get('RequestApproval?beamId=' + beamId).done(function (r) {
-                if (r.result == 'success') {
-                    alert('提交成功');
-                    window.location = window.location.protocol + '//' + window.location.host + '/Project/Index';
-                } else {
-                    alert(r.msg);
-                }
-            });
         }
         function nextBeam(projectid, beamid) {
             $.get('/Beaminfo/NextBeam', { projectId: projectid, beamId: beamid }).done(function (r) {
@@ -571,14 +565,22 @@
             }
         }
         function saveFile() {
-            var url = window.location.protocol + '//' + window.location.hostname;
-            var port = window.location.port;
-            if (mxOcx.SaveDwgToURL(url, "/beaminfo/PostDwgFile?beamid=67", "file", port)) {
+            if (mxOcx.SaveDwgFile($('#fileServerPath').val())) {
                 alert('保存成功');
-            }
-            else {
-                alert('保存文件失败');
-            }
+                return true;
+            } else {
+                var url = window.location.protocol + '//' + window.location.hostname;
+                var port = window.location.port;
+                if (mxOcx.SaveDwgToURL(url, "/beaminfo/PostDwgFile?beamid=67", "file", port)) {
+                    alert('保存成功');
+                    return true;
+                }
+                else {
+                    alert('保存文件失败');
+                    return false;
+                }
+            } 
+            return false;
         }
     </script>
 }
