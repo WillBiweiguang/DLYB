@@ -116,10 +116,10 @@ namespace Innocellence.Web.Controllers
                 objModal.DwgFile = System.IO.Path.GetFileName(file.FileName);
                 objModal.ProjectId = ProjectId;
                 var fileExtension = System.IO.Path.GetExtension(file.FileName);
-                if (fileExtension.ToLower() != ".dwg"|| fileExtension.ToLower() != ".dxf")
+                if (fileExtension.ToLower() != ".dwg")
                 {
                     var result = GetErrorJson();
-                    result.Message = new JsonMessage(103, "请上传dwg/dxf文件");
+                    result.Message = new JsonMessage(103, "请上传dwg文件");
                     return Json(result, JsonRequestBehavior.AllowGet);
                 }
                 

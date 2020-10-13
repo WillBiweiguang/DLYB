@@ -363,7 +363,7 @@
                             }
                             oprStr += '<a href="#" onclick="DingWei(\'' + full.HandleID + '\');return false;" class="artDailog btn btn-info  btn-xs" style="margin-right:4px;" data-toggle="tooltip" data-placement="top" title="定位">定位</a>';
                             if (!isViewModel) {
-                                oprStr += '<a href="#" onclick="LEAP.Common.MainPop.RowClick(\'' + full.Id + '\',2);return false;" class="btn btn-danger btn-xs" id="btnDelete" data-toggle="tooltip" data-placement="top" title="删除"><i class="fa fa-trash-o"></i></a>';
+                                oprStr += '<a href="#" onclick="DeleteData(\'' + full.Id + '\',2);return false;" class="btn btn-danger btn-xs" id="btnDelete" data-toggle="tooltip" data-placement="top" title="删除"><i class="fa fa-trash-o"></i></a>';
                             }
                             return oprStr;
                         }
@@ -560,6 +560,15 @@
                     alert('没有未完成的梁段');
                 }
             });
+        }
+        function DeleteData(id) {
+            if (confirm('您确认删除此记录吗? ')) {
+                $.get("Delete", {
+                    "sIds": id
+                }, function (r) {
+                    LEAP.Common.MainPop.options.dataTable.fnDraw(false);
+                });
+            }
         }
     </script>
 }
