@@ -144,5 +144,24 @@ namespace Innocellence.Web.Controllers
             }
             return Json(doJson(null), JsonRequestBehavior.AllowGet);
         }
+
+        [HttpPost]
+        [ValidateInput(true)]
+        public ActionResult PostDwgFile(int BeamId)
+        {
+            //验证错误
+            if (!ModelState.IsValid)
+            {
+                return Json(GetErrorJson(), JsonRequestBehavior.AllowGet);
+            }
+            if (Request.Files.Count > 0)
+            {
+                var beam = _beamInfoService.GetList<BeamInfoView>(1, x => x.Id == BeamId).FirstOrDefault();
+                var file = Request.Files[0];
+                string path = "/Files/BeamInfo/" + beam.ProjectId + SLASH + beam.DwgFile;
+                file.SaveAs(Server.MapPath(path));
+            }
+            return Json(doJson(null), JsonRequestBehavior.AllowGet);
+        }
     }
 }

@@ -392,7 +392,7 @@
                     if (mxOcx.SaveDwgFile($('#fileServerPath').val())) {
                         alert('保存成功');
                     } else {
-                        alert('保存文件失败');
+                        saveFile();                        
                     }
                 }
             });
@@ -568,6 +568,16 @@
                 }, function (r) {
                     LEAP.Common.MainPop.options.dataTable.fnDraw(false);
                 });
+            }
+        }
+        function saveFile() {
+            var url = window.location.protocol + '//' + window.location.hostname;
+            var port = window.location.port;
+            if (mxOcx.SaveDwgToURL(url, "/beaminfo/PostDwgFile?beamid=67", "file", port)) {
+                alert('保存成功');
+            }
+            else {
+                alert('保存文件失败');
             }
         }
     </script>
