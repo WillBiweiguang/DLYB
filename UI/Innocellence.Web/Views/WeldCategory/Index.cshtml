@@ -491,7 +491,7 @@
                 }
                 LEAP.Common.MainPop.options.dataTable.fnDraw(false);
                 if (mode === 2) { //手动添加焊缝操作
-                    var rt = window.showModelessDialog('Edit?Id=' + r.data + '&v=' + Math.random(), "编辑焊缝信息", editModalSetting);
+                    var rt = window.showModalDialog('Edit?Id=' + r.data + '&v=' + Math.random(), "编辑焊缝信息", editModalSetting);
                     LEAP.Common.MainPop.options.dataTable.fnDraw(false);
                 } else { //全图识别操作
                     alert("识别完成");
@@ -501,7 +501,7 @@
         }
 
         function showEditForm(id) {
-            var rt = window.showModelessDialog('Edit?Id=' + id + '&v=' + Math.random(), "编辑焊缝信息", editModalSetting);
+            var rt = window.showModalDialog('Edit?Id=' + id + '&v=' + Math.random(), "编辑焊缝信息", editModalSetting);
             LEAP.Common.MainPop.options.dataTable.fnDraw(false);
         }
 

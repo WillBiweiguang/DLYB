@@ -79,9 +79,13 @@ namespace Innocellence.Web.Controllers
         public async Task<ActionResult> Login(LoginViewModel model, string returnUrl)
         {            
             if (ModelState.IsValid)
-            {
-                //暂时去掉用户登录
+            {                
                 var user = UserManager.UserLoginAsync(model.UserName, model.Password);
+                if(user == null)
+                {
+                    ModelState.AddModelError("", "错误的用户名或密码");
+                    return Json(GetErrorJson(), JsonRequestBehavior.AllowGet);
+                }
                 model.RememberMe = true;
                 user.Roles = _sysUserRoleService.Repository.Entities.Where(x => x.UserId == user.Id).ToList();
                 await _authService.SignInNoDB(user, true);

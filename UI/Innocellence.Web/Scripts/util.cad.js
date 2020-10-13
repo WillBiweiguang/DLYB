@@ -127,6 +127,25 @@ function DoCommandEventFunc(iCmd) {
             });
         }
     }
+    if (iCmd == 103) {
+        var handleid = DuiJieWeldAdd();
+        var weldData = [];
+        weldData.push({ WeldType: 'ManDuiJieH', HandleID: handleid.toString() });
+        saveWeldData(weldData, 2);
+    }
+    if (iCmd == 104) {
+        var handleid = RongTouWeldAdd();
+        var weldData = [];
+        weldData.push({ WeldType: 'ManRongTouH', HandleID: handleid.toString() });
+        saveWeldData(weldData, 2);
+    }
+    if (iCmd == 105) {
+        var handleid = PoKouWeldAdd();
+        var weldData = [];
+        weldData.push({ WeldType: 'ManPoKouH', HandleID: handleid.toString() });
+        saveWeldData(weldData, 2);
+    }
+
 }
 
 
@@ -3127,7 +3146,34 @@ function DoDynWorldDrawFun(dX, dY, pWorldDraw, pData) {
     else if (sGuid == "DrawJiaoWeld2") {
         DynWorldDrawJiaoWeld2(pData, pWorldDraw, curPt);
         mxOcx.SetEventRet(1);
-    }  
+    }
+
+    if (sGuid == "DrawDuijieWeld") {
+        DynWorldDrawDuijieWeld(pData, pWorldDraw, curPt);
+        mxOcx.SetEventRet(1);
+    }
+    else if (sGuid == "DrawDuijieWeld2") {
+        DynWorldDrawDuijieWeld2(pData, pWorldDraw, curPt);
+        mxOcx.SetEventRet(1);
+    }
+
+    if (sGuid == "DrawRongTouWeld") {
+        DynWorldDrawRongTouWeld(pData, pWorldDraw, curPt);
+        mxOcx.SetEventRet(1);
+    }
+    else if (sGuid == "DrawRongTouWeld2") {
+        DynWorldDrawRongTouWeld2(pData, pWorldDraw, curPt);
+        mxOcx.SetEventRet(1);
+    }
+
+    if (sGuid == "DrawPoKouWeld") {
+        DynWorldDrawPoKouWeld(pData, pWorldDraw, curPt);
+        mxOcx.SetEventRet(1);
+    }
+    else if (sGuid == "DrawPoKouWeld2") {
+        DynWorldDrawPoKouWeld2(pData, pWorldDraw, curPt);
+        mxOcx.SetEventRet(1);
+    }
 }
 //动态绘制角
 function DynWorldDrawJiaoWeld(pCustomEntity,
@@ -3885,6 +3931,533 @@ function HideLayerByName(sLayerName) {
     if (layerTable != null) {
         layerTableRec.IsOff = true;
     }
+}
+
+//对接焊缝
+function DuiJieWeldAdd() {
+
+    //创建一个图层,名为"DuijieLayer"
+    mxOcx.AddLayer("DuijieLayer");
+    //设置当前图层为"DuijieLayer"
+    mxOcx.LayerName = "DuijieLayer";
+
+    // 创建一个与用户交互取点的对象。
+    var getPt = mxOcx.NewComObject("IMxDrawUiPrPoint");
+    getPt.message = "输入标注插入基点";
+    // 设置动态绘制参数.
+    var spDrawData = getPt.InitUserDraw("DrawDuijieWeld");
+    // 开始取第一个点。
+    if (getPt.go() != 1)
+        return;
+    // 创建一个与用户交互取点的对象。
+    var getSecondPt = mxOcx.NewComObject("IMxDrawUiPrPoint");
+
+    getSecondPt.message = "输入标注位置点";
+    getSecondPt.basePoint = getPt.value();
+
+    getSecondPt.setUseBasePt(false);
+
+    spDrawData = getSecondPt.InitUserDraw("DrawDuijieWeld2");
+    // 设置动态绘制参数.
+    spDrawData.SetPoint("BasePoint", getPt.value());
+    // 开始取第二个点。
+    if (getSecondPt.go() != 1)
+        return;
+    var ret = spDrawData.Draw();
+    //用填充画箭头
+    mxOcx.AddPatternDefinition("SOLID", "((0, 0,0, 0,0.125))");
+    //把路径变成一个填充对象
+    mxOcx.PatternDefinition = "SOLID";
+    mxOcx.PathMoveTo(getPt.value().x, getPt.value().y);
+    var pt = mxOcx.NewPoint();
+    var pt_e = mxOcx.NewPoint();
+    var ll = Math.sqrt((Math.pow((getSecondPt.value().x - getPt.value().x), 2) + Math.pow((getSecondPt.value().y - getPt.value().y), 2)), 2)
+    pt.x = getPt.value().x + 1.5 * (getSecondPt.value().x - getPt.value().x) / ll;
+    pt.y = getPt.value().y + 1.5 * (getSecondPt.value().y - getPt.value().y) / ll;
+    pt_e.x = pt.x - (pt.y - getPt.value().y) / 3
+    pt_e.y = pt.y + (pt.x - getPt.value().x) / 3
+    //路径的一下个点
+    mxOcx.PathLineTo(pt_e.x, pt_e.y);
+    //路径的一下个点
+    pt_e.x = pt.x + (pt.y - getPt.value().y) / 3
+    pt_e.y = pt.y - (pt.x - getPt.value().x) / 3
+    mxOcx.PathLineTo(pt_e.x, pt_e.y);
+    //路径的一下个点
+    mxOcx.PathLineTo(getPt.value().x, getPt.value().y);
+
+    mxOcx.AddLinetype("MLineType1", "");
+    mxOcx.LineType = "MLineType1";
+    var id = mxOcx.DrawPathToHatch(1);
+    var database = mxOcx.GetDatabase();
+    var ent;
+    ent = database.ObjectIdToObject(id);
+    var hd = ent.handle;
+    var hdArray = [];
+    hdArray[hdArray.length] = hd;
+    // 设置绘制的批注文字样式。
+    for (var i = 0; i < ret.Count; i++) {
+        ent = ret.AtObject(i);
+        ent.Layer = "DuijieLayer";
+        hd = ent.handle;
+        hdArray[hdArray.length] = hd;
+    }
+    //var ent = ret.AtObject(0);
+    //var hd = ent.handle;
+    return hdArray
+}
+
+//熔透焊缝
+function RongTouWeldAdd() {
+
+    //创建一个图层,名为"RongTouLayer"
+    mxOcx.AddLayer("RongTouLayer");
+    //设置当前图层为"RongTouLayer"
+    mxOcx.LayerName = "RongTouLayer";
+
+    // 创建一个与用户交互取点的对象。
+    var getPt = mxOcx.NewComObject("IMxDrawUiPrPoint");
+    getPt.message = "输入标注插入基点";
+    // 设置动态绘制参数.
+    var spDrawData = getPt.InitUserDraw("DrawRongTouWeld");
+    // 开始取第一个点。
+    if (getPt.go() != 1)
+        return;
+    // 创建一个与用户交互取点的对象。
+    var getSecondPt = mxOcx.NewComObject("IMxDrawUiPrPoint");
+
+    getSecondPt.message = "输入标注位置点";
+    getSecondPt.basePoint = getPt.value();
+
+    getSecondPt.setUseBasePt(false);
+
+    spDrawData = getSecondPt.InitUserDraw("DrawRongTouWeld2");
+    // 设置动态绘制参数.
+    spDrawData.SetPoint("BasePoint", getPt.value());
+    // 开始取第二个点。
+    if (getSecondPt.go() != 1)
+        return;
+    var ret = spDrawData.Draw();
+    //用填充画箭头
+    mxOcx.AddPatternDefinition("SOLID", "((0, 0,0, 0,0.125))");
+    //把路径变成一个填充对象
+    mxOcx.PatternDefinition = "SOLID";
+    mxOcx.PathMoveTo(getPt.value().x, getPt.value().y);
+    var pt = mxOcx.NewPoint();
+    var pt_e = mxOcx.NewPoint();
+    var ll = Math.sqrt((Math.pow((getSecondPt.value().x - getPt.value().x), 2) + Math.pow((getSecondPt.value().y - getPt.value().y), 2)), 2)
+    pt.x = getPt.value().x + 1.5 * (getSecondPt.value().x - getPt.value().x) / ll;
+    pt.y = getPt.value().y + 1.5 * (getSecondPt.value().y - getPt.value().y) / ll;
+    pt_e.x = pt.x - (pt.y - getPt.value().y) / 3
+    pt_e.y = pt.y + (pt.x - getPt.value().x) / 3
+    //路径的一下个点
+    mxOcx.PathLineTo(pt_e.x, pt_e.y);
+    //路径的一下个点
+    pt_e.x = pt.x + (pt.y - getPt.value().y) / 3
+    pt_e.y = pt.y - (pt.x - getPt.value().x) / 3
+    mxOcx.PathLineTo(pt_e.x, pt_e.y);
+    //路径的一下个点
+    mxOcx.PathLineTo(getPt.value().x, getPt.value().y);
+
+    mxOcx.AddLinetype("MLineType1", "");
+    mxOcx.LineType = "MLineType1";
+    var id = mxOcx.DrawPathToHatch(1);
+    var database = mxOcx.GetDatabase();
+    var ent;
+    ent = database.ObjectIdToObject(id);
+    var hd = ent.handle;
+    var hdArray = [];
+    hdArray[hdArray.length] = hd;
+    // 设置绘制的批注文字样式。
+    for (var i = 0; i < ret.Count; i++) {
+        ent = ret.AtObject(i);
+        ent.Layer = "RongTouLayer";
+        hd = ent.handle;
+        hdArray[hdArray.length] = hd;
+    }
+    //var ent = ret.AtObject(0);
+    //var hd = ent.handle;
+    return hdArray
+}
+
+//坡口焊缝
+function PoKouWeldAdd() {
+
+    //创建一个图层,名为"PoKouLayer"
+    mxOcx.AddLayer("PoKouLayer");
+    //设置当前图层为"PoKouLayer"
+    mxOcx.LayerName = "PoKouLayer";
+
+    // 创建一个与用户交互取点的对象。
+    var getPt = mxOcx.NewComObject("IMxDrawUiPrPoint");
+    getPt.message = "输入标注插入基点";
+    // 设置动态绘制参数.
+    var spDrawData = getPt.InitUserDraw("DrawPoKouWeld");
+    // 开始取第一个点。
+    if (getPt.go() != 1)
+        return;
+    // 创建一个与用户交互取点的对象。
+    var getSecondPt = mxOcx.NewComObject("IMxDrawUiPrPoint");
+
+    getSecondPt.message = "输入标注位置点";
+    getSecondPt.basePoint = getPt.value();
+
+    getSecondPt.setUseBasePt(false);
+
+    spDrawData = getSecondPt.InitUserDraw("DrawPoKouWeld2");
+    // 设置动态绘制参数.
+    spDrawData.SetPoint("BasePoint", getPt.value());
+    // 开始取第二个点。
+    if (getSecondPt.go() != 1)
+        return;
+
+    var ret = spDrawData.Draw();
+    //用填充画箭头
+    mxOcx.AddPatternDefinition("SOLID", "((0, 0,0, 0,0.125))");
+    //把路径变成一个填充对象
+    mxOcx.PatternDefinition = "SOLID";
+    mxOcx.PathMoveTo(getPt.value().x, getPt.value().y);
+    var pt = mxOcx.NewPoint();
+    var pt_e = mxOcx.NewPoint();
+    var ll = Math.sqrt((Math.pow((getSecondPt.value().x - getPt.value().x), 2) + Math.pow((getSecondPt.value().y - getPt.value().y), 2)), 2)
+    pt.x = getPt.value().x + 1.5 * (getSecondPt.value().x - getPt.value().x) / ll;
+    pt.y = getPt.value().y + 1.5 * (getSecondPt.value().y - getPt.value().y) / ll;
+    pt_e.x = pt.x - (pt.y - getPt.value().y) / 3
+    pt_e.y = pt.y + (pt.x - getPt.value().x) / 3
+    //路径的一下个点
+    mxOcx.PathLineTo(pt_e.x, pt_e.y);
+    //路径的一下个点
+    pt_e.x = pt.x + (pt.y - getPt.value().y) / 3
+    pt_e.y = pt.y - (pt.x - getPt.value().x) / 3
+    mxOcx.PathLineTo(pt_e.x, pt_e.y);
+    //路径的一下个点
+    mxOcx.PathLineTo(getPt.value().x, getPt.value().y);
+
+    mxOcx.AddLinetype("MLineType1", "");
+    mxOcx.LineType = "MLineType1";
+    var id = mxOcx.DrawPathToHatch(1);
+    var database = mxOcx.GetDatabase();
+    var ent;
+    ent = database.ObjectIdToObject(id);
+    var hd = ent.handle;
+    var hdArray = [];
+    hdArray[hdArray.length] = hd;
+    // 设置绘制的批注文字样式。
+    for (var i = 0; i < ret.Count; i++) {
+        ent = ret.AtObject(i);
+        ent.Layer = "PoKouLayer";
+        hd = ent.handle;
+        hdArray[hdArray.length] = hd;
+    }
+    return hdArray
+}
+//动态绘制对接
+function DynWorldDrawDuijieWeld(pCustomEntity,
+    pWorldDraw, curPt) {
+    // 得到绘制参数.
+    var pt1 = curPt;
+    var pt2 = mxOcx.NewPoint();
+    pt2.x = curPt.x + 5;
+    pt2.y = curPt.y
+    // 创建一个批注对象.
+    var pl = mxOcx.NewEntity("IMxDrawLine");
+    pl.StartPoint = pt1;
+    pl.EndPoint = pt2;
+    //竖线
+    var vec = mxOcx.NewComObject("IMxDrawVector3d");
+    vec.MakeYAxis();
+    vec.Mult(2);
+    var ptJ1 = mxOcx.NewPoint();
+    ptJ1.x = curPt.x + 2.5;
+    ptJ1.y = curPt.y;
+    var ptJ2 = mxOcx.NewPoint();
+    ptJ2.x = ptJ1.x;
+    ptJ2.y = ptJ1.y;
+    ptJ2.Add(vec);
+
+    var ptJ3 = mxOcx.NewPoint();
+    ptJ3.x = curPt.x + 3;
+    ptJ3.y = curPt.y;
+
+    var ptJ4 = mxOcx.NewPoint();
+    ptJ4.x = ptJ3.x;
+    ptJ4.y = ptJ3.y;
+    ptJ4.Add(vec);
+    // 动态绘制.
+    pWorldDraw.DrawEntity(pl);
+    pWorldDraw.DrawLine(ptJ1.x, ptJ1.y, ptJ2.x, ptJ2.y);
+    pWorldDraw.DrawLine(ptJ3.x, ptJ3.y, ptJ4.x, ptJ4.y);
+}
+//动态绘制对接
+function DynWorldDrawDuijieWeld2(pCustomEntity, pWorldDraw, curPt) {
+    var basePoint = pCustomEntity.GetPoint("BasePoint");
+    var pt2 = mxOcx.NewPoint();
+    var pt1 = mxOcx.NewPoint();
+    if (basePoint.x < curPt.x) {
+        // 得到绘制参数.
+        pt1 = curPt;
+        pt2.x = curPt.x + 5;
+        pt2.y = curPt.y
+        //画竖线
+        var vec = mxOcx.NewComObject("IMxDrawVector3d");
+        vec.MakeYAxis();
+        vec.Mult(2);
+        var ptJ1 = mxOcx.NewPoint();
+        ptJ1.x = curPt.x + 2.5;
+        ptJ1.y = curPt.y;
+        var ptJ2 = mxOcx.NewPoint();
+        ptJ2.x = ptJ1.x;
+        ptJ2.y = ptJ1.y;
+        ptJ2.Add(vec);
+
+        var ptJ3 = mxOcx.NewPoint();
+        ptJ3.x = curPt.x + 3;
+        ptJ3.y = curPt.y;
+
+        var ptJ4 = mxOcx.NewPoint();
+        ptJ4.x = ptJ3.x;
+        ptJ4.y = ptJ3.y;
+        ptJ4.Add(vec);
+
+    }
+    else {
+        pt1 = curPt;
+        pt2.x = curPt.x - 5;
+        pt2.y = curPt.y
+        //画竖线
+        var vec = mxOcx.NewComObject("IMxDrawVector3d");
+        vec.MakeYAxis();
+        vec.Mult(2);
+        var ptJ1 = mxOcx.NewPoint();
+        ptJ1.x = curPt.x - 2.5;
+        ptJ1.y = curPt.y;
+        var ptJ2 = mxOcx.NewPoint();
+        ptJ2.x = ptJ1.x;
+        ptJ2.y = ptJ1.y;
+        ptJ2.Add(vec);
+
+        var ptJ3 = mxOcx.NewPoint();
+        ptJ3.x = curPt.x - 3;
+        ptJ3.y = curPt.y;
+
+        var ptJ4 = mxOcx.NewPoint();
+        ptJ4.x = ptJ3.x;
+        ptJ4.y = ptJ3.y;
+        ptJ4.Add(vec);
+    }
+    // 创建一个批注对象.
+    var pl = mxOcx.NewEntity("IMxDrawLine");
+    pl.StartPoint = pt1;
+    pl.EndPoint = pt2;
+    var pl2 = mxOcx.NewEntity("IMxDrawLine");
+    pl2.StartPoint = basePoint;
+    pl2.EndPoint = pt1;
+
+    // 动态绘制.
+    pWorldDraw.DrawEntity(pl);
+    pWorldDraw.DrawEntity(pl2);
+    pWorldDraw.DrawLine(ptJ1.x, ptJ1.y, ptJ2.x, ptJ2.y);
+    pWorldDraw.DrawLine(ptJ3.x, ptJ3.y, ptJ4.x, ptJ4.y);
+}
+
+
+//动态绘制熔透
+function DynWorldDrawRongTouWeld(pCustomEntity,
+    pWorldDraw, curPt) {
+    // 得到绘制参数.
+    var pt1 = curPt;
+    var pt2 = mxOcx.NewPoint();
+    pt2.x = curPt.x + 5;
+    pt2.y = curPt.y
+    // 创建一个批注对象.
+    var pl = mxOcx.NewEntity("IMxDrawLine");
+    pl.StartPoint = pt1;
+    pl.EndPoint = pt2;
+    //画开口
+    var vec = mxOcx.NewComObject("IMxDrawVector3d");
+
+    vec.MakeXAxis();
+    vec.Mult(2.3);
+    vec.RotateByXyPlan(45 * 3.14159265 / 180.0);
+    var ptJ1 = mxOcx.NewPoint();
+    ptJ1.x = pt2.x;
+    ptJ1.y = pt2.y;
+    ptJ1.Add(vec);
+    vec.RotateByXyPlan(-90 * 3.14159265 / 180.0);
+    var ptJ2 = mxOcx.NewPoint();
+    ptJ2.x = pt2.x;
+    ptJ2.y = pt2.y;
+    ptJ2.Add(vec);
+
+    // 动态绘制.
+    pWorldDraw.DrawEntity(pl);
+    pWorldDraw.DrawLine(pt2.x, pt2.y, ptJ1.x, ptJ1.y);
+    pWorldDraw.DrawLine(pt2.x, pt2.y, ptJ2.x, ptJ2.y);
+}
+//动态绘制熔透
+function DynWorldDrawRongTouWeld2(pCustomEntity,
+    pWorldDraw, curPt) {
+    var basePoint = pCustomEntity.GetPoint("BasePoint");
+    var pt2 = mxOcx.NewPoint();
+    var pt1 = mxOcx.NewPoint();
+    if (basePoint.x < curPt.x) {
+        // 得到绘制参数.
+        pt1 = curPt;
+        pt2.x = curPt.x + 5;
+        pt2.y = curPt.y
+        //画开口
+        var vec = mxOcx.NewComObject("IMxDrawVector3d");
+        vec.MakeXAxis();
+        vec.Mult(2.3);
+        vec.RotateByXyPlan(45 * 3.14159265 / 180.0);
+        var ptJ1 = mxOcx.NewPoint();
+        ptJ1.x = pt2.x;
+        ptJ1.y = pt2.y;
+        ptJ1.Add(vec);
+        vec.RotateByXyPlan(-90 * 3.14159265 / 180.0);
+        var ptJ2 = mxOcx.NewPoint();
+        ptJ2.x = pt2.x;
+        ptJ2.y = pt2.y;
+        ptJ2.Add(vec);
+    }
+    else {
+        pt1 = curPt;
+        pt2.x = curPt.x - 5;
+        pt2.y = curPt.y
+        //画开口
+        var vec = mxOcx.NewComObject("IMxDrawVector3d");
+        vec.MakeXAxis();
+        vec.Mult(2.3);
+        vec.RotateByXyPlan(135 * 3.14159265 / 180.0);
+        var ptJ1 = mxOcx.NewPoint();
+        ptJ1.x = pt2.x;
+        ptJ1.y = pt2.y;
+        ptJ1.Add(vec);
+        vec.RotateByXyPlan(90 * 3.14159265 / 180.0);
+        var ptJ2 = mxOcx.NewPoint();
+        ptJ2.x = pt2.x;
+        ptJ2.y = pt2.y;
+        ptJ2.Add(vec);
+    }
+    // 创建一个批注对象.
+    var pl = mxOcx.NewEntity("IMxDrawLine");
+    pl.StartPoint = pt1;
+    pl.EndPoint = pt2;
+    var pl2 = mxOcx.NewEntity("IMxDrawLine");
+    pl2.StartPoint = basePoint;
+    pl2.EndPoint = pt1;
+
+    // 动态绘制.
+    pWorldDraw.DrawEntity(pl);
+    pWorldDraw.DrawEntity(pl2);
+    pWorldDraw.DrawLine(pt2.x, pt2.y, ptJ1.x, ptJ1.y);
+    pWorldDraw.DrawLine(pt2.x, pt2.y, ptJ2.x, ptJ2.y);
+}
+
+//动态绘制坡口
+function DynWorldDrawPoKouWeld(pCustomEntity,
+    pWorldDraw, curPt) {
+    // 得到绘制参数.
+    var pt1 = curPt;
+    var pt2 = mxOcx.NewPoint();
+    pt2.x = curPt.x + 5;
+    pt2.y = curPt.y
+    // 创建一个批注对象.
+    var pl = mxOcx.NewEntity("IMxDrawLine");
+    pl.StartPoint = pt1;
+    pl.EndPoint = pt2;
+    //画三角形
+    var vec = mxOcx.NewComObject("IMxDrawVector3d");
+    vec.MakeYAxis();
+    vec.Mult(1.5);
+    var ptJ1 = mxOcx.NewPoint();
+    ptJ1.x = curPt.x + 1.5;
+    ptJ1.y = curPt.y;
+    var ptJ2 = mxOcx.NewPoint();
+    ptJ2.x = ptJ1.x;
+    ptJ2.y = ptJ1.y;
+    ptJ2.Add(vec);
+
+    vec.MakeYAxis();
+    vec.Mult(2.2);
+    vec.RotateByXyPlan(-45 * 3.14159265 / 180.0);
+    var ptJ3 = mxOcx.NewPoint();
+    ptJ3.x = ptJ1.x;
+    ptJ3.y = ptJ1.y;
+    ptJ3.Add(vec);
+    // 动态绘制.
+    pWorldDraw.DrawEntity(pl);
+    pWorldDraw.DrawLine(ptJ1.x, ptJ1.y, ptJ2.x, ptJ2.y);
+    pWorldDraw.DrawLine(ptJ1.x, ptJ1.y, ptJ3.x, ptJ3.y);
+}
+//动态绘制坡口
+function DynWorldDrawPoKouWeld2(pCustomEntity,
+    pWorldDraw, curPt) {
+    var basePoint = pCustomEntity.GetPoint("BasePoint");
+    var pt2 = mxOcx.NewPoint();
+    var pt1 = mxOcx.NewPoint();
+    if (basePoint.x < curPt.x) {
+        // 得到绘制参数.
+        pt1 = curPt;
+        pt2.x = curPt.x + 5;
+        pt2.y = curPt.y
+        //画三角形
+        var vec = mxOcx.NewComObject("IMxDrawVector3d");
+        vec.MakeYAxis();
+        vec.Mult(1.5);
+        var ptJ1 = mxOcx.NewPoint();
+        ptJ1.x = curPt.x + 1.5;
+        ptJ1.y = curPt.y;
+        var ptJ2 = mxOcx.NewPoint();
+        ptJ2.x = ptJ1.x;
+        ptJ2.y = ptJ1.y;
+        ptJ2.Add(vec);
+
+        vec.MakeYAxis();
+        vec.Mult(2.2);
+        vec.RotateByXyPlan(-45 * 3.14159265 / 180.0);
+        var ptJ3 = mxOcx.NewPoint();
+        ptJ3.x = ptJ1.x;
+        ptJ3.y = ptJ1.y;
+        ptJ3.Add(vec);
+
+    }
+    else {
+        pt1 = curPt;
+        pt2.x = curPt.x - 5;
+        pt2.y = curPt.y
+        //画三角形
+        var vec = mxOcx.NewComObject("IMxDrawVector3d");
+        vec.MakeYAxis();
+        vec.Mult(1.5);
+        var ptJ1 = mxOcx.NewPoint();
+        ptJ1.x = curPt.x - 3;
+        ptJ1.y = curPt.y;
+        var ptJ2 = mxOcx.NewPoint();
+        ptJ2.x = ptJ1.x;
+        ptJ2.y = ptJ1.y;
+        ptJ2.Add(vec);
+
+        vec.MakeYAxis();
+        vec.Mult(2.2);
+        vec.RotateByXyPlan(-45 * 3.14159265 / 180.0);
+        var ptJ3 = mxOcx.NewPoint();
+        ptJ3.x = ptJ1.x;
+        ptJ3.y = ptJ1.y;
+        ptJ3.Add(vec);
+    }
+    // 创建一个批注对象.
+    var pl = mxOcx.NewEntity("IMxDrawLine");
+    pl.StartPoint = pt1;
+    pl.EndPoint = pt2;
+    var pl2 = mxOcx.NewEntity("IMxDrawLine");
+    pl2.StartPoint = basePoint;
+    pl2.EndPoint = pt1;
+
+    // 动态绘制.
+    pWorldDraw.DrawEntity(pl);
+    pWorldDraw.DrawEntity(pl2);
+    pWorldDraw.DrawLine(ptJ1.x, ptJ1.y, ptJ2.x, ptJ2.y);
+    pWorldDraw.DrawLine(ptJ1.x, ptJ1.y, ptJ3.x, ptJ3.y);
 }
 
 

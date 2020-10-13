@@ -58,7 +58,7 @@ namespace Innocellence.FaultSearch.Controllers
                         var task = _taskListService.GetList<TaskListView>(1, x => !x.IsDeleted && x.ProjectId == beam.ProjectId && x.BeamId == beam.Id).FirstOrDefault();
                         if (task == null || task.TaskStatus == (int)TaskStatus.NotRequest || task.TaskStatus == (int)TaskStatus.Rejected)
                         {
-                            ViewBag.ViewModel = 1;
+                            ViewBag.ViewModel = 0;
                         }
                     }
                 }
@@ -320,6 +320,12 @@ namespace Innocellence.FaultSearch.Controllers
                     return "14-双面角焊缝";
                 case "ManJiaoH":
                     return "角焊缝";
+                case "ManDuiJieH":
+                    return "对接焊缝";
+                case "ManPoKouH":
+                    return "坡口焊缝";
+                case "ManRongTouH":
+                    return "熔透焊缝";
                 default:
                     return "其他";
             }
