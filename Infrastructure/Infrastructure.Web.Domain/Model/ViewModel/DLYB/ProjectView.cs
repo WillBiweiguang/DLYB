@@ -6,7 +6,7 @@ using Infrastructure.Web.Domain.Entity;
 
 namespace Infrastructure.Web.Domain.ModelsView
 {
-    public partial class ProjectView : IViewModel
+    public partial class ProjectView : ViewModelBase, IViewModel
 	{	
 		public Int32 Id { get;set; }
         public string ProjectName { get; set; }

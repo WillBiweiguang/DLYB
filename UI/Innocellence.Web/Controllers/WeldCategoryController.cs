@@ -70,7 +70,6 @@ namespace Innocellence.FaultSearch.Controllers
             ViewBag.Figures = _weldCategoryService.Repository.Entities.Select(x => x.FigureNumber).Distinct().Select(x => new SelectListItem { Value = x, Text = x }).ToList();
             ViewBag.Boards = _weldCategoryService.Repository.Entities.Select(x => x.BoardNumber).Distinct().Select(x => new SelectListItem { Value = x, Text = x }).ToList();
             ViewBag.Areas = statistics.Select(x => x.SectionalArea).Distinct().ToList();
-
             ViewBag.weldGeometries = statistics.Select(x => x.WeldType).Distinct().ToList();
             ViewBag.weldLocations = statistics.Select(x => x.WeldLocationType).Distinct().ToList();
             return View();

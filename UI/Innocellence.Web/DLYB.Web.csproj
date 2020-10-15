@@ -382,6 +382,7 @@
     <Content Include="Content\img\icon_avatar_default.png" />
     <Content Include="Content\img\icon_party_default.png" />
     <Content Include="Content\img\loading.gif" />
+    <Content Include="Content\img\logo_icon.ico" />
     <Content Include="Content\img\profile-pic.jpg" />
     <Content Include="Content\img\qrcode_lilly.jpg" />
     <Content Include="Content\img\smiley.png" />
