@@ -17,6 +17,7 @@ namespace Infrastructure.Web.Domain.ModelsView
         public double? WorksThickness2 { get; set; }
         public double? WorksThicknessH1 { get; set; }
         public double? WorksThicknessH2 { get; set; }
+        public double? WorksThicknessH3 { get; set; }
         public double? GrooveClearance { get; set; }
         public double? BluntThickness { get; set; }
         public double? GrooveAngleA1 { get; set; }
@@ -48,6 +49,7 @@ namespace Infrastructure.Web.Domain.ModelsView
             WorksThickness2 = entity.WorksThickness2;
             WorksThicknessH1 = entity.WorksThicknessH1;
             WorksThicknessH2 = entity.WorksThicknessH2;
+            WorksThicknessH3 = entity.WorksThicknessH3;
             GrooveClearance = entity.GrooveClearance;
             BluntThickness = entity.BluntThickness;
             GrooveAngleA1 = entity.GrooveAngleA1;

@@ -21,6 +21,7 @@ namespace Infrastructure.Web.Domain.Entity
         public double? WorksThickness2 { get; set; }
         public double? WorksThicknessH1 { get; set; }
         public double? WorksThicknessH2 { get; set; }
+        public double? WorksThicknessH3 { get; set; }
         public double? GrooveClearance { get; set; }
         public double? BluntThickness { get; set; }
         public double? GrooveAngleA1 { get; set; }
