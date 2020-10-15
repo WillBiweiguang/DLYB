@@ -124,11 +124,11 @@
                             <label for="FigureNumber" class="col-sm-5 control-label">图号:</label>
                             <div class="col-sm-7">
                                 <select class="single-select form-control" name="FigureNumber" id="FigureNumber" data-placeholder="请选择图号" data-bind="value: FigureNumber" title="图号">
-                                    @foreach (WeldCategoryLabeling a in ViewBag.weldCategorys)
+                                    @foreach (SelectListItem a in ViewBag.Figures)
                                     {
-                                        if (!string.IsNullOrEmpty(a.FigureNumber))
+                                        if (!string.IsNullOrEmpty(a.Value))
                                         {
-                                            <option value="@a.FigureNumber">@a.FigureNumber</option>
+                                            <option value="@a.Value">@a.Text</option>
                                         }
                                     }
                                 </select>
@@ -138,11 +138,11 @@
                             <label for="BoardNumber" class="col-sm-5 control-label">板件号:</label>
                             <div class="col-sm-7">
                                 <select class="single-select form-control" name="BoardNumber" id="BoardNumber" data-placeholder="请选择板件号" data-bind="value: BoardNumber">
-                                    @foreach (WeldCategoryLabeling a in ViewBag.weldCategorys)
+                                    @foreach (SelectListItem a in ViewBag.Boards)
                                     {
-                                        if (!string.IsNullOrEmpty(a.BoardNumber))
+                                        if (!string.IsNullOrEmpty(a.Value))
                                         {
-                                            <option value="@a.BoardNumber">@a.BoardNumber</option>
+                                            <option value="@a.Value">@a.Text</option>
                                         }
                                     }
                                 </select>
@@ -154,11 +154,12 @@
                             <label class="col-sm-5 control-label">焊缝类型:</label>
                             <div class="col-sm-7">
                                 <select class="single-select form-control" id="WeldType" name="WeldType" style="" data-bind="value:WeldType" validate="{required:true}" data-geturl="/WeldGeometry/GetDropdownList">
-                                    @foreach (WeldGeometry a in ViewBag.weldGeometries)
+                                    @foreach (string a in ViewBag.weldGeometries)
                                     {
-                                        if (!string.IsNullOrEmpty(a.WeldType))
+                                        if (!string.IsNullOrEmpty(a))
                                         {
-                                            <option value="@a.WeldType">@a.WeldType</option>}
+                                            <option value="@a">@a</option>
+                                        }
                                     }
                                 </select>
                             </div>
@@ -168,11 +169,12 @@
                             <label class="col-sm-5 control-label">焊缝位置:</label>
                             <div class="col-sm-7">
                                 <select class="single-select form-control" name="WeldLocation" id="WeldLocation" data-placeholder="请选择焊缝位置" validate="{required:true}" data-geturl="/WeldLocation/GetDropdownList">
-                                    @foreach (WeldLocation a in ViewBag.weldLocations)
+                                    @foreach (string a in ViewBag.weldLocations)
                                     {
-                                        if (!string.IsNullOrEmpty(a.WeldLocationType))
+                                        if (!string.IsNullOrEmpty(a))
                                         {
-                                            <option value="@a.WeldLocationType">@a.WeldLocationType</option>}
+                                            <option value="@a">@a</option>
+                                        }
                                     }
                                 </select>
                             </div>
@@ -217,9 +219,9 @@
                             <label class="col-sm-5 control-label">焊缝截面积:</label>
                             <div class="col-sm-7">
                                 <select class="single-select form-control" name="SectionArea" id="SectionArea" validate="{required:true}" data-placeholder="请选择焊缝截面积" data-bind="value: SectionArea">
-                                    @foreach (WeldCategoryLabeling a in ViewBag.weldCategorys)
+                                    @foreach (string a in ViewBag.Areas)
                                     {
-                                        <option value="@a.SectionArea">@a.SectionArea</option>
+                                        <option value="@a">@a</option>
                                     }
                                 </select>
                             </div>

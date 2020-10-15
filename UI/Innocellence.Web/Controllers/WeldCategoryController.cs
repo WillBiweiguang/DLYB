@@ -21,11 +21,13 @@ namespace Innocellence.FaultSearch.Controllers
         private readonly IWeldGeometryService _weldGeometryService;
         private readonly IWeldLocationService _weldLocationService;
         private readonly ITaskListService _taskListService;
+        private readonly IWeldCategoryStatisticsVService _weldCategoryStatisticsVService;
 
         private readonly string baseUrl = "http://42.202.130.245:3001/";
         public WeldCategoryController(IWeldCategoryLabelingService weldCategoryService,
-            IBeamInfoService beamInfoService,IWeldGeometryService weldGeometryService,
-            IWeldLocationService weldLocationService, ITaskListService taskListService) : base(weldCategoryService)
+            IBeamInfoService beamInfoService, IWeldGeometryService weldGeometryService,
+            IWeldLocationService weldLocationService, ITaskListService taskListService,
+            IWeldCategoryStatisticsVService weldCategoryStatisticsVService) : base(weldCategoryService)
         {
             _weldCategoryService = weldCategoryService;
             _beamInfoService = beamInfoService;
@@ -33,6 +35,7 @@ namespace Innocellence.FaultSearch.Controllers
             _weldLocationService = weldLocationService;
             baseUrl = ConfigurationManager.AppSettings["WebUrl"];
             _taskListService = taskListService;
+            _weldCategoryStatisticsVService = weldCategoryStatisticsVService;
         }
         public override ActionResult Index()
         {
@@ -47,7 +50,7 @@ namespace Innocellence.FaultSearch.Controllers
                     ViewBag.FileName = beam.DwgFile;
                     ViewBag.FilePath = GetFilePath(beam.ProjectId, beam.DwgFile);
                     ViewBag.FileServerPath = GetFileAbsolutePath(beam.ProjectId, beam.DwgFile);
-                    var isView = Request["viewMode"];                    
+                    var isView = Request["viewMode"];
                     ViewBag.ViewModel = 0;
                     if (!string.IsNullOrEmpty(isView) && isView == "1")
                     {
@@ -63,9 +66,13 @@ namespace Innocellence.FaultSearch.Controllers
                     }
                 }
             }
-            ViewBag.weldCategorys = _weldCategoryService.Repository.Entities.Where(a => !a.IsDeleted).ToList();
-            ViewBag.weldGeometries = _weldGeometryService.Repository.Entities.Where(x => !x.IsDeleted).ToList();
-            ViewBag.weldLocations = _weldLocationService.Repository.Entities.Where(x => !x.IsDeleted).ToList();
+            var statistics = _weldCategoryStatisticsVService.GetList<WeldCategoryStatisticsVView>(int.MaxValue, x => !x.IsDeleted && x.BeamId == beamId).ToList();
+            ViewBag.Figures = _weldCategoryService.Repository.Entities.Select(x => x.FigureNumber).Distinct().Select(x => new SelectListItem { Value = x, Text = x }).ToList();
+            ViewBag.Boards = _weldCategoryService.Repository.Entities.Select(x => x.BoardNumber).Distinct().Select(x => new SelectListItem { Value = x, Text = x }).ToList();
+            ViewBag.Areas = statistics.Select(x => x.SectionalArea).Distinct().ToList();
+
+            ViewBag.weldGeometries = statistics.Select(x => x.WeldType).Distinct().ToList();
+            ViewBag.weldLocations = statistics.Select(x => x.WeldLocationType).Distinct().ToList();
             return View();
         }
 
