@@ -179,6 +179,7 @@ function InitMxDrawX() {
             
             BrownerMode();
 
+            mxOcx.ZoomAll();
         }
     }
 }

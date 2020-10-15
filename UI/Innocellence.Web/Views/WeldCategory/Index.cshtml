@@ -571,7 +571,7 @@
             } else {
                 var url = window.location.protocol + '//' + window.location.hostname;
                 var port = window.location.port;
-                if (mxOcx.SaveDwgToURL(url, "/beaminfo/PostDwgFile?beamid=67", "file", port)) {
+                if (mxOcx.SaveDwgToURL(url, "/beaminfo/PostDwgFile?beamid=" + $('#beamId').val(), "file", port)) {
                     alert('保存成功');
                     return true;
                 }
