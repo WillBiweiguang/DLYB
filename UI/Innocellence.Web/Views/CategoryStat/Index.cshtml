@@ -694,8 +694,103 @@
         }
         //Groove Calc
         function calculateSection() {
-            if ($("#WeldGeometry").val() == '对角焊缝' && $("#GrooveType").val() == 'I形坡口') {
-                $("#SectionResult").val($("#GrooveClearance").val() * $("#GrooveThicknessT").val() + $("#GrooveArcR1").val() * $("#WorksThicknessH2").val());
+            if ($("#WeldGeometry").val() == '对接焊缝' && $("#GrooveType").val() == 'I形坡口') {
+                $("#SectionResult").val($("#GrooveClearance").val() * $("#GrooveThicknessT").val()
+                    + $("#GrooveArcR1").val() * $("#WorksThicknessH2").val());
+            }
+            else if ($("#WeldGeometry").val() == '对接焊缝' && $("#GrooveType").val() == '单边V形坡口') {
+                $("#SectionResult").val($("#GrooveClearance").val() * $("#GrooveThicknessT").val()
+                    + ($("#GrooveThicknessT").val() - $("#BluntThickness").val()) * ($("#GrooveThicknessT").val()
+                        - $("#BluntThickness").val()) * tan($("#GrooveAngleA2").val()) * 0.5 + (($("#GrooveThicknessT").val()
+                            - $("#BluntThickness").val()) * tan($("#GrooveAngleA2").val())
+                            + $("#GrooveClearance").val() + 4) * $("#WorksThicknessH2").val() * 0.5)
+            }
+            else if ($("#WeldGeometry").val() == '对接焊缝' && $("#GrooveType").val() == 'V形坡口') {
+                $("#SectionResult").val($("#GrooveClearance").val() * $("#GrooveThicknessT").val() + ($("#GrooveThicknessT").val()
+                    - $("#BluntThickness").val()) * ($("#GrooveThicknessT").val() - $("#BluntThickness").val()) * tan(0.5 * $("#GrooveAngleA2").val())
+                    + (($("#GrooveThicknessT").val() - $("#BluntThickness").val()) * tan(0.5 * $("#GrooveAngleA2").val()) * 2 + c + 4) * $("#WorksThicknessH2").val() * 0.5);
+            }
+            else if ($("#WeldGeometry").val() == '对接焊缝' && $("#GrooveType").val() == 'J形坡口') {
+                $("#SectionResult").val(c * $("#GrooveThicknessT").val() +
+                    0.25 * 3.14 * $("#CircleArcR").val() * $("#CircleArcR").val() +
+                    ($("#CircleArcR").val() + $("#CircleArcR").val() + ($("#GrooveThicknessT").val()
+                        - $("#BluntThickness").val() - $("#CircleArcR").val()) * tan($("#GrooveAngleA2").val())) * ($("#GrooveThicknessT").val()
+                            - $("#BluntThickness").val() - $("#CircleArcR").val()) * 0.5 +
+                    ($("#GrooveClearance").val() + $("#CircleArcR").val() + ($("#GrooveThicknessT").val()
+                        - $("#BluntThickness").val() - $("#CircleArcR").val()) * tan($("#GrooveAngleA2").val()) + 4) * $("#WorksThicknessH2").val() * 0.5)
+            }
+            else if ($("#WeldGeometry").val() == '对接焊缝' && $("#GrooveType").val() == 'U形坡口') {
+                $("#SectionResult").val(S = c * $("#GrooveThicknessT").val() +
+                    0.5 * 3.14 * $("#CircleArcR").val() * $("#CircleArcR").val() +
+                    ($("#CircleArcR").val() + $("#CircleArcR").val() + ($("#GrooveThicknessT").val()
+                        - $("#BluntThickness").val() - $("#CircleArcR").val()) * tan($("#GrooveAngleA2").val())) * ($("#GrooveThicknessT").val()
+                            - $("#BluntThickness").val() - $("#CircleArcR").val()) +
+                    ($("#GrooveClearance").val() + $("#CircleArcR").val() + ($("#GrooveThicknessT").val()
+                        - $("#BluntThickness").val() - $("#CircleArcR").val()) * tan($("#GrooveAngleA2").val()) + 4) * $("#WorksThicknessH2").val());
+            }
+            else if ($("#WeldGeometry").val() == '对接焊缝' && $("#GrooveType").val() == '双面J形坡口') {
+                $("#SectionResult").val(c * $("#GrooveThicknessT").val() +
+                    0.5 * 3.14 * $("#CircleArcR").val() * $("#CircleArcR").val() +
+                    ($("#CircleArcR").val() + $("#CircleArcR").val() + ($("#WorksThicknessH3").val()
+                        - $("#CircleArcR").val()) * tan($("#GrooveAngleA2").val())) * ($("#WorksThicknessH3").val() - $("#CircleArcR").val()) * 0.5 +
+                    ($("#GrooveClearance").val() + $("#CircleArcR").val() + ($("#WorksThicknessH3").val()
+                        - $("#CircleArcR").val()) * tan($("#GrooveAngleA2").val()) + 4) * $("#WorksThicknessH2").val() * 0.5 +
+                    ($("#CircleArcR").val() + $("#CircleArcR").val() + ($("#GrooveThicknessT").val() - $("#WorksThicknessH3").val()
+                        - $("#BluntThickness").val() - $("#CircleArcR").val()) * tan($("#GrooveAngleA2").val())) * ($("#GrooveThicknessT").val()
+                            - $("#WorksThicknessH3").val() - $("#BluntThickness").val() - $("#CircleArcR").val()) * 0.5 +
+                    ($("#GrooveClearance").val() + $("#CircleArcR").val() + ($("#GrooveThicknessT").val()
+                        - $("#WorksThicknessH3").val() - $("#BluntThickness").val()
+                        - $("#CircleArcR").val()) * tan($("#GrooveAngleA2").val()) + 4) * $("#WorksThicknessH2").val() * 0.5)
+            }
+            else if ($("#WeldGeometry").val() == '对接焊缝' && $("#GrooveType").val() == '双面U形坡口') {
+                $("#SectionResult").val(c * $("#GrooveThicknessT").val() +
+                    3.14 * $("#CircleArcR").val() * $("#CircleArcR").val() +
+                    ($("#CircleArcR").val() + $("#CircleArcR").val() + ($("#WorksThicknessH3").val()
+                        - $("#CircleArcR").val()) * tan($("#GrooveAngleA2").val())) * ($("#WorksThicknessH3").val() - $("#CircleArcR").val()) +
+                    ($("#GrooveClearance").val() + $("#CircleArcR").val() + ($("#WorksThicknessH3").val()
+                        - $("#CircleArcR").val()) * tan($("#GrooveAngleA2").val()) + 4) * $("#WorksThicknessH2").val() +
+                    ($("#CircleArcR").val() + $("#CircleArcR").val() + ($("#GrooveThicknessT").val() - $("#WorksThicknessH3").val()
+                        - $("#BluntThickness").val() - $("#CircleArcR").val()) * tan($("#GrooveAngleA2").val())) * ($("#GrooveThicknessT").val()
+                            - $("#WorksThicknessH3").val() - $("#BluntThickness").val() - $("#CircleArcR").val()) +
+                    ($("#GrooveClearance").val() + $("#CircleArcR").val() + ($("#GrooveThicknessT").val()
+                        - $("#WorksThicknessH3").val() - $("#BluntThickness").val()
+                        - $("#CircleArcR").val()) * tan($("#GrooveAngleA2").val()) + 4) * $("#WorksThicknessH2").val());
+            }
+            else if ($("#WeldGeometry").val() == '熔透及部分熔透角焊缝' && $("#GrooveType").val() == '单边V形坡口') {
+                $("#SectionResult").val(c * $("#GrooveThicknessT").val() + ($("#GrooveThicknessT").val()
+                    - $("#BluntThickness").val()) * ($("#GrooveThicknessT").val() - $("#BluntThickness").val()) * tan($("#GrooveAngleA2").val()) * 0.5 +
+                    (($("#GrooveThicknessT").val() - $("#BluntThickness").val()) * tan($("#GrooveAngleA2").val()) + c + 2) * $("#GrooveArcR2").val() * 0.5 +
+                    (K1 + $("#GrooveClearance").val()) * K1 * 0.5)
+            }
+            else if ($("#WeldGeometry").val() == '熔透及部分熔透角焊缝' && $("#GrooveType").val() == 'K形坡口') {
+                $("#SectionResult").val(c * $("#GrooveThicknessT").val() +
+                    $("#WorksThicknessH1").val() * $("#WorksThicknessH1").val() * tan($("#GrooveAngleA2").val()) * 0.5
+                    + ($("#WorksThicknessH1").val() * tan($("#GrooveAngleA2").val()) + $("#GrooveClearance").val() + 2) * $("#GrooveArcR2").val() * 0.5 +
+                    ($("#GrooveThicknessT").val() - $("#WorksThicknessH1").val() - $("#BluntThickness").val()) * ($("#GrooveThicknessT").val()
+                        - $("#WorksThicknessH1").val() - $("#BluntThickness").val()) * tan($("# GrooveAngleA1").val()) * 0.5 + (($("#GrooveThicknessT").val()
+                            - $("#WorksThicknessH1").val() - $("#BluntThickness").val()) * tan($("# GrooveAngleA1").val())
+                            + $("#GrooveClearance").val() + 2) * K1 * 0.5);
+            }
+            else if ($("#WeldGeometry").val() == '熔透及部分熔透角焊缝' && $("#GrooveType").val() == 'J形坡口') {
+                $("#SectionResult").val(c * $("#GrooveThicknessT").val() +
+                    0.25 * 3.14 * $("#CircleArcR").val() * $("#CircleArcR").val() +
+                    ($("#CircleArcR").val() + $("#CircleArcR").val() + ($("#GrooveThicknessT").val()
+                        - $("#BluntThickness").val() - $("#CircleArcR").val()) * tan($("#GrooveAngleA2").val())) * (t - $("#BluntThickness").val()
+                            - $("#CircleArcR").val()) * 0.5 +
+                    ($("#GrooveClearance").val() + $("#CircleArcR").val() + ($("#GrooveThicknessT").val()
+                        - $("#BluntThickness").val() - $("#CircleArcR").val()) * tan($("#GrooveAngleA2").val()) + 4) * K * 0.5 +
+                    K1 * K1 * 0.5);
+            }
+            else if ($("#WeldGeometry").val() == '熔透及部分熔透角焊缝' && $("#GrooveType").val() == '单侧棱角焊缝') {
+                $("#SectionResult").val(c * t + $("#WorksThicknessH1").val() * $("#WorksThicknessH1").val() * tan($("#GrooveAngleA2").val()) * 0.5 +
+                    ($("#WorksThicknessH1").val() * tan($("#GrooveAngleA2").val()) + $("#GrooveClearance").val() + 2) * $("#GrooveArcR2").val() * 0.5 +
+                    (K1 + $("#GrooveClearance").val()) * K1 * 0.5);
+            }
+            else if ($("#WeldGeometry").val() == '贴角焊缝' && $("#GrooveType").val() == 'T形接头') {
+                $("#SectionResult").val($("#GrooveArcR2").val() * $("#GrooveArcR2").val() * 0.5 + K1 * K1 * 0.5);
+            }
+            else {
+                $("#SectionResult").val("");
             }
         }
         function saveArea() {
