@@ -6,7 +6,7 @@ using Infrastructure.Web.Domain.Entity;
 
 namespace Infrastructure.Web.Domain.ModelsView
 {
-    public partial class AddressView : IViewModel
+    public partial class AddressView : ViewModelBase, IViewModel
 	{	
 		public Int32 Id { get;set; }
 

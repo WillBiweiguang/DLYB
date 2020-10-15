@@ -7,7 +7,7 @@ using Infrastructure.Web.Domain.Entity;
 
 namespace Infrastructure.Web.Domain.ModelsView
 {
-    public partial class TaskListView : IViewModel
+    public partial class TaskListView : ViewModelBase, IViewModel
 	{	
 		public Int32 Id { get;set; }
 

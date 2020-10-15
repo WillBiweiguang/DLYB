@@ -440,6 +440,7 @@
         //$('[data-toggle="tooltip"]').tooltip();
         var popMenu;
         var IdCur;
+        var popObj;
 
         var initDataTable = function () {
             reinitMainPop('#ModalTable');
@@ -451,7 +452,7 @@
                 "paging": true,
                 "info": false,
                 "aoColumns": [
-                    { "mData": 'Id' },
+                    { "mData": 'Index' },
                     { "mData": 'ProjectName' },
                     { "mData": 'AddressName' },
                     { "mData": 'HanJieType' },
@@ -475,11 +476,11 @@
                 }
             }));
         };
-        var refreshSelect = function () {
-            BindChosen('/Project/GetDropdownList', $('#ProjectName'), InitChosen);
-            $.each($('.single-select '), function (i, obj) {
+        var refreshSelect = function (obj) {
+            if (obj && $(obj).prop('nodeName').toUpperCase() == 'select'.toUpperCase()) {
                 BindSelect(obj);
-            });
+                popObj = undefined;
+            }
         };
         $(document).ready(function () {
             initDataTable();
@@ -504,6 +505,7 @@
                 var url = $(this).attr('href');
                 var frame = '<iframe id="iframei" src="' + url + '" style="position:absolute; border:none; visibility:inherit; top:38px; left:0px;  height:100%; width:100%; z-index:-1; filter: progid:DXImageTransform.Microsoft.Alpha(style=0,opacity=0);"></iframe>';
                 $('#rightPanel').append(frame);
+                popObj = $(this).parent().find('select');
                 $('#rightPanel').show(300);
             });
             $('#ModalTable').on('hide.bs.modal', function () {
@@ -636,7 +638,7 @@
             $('#closePanel').on('click', function () {
                 $('#rightPanel').hide(300);
                 $('#iframei').remove();
-                refreshSelect();
+                refreshSelect(popObj);
             });
         });
 

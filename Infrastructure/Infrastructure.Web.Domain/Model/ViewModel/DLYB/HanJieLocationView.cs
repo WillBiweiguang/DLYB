@@ -6,7 +6,7 @@ using Infrastructure.Web.Domain.Entity;
 
 namespace Infrastructure.Web.Domain.ModelsView
 {
-    public partial class HanJieLocationView : IViewModel
+    public partial class HanJieLocationView : ViewModelBase, IViewModel
 	{	
 		public Int32 Id { get;set; }
 
