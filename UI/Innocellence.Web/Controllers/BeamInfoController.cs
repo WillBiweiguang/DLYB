@@ -52,13 +52,13 @@ namespace Innocellence.Web.Controllers
 
         public JsonResult NextBeam(int projectId, int beamId)
         {
-            var beam = _beamInfoService.GetList<BeamInfoView>(1, x => !x.IsDeleted && x.ProjectId == projectId && x.Id != beamId
+            var beam = _beamInfoService.GetList<BeamInfoView>(1, x => !x.IsDeleted && x.ProjectId == projectId && x.Id == beamId
             && x.ProcessStatus != (int)BeamProcessStatus.Complete).FirstOrDefault();
             if(beam == null)
             {
                 return new JsonResult { Data = new { result = "failed", msg = "没有未完成的梁段" }, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
             }
-            return new JsonResult { Data = new { result = "success", data = beam.Id }, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
+            return new JsonResult { Data = new { result = "success", data = beam.Id , data1=beam.ProjectId}, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
         }
 
         public override ActionResult GetList()
