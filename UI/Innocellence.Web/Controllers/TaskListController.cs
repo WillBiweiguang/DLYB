@@ -179,7 +179,7 @@ namespace DLYB.Web.Controllers
                 var workbook = new XSSFWorkbook(file);
                 var sheet1 = workbook.GetSheet("焊材");
 
-                // 导出 答卷 
+                // 导出 焊材详情表 
                 //var answer = _pollingResultService.GetList(Id);
                 var reportList1 = _weldCategoryService.Repository.Entities.Where(a => !a.IsDeleted && a.BeamId == beamId).ToList();
                 int i = 1;
@@ -195,13 +195,13 @@ namespace DLYB.Web.Controllers
                     row.CreateCell(j++).SetCellValue(v.WeldType);
                     row.CreateCell(j++).SetCellValue(v.Thickness);
                     row.CreateCell(j++).SetCellValue(v.WeldLocation);
-                    row.CreateCell(j++).SetCellValue(v.ConsumeFactor);
                     row.CreateCell(j++).SetCellValue(v.SectionArea);
                     row.CreateCell(j++).SetCellValue(v.WeldLength);
-                    row.CreateCell(j++).SetCellValue(v.WeldQuanlity);
                     row.CreateCell(j++).SetCellValue(v.WeldingNumber);
                     row.CreateCell(j++).SetCellValue(v.Quantity);
                     row.CreateCell(j++).SetCellValue(v.BeamNum);
+                    row.CreateCell(j++).SetCellValue(v.WeldQuanlity);
+                    row.CreateCell(j++).SetCellValue(v.ConsumeFactor);
                     row.CreateCell(j++).SetCellValue(v.ConsumeFactor*v.WeldQuanlity);
 
                 }
