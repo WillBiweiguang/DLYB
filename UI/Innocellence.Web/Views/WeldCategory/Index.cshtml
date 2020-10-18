@@ -334,6 +334,7 @@
             ; //编辑模态窗口参数
         var tableModalSetting = {}; //数据列表窗口参数
         var isViewModel = @ViewBag.ViewModel;
+        var lstPaging = {};
 
         $(document).ready(function () {
             var beamId = $('')
@@ -365,7 +366,7 @@
                         "render": function (data, type, full, meta) {
                             var oprStr = '';
                             if (!isViewModel) {
-                                oprStr += '<a href="#" onclick="LEAP.Common.MainPop.ShowUpdateInfo(\'' + full.Id + '\');return false;" class="artDailog btn btn-info  btn-xs" style="margin-right:4px;" data-toggle="tooltip" data-placement="top" title="编辑"><i class="fa fa-pencil"></i></a>';
+                                oprStr += '<a href="#" onclick="showEditForm(\'' + full.Id + '\');return false;" class="artDailog btn btn-info  btn-xs" style="margin-right:4px;" data-toggle="tooltip" data-placement="top" title="编辑"><i class="fa fa-pencil"></i></a>';
                             }
                             oprStr += '<a href="#" onclick="DingWei(\'' + full.HandleID + '\');return false;" class="artDailog btn btn-info  btn-xs" style="margin-right:4px;" data-toggle="tooltip" data-placement="top" title="定位">定位</a>';
                             if (!isViewModel) {
@@ -375,6 +376,7 @@
                         }
                     }],
                 fnDrawCallback: function () {
+                    lstPaging.Index = LEAP.Common.MainPop.options.dataTable.fnSettings()._iDisplayStart;
                     $('[data-toggle="tooltip"]').tooltip();
                 }
             }));

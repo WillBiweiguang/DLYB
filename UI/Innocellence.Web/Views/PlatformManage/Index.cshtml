@@ -44,7 +44,7 @@
             <li role="presentation"><a href="#partTwo" role="tab" data-toggle="tab">用户管理</a></li>
             if (ViewBag.IsSuperAdmin!=null&& ViewBag.IsSuperAdmin==true)
             {
-            <li role="presentation"><a href="/SysMenu/Index">权限管理</a></li>
+            @*<li role="presentation"><a href="/SysMenu/Index">权限管理</a></li>*@
             }
         }
         else if (ViewBag.IsRole)
@@ -117,9 +117,9 @@
                                     <table class="table table-bordered table-hover data-table dataTable no-footer" id="DataTables_Table_0" role="grid">
                                         <thead>
                                             <tr role="row">
-                                                <th class="sorting_disabled" rowspan="1" colspan="1">用户名</th>
+                                                <th class="sorting_disabled" rowspan="1" colspan="1">用户名(手机号)</th>
                                                 <th class="sorting_disabled" rowspan="1" colspan="1">真实姓名</th>
-                                                <th class="sorting_disabled" rowspan="1" colspan="1">员工ID</th>
+                                                <th class="sorting_disabled" rowspan="1" colspan="1">机构</th>
                                                 <th class="sorting_disabled" rowspan="1" colspan="1">邮箱</th>
                                                 <th style="width: 8%;" class="sorting_disabled" rowspan="1" colspan="1">操作</th>
                                             </tr>
@@ -490,8 +490,8 @@
                     var loadView;
         var htmlStr = '<tr role="row">' +
                       '<td>{{: UserName}}</td>' +
-                      '<td>{{: UserTrueName}}</td>' +
-                      '<td>{{: UserId}}</td>' +
+                      '<td>{{: UserTrueName}}</td>' +            
+            '<td>{{: Department}}</td>' +
                       '<td>{{: Email}}</td>' +
                       '<td><a href="#" onclick="EditUser(\'{{: Id}}\', \'{{: Department}}\');return false;" class="artDailog btn btn-info  btn-xs" style="margin-right: 4px;" data-toggle="modal" data-placement="top" title="编辑"><i class="fa fa-pencil"></i></a><a href="#" onclick="DeleteUserBtnClick(\'{{: Id}}\');return false;" class="btn btn-danger btn-xs" data-toggle="modal" data-placement="top" title="删除"><i class="fa fa-trash-o"></i></a></td>' +
                       '</tr>';
