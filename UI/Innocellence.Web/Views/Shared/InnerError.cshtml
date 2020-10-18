@@ -1,0 +1,26 @@
+﻿@*@model System.Web.Mvc.HandleErrorInfo
+
+    @{
+        ViewBag.Title = "错误";
+    }
+
+    <h1 class="text-danger">错误。</h1>
+    <h2 class="text-danger">处理你的请求时出错。</h2>
+    <h3>Message:@Model.Exception.Message</h3>
+    <h3>Stack:@Model.Exception.StackTrace</h3>*@
+
+@model System.String
+@{
+    ViewBag.Title = "发生错误";
+}
+
+<h2>系统发生错误</h2>
+<p>错误信息:</p>
+@if (Model != null)
+{
+
+    <p>@Model</p>
+
+}
+
+

@@ -13,7 +13,7 @@ namespace Infrastructure.Web.Domain.Contracts
     public interface ISysUserService : IDependency,IBaseService<SysUser>
     {
          UserManager<SysUser, int> UserContext { get; set; }
-         SysUser UserLoginAsync(string strUser, string strPassword);
+         SysUser UserLoginAsync(string strUser, string strPassword, bool verifyPwd = true);
 
          SysUser AutoLogin(IIdentity objWI);
          SysUser AutoLogin(string strUser);

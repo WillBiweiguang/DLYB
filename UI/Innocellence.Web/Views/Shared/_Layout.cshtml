@@ -97,10 +97,6 @@
             display: none;
         }
 
-        #breadcrumbs {
-            display: none;
-        }
-
         .main-content {
             margin-left: 0px !important;
         }
@@ -295,12 +291,29 @@
                     <ul class="breadcrumb">
                         <li>
                             <i class="ace-icon fa fa-home home-icon"></i>
-                            <a href="#">Home</a>
+                            <a href="/Project/Index">项目列表</a>
                         </li>
-                        @*<li>
-                                <a href="#">Tables</a>
-                            </li>
-                            <li class="active">Simple &amp; Dynamic</li>*@
+                        @if (!string.IsNullOrEmpty(ViewBag.ProjectName))
+                        {
+                            if (!string.IsNullOrEmpty(ViewBag.BeamName))
+                            {
+                                <li>
+                                    <i class="ace-icon fa "></i>
+                                    <a href="/BeamInfo/Index?ProjectId=@ViewBag.ProjectId">@ViewBag.ProjectName</a>
+                                </li>
+                                <li>
+                                    <i class="ace-icon fa active"></i>
+                                    <span>@ViewBag.BeamName</span>
+                                </li>
+                            }
+                            else
+                            {
+                                <li>
+                                    <i class="ace-icon fa active"></i>
+                                    <a href="/BeamInfo/Index?ProjectId=@ViewBag.ProjectId">@ViewBag.ProjectName</a>
+                                </li>
+                            }
+                        }
                     </ul>
                     <!-- /.breadcrumb -->
                     <!-- #section:basics/content.searchbox -->

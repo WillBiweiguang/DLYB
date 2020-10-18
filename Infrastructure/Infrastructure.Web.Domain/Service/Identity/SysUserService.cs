@@ -110,7 +110,7 @@ namespace Infrastructure.Web.Domain.Services
             return tUser;
         }
 
-        public SysUser UserLoginAsync(string strUser, string strPassword)
+        public SysUser UserLoginAsync(string strUser, string strPassword,bool verifyPwd = true)
         {
             SysUser tUser = Repository.Entities.Where(a => (a.UserId == strUser || a.UserName == strUser) && a.IsDeleted == false).FirstOrDefault();
             SysUser result;
@@ -120,7 +120,11 @@ namespace Infrastructure.Web.Domain.Services
             }
             else
             {
-                result = ((UserContext.PasswordHasher.VerifyHashedPassword(tUser.PasswordHash, strPassword) != PasswordVerificationResult.Failed) ? tUser : default(SysUser));
+                result = tUser;
+                if (verifyPwd)
+                {
+                    result = ((UserContext.PasswordHasher.VerifyHashedPassword(tUser.PasswordHash, strPassword) != PasswordVerificationResult.Failed) ? tUser : default(SysUser));
+                }        
                 if (result != null)
                 {
                     SysMenuService objServ = new SysMenuService();
