@@ -42,6 +42,7 @@
                 <input class="form-control" type="text" id="search_condition" name="search_condition" placeholder="图号">
                 <input id="locatedId" name="locatedId" type="hidden" value="0" />
                 <a href="#" class="btn btn-info btn-sm" id="btnSearch" data-toggle="tooltip" data-placement="top" title="查询条件"><i class="fa fa-search">查询</i></a>
+                <input type="button" id="btnShowAll" class="btn btn-sm" value="显示所有" style="display:none" onclick="showAll();">
             </div>
             <div class="form-group">
                 @if (ViewBag.ViewModel == 0)
@@ -529,7 +530,8 @@
                         DrawCircleOfArrow(r.data);
                     }
                     $('#locatedId').val(r.Id);
-                    $('#btnSearch').click();
+                    $('#btnSearch').click();             
+                    $('#btnShowAll').show();
                     setTimeout(function () { $('#locatedId').val('0'); }, 300);
                 } else {
                     alert('未获取到焊缝位置或点击的元素不是焊缝');
@@ -540,8 +542,13 @@
         function DingWei(hd) {
             ZoomByHandle(hd);
             if ($('#tableDiv').is(':visible')) {
-                $('#btnCollapse').click();
-            }
+                $('#btnCollapse').click();                
+            }            
+        }
+        function showAll() {
+            $('#search_condition').val('');
+            $('#btnSearch').click();
+            $('#btnShowAll').hide();
         }
         function requestApprove() {
             if (!confirm('提交将自动保存当前文件到服务器，确认提交审核？')) {
