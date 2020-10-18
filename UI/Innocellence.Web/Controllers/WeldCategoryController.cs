@@ -46,7 +46,9 @@ namespace Innocellence.FaultSearch.Controllers
                 if (beam != null)
                 {
                     ViewBag.BeamId = beamId;
+                    ViewBag.BeamName = beam.DwgFile;
                     ViewBag.ProjectId = beam.ProjectId;
+                    ViewBag.ProjectName = beam.ProjectName;
                     ViewBag.FileName = beam.DwgFile;
                     ViewBag.FilePath = GetFilePath(beam.ProjectId, beam.DwgFile);
                     ViewBag.FileServerPath = GetFileAbsolutePath(beam.ProjectId, beam.DwgFile);
@@ -97,7 +99,7 @@ namespace Innocellence.FaultSearch.Controllers
         public override ActionResult Edit(string Id)
         {
             WeldCategoryLabelingView model = new WeldCategoryLabelingView();
-            if (!string.IsNullOrEmpty(Id))
+            if (!string.IsNullOrEmpty(Id) && Id != "0")
             {
                 model = GetObject(Id);
                 var beam = _beamInfoService.GetList<BeamInfoView>(1, x => x.Id == model.BeamId).FirstOrDefault();
@@ -106,12 +108,16 @@ namespace Innocellence.FaultSearch.Controllers
                     ViewBag.BeamId = beam.Id;
                     ViewBag.ProjectId = beam.ProjectId;
                     ViewBag.FileName = beam.DwgFile;
+                    var statistics = _weldCategoryStatisticsVService.GetList<WeldCategoryStatisticsVView>(int.MaxValue, x => !x.IsDeleted && x.BeamId == beam.Id).ToList();
+                    ViewBag.Figures = _weldCategoryService.Repository.Entities.Select(x => x.FigureNumber).Distinct().Select(x => new SelectListItem { Value = x, Text = x }).ToList();
+                    ViewBag.Boards = _weldCategoryService.Repository.Entities.Select(x => x.BoardNumber).Distinct().Select(x => new SelectListItem { Value = x, Text = x }).ToList();
+                    ViewBag.Areas = statistics.Select(x => x.SectionalArea).Distinct().ToList();
+                    ViewBag.weldGeometries = statistics.Select(x => x.WeldType).Distinct().ToList();
+                    ViewBag.weldLocations = statistics.Select(x => x.WeldLocationType).Distinct().ToList();
+                    return View(model);
                 }
-                ViewBag.weldCategorys = _weldCategoryService.Repository.Entities.Where(a => !a.IsDeleted).ToList();
-                ViewBag.weldGeometries = _weldGeometryService.Repository.Entities.Where(x => !x.IsDeleted).ToList();
-                ViewBag.weldLocations = _weldLocationService.Repository.Entities.Where(x => !x.IsDeleted).ToList();
             }
-            return View(model);
+            return PartialView("InnerError","无法找到焊缝记录，请在焊缝列表中寻找对应焊缝内容并修改。");
         }
 
         public ActionResult cadwelding()

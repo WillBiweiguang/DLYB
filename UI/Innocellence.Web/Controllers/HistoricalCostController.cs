@@ -24,6 +24,7 @@ namespace DLYB.Web.Controllers
     {
         private readonly IHistoricalCostService _service;
         private readonly ISysUserService _sysUserService;
+        private readonly IProjectService _projectService;
         public HistoricalCostController(IHistoricalCostService service,ISysUserService sysUserService) : base(service)
         {
             _service = service;
@@ -40,6 +41,7 @@ namespace DLYB.Web.Controllers
         public ActionResult Template()
         {
             string fileName = Server.MapPath("~/Files/Template/历史消耗.xlsx");
+            string projectId = Request["projectId"];
 
             return File(fileName, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "历史消耗_Template.xlsx");
         }
