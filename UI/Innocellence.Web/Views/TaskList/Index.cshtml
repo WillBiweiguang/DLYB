@@ -76,7 +76,7 @@
                             <th>@T("审核状态")</th>
                             <th>@T("提交人")</th>
                             <th>@T("提交日期")</th>
-                            <th style="width:10%;">@T("操作")</th>
+                            <th style="width:15%;max-width:180px;">@T("操作")</th>
                         </tr>
                     </thead>
                 </table>
@@ -357,8 +357,8 @@
                         "render": function (data, type, full, meta) {
                             var opstr = '<a href="#" onclick="ShowWeldingDetail(\'' + full.BeamId + '\');" class="artDailog btn btn-info  btn-xs pop-btn" style="margin-right:4px;" data-toggle="tooltip" data-placement="top" title="焊材详情统计"><i class="ace-icon glyphicon glyphicon-align-left"></i></a>';
                             if (isapprover == 1 && full.TaskStatus == tastStatus.pending) {
-                                opstr = opstr + '<a href="#" onclick="approveTask(\'' + full.Id + '\',1);return false;" class="artDailog btn btn-info  btn-xs" style="margin-right:4px;" data-toggle="tooltip" data-placement="top" title="审核"><i class="ace-icon glyphicon glyphicon-ok"></i></a>';
-                                opstr = opstr + '<a href="#" onclick="approveTask(\'' + full.Id + '\',0);return false;" class="artDailog btn btn-info  btn-xs" style="margin-right:4px;" data-toggle="tooltip" data-placement="top" title="驳回"><i class="ace-icon glyphicon glyphicon-remove"></i></a>';
+                                opstr = opstr + '<a href="#" onclick="approveTask(\'' + full.Id + '\',1);return false;" class="artDailog btn btn-info  btn-xs" style="margin-right:4px;" data-toggle="tooltip" data-placement="top" title="通过">通过</a>';
+                                opstr = opstr + '<a href="#" onclick="approveTask(\'' + full.Id + '\',0);return false;" class="artDailog btn btn-info  btn-xs" style="margin-right:4px;" data-toggle="tooltip" data-placement="top" title="驳回">驳回</a>';
                             }
                             if ((full.TaskStatus == tastStatus.new || full.TaskStatus == tastStatus.rejected) && userId == full.CreatedUserID) {
                                 opstr = opstr + '<a href="#" onclick="raiseApproval(\'' + full.Id + '\');return false;" class="artDailog btn btn-info  btn-xs" style="margin-right:4px;" data-toggle="tooltip" data-placement="top" title="提交审核"><i class="ace-icon glyphicon glyphicon-cog"></i></a>';
@@ -491,7 +491,11 @@
                 });
         }
         function approveTask(id, option) {
-            if (confirm('是否确认审核通过？')) {
+            var message = '是否确认通过审核？';
+            if (option = 0) {
+                message = '是否确认驳回审核？';
+            }
+            if (confirm(message)) {
                 $.ajax('ApproveTask?Id=' + id + '&option=' + option).done(function (data) {
                     if (data.result == 'failed') {
                         alert('操作失败，详情：' + data.message);
