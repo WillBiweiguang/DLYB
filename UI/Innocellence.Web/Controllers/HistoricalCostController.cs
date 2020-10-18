@@ -25,10 +25,12 @@ namespace DLYB.Web.Controllers
         private readonly IHistoricalCostService _service;
         private readonly ISysUserService _sysUserService;
         private readonly IProjectService _projectService;
-        public HistoricalCostController(IHistoricalCostService service,ISysUserService sysUserService) : base(service)
+        public HistoricalCostController(IHistoricalCostService service,ISysUserService sysUserService,
+            IProjectService projectService) : base(service)
         {
             _service = service;
             _sysUserService = sysUserService;
+            _projectService = projectService;
         }
         // GET: Address
         public override ActionResult Index()
@@ -40,10 +42,17 @@ namespace DLYB.Web.Controllers
 
         public ActionResult Template()
         {
+            string downloadFileName = "历史消耗_Template.xlsx";
             string fileName = Server.MapPath("~/Files/Template/历史消耗.xlsx");
             string projectId = Request["projectId"];
-
-            return File(fileName, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "历史消耗_Template.xlsx");
+            int pid = 0;
+            if(!string.IsNullOrEmpty(projectId)&& int.TryParse(projectId,out pid))
+            {
+                var project = _projectService.GetList<ProjectView>(1, x => x.Id == pid).FirstOrDefault();
+                downloadFileName = project == null ? downloadFileName : project.ProjectName + "_" + downloadFileName;
+            }
+            
+            return File(fileName, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", downloadFileName);
         }
 
         [HttpPost]

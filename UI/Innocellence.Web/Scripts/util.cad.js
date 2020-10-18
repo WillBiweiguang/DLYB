@@ -4835,6 +4835,35 @@ function GetColorIDByType(myWeldArray) {
     return colID;
 }
 
+//根据handle定点缩放
+function ZoomByHandle(m_handle) {
+    if (m_handle.indexOf(',') > -1) {
+        var handles = m_handle.split(',');
+        m_handle = handles[0];
+    }
+    //删掉上一个画圈的handleid
+    //if (lastCircleHandle > 0) {
+    //    deleClrByID(lastCircleHandle);
+    //    lastCircleHandle = 0;
+    //}
+    var mxOcx = document.all.item("MxDrawXCtrl");
+    var database = mxOcx.GetDatabase();
+    var ent = database.HandleToObject(m_handle);
+    var HatchArrow = ent;
+    var PolylineArray = HatchArrow.GetPolylines();
+    var polyline = PolylineArray.AtObject(0);
+    var pt1 = polyline.GetPointAt(0);
+
+    var l1 = Math.pow((polyline.GetPointAt(0).x - polyline.GetPointAt(1).x), 2);
+    var l2 = Math.pow((polyline.GetPointAt(0).y - polyline.GetPointAt(1).y), 2);
+    var mtempL = Math.sqrt((l1 + l2), 2);
+    var qt = 8 * mtempL;
+    mxOcx.ZoomWindow(pt1.x - qt, pt1.y - qt, pt1.x + qt, pt1.y + qt);
+    //更新视区显示
+    mxOcx.UpdateDisplay();
+    //return mcirlId;
+}
+
 
 document.getElementById("MxDrawXCtrl").ImplementCommandEventFun = DoCommandEventFunc;
 document.getElementById("MxDrawXCtrl").ImpDynWorldDrawFun = DoDynWorldDrawFun;
