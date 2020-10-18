@@ -111,36 +111,31 @@ namespace Innocellence.Web.Controllers
             }
             if (Request.Files.Count > 0)
             {
-                var file = Request.Files[0];                
-                objModal = objModal ?? new BeamInfoView();
-                objModal.DwgFile = System.IO.Path.GetFileName(file.FileName);
-                objModal.ProjectId = ProjectId;
-                var fileExtension = System.IO.Path.GetExtension(file.FileName);
-                if (fileExtension.ToLower() != ".dwg")
+                for (int i = 0; i < Request.Files.Count; i++)
                 {
-                    var result = GetErrorJson();
-                    result.Message = new JsonMessage(103, "请上传dwg文件");
-                    return Json(result, JsonRequestBehavior.AllowGet);
+                    var file = Request.Files[i];
+                    objModal = objModal ?? new BeamInfoView();
+                    objModal.DwgFile = System.IO.Path.GetFileName(file.FileName);
+                    objModal.ProjectId = ProjectId;
+                    var fileExtension = System.IO.Path.GetExtension(file.FileName);
+                    if (fileExtension.ToLower() != ".dwg")
+                    {
+                        var result = GetErrorJson();
+                        result.Message = new JsonMessage(103, "请上传dwg文件");
+                        return Json(result, JsonRequestBehavior.AllowGet);
+                    }
+
+                    if (!System.IO.Directory.Exists(Server.MapPath("/Files/BeamInfo/" + ProjectId + SLASH)))
+                    {
+                        System.IO.Directory.CreateDirectory(Server.MapPath("/Files/BeamInfo/" + ProjectId + SLASH));
+                    }
+                    string path = "/Files/BeamInfo/" + ProjectId + SLASH + objModal.DwgFile;
+                    file.SaveAs(Server.MapPath(path));
+                    if (!_beamInfoService.Repository.Entities.Any(x => x.ProjectId == ProjectId && x.DwgFile == objModal.DwgFile && !x.IsDeleted))
+                    {
+                        _beamInfoService.InsertView(objModal);
+                    }
                 }
-                
-                if (!System.IO.Directory.Exists(Server.MapPath("/Files/BeamInfo/"+ ProjectId+ SLASH)))
-                {
-                    System.IO.Directory.CreateDirectory(Server.MapPath("/Files/BeamInfo/" + ProjectId + SLASH));
-                }
-                string path = "/Files/BeamInfo/" + ProjectId + SLASH + objModal.DwgFile;
-                file.SaveAs(Server.MapPath(path));
-                if (!_beamInfoService.Repository.Entities.Any(x => x.ProjectId == ProjectId && x.DwgFile == objModal.DwgFile && !x.IsDeleted))
-                {
-                    _beamInfoService.InsertView(objModal);
-                }
-                //if (string.IsNullOrEmpty(Id) || Id == "0")
-                //{
-                //    _service.InsertView(objModal);
-                //}
-                //else
-                //{
-                //    _service.UpdateView(objModal);
-                //}
             }
             return Json(doJson(null), JsonRequestBehavior.AllowGet);
         }
