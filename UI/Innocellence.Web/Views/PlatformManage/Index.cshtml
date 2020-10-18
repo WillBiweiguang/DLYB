@@ -811,11 +811,11 @@
                 return false;
             }
 
-            if (checkPass(newPWD) < 3) {
-                alert("新密码复杂度不够, 请重新输入(8位及以上, 由数字及大小写英文字母组成.)");
-                $(modalId + ' #new-password').focus();
-                return false;
-            }
+            //if (checkPass(newPWD) < 3) {
+            //    alert("新密码复杂度不够, 请重新输入(8位及以上, 由数字及大小写英文字母组成.)");
+            //    $(modalId + ' #new-password').focus();
+            //    return false;
+            //}
 
             if (newPWD != confirmPWD) {
                 alert("两次输入的新密码不同, 请重新输入.");
