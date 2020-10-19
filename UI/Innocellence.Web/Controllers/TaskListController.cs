@@ -32,15 +32,18 @@ namespace DLYB.Web.Controllers
         private readonly ISysUserRoleService _sysUserRoleService;
         private readonly IProjectService _projectService;
         private readonly ISysUserService _sysUserService;
+        public readonly IBeamInfoService _beamInfoService;
         public TaskListController(ITaskListService TaskListService,
             IWeldCategoryLabelingService weldCategoryService,
             IWeldCategoryStatisticsVService wcsvService,
+            IBeamInfoService beamInfoService,
         ISysUserRoleService sysUserRoleService,IProjectService projectService,
             ISysUserService sysUserService) : base(TaskListService)
         {
             _TaskListService = TaskListService;
             _weldCategoryService = weldCategoryService;
             _wcsvService = wcsvService;
+            _beamInfoService = beamInfoService;
             _sysUserRoleService = sysUserRoleService;
             _projectService = projectService;
             _sysUserService = sysUserService;
@@ -183,13 +186,24 @@ namespace DLYB.Web.Controllers
                 //var answer = _pollingResultService.GetList(Id);
                 var reportList1 = _weldCategoryService.Repository.Entities.Where(a => !a.IsDeleted && a.BeamId == beamId).ToList();
                 int i = 1;
+                string beamName = "";
+                int projectId = 0;
+                string projectName = "";
                 foreach (var v in reportList1)
                 {
+                    var beam = _beamInfoService.Repository.Entities.FirstOrDefault(x => x.Id == v.BeamId);
+                    if (beam.DwgFile.IndexOf("dwg") > 0)
+                    {
+                        beamName = beam.DwgFile.Substring(0, beam.DwgFile.IndexOf("dwg") - 1);
+                        projectId = beam.ProjectId;
+                        var project=_projectService.Repository.Entities.FirstOrDefault(x => x.Id == projectId);
+                        projectName = project.ProjectName;
+                    }
                     int j = 0;
                     var row = sheet1.CreateRow(i++);
                     row.CreateCell(j++).SetCellValue(i-1);
-                    row.CreateCell(j++).SetCellValue(v.BeamId);
-                    row.CreateCell(j++).SetCellValue(v.BeamId);
+                    row.CreateCell(j++).SetCellValue(projectName);
+                    row.CreateCell(j++).SetCellValue(beamName);
                     row.CreateCell(j++).SetCellValue(v.FigureNumber);
                     row.CreateCell(j++).SetCellValue(v.BoardNumber);
                     row.CreateCell(j++).SetCellValue(v.WeldType);
