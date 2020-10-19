@@ -294,7 +294,7 @@ function GetWelding() {
                         midP.x = x;
                         midP.y = y;
                         var MObjectID = HatchArrow.handle;
-                        var myArrowtest = new myArrow(MObjectID, pt2, pt1, pt3, midP)
+                        var myArrowtest = new myArrow(MObjectID, pt2, pt1, pt3, midP);
                         ArrowArray[ArrowArray.length] = myArrowtest;
                     }
 
@@ -306,7 +306,7 @@ function GetWelding() {
     var m_ResWeldArr = [];
     for (var i = 0; i < NSArrowArray.length; i++) {
         var myWeld = GetWeldingType(NSArrowArray[i]);
-        if (myWeld == null) {
+        if (myWeld == null || myWeld.myWelType == "") {
             continue;
         }
         m_ResWeldArr.push(myWeld);

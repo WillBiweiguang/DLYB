@@ -22,12 +22,13 @@ namespace Innocellence.FaultSearch.Controllers
         private readonly IWeldLocationService _weldLocationService;
         private readonly ITaskListService _taskListService;
         private readonly IWeldCategoryStatisticsVService _weldCategoryStatisticsVService;
+        private readonly IProjectService _projectService;
 
         private readonly string baseUrl = "http://42.202.130.245:3001/";
         public WeldCategoryController(IWeldCategoryLabelingService weldCategoryService,
             IBeamInfoService beamInfoService, IWeldGeometryService weldGeometryService,
             IWeldLocationService weldLocationService, ITaskListService taskListService,
-            IWeldCategoryStatisticsVService weldCategoryStatisticsVService) : base(weldCategoryService)
+            IWeldCategoryStatisticsVService weldCategoryStatisticsVService,IProjectService projectService) : base(weldCategoryService)
         {
             _weldCategoryService = weldCategoryService;
             _beamInfoService = beamInfoService;
@@ -36,6 +37,7 @@ namespace Innocellence.FaultSearch.Controllers
             baseUrl = ConfigurationManager.AppSettings["WebUrl"];
             _taskListService = taskListService;
             _weldCategoryStatisticsVService = weldCategoryStatisticsVService;
+            _projectService = projectService;
         }
         public override ActionResult Index()
         {
@@ -48,7 +50,8 @@ namespace Innocellence.FaultSearch.Controllers
                     ViewBag.BeamId = beamId;
                     ViewBag.BeamName = beam.DwgFile;
                     ViewBag.ProjectId = beam.ProjectId;
-                    ViewBag.ProjectName = beam.ProjectName;
+                    ViewBag.ProjectName = string.IsNullOrEmpty(beam.ProjectName) ? _projectService.Repository.Entities.FirstOrDefault(x => x.Id == beam.ProjectId).ProjectName
+                        : beam.ProjectName;
                     ViewBag.FileName = beam.DwgFile;
                     ViewBag.FilePath = GetFilePath(beam.ProjectId, beam.DwgFile);
                     ViewBag.FileServerPath = GetFileAbsolutePath(beam.ProjectId, beam.DwgFile);

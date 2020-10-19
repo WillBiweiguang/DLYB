@@ -567,13 +567,14 @@
             }
         }
         function nextBeam(projectid, beamid) {
-            $.get('/Beaminfo/NextBeam', { projectId: projectid, beamId: beamid }).done(function (r) {
-                if (r.result == 'success') {
-                    window.location = '/CategoryStat/index?projectId='+r.data1 +'&beamId=' + r.data;
-                } else {
-                    alert('没有未完成的梁段');
-                }
-            });
+            window.location = '/BeamInfo/index?projectId=' + projectid;
+            //$.get('/Beaminfo/NextBeam', { projectId: projectid, beamId: beamid }).done(function (r) {
+            //    if (r.result == 'success') {
+            //        window.location = '/CategoryStat/index?projectId='+r.data1 +'&beamId=' + r.data;
+            //    } else {
+            //        alert('没有未完成的梁段');
+            //    }
+            //});
         }
         function DeleteData(id) {
             if (confirm('您确认删除此记录吗? ')) {
