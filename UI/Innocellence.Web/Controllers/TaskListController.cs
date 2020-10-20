@@ -120,6 +120,7 @@ namespace DLYB.Web.Controllers
             expression = expression.AndAlso<WeldCategoryLabeling>(x => x.IsDeleted != true && x.BeamId == beamId);
             int rowCount = gridRequest.PageCondition.RowCount;
             List<WeldCategoryLabelingView> listEx = _weldCategoryService.GetList< WeldCategoryLabelingView>(expression, gridRequest.PageCondition);
+            listEx = TableListHelper.GenerateIndex(listEx, gridRequest.PageCondition);
             return this.GetPageResult(listEx, gridRequest);
         }
         public ActionResult GetWeldingDownloadList()
@@ -130,6 +131,7 @@ namespace DLYB.Web.Controllers
             expression = expression.AndAlso<WeldCategoryStatisticsV>(x => x.IsDeleted != true );
             int rowCount = gridRequest.PageCondition.RowCount;
             List<WeldCategoryStatisticsVView> listEx = _wcsvService.GetList<WeldCategoryStatisticsVView>(expression, gridRequest.PageCondition);
+            listEx = TableListHelper.GenerateIndex(listEx, gridRequest.PageCondition);
             return this.GetPageResult(listEx, gridRequest);
         }
         [HttpPost]

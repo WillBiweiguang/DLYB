@@ -91,13 +91,19 @@
                 "paging": true,
                 "info": false,
                 "aoColumns": [
-                    { "mData": 'Id' },
+                    { "mData": 'Index' },
                     { "mData": 'ProjectName' },
                     { "mData": 'AddressName' },
                     { "mData": 'WeldType' },
                     { "mData": 'WeldingModel' }
                 ],
-
+                "columnDefs": [
+                    {
+                        "targets": 0,
+                        "render": function (data, type, full, meta) {
+                            return full.Index;
+                        }
+                    }],
                 fnDrawCallback: function () {
                     $('[data-toggle="tooltip"]').tooltip();
                 }
