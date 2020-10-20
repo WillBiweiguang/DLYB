@@ -62,6 +62,7 @@
                             <th>@T("厂址")</th>
                             <th>@T("焊材类型")</th>
                             <th>@T("焊材型号")</th>
+                            <th>@T("焊缝截面积")</th>
                         </tr>
                     </thead>
                 </table>
@@ -91,13 +92,19 @@
                 "paging": true,
                 "info": false,
                 "aoColumns": [
-                    { "mData": 'Id' },
+                    { "mData": 'Index' },
                     { "mData": 'ProjectName' },
                     { "mData": 'AddressName' },
                     { "mData": 'WeldType' },
-                    { "mData": 'WeldingModel' }
+                    { "mData": 'WeldingModel' },
+                    { "mData": 'SectionalArea' }
                 ],
-
+                "columnDefs": [{
+                    "targets": 0,
+                    "render": function (data, type, full, meta) {
+                        return full.Id;
+                    }
+                }],
                 fnDrawCallback: function () {
                     $('[data-toggle="tooltip"]').tooltip();
                 }

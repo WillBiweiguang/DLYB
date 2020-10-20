@@ -247,12 +247,28 @@ namespace DLYB.Web.Controllers
                 //var answer = _pollingResultService.GetList(Id);
                 var reportList1 = _wcsvService.Repository.Entities.Where(a => !a.IsDeleted).ToList();
                 int i = 1;
+                string beamName = "";
+                int projectId = 0;
+                string projectName = "";
+                double weldQuantity = 0;
                 foreach (var v in reportList1)
                 {
+                    //var beam = _beamInfoService.Repository.Entities.FirstOrDefault(x => x.Id == v.BeamId);
+                    //if (beam.DwgFile.IndexOf("dwg") > 0)
+                    //{
+                    //    projectId = beam.ProjectId;
+                    //    var project = _projectService.Repository.Entities.FirstOrDefault(x => x.ProjectName == v.ProjectName);
+                    //    projectName = project.ProjectName;
+                    //    var weld=_weldCategoryService.Repository.Entities.Where(a =>  a.BeamId == beamId ).ToList();
+                    //    foreach(var w in weld)
+                    //    {
+                    //        weldQuantity += w.WeldQuanlity;
+                    //    }
+                    //}
                     int j = 0;
                     var row = sheet1.CreateRow(i++);
                     row.CreateCell(j++).SetCellValue(i - 1);
-                    row.CreateCell(j++).SetCellValue(v.BeamId);
+                    row.CreateCell(j++).SetCellValue(v.ProjectName);
                     row.CreateCell(j++).SetCellValue(v.AddressName);
                     row.CreateCell(j++).SetCellValue(v.WeldType);
                     row.CreateCell(j++).SetCellValue(v.WeldingModel);
