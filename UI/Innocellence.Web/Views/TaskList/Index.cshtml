@@ -492,7 +492,7 @@
         }
         function approveTask(id, option) {
             var message = '是否确认通过审核？';
-            if (option = 0) {
+            if (option === 0) {
                 message = '是否确认驳回审核？';
             }
             if (confirm(message)) {

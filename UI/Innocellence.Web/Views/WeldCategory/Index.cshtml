@@ -339,6 +339,7 @@
         var tableModalSetting = {}; //数据列表窗口参数
         var isViewModel = @ViewBag.ViewModel;
         var lstPaging = {};
+        var isApproval = 0;
 
         $(document).ready(function () {
             var beamId = $('')
@@ -405,9 +406,11 @@
                 }
             });
             window.onbeforeunload = function (event) {
-                var dialogText = '确认要离开此页面？您对图纸的修改将无法保存，如有修改，请先保存文件。';
-                event.returnValue = dialogText;
-                return dialogText;
+                if (!isApproval) {
+                    var dialogText = '确认要离开此页面？您对图纸的修改将无法保存，如有修改，请先保存文件。';
+                    event.returnValue = dialogText;
+                    return dialogText;
+                }
             }
         });
         $('#iframei').on('mousedown', function (e) {
@@ -562,6 +565,7 @@
                 $.get('RequestApproval?beamId=' + beamId).done(function (r) {
                     if (r.result == 'success') {
                         alert('提交成功');
+                        isApproval = 1;
                         window.location = window.location.protocol + '//' + window.location.host + '/Project/Index';
                     } else {
                         alert(r.msg);
@@ -570,13 +574,14 @@
             }
         }
         function nextBeam(projectid, beamid) {
-            $.get('/Beaminfo/NextBeam', { projectId: projectid, beamId: beamid }).done(function (r) {
-                if (r.result == 'success') {
-                    window.location = '/CategoryStat/index?projectId='+r.data1 +'&beamId=' + r.data;
-                } else {
-                    alert('没有未完成的梁段');
-                }
-            });
+            window.location = '/BeamInfo/index?projectId=' + projectid;
+            //$.get('/Beaminfo/NextBeam', { projectId: projectid, beamId: beamid }).done(function (r) {
+            //    if (r.result == 'success') {
+            //        window.location = '/CategoryStat/index?projectId='+r.data1 +'&beamId=' + r.data;
+            //    } else {
+            //        alert('没有未完成的梁段');
+            //    }
+            //});
         }
         function DeleteData(id) {
             if (confirm('您确认删除此记录吗? ')) {

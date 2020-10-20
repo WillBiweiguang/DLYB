@@ -90,7 +90,7 @@ namespace Innocellence.Web.Controllers
             var tasklist = _taskListService.GetList<TaskListView>(int.MaxValue, x => !x.IsDeleted && projectIDs.Contains(x.ProjectId)).ToList();
             listEx.ForEach(w => {
                 var p = projects.FirstOrDefault(x => x.Id == w.ProjectId);
-                var task = tasklist.FirstOrDefault(x => x.ProjectId == w.ProjectId && x.DWGFile == w.DwgFile);
+                var task = tasklist.FirstOrDefault(x => x.ProjectId == w.ProjectId && (x.BeamId == w.Id || x.DWGFile == w.DwgFile));
                 if (p != null)
                 {
                     w.ProjectName = p.ProjectName;
@@ -117,6 +117,11 @@ namespace Innocellence.Web.Controllers
                     objModal = objModal ?? new BeamInfoView();
                     objModal.DwgFile = System.IO.Path.GetFileName(file.FileName);
                     objModal.ProjectId = ProjectId;
+                    var project = _projectService.Repository.Entities.FirstOrDefault(x => x.Id == ProjectId);
+                    if (project != null)
+                    {
+                        objModal.ProjectName = project.ProjectName;
+                    }
                     var fileExtension = System.IO.Path.GetExtension(file.FileName);
                     if (fileExtension.ToLower() != ".dwg")
                     {
@@ -124,7 +129,6 @@ namespace Innocellence.Web.Controllers
                         result.Message = new JsonMessage(103, "请上传dwg文件");
                         return Json(result, JsonRequestBehavior.AllowGet);
                     }
-
                     if (!System.IO.Directory.Exists(Server.MapPath("/Files/BeamInfo/" + ProjectId + SLASH)))
                     {
                         System.IO.Directory.CreateDirectory(Server.MapPath("/Files/BeamInfo/" + ProjectId + SLASH));
