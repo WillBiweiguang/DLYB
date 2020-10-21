@@ -9,6 +9,11 @@
     .datagrid-mask-msg {
         height: 36px !important;
     }
+    .table_bottom_total {
+        height: 37px;
+        padding: 7px;
+        float: right;
+    }
 </style>
 <!--Action boxes-->
 <div class="row">
@@ -88,6 +93,7 @@
                 }],
                 fnDrawCallback: function () {
                     $('[data-toggle="tooltip"]').tooltip();
+        $('.dataTables_wrapper .dataTables_length').append('<label style="margin-left:30px">总条数：'+LEAP.Common.MainPop.options.dataTable.fnSettings().fnRecordsTotal()+'条</label>');
                 }
             }));
             //inital select2
