@@ -59,6 +59,8 @@ namespace Infrastructure.Web.Domain.Services
                 GrooveArcR2 = x.GrooveArcR2,
                 CircleArcR = x.CircleArcR,
                 GrooveThicknessT = x.GrooveThicknessT,
+                WorksThicknessH3 = x.WorksThicknessH3,
+                WeldLeg1 = x.WeldLeg1,
             }).Distinct().ToList();
         }
     }
