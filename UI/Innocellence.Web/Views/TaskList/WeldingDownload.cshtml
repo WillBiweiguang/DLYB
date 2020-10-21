@@ -99,12 +99,13 @@
                     { "mData": 'WeldingModel' },
                     { "mData": 'SectionalArea' }
                 ],
-                "columnDefs": [{
-                    "targets": 0,
-                    "render": function (data, type, full, meta) {
-                        return full.Id;
-                    }
-                }],
+                "columnDefs": [
+                    {
+                        "targets": 0,
+                        "render": function (data, type, full, meta) {
+                            return full.Index;
+                        }
+                    }],
                 fnDrawCallback: function () {
                     $('[data-toggle="tooltip"]').tooltip();
                 }

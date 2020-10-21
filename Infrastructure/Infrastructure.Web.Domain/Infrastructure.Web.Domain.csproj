@@ -187,6 +187,7 @@
   <ItemGroup>
     <Compile Include="Common\Consts.cs" />
     <Compile Include="Common\Enums.cs" />
+    <Compile Include="Common\TableListHelper.cs" />
     <Compile Include="Configuration\SysWechatConfigConfiguration.generated.cs" />
     <Compile Include="Configuration\CategoryConfiguration.generated.cs" />
     <Compile Include="Configuration\CommonConfiguration.generated.cs" />

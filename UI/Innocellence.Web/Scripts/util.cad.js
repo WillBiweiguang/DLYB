@@ -4841,6 +4841,10 @@ function ZoomByHandle(m_handle) {
         var handles = m_handle.split(',');
         m_handle = handles[0];
     }
+    if (lastCircleHandle) {
+        StopTwinkeEntByHandle(lastCircleHandle);
+        lastCircleHandle = m_handle;
+    }
     //删掉上一个画圈的handleid
     //if (lastCircleHandle > 0) {
     //    deleClrByID(lastCircleHandle);
@@ -4859,9 +4863,26 @@ function ZoomByHandle(m_handle) {
     var mtempL = Math.sqrt((l1 + l2), 2);
     var qt = 8 * mtempL;
     mxOcx.ZoomWindow(pt1.x - qt, pt1.y - qt, pt1.x + qt, pt1.y + qt);
+    TwinkeEntByHandle(m_handle);
     //更新视区显示
     mxOcx.UpdateDisplay();
     //return mcirlId;
+}
+
+//通过实体handle实现实体动画效果
+function TwinkeEntByHandle(m_handle) {
+    var database = mxOcx.GetDatabase();
+    var ent = database.HandleToObject(m_handle);
+    var entId = ent.ObjectID;
+    mxOcx.TwinkeEnt(entId);
+}
+
+//通过实体handle实现关闭实体动画效果
+function StopTwinkeEntByHandle(m_handle) {
+    var database = mxOcx.GetDatabase();
+    var ent = database.HandleToObject(m_handle);
+    var entId = ent.ObjectID;
+    mxOcx.StopTwinkeEnt(entId);
 }
 
 

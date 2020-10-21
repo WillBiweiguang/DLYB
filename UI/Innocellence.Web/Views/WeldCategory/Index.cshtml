@@ -402,6 +402,9 @@
             });
             $('#btnSaveFile').click(function () {
                 if (window.confirm("确定保存当前文件到服务器？")) {
+                    if (lastCircleHandle) {
+                        StopTwinkeEntByHandle(lastCircleHandle);
+                    }
                     saveFile();
                 }
             });
