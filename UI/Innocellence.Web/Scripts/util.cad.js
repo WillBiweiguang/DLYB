@@ -4842,9 +4842,9 @@ function ZoomByHandle(m_handle) {
         m_handle = handles[0];
     }
     if (lastCircleHandle) {
-        StopTwinkeEntByHandle(lastCircleHandle);
-        lastCircleHandle = m_handle;
+        StopTwinkeEntByHandle(lastCircleHandle);        
     }
+    lastCircleHandle = m_handle;
     //删掉上一个画圈的handleid
     //if (lastCircleHandle > 0) {
     //    deleClrByID(lastCircleHandle);

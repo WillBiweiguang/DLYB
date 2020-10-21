@@ -117,7 +117,7 @@ namespace Innocellence.Web.Controllers
                     objModal = objModal ?? new BeamInfoView();
                     objModal.DwgFile = System.IO.Path.GetFileName(file.FileName);
                     objModal.ProjectId = ProjectId;
-                    var project = _projectService.Repository.Entities.FirstOrDefault(x => x.Id == ProjectId);
+                    var project = _projectService.GetList<ProjectView>(1, x => !x.IsDeleted && x.Id == ProjectId).FirstOrDefault();
                     if (project != null)
                     {
                         objModal.ProjectName = project.ProjectName;
@@ -138,6 +138,11 @@ namespace Innocellence.Web.Controllers
                     if (!_beamInfoService.Repository.Entities.Any(x => x.ProjectId == ProjectId && x.DwgFile == objModal.DwgFile && !x.IsDeleted))
                     {
                         _beamInfoService.InsertView(objModal);
+                    }
+                    if (project != null && project.Status != ProjectStauts.NotComplete)
+                    {
+                        project.Status = ProjectStauts.NotComplete;
+                        _projectService.UpdateView(project);
                     }
                 }
             }
@@ -161,6 +166,23 @@ namespace Innocellence.Web.Controllers
                 file.SaveAs(Server.MapPath(path));
             }
             return Json(doJson(null), JsonRequestBehavior.AllowGet);
+        }
+
+        public override bool AfterDelete(string sIds)
+        {
+            if (!string.IsNullOrEmpty(sIds))
+            {
+                int[] arrID = sIds.TrimEnd(',').Split(',').Select(a => int.Parse(a)).ToArray();
+                var beam = _beamInfoService.GetList<BeamInfoView>(1, x => x.Id == arrID[0]).FirstOrDefault();
+                if (beam != null
+                    && (_beamInfoService.Repository.Entities.Any(x => !x.IsDeleted && x.ProjectId == beam.ProjectId && x.ProcessStatus != (int)BeamProcessStatus.Complete)
+                    || _taskListService.Repository.Entities.Any(x => !x.IsDeleted && x.ProjectId == beam.ProjectId && x.TaskStatus != (int)TaskStatus.Approved)))
+                {
+                    var project = _projectService.GetList<ProjectView>(1, x => !x.IsDeleted && x.Id == beam.ProjectId).FirstOrDefault();
+                    _projectService.UpdateView(project);
+                }
+            }
+            return base.AfterDelete(sIds);
         }
     }
 }

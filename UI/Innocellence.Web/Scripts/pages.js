@@ -83,11 +83,11 @@ Page.prototype.getPageHtml = function () {
         }
 
     }
-    pageStr += "<ul class='pagination-psp'>";
+    pageStr += "<ul class='pagination'>";
     if (this.pageIndex > 1) {
-        pageStr += "<li><a href='javascript:;' pageindex='" + (this.pageIndex - 1) + "'>< 上一页</a></li>";
+        pageStr += "<li><a href='javascript:;' pageindex='" + (this.pageIndex - 1) + "'>上页</a></li>";
     } else {
-        pageStr += "<li><a class='none'>< 上一页</a></li>";
+        pageStr += "<li><a class='none'>上页</a></li>";
     }
     if (this.pageIndex == 1) pageStr += " <li><a class='active'>" + 1 + "</a></li>"
         //else if (this.pageIndex == pageEndIndex - pageMathIndex) "";
@@ -114,11 +114,11 @@ Page.prototype.getPageHtml = function () {
 
 
     if (this.pageIndex < pageEndIndex) {
-        pageStr += "<li><a href='javascript:;' pageindex='" + (this.pageIndex + 1) + "'>下一页 ></a></li>";
+        pageStr += "<li><a href='javascript:;' pageindex='" + (this.pageIndex + 1) + "'>下页</a></li>";
     } else {
-        pageStr += "<li><a class='none'>下一页 ></a></li>";
+        pageStr += "<li><a class='none'>下页</a></li>";
     }
-    pageStr += "<li><input type='text' style='width:30px' id='go_page'></li><li><a href='javascript:;' class='gotopage'>Go</a></li>"
+    //pageStr += "<li><input type='text' style='width:30px' id='go_page'></li><li><a href='javascript:;' class='gotopage'>Go</a></li>"
     pageStr += "</ul>";
     //	 if(pageStartIndex == 1) first = '';
     //	 if(pageEndIndex == this.pageCount) last = '';

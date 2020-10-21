@@ -114,8 +114,6 @@
 
 <body class="no-skin">
     <!-- #section:basics/navbar.layout -->
-    
-
     <!-- /section:basics/navbar.layout -->
     <div class="main-container" id="main-container">
         <script type="text/javascript">
@@ -252,7 +250,7 @@
     <script type="text/javascript">
         var menu = view.menuModule();
 
-        try { ace.settings.check('sidebar', 'collapsed');} catch (ex) { }
+        try { ace.settings.check('sidebar', 'collapsed'); } catch (ex) { }
 
         $('.nav-list .active').removeClass();
 
@@ -299,8 +297,8 @@
             for (var i = 0; i < hrefs.length; i++) {
                 var item = hrefs[i];
                 if (item != '#' &&
-                         (((item.indexOf('*') > 0) && pall.indexOf(item.replace('*', '')) >= 0)
-                                       || item == p)) {
+                    (((item.indexOf('*') > 0) && pall.indexOf(item.replace('*', '')) >= 0)
+                        || item == p)) {
                     return true;
                 }
             }
@@ -321,7 +319,7 @@
             if (oControl.is('li')) {
                 var a = oControl.find('a');
                 var html = a[0].outerHTML;
-                if (isCurrent(a[0])) { html = a[0].text;}
+                if (isCurrent(a[0])) { html = a[0].text; }
                 strHtml = '<li>' + html + '</li>' + strHtml;
             }
         }
@@ -333,7 +331,7 @@
             }
             e.preventDefault();
             var url = $this.attr('href');
-            if(url==null){return;}
+            if (url == null) { return; }
             menu.activeMenu(url.toUpperCase());
             window.location.href = url;
         }
@@ -401,6 +399,7 @@
     <script src="~/Scripts/webuploader/webuploader.min.js" type="text/javascript"></script><!--optimize js.-->
     <script src="~/Scripts/common/commonupload.js" type="text/javascript"></script>
     <script src="~/Scripts/jquery.mloading.js" type="text/javascript"></script>
+    <script src="~/Scripts/jquery.dataTables.zh.js" type="text/javascript"></script>
     @RenderSection("scripts_Foot", required: false)
 
     @Display(ResourceLocation.Foot)
