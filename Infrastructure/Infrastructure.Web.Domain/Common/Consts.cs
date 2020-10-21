@@ -13,9 +13,16 @@ namespace Infrastructure.Web.Domain.Common
             "{\"key\":4, \"value\":\"中铁九桥\"}, {\"key\":5, \"value\":\"中铁钢构\"}," +
             "{\"key\":6, \"value\":\"中铁重工\"}, {\"key\":7, \"value\":\"中铁科工\"}]";
     }
+
    public class ApiReturnCode
     {
         public const string Success = "SYSTEM_SUCCESS";
         public const string Fail = "failed";
+    }
+
+    public class ProjectStauts
+    {
+        public const string NotComplete = "未完成";
+        public const string Complete = "完成";
     }
 }
