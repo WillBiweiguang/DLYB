@@ -496,7 +496,7 @@
                 message = '是否确认驳回审核？';
             }
             if (confirm(message)) {
-                $.ajax('ApproveTask?Id=' + id + '&option=' + option).done(function (data) {
+                $.ajax('ApproveTask?Id=' + id + '&option=' + option + '&v=' + Math.random()).done(function (data) {
                     if (data.result == 'failed') {
                         alert('操作失败，详情：' + data.message);
                     } else {
@@ -507,7 +507,7 @@
         }
         function raiseApproval(id) {
             if (confirm('是否提交审核？')) {
-                $.ajax('RaiseApprove?Id=' + id).done(function (data) {
+                $.ajax('RaiseApprove?Id=' + id + '&v=' + Math.random()).done(function (data) {
                     if (data.result == 'failed') {
                         alert('提交失败，详情：' + data.message);
                     } else {

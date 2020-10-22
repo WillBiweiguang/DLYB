@@ -4871,6 +4871,9 @@ function ZoomByHandle(m_handle) {
 
 //通过实体handle实现实体动画效果
 function TwinkeEntByHandle(m_handle) {
+    if (m_handle.indexOf(',') >= -1) {
+        m_handle = m_handle.split(',')[0];
+    }
     var database = mxOcx.GetDatabase();
     var ent = database.HandleToObject(m_handle);
     var entId = ent.ObjectID;

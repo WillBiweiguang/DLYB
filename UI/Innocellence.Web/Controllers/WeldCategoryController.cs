@@ -102,9 +102,9 @@ namespace Innocellence.FaultSearch.Controllers
         public override ActionResult Edit(string Id)
         {
             WeldCategoryLabelingView model = new WeldCategoryLabelingView();
-            if (!string.IsNullOrEmpty(Id) && Id != "0")
+            if (!string.IsNullOrEmpty(Id) && Id != "0" && Id != "1")
             {
-                model = GetObject(Id);
+                model = GetObject(Id);                
                 var beam = _beamInfoService.GetList<BeamInfoView>(1, x => x.Id == model.BeamId).FirstOrDefault();
                 if (beam != null)
                 {
@@ -118,6 +118,10 @@ namespace Innocellence.FaultSearch.Controllers
                     ViewBag.weldGeometries = statistics.Select(x => x.WeldType).Distinct().ToList();
                     ViewBag.weldLocations = statistics.Select(x => x.WeldLocationType).Distinct().ToList();
                     return View(model);
+                }
+                else
+                {
+                    return PartialView("InnerError", "无法找到焊缝记录，请在焊缝列表中寻找对应焊缝内容并修改。");
                 }
             }
             return PartialView("InnerError","无法找到焊缝记录，请在焊缝列表中寻找对应焊缝内容并修改。");

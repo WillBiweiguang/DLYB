@@ -134,15 +134,19 @@ namespace Innocellence.Web.Controllers
                         System.IO.Directory.CreateDirectory(Server.MapPath("/Files/BeamInfo/" + ProjectId + SLASH));
                     }
                     string path = "/Files/BeamInfo/" + ProjectId + SLASH + objModal.DwgFile;
-                    file.SaveAs(Server.MapPath(path));
-                    if (!_beamInfoService.Repository.Entities.Any(x => x.ProjectId == ProjectId && x.DwgFile == objModal.DwgFile && !x.IsDeleted))
+                    var beam = _beamInfoService.GetList<BeamInfoView>(1, x => !x.IsDeleted && x.ProjectId == ProjectId && x.DwgFile == objModal.DwgFile).FirstOrDefault();
+                    if (beam == null || System.IO.File.Exists(Server.MapPath(path)))
                     {
-                        _beamInfoService.InsertView(objModal);
-                    }
-                    if (project != null && project.Status != ProjectStauts.NotComplete)
-                    {
-                        project.Status = ProjectStauts.NotComplete;
-                        _projectService.UpdateView(project);
+                        file.SaveAs(Server.MapPath(path));
+                        if (!_beamInfoService.Repository.Entities.Any(x => x.ProjectId == ProjectId && x.DwgFile == objModal.DwgFile && !x.IsDeleted))
+                        {
+                            _beamInfoService.InsertView(objModal);
+                        }
+                        if (project != null && project.Status != ProjectStauts.NotComplete)
+                        {
+                            project.Status = ProjectStauts.NotComplete;
+                            _projectService.UpdateView(project);
+                        }
                     }
                 }
             }
@@ -173,7 +177,8 @@ namespace Innocellence.Web.Controllers
             if (!string.IsNullOrEmpty(sIds))
             {
                 int[] arrID = sIds.TrimEnd(',').Split(',').Select(a => int.Parse(a)).ToArray();
-                var beam = _beamInfoService.GetList<BeamInfoView>(1, x => x.Id == arrID[0]).FirstOrDefault();
+                var id = arrID[0];
+                var beam = _beamInfoService.GetList<BeamInfoView>(1, x => x.Id == id).FirstOrDefault();
                 if (beam != null
                     && (_beamInfoService.Repository.Entities.Any(x => !x.IsDeleted && x.ProjectId == beam.ProjectId && x.ProcessStatus != (int)BeamProcessStatus.Complete)
                     || _taskListService.Repository.Entities.Any(x => !x.IsDeleted && x.ProjectId == beam.ProjectId && x.TaskStatus != (int)TaskStatus.Approved)))
