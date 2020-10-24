@@ -93,7 +93,10 @@
                 }],
                 fnDrawCallback: function () {
                     $('[data-toggle="tooltip"]').tooltip();
-        $('.dataTables_wrapper .dataTables_length').append('<label style="margin-left:30px">总条数：'+LEAP.Common.MainPop.options.dataTable.fnSettings().fnRecordsTotal()+'条</label>');
+                    if ($('.total-count').length > 0) {
+                        $('.total-count').remove();
+                    }
+                    $('.dataTables_wrapper .dataTables_length').append('<label class="total-count" style="margin-left:30px">总条数：' + LEAP.Common.MainPop.options.dataTable.fnSettings().fnRecordsTotal() + '条</label>');
                 }
             }));
             //inital select2
