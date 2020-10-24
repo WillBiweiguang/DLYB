@@ -20,6 +20,40 @@
     .select2-container-multi .select2-choices .select2-search-field input {
         font-family: inherit;
     }
+
+    /*分页器*/
+    .pagination-psp {
+        margin-right: 10px;
+        list-style: none;
+    }
+
+        .pagination-psp li {
+            float: left;
+            margin-right: 5px;
+        }
+
+            .pagination-psp li a {
+                display: block;
+                text-decoration: none;
+                border: 1px solid #ccc;
+                padding: 5px 8px;
+                border-radius: 4px;
+                background: #fff;
+                cursor: pointer;
+                color: #777777;
+            }
+
+                .pagination-psp li a:hover, .pagination-psp li a.active {
+                    display: block;
+                    border: 1px solid #ee4b46;
+                    color: #ee4b46;
+                }
+
+                .pagination-psp li a.none {
+                    color: #d9d9d9;
+                    border: 1px solid #d9d9d9;
+                    cursor: not-allowed;
+                }
 </style>
 
 <div id="PlateformManage">
@@ -81,7 +115,7 @@
                                     <thead>
                                         <tr>
                                             <th>@T("权限")</th>
-                                            <th style="width: 10%;">@T("操作")</th>
+                                            <th style="width: 20%;">@T("操作")</th>
                                         </tr>
                                     </thead>
                                 </table>
@@ -130,7 +164,7 @@
                                         <div class="col-xs-6"></div>
                                         <div class="col-xs-6">
                                             <div class="dataTables_paginate paging_simple_numbers" id="data_table_test_paginate">
-                                                <ul class="pagination" id="page_image"></ul>
+                                                <div class="pagination" id="page_image"></div>
                                             </div>
                                         </div>
                                     </div>
@@ -528,8 +562,8 @@
                         "render": function (data, type, full, meta) {
                             return '<a href="#" onclick="EditRoleMenu(\'' + full.Id + '\',\'' + full.Name + '\');return false;" class="artDailog btn btn-info  btn-xs" style="margin-right:4px;" data-target="#RoleModalTable" data-toggle="modal" data-placement="top" title="编辑"><i class="fa fa-pencil"></i></a>' +
                                  '<a href="#" onclick="LEAP.Common.MainPop.RowClick(\'' + full.Id + '\',2,' + null + ',\'/SysRole/Delete\');return false;" class="btn btn-danger btn-xs" id="btnDelete" data-toggle="modal" data-placement="top" title="删除">' +
-                                 '<i class="fa fa-trash-o"></i></a>' + '<a href="#" onclick="SetRoleMenu(\'' + full.Id + '\', \'' + full.Name + '\' );return false;" class="btn btn-danger btn-xs" id="btnDelete" data-toggle="modal" data-placement="top" title="设置角色菜单">' +
-                                 '<i class="glyphicon glyphicon-cog"></i></a>';
+                                 '<i class="fa fa-trash-o"></i></a>' + '<a href="#" onclick="SetRoleMenu(\'' + full.Id + '\', \'' + full.Name + '\' );return false;" class="btn btn-info btn-xs" id="btnDelete" data-toggle="modal" data-placement="top" title="设置角色菜单">' +
+                                 '权限管理</a>';
                         }
                     }],
                     fnDrawCallback: function () {
