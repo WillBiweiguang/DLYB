@@ -104,7 +104,16 @@ namespace Innocellence.FaultSearch.Controllers
             WeldCategoryLabelingView model = new WeldCategoryLabelingView();
             if (!string.IsNullOrEmpty(Id) && Id != "0" && Id != "1")
             {
-                model = GetObject(Id);                
+                if (Id.Contains(','))
+                {
+                    var firstId = Id.TrimEnd(',').Split(',').First(x => !string.IsNullOrEmpty(x));
+                    model = GetObject(firstId);
+                    model.Ids = Id.TrimEnd(',');
+                }
+                else
+                {
+                    model = GetObject(Id);
+                }
                 var beam = _beamInfoService.GetList<BeamInfoView>(1, x => x.Id == model.BeamId).FirstOrDefault();
                 if (beam != null)
                 {
@@ -125,6 +134,50 @@ namespace Innocellence.FaultSearch.Controllers
                 }
             }
             return PartialView("InnerError","无法找到焊缝记录，请在焊缝列表中寻找对应焊缝内容并修改。");
+        }
+
+        [HttpPost]
+        [ValidateInput(true)]
+        public override JsonResult Post(WeldCategoryLabelingView objModal, string Id)
+        {
+            if (string.IsNullOrEmpty(objModal.Ids) || !objModal.Ids.Contains(","))
+            {
+                return base.Post(objModal, Id);
+            }
+            //批量更新
+            if (!ModelState.IsValid)
+            {
+                return Json(GetErrorJson(), JsonRequestBehavior.AllowGet);
+            }
+            var ids = objModal.Ids.TrimEnd(',').Split(',');
+            foreach (var itemId in ids)
+            {
+                var intId = int.Parse(itemId);
+                var item = _BaseService.GetList<WeldCategoryLabelingView>(1, x => x.Id == intId).FirstOrDefault();
+                if (item != null && item.Id > 0)
+                {
+                    item.FigureNumber = objModal.FigureNumber;
+                    item.BoardNumber = objModal.BoardNumber;
+                    item.Thickness = objModal.Thickness;
+                    item.WeldType = objModal.WeldType;
+                    item.Thickness = objModal.Thickness;
+                    item.WeldLocation = objModal.WeldLocation;
+                    item.ConsumeFactor = objModal.ConsumeFactor;
+                    item.MentalDensity = objModal.MentalDensity;
+                    item.SectionArea = objModal.SectionArea;
+                    item.WeldLength = objModal.WeldLength;
+                    item.WeldQuanlity = objModal.WeldQuanlity;
+                    item.WeldingNumber = objModal.WeldingNumber;
+                    item.WeldingQuanlity = objModal.WeldingQuanlity;
+                    item.BeamNum = objModal.BeamNum;
+                    item.Quantity = objModal.Quantity;
+                    item.LengthVal = objModal.LengthVal;
+                    item.WidthVal = objModal.WidthVal;
+
+                    _BaseService.UpdateView(item);
+                }
+            }            
+            return Json(doJson(null), JsonRequestBehavior.AllowGet);
         }
 
         public ActionResult cadwelding()

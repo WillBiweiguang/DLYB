@@ -48,6 +48,7 @@ function DoCommandEventFunc(iCmd) {
         var handleid = JiaoWeldAdd();
         var weldData = [];
         weldData.push({ WeldType: 'ManJiaoH', HandleID: handleid.toString() });
+        console.log(handleid);
         saveWeldData(weldData, 2);
     }
     //复制
@@ -57,11 +58,11 @@ function DoCommandEventFunc(iCmd) {
     }
     //旋转
     if (iCmd == 6) {
-        RotateByClockwise()
+        RotateByClockwise();
     }
     //旋转
     if (iCmd == 7) {
-        RotateByAntiClockwise()
+        RotateByAntiClockwise();
     }
     //复制
     if (iCmd == 101) {
@@ -141,6 +142,7 @@ function DoCommandEventFunc(iCmd) {
         var handleid = DuiJieWeldAdd();
         var weldData = [];
         weldData.push({ WeldType: 'ManDuiJieH', HandleID: handleid.toString() });
+        console.log(handleid);
         saveWeldData(weldData, 2);
     }
     //新建融透焊缝
@@ -148,6 +150,7 @@ function DoCommandEventFunc(iCmd) {
         var handleid = RongTouWeldAdd();
         var weldData = [];
         weldData.push({ WeldType: 'ManRongTouH', HandleID: handleid.toString() });
+        console.log(handleid);
         saveWeldData(weldData, 2);
     }
     //新建坡口焊缝
@@ -155,6 +158,7 @@ function DoCommandEventFunc(iCmd) {
         var handleid = PoKouWeldAdd();
         var weldData = [];
         weldData.push({ WeldType: 'ManPoKouH', HandleID: handleid.toString() });
+        console.log(handleid);
         saveWeldData(weldData, 2);
     }
 }
@@ -4894,4 +4898,7 @@ document.getElementById("MxDrawXCtrl").ImpDynWorldDrawFun = DoDynWorldDrawFun;
 document.getElementById("MxDrawXCtrl").ImpExplodeFun = ExplodeFun;
 document.getElementById("MxDrawXCtrl").ImpGetGripPointsFun = GetGripPointsFun;
 document.getElementById("MxDrawXCtrl").ImpMoveGripPointsAtFun = MoveGripPointsFun;
-document.getElementById("MxDrawXCtrl").ImplementMouseEventFun = MouseEvent;
+setTimeout(function () {
+    document.getElementById("MxDrawXCtrl").ImplementMouseEventFun = MouseEvent;
+}, 1000);
+//document.getElementById("MxDrawXCtrl").ImplementMouseEventFun = MouseEvent;
