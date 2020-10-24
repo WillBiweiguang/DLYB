@@ -192,7 +192,7 @@
                     </div>
 
 
-                    <div class="row">
+                    <div class="row hidden">
                         <div class="form-group col-lg-6">
                             <label class="col-sm-5 control-label">长度:</label>
                             <div class="col-sm-7">
@@ -408,6 +408,30 @@
                     $(this).find('i').addClass('fa-chevron-up');
                     $(this).attr('title', '折叠');
                 }
+            });
+            $(document).on('change', '#boardNumber', function () {
+                var postVaule = { "figureNumber": $('#figureNumber').val(), "boardNumber": $('#boardNumber').val() }
+                var jsonVaule = JSON.stringify(postVaule);
+
+                $.ajax({
+                    url: "/WeldCategory/GetWeldingProperty",
+                    type: "post",
+                    contentType: "application/json",
+                    data: jsonVaule,
+                    success: function (data) {
+                        hideLoading();
+                        if (data != null) {
+                            if (data.indexOf('Success') > -1) {
+                                $('#LengthVal').val(data.LengthVal);
+                                $('#Thickness').val(data.Thickness);
+                                $('#WidthVal').val(data.WidthVal);
+                            }
+                        }
+                        else {
+                            alert('没有对应数据');
+                        }
+                    }
+                });
             });
             $('#btnSaveFile').click(function () {
                 if (window.confirm("确定保存当前文件到服务器？")) {
@@ -641,7 +665,7 @@
 
 
 <!--以下是CAD控件对象-->
-<SCRIPT language="JavaScript">
+@*<SCRIPT language="JavaScript">
     document.oncontextmenu = new Function('event.returnValue=false;'); //禁用右键
     function LoadMxDrawX(id, dwgfile, cabpath, msipath) {
         var s, classid, Sys = {}, ua = navigator.userAgent.toLowerCase();
@@ -715,6 +739,6 @@
 
         return Sys.firefox;
     }
-</SCRIPT>
-<script type="text/javascript">LoadMxDrawX("MxDrawXCtrl", "", "http://www.mxdraw.com/MxDrawX52.CAB#version=11,0,0,1", "http://www.mxcad.net:2080/MxChromex86Setup.exe");</script>
-<script src="~/Scripts/util.cad.js"></script>
+</SCRIPT>*@
+@*<script type="text/javascript">LoadMxDrawX("MxDrawXCtrl", "", "http://www.mxdraw.com/MxDrawX52.CAB#version=11,0,0,1", "http://www.mxcad.net:2080/MxChromex86Setup.exe");</script>
+<script src="~/Scripts/util.cad.js"></script>*@
