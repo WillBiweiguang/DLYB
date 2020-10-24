@@ -23,17 +23,20 @@ namespace Innocellence.FaultSearch.Controllers
         private readonly ITaskListService _taskListService;
         private readonly IWeldCategoryStatisticsVService _weldCategoryStatisticsVService;
         private readonly IProjectService _projectService;
+        private readonly IBoardPackageService _boardPackageService;
 
         private readonly string baseUrl = "http://42.202.130.245:3001/";
         public WeldCategoryController(IWeldCategoryLabelingService weldCategoryService,
             IBeamInfoService beamInfoService, IWeldGeometryService weldGeometryService,
             IWeldLocationService weldLocationService, ITaskListService taskListService,
-            IWeldCategoryStatisticsVService weldCategoryStatisticsVService,IProjectService projectService) : base(weldCategoryService)
+            IBoardPackageService boardPackageService,
+        IWeldCategoryStatisticsVService weldCategoryStatisticsVService,IProjectService projectService) : base(weldCategoryService)
         {
             _weldCategoryService = weldCategoryService;
             _beamInfoService = beamInfoService;
             _weldGeometryService = weldGeometryService;
             _weldLocationService = weldLocationService;
+            _boardPackageService = boardPackageService;
             baseUrl = ConfigurationManager.AppSettings["WebUrl"];
             _taskListService = taskListService;
             _weldCategoryStatisticsVService = weldCategoryStatisticsVService;
@@ -170,7 +173,15 @@ namespace Innocellence.FaultSearch.Controllers
             }
             return new JsonResult { Data = new { result = "failed" }, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
         }
-
+        public JsonResult GetWeldingProperty(string figureNumber, string boardNumber)
+        {
+            var item = _boardPackageService.Repository.Entities.Where(x => !x.IsDeleted && x.FigureNumber == figureNumber && x.BoardNumber== boardNumber).FirstOrDefault();
+            if (item != null)
+            {
+                return new JsonResult { Data = new { result = "success", data = item}, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
+            }
+            return new JsonResult { Data = new { result = "failed" }, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
+        }
         public JsonResult PostWeld(int? beamId, string dwgfile, List<WeldCategoryLabelingView> weldList)
         {
             if (string.IsNullOrEmpty(dwgfile) || !beamId.HasValue || weldList == null || weldList.Count == 0)
