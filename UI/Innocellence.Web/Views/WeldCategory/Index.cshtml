@@ -98,7 +98,6 @@
                             <th>@T("焊缝截面积(mm^2)")</th>
                             <th>@T("焊缝长度")</th>
                             <th>@T("焊缝质量")</th>
-                            <th>@T("焊接边数")</th>
                             <th>@T("数量")</th>
                             <th>@T("长度")</th>
                             <th style="width:10%;">@T("操作")</th>
@@ -235,13 +234,13 @@
                             </div>
                         </div>
 
-                        <div class="form-group col-lg-6">
+                        @*<div class="form-group col-lg-6">
                             <label class="col-sm-5 control-label">焊接边数:</label>
                             <div class="col-sm-7">
 
                                 <input type="text" name="WeldingNumber" id="WeldingNumber" class="form-control" validate="{required:true}" data-bind="value: WeldingNumber" />
                             </div>
-                        </div>
+                        </div>*@
                     </div>
                     <div class="row">
                         <div class="form-group col-lg-6">
@@ -361,7 +360,6 @@
                     { "mData": 'SectionArea' },
                     { "mData": 'WeldLength' },
                     { "mData": 'WeldQuanlity' },
-                    { "mData": 'WeldingNumber' },
                     { "mData": 'Quantity' },
                     { "mData": 'LengthVal' }
                 ],
@@ -400,30 +398,7 @@
                     $(this).attr('title', '折叠');
                 }
             });
-            $(document).on('change', '#boardNumber', function () {
-                var postVaule = { "figureNumber": $('#figureNumber').val(), "boardNumber": $('#boardNumber').val() }
-                var jsonVaule = JSON.stringify(postVaule);
-
-                $.ajax({
-                    url: "/WeldCategory/GetWeldingProperty",
-                    type: "post",
-                    contentType: "application/json",
-                    data: jsonVaule,
-                    success: function (data) {
-                        hideLoading();
-                        if (data != null) {
-                            if (data.indexOf('Success') > -1) {
-                                $('#LengthVal').val(data.LengthVal);
-                                $('#Thickness').val(data.Thickness);
-                                $('#WidthVal').val(data.WidthVal);
-                            }
-                        }
-                        else {
-                            alert('没有对应数据');
-                        }
-                    }
-                });
-            });
+       
             $('#btnSaveFile').click(function () {
                 if (window.confirm("确定保存当前文件到服务器？")) {
                     if (lastCircleHandle) {

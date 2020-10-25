@@ -129,7 +129,9 @@ namespace DLYB.Web.Controllers
             string strCondition = Request["search_condition"];
             Expression<Func<WeldCategoryStatisticsV, bool>> expression = FilterHelper.GetExpression<WeldCategoryStatisticsV>(gridRequest.FilterGroup);
             expression = expression.AndAlso<WeldCategoryStatisticsV>(x => x.IsDeleted != true );
+
             int rowCount = gridRequest.PageCondition.RowCount;
+           
             List<WeldCategoryStatisticsVView> listEx = _wcsvService.GetList<WeldCategoryStatisticsVView>(expression, gridRequest.PageCondition);
             listEx = TableListHelper.GenerateIndex(listEx, gridRequest.PageCondition);
             return this.GetPageResult(listEx, gridRequest);

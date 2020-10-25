@@ -177,12 +177,13 @@ namespace Innocellence.FaultSearch.Controllers
             }
             return new JsonResult { Data = new { result = "failed" }, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
         }
+        [HttpPost]
         public JsonResult GetWeldingProperty(string figureNumber, string boardNumber)
         {
             var item = _boardPackageService.Repository.Entities.Where(x => !x.IsDeleted && x.FigureNumber == figureNumber && x.BoardNumber== boardNumber).FirstOrDefault();
             if (item != null)
             {
-                return new JsonResult { Data = new { result = "success", data = item}, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
+                return new JsonResult { Data = new { result = "success", data1 = item}, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
             }
             return new JsonResult { Data = new { result = "failed" }, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
         }

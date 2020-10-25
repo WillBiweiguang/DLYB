@@ -153,13 +153,13 @@
                             </div>
                         </div>
 
-                        <div class="form-group col-lg-6">
+                        @*<div class="form-group col-lg-6">
                             <label class="col-sm-5 control-label">焊接边数:</label>
                             <div class="col-sm-7">
 
                                 <input type="text" name="WeldingNumber" id="WeldingNumber" class="form-control" validate="{required:true}" data-bind="value: WeldingNumber" />
                             </div>
-                        </div>
+                        </div>*@
                     </div>
                     <div class="row">
                         <div class="form-group col-lg-6">
@@ -308,6 +308,29 @@
 
             this.style.left = nl + 'px';
             this.style.top = nt + 'px';
+        });
+        $(document).on('change', '#BoardNumber', function () {
+            var postVaule = { "FigureNumber": $('#FigureNumber').val(), "BoardNumber": $('#BoardNumber').val() }
+            var jsonVaule = JSON.stringify(postVaule);
+
+            $.ajax({
+                url: "/WeldCategory/GetWeldingProperty",
+                type: "post",
+                contentType: "application/json",
+                data: jsonVaule,
+                success: function (data) {
+                    if (data != null) {
+                        if (data.result.indexOf('Success') > -1) {
+                            $('#LengthVal').val(data.data1.LengthVal);
+                            $('#Thickness').val(data.Thickness);
+                            $('#WidthVal').val(data.WidthVal);
+                        }
+                    }
+                    else {
+                        alert('没有对应数据');
+                    }
+                }
+            });
         });
         //$('#iframei').on('mouseup', function (e) {
         //    //开关关闭

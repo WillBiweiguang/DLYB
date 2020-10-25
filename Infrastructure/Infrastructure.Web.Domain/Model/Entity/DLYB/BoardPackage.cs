@@ -18,7 +18,6 @@ namespace Infrastructure.Web.Domain.Entity
         public string FigureNumber { get; set; }
         public string BoardNumber { get; set; }
         public double Thickness { get; set; }
-        public double WeldLength { get; set; }
         public double LengthVal { get; set; }
         public double WidthVal { get; set; }
         public DateTime? CreatedDate { get; set; }
