@@ -260,12 +260,25 @@ namespace DLYB.Web.Controllers
             {
                 var workbook = new XSSFWorkbook(file);
                 var sheet1 = workbook.GetSheet("焊材");
-                var query = _wcsvService.Repository.Entities.Where(a => !a.IsDeleted);
+
+                //var query = _wcsvService.Repository.Entities.Where(a => !a.IsDeleted);
+
+                Expression<Func<WeldCategoryStatisticsV, bool>> expression = (x) => !x.IsDeleted;
+                //var query = _wcsvService.Repository.Entities.Where(a => !a.IsDeleted);
+                string strCondition = Request["search_condition"];
+
                 if (!string.IsNullOrEmpty(objLoginInfo.Department))
                 {
-                    query.Where(a => a.DepartmentID == objLoginInfo.Department);
+                    var departmentid = objLoginInfo.Department.Split('_').First();
+                    expression = expression.AndAlso<WeldCategoryStatisticsV>(x => x.DepartmentID == departmentid);
+                    //query.Where(a => a.DepartmentID == departmentid);
                 }
-                var reportList1 = query.ToList();
+                if (!string.IsNullOrEmpty(strCondition))
+                {
+                    expression = expression.AndAlso<WeldCategoryStatisticsV>(x => x.ProjectName.Contains(strCondition));
+                    //query.Where(a => a.ProjectName.Contains(strCondition));
+                }
+                var reportList1 = _wcsvService.GetList<WeldCategoryStatisticsVView>(int.MaxValue, expression).ToList();
                 int i = 1;
                 ;
                 foreach (var v in reportList1)
@@ -297,9 +310,7 @@ namespace DLYB.Web.Controllers
                     //workbook.Close();//一般只用写这一个就OK了，他会遍历并释放所有资源，但当前版本有问题所以只释放sheet
                     return File(ms.ToArray(), "application/vnd-excel", fileName);
                 }
-
             }
-
         }
         public ActionResult ApproveTask(int Id, int option)
         {

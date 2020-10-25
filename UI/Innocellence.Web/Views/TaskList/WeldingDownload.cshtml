@@ -56,7 +56,7 @@
             <a href="#" class="btn btn-info btn-sm" id="btnSearch" data-toggle="tooltip" data-placement="top" title="查询条件"><i class="fa fa-search">查询</i></a>
         </div>
         <div class="form-group pull-right">
-            <a href="ExportToExcelDownload" class="btn btn-sm btn-success" data-toggle="tooltip" data-placement="top" title="导出Excel" id="btnDownloadExport">
+            <a href="#" class="btn btn-sm btn-success" data-toggle="tooltip" data-placement="top" title="导出Excel" id="btnDownloadExport">
                 <i class="fa fa-download"></i> 导出Excel
             </a>
         </div>
@@ -132,31 +132,22 @@
             setTimeout(function () {
                 $('.chosen-container').removeAttr('style');
             }, 3000);
+            $('#btnSearch').on('click', function () {
+                var para = '';
+                var dSearch = $("#SearchForm").serializeArray();
+                if (!BeforeExport(dSearch)) {
+                    return false;
+                }
+                $.each(dSearch, function (key, val) {
+                    para += val.name + '=' + val.value + '&';
+                });
+                $('#btnDownloadExport').attr('href', "ExportToExcelDownload?" + para + "t=" + (new Date()).getTime());
+            });
         });
         //$(document).on('click', '.pop-btn', function () {
         //    $('#ModalTableDetail').modal(500);
         //    $('#ModalTable').modal('hide');
         //});
-
-
-        $('#btnDownloadExport').on('click', function () {
-
-            var para = '';
-            var dSearch = $("#SearchForm").serializeArray();
-            if (!BeforeExport(dSearch)) {
-                return false;
-            }
-
-            $.each(dSearch, function (key, val) {
-                para += val.name + '=' + val.value + '&';
-            });
-
-            // $.download("ExportAnswer", para + "t=" + (new Date()).getTime());
-            $.download("ExportToExcelDownload", para + "t=" + (new Date()).getTime());
-            return true;
-        });
-
-
     </script>
 }
 
