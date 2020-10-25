@@ -50,9 +50,10 @@
                     <input type="button" class="btn btn-info  btn-sm" value="焊接符号识别" data-toggle="tooltip" title="焊接符号识别" onclick="myclick5();">
                     <input type="button" class="btn btn-info  btn-sm" value="提交审核" data-toggle="tooltip" title="提交审核" onclick="requestApprove();">
                     @*<input type="button" class="btn btn-sm" value="隐藏图层" onclick="DoCmd(3);">
-                        <input type="button" class="btn btn-sm" value="显示图层" onclick="DoCmd(4);">*@
+            <input type="button" class="btn btn-sm" value="显示图层" onclick="DoCmd(4);">*@
                     <input type="button" class="btn btn-info  btn-sm" value="顺时针转90度" data-toggle="tooltip" title="顺时针转90度" onclick="DoCmd(6);">
                     <input type="button" class="btn btn-info  btn-sm" value="逆时针转90度" data-toggle="tooltip" title="逆时针转90度" onclick="DoCmd(7)">
+                    <input type="button" class="btn btn-info  btn-sm" value="批量编辑" data-toggle="tooltip" title="批量编辑" onclick="batchEdit()">
                 }
             </div>
             <div class="form-group pull-right">
@@ -87,6 +88,7 @@
                 <table class="table table-bordered table-hover data-table">
                     <thead>
                         <tr>
+                            <th><input type="checkbox" value="全选" /></th>
                             <th style="width:5%;text-align:center;">@T("序号")</th>
                             <th>@T("图号")</th>
                             <th>@T("板件号")</th>
@@ -332,7 +334,7 @@
         var popMenu;
         var IdCur;
         var lastCircleHandle;
-        var editModalSetting = 'dialogHeight:800px;dialogWidth:700px;dialogTop:' + ((screen.height - 600) / 2 - 20) + 'px;dialogLeft:'
+        var editModalSetting = 'dialogHeight:600px;dialogWidth:700px;dialogTop:' + ((screen.height - 600) / 2 - 20) + 'px;dialogLeft:'
             + ((screen.width - 600) / 2) + 'px;resizable:yes;center:yes;status:no;'
             ; //编辑模态窗口参数
         var tableModalSetting = {}; //数据列表窗口参数
@@ -349,6 +351,7 @@
                 "paging": true,
                 "info": false,
                 "aoColumns": [
+                    { "mData": "Id" },
                     { "mData": 'Index' },
                     { "mData": 'FigureNumber' },
                     { "mData": 'BoardNumber' },
@@ -365,7 +368,13 @@
                 ],
                 "columnDefs": [
                     {
-                        "targets": 14,
+                        "targets": 0,
+                        "render": function (data, type, full, meta) {
+                            return '<input type="checkbox" value="' + full.Id + '" title="' + full.Index + '" id="checkbox" />';
+                        }
+                    },
+                    {
+                        "targets": 15,
                         "render": function (data, type, full, meta) {
                             var oprStr = '';
                             if (!isViewModel) {
@@ -617,12 +626,21 @@
             }
             return false;
         }
+        function batchEdit() {
+            var ids = '';
+            $('.data-table td input[type=checkbox]').each(function (index, ctr) {
+                if (ctr.checked) {
+                    ids += $(ctr).val() + ',';
+                }
+            });
+            showEditForm(ids);
+        }
     </script>
 }
 
 
 <!--以下是CAD控件对象-->
-@*<SCRIPT language="JavaScript">
+<SCRIPT language="JavaScript">
     document.oncontextmenu = new Function('event.returnValue=false;'); //禁用右键
     function LoadMxDrawX(id, dwgfile, cabpath, msipath) {
         var s, classid, Sys = {}, ua = navigator.userAgent.toLowerCase();
@@ -696,6 +714,6 @@
 
         return Sys.firefox;
     }
-</SCRIPT>*@
-@*<script type="text/javascript">LoadMxDrawX("MxDrawXCtrl", "", "http://www.mxdraw.com/MxDrawX52.CAB#version=11,0,0,1", "http://www.mxcad.net:2080/MxChromex86Setup.exe");</script>
-<script src="~/Scripts/util.cad.js"></script>*@
+</SCRIPT>
+<script type="text/javascript">LoadMxDrawX("MxDrawXCtrl", "", "http://www.mxdraw.com/MxDrawX52.CAB#version=11,0,0,1", "http://www.mxcad.net:2080/MxChromex86Setup.exe");</script>
+<script src="~/Scripts/util.cad.js"></script>

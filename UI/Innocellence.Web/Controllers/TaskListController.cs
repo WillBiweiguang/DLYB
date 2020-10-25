@@ -96,7 +96,7 @@ namespace DLYB.Web.Controllers
                 }
                 if (users.Any(u => u.Id == w.CreatedUserID))
                 {
-                    w.CreatedUserName = users.FirstOrDefault(u => u.Id == w.CreatedUserID).UserName;
+                    w.CreatedUserName = users.FirstOrDefault(u => u.Id == w.CreatedUserID).UserTrueName;
                 }
             });
             return this.GetPageResult(listEx, gridRequest);

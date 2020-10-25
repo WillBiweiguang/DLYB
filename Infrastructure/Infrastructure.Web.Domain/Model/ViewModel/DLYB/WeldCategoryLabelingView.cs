@@ -41,6 +41,8 @@ namespace Infrastructure.Web.Domain.ModelsView
 
         public int? CopyOriginId { get; set; }
 
+        public string Ids { get; set; }
+
         public IViewModel ConvertAPIModel(object obj) {
             var entity = (WeldCategoryLabeling)obj;
             Id = entity.Id;

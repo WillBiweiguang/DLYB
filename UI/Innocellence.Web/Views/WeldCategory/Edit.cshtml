@@ -25,6 +25,20 @@
         position: relative;
         /*margin-right: 20px;*/
     }
+    .control-label {
+        
+    }
+    table{width:100%;}
+    tr{width:100%;}
+    td{
+        vertical-align:central;
+        height:42px;
+    }
+    .first-td{width:100px; }
+    .second-td{width:220px;}
+    .thrid-td{width:100px}
+    label{width:100%;text-align:right;}
+    .form-control{min-width:160px!important;}
 </style>
 <!--Action boxes-->
 
@@ -43,181 +57,215 @@
             <div class="modal-body">
                 <form action="Post" id="ff" method="get" class="form-horizontal" datasource="Get">
                     <input type="hidden" id="ID" name="ID" value="0" />
+                    <input type="hidden" id="Ids" name="Ids" value="@Model.Ids" />
                     <input type="hidden" id="beamId" name="beamId" value="@ViewBag.BeamId" />
                     <input type="hidden" id="HandleID" name="HandleID" value="" data-bind="value: HandleID" />
-                    <div class="row">
-                        <div class="form-group col-lg-6">
-                            <label for="FigureNumber" class="col-sm-5 control-label">图号:</label>
-                            <div class="col-sm-7">
-                                <select class="single-select form-control" name="FigureNumber" id="FigureNumber" data-placeholder="请选择图号" data-bind="value: FigureNumber" title="图号">
-                                    @foreach (SelectListItem a in ViewBag.Figures)
-                                    {
-                                        if (!string.IsNullOrEmpty(a.Value))
+                    <table>
+                        <tr class="row">
+                            <td class="first-td">
+                                <label for="FigureNumber" class="col-sm-5 control-label">图号:</label>
+                            </td>
+                            <td class="second-td">
+                                <div class="col-sm-7">
+                                    <select class="single-select form-control" name="FigureNumber" id="FigureNumber" data-placeholder="请选择图号" data-bind="value: FigureNumber" title="图号">
+                                        @foreach (SelectListItem a in ViewBag.Figures)
                                         {
-                                            <option value="@a.Value">@a.Text</option>
+                                            if (!string.IsNullOrEmpty(a.Value))
+                                            {
+                                                <option value="@a.Value">@a.Text</option>
+                                            }
                                         }
-                                    }
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-group col-lg-6">
-                            <label for="BoardNumber" class="col-sm-5 control-label">板件号:</label>
-                            <div class="col-sm-7">
-                                <select class="single-select form-control" name="BoardNumber" id="BoardNumber" data-placeholder="请选择板件号" data-bind="value: BoardNumber">
-                                    @foreach (SelectListItem a in ViewBag.Boards)
-                                    {
-                                        if (!string.IsNullOrEmpty(a.Value))
+                                    </select>
+                                </div>
+                            </td>
+                            <td class="thrid-td">
+                                <label for="BoardNumber" class="col-sm-5 control-label">板件号:</label>
+                            </td>
+                            <td>
+                                <div class="col-sm-7">
+                                    <select class="single-select form-control" name="BoardNumber" id="BoardNumber" data-placeholder="请选择板件号" data-bind="value: BoardNumber">
+                                        @foreach (SelectListItem a in ViewBag.Boards)
                                         {
-                                            <option value="@a.Value">@a.Text</option>
+                                            if (!string.IsNullOrEmpty(a.Value))
+                                            {
+                                                <option value="@a.Value">@a.Text</option>
+                                            }
                                         }
-                                    }
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="form-group col-lg-6">
-                            <label class="col-sm-5 control-label">焊缝类型:</label>
-                            <div class="col-sm-7">
-                                <select class="single-select form-control" id="WeldType" name="WeldType" style="" data-bind="value:WeldType" validate="{required:true}" data-geturl="/WeldGeometry/GetDropdownList">
-                                    @foreach (string a in ViewBag.weldGeometries)
-                                    {
-                                        if (!string.IsNullOrEmpty(a))
+                                    </select>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="row">
+                            <td>
+                                <label class="col-sm-5 control-label">焊缝类型:</label>
+                            </td>
+                            <td>
+                                <div class="col-sm-7">
+                                    <select class="single-select form-control" id="WeldType" name="WeldType" style="" data-bind="value:WeldType" validate="{required:true}" data-geturl="/WeldGeometry/GetDropdownList">
+                                        @foreach (string a in ViewBag.weldGeometries)
+                                        {
+                                            if (!string.IsNullOrEmpty(a))
+                                            {
+                                                <option value="@a">@a</option>
+                                            }
+                                        }
+                                    </select>
+                                </div>
+                            </td>
+
+                            <td>
+                                <label class="col-sm-5 control-label">焊缝位置:</label>
+                            </td>
+                            <td>
+                                <div class="col-sm-7">
+                                    <select class="single-select form-control" name="WeldLocation" id="WeldLocation" data-placeholder="请选择焊缝位置" validate="{required:true}" data-geturl="/WeldLocation/GetDropdownList">
+                                        @foreach (string a in ViewBag.weldLocations)
+                                        {
+                                            if (!string.IsNullOrEmpty(a))
+                                            {
+                                                <option value="@a">@a</option>
+                                            }
+                                        }
+                                    </select>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <tr class="row">
+                            <td>
+                                <label class="col-sm-5 control-label">长度:</label>
+                            </td>
+                            <td>
+                                <div class="col-sm-7">
+                                    <input type="text" name="LengthVal" id="LengthVal" class="form-control" validate="{required:true}" data-bind="value: LengthVal" />
+                                </div>
+                            </td>
+                            <td>
+                                <label class="col-sm-5 control-label">板厚:</label>
+                            </td>
+                            <td>
+                                <div class="col-sm-7">
+
+                                    <input type="text" name="Thickness" id="Thickness" class="form-control" validate="{required:true}" data-bind="value: Thickness" />
+                                </div>
+                            </td>
+
+                        </tr>
+                        <tr class="row">
+                            <td>
+                                <label class="col-sm-5 control-label">熔敷密度:</label>
+                            </td>
+                            <td>
+                                <div class="col-sm-7">
+                                    <input type="text" name="MentalDensity" id="MentalDensity" class="form-control" validate="{required:true}" data-bind="value: MentalDensity" />
+                                </div>
+                            </td>
+                            <td>
+                                <label class="col-sm-5 control-label">消耗系数:</label>
+                            </td>
+                            <td>
+                                <div class="col-sm-7">
+
+                                    <input type="text" name="ConsumeFactor" id="ConsumeFactor" class="form-control" validate="{required:true}" data-bind="value: ConsumeFactor" />
+                                </div>
+                            </td>
+
+                        </tr>
+                        <tr class="row">
+                            <td>
+                                <label class="col-sm-5 control-label">焊缝截面积:</label>
+                            </td>
+                            <td>
+                                <div class="col-sm-7">
+                                    <select class="single-select form-control" name="SectionArea" id="SectionArea" validate="{required:true}" data-placeholder="请选择焊缝截面积" data-bind="value: SectionArea">
+                                        @foreach (string a in ViewBag.Areas)
                                         {
                                             <option value="@a">@a</option>
                                         }
-                                    }
-                                </select>
-                            </div>
-                        </div>
+                                    </select>
+                                </div>
+                            </td>
 
-                        <div class="form-group col-lg-6">
-                            <label class="col-sm-5 control-label">焊缝位置:</label>
-                            <div class="col-sm-7">
-                                <select class="single-select form-control" name="WeldLocation" id="WeldLocation" data-placeholder="请选择焊缝位置" validate="{required:true}" data-geturl="/WeldLocation/GetDropdownList">
-                                    @foreach (string a in ViewBag.weldLocations)
-                                    {
-                                        if (!string.IsNullOrEmpty(a))
-                                        {
-                                            <option value="@a">@a</option>
-                                        }
-                                    }
-                                </select>
-                            </div>
-                        </div>
-                    </div>
+                            @*<td>
+                                <label class="col-sm-5 control-label">焊接边数:</label>
+                            </td>
+                            <td>
+                                <div class="col-sm-7">
 
+                                    <input type="text" name="WeldingNumber" id="WeldingNumber" class="form-control" validate="{required:true}" data-bind="value: WeldingNumber" />
+                                </div>
+                            </td>*@
+                        </tr>
+                        <tr class="row">
+                            <td>
+                                <label class="col-sm-5 control-label">梁段数量:</label>
+                            </td>
+                            <td>
+                                <div class="col-sm-7">
 
-                    <div class="row">
-                        <div class="form-group col-lg-6">
-                            <label class="col-sm-5 control-label">长度:</label>
-                            <div class="col-sm-7">
-                                <input type="text" name="LengthVal" id="LengthVal" class="form-control" validate="{required:true}" data-bind="value: LengthVal" />
-                            </div>
-                        </div>
-                        <div class="form-group col-lg-6">
-                            <label class="col-sm-5 control-label">板厚:</label>
-                            <div class="col-sm-7">
+                                    <input type="text" name="BeamNum" id="BeamNum" class="form-control" validate="{required:true}" data-bind="value: BeamNum" />
+                                </div>
+                            </td>
+                            <td>
+                                <label class="col-sm-5 control-label">焊缝数量:</label>
+                            </td>
+                            <td>
+                                <div class="col-sm-7">
 
-                                <input type="text" name="Thickness" id="Thickness" class="form-control" validate="{required:true}" data-bind="value: Thickness" />
-                            </div>
-                        </div>
+                                    <input type="text" name="Quantity" id="Quantity" class="form-control" validate="{required:true}" data-bind="value: Quantity" />
+                                </div>
+                            </td>
+                        </tr>
 
-                    </div>
-                    <div class="row">
-                        <div class="form-group col-lg-6">
-                            <label class="col-sm-5 control-label">熔敷密度:</label>
-                            <div class="col-sm-7">
-                                <input type="text" name="MentalDensity" id="MentalDensity" class="form-control" validate="{required:true}" data-bind="value: MentalDensity" />
-                            </div>
-                        </div>
-                        <div class="form-group col-lg-6">
-                            <label class="col-sm-5 control-label">消耗系数:</label>
-                            <div class="col-sm-7">
+                        <tr class="row">
+                            <td>
+                                <label class="col-sm-5 control-label">宽度:</label>
+                            </td>
+                            <td>
+                                <div class="col-sm-7">
+                                    <input type="text" name="WidthVal" id="WidthVal" class="form-control" validate="{required:true}" data-bind="value: WidthVal" />
+                                </div>
+                            </td>
 
-                                <input type="text" name="ConsumeFactor" id="ConsumeFactor" class="form-control" validate="{required:true}" data-bind="value: ConsumeFactor" />
-                            </div>
-                        </div>
+                        </tr>
+                        <tr class="row">
+                            <td>
+                                <label class="col-sm-5 control-label">焊缝长度:</label>
+                            </td>
+                            <td>
+                                <div class="col-sm-7">
+                                    <select class="single-select form-control" name="WeldLengthSel" validate="{required:true}" id="WeldLengthSel">
 
-                    </div>
-                    <div class="row">
-                        <div class="form-group col-lg-6">
-                            <label class="col-sm-5 control-label">焊缝截面积:</label>
-                            <div class="col-sm-7">
-                                <select class="single-select form-control" name="SectionArea" id="SectionArea" validate="{required:true}" data-placeholder="请选择焊缝截面积" data-bind="value: SectionArea">
-                                    @foreach (string a in ViewBag.Areas)
-                                    {
-                                        <option value="@a">@a</option>
-                                    }
-                                </select>
-                            </div>
-                        </div>
+                                        <option value="长">长</option>
+                                        <option value="宽">宽</option>
+                                        <option value="长+宽">长+宽</option>
+                                        <option value="2*宽+长">2*宽+长</option>
+                                        <option value="2*长+宽">2*长+宽</option>
+                                        <option value="2*(长+宽)">2*(长+宽)</option>
+                                    </select>
+                                </div>
+                            </td>
+                            <td>
+                                <label class="col-sm-5 control-label">焊缝长度值:</label>
+                            </td>
+                            <td>
+                                <div class="col-sm-7">
+                                    <input type="text" name="WeldLength" id="WeldLength" class="form-control" validate="{required:true}" data-bind="value: WeldLength" />
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="row">
+                            <td>
+                                <label class="col-sm-5 control-label">焊缝质量:</label>
+                            </td>
+                            <td>
+                                <div class="col-sm-7">
 
-                        @*<div class="form-group col-lg-6">
-                            <label class="col-sm-5 control-label">焊接边数:</label>
-                            <div class="col-sm-7">
-
-                                <input type="text" name="WeldingNumber" id="WeldingNumber" class="form-control" validate="{required:true}" data-bind="value: WeldingNumber" />
-                            </div>
-                        </div>*@
-                    </div>
-                    <div class="row">
-                        <div class="form-group col-lg-6">
-                            <label class="col-sm-5 control-label">梁段数量:</label>
-                            <div class="col-sm-7">
-
-                                <input type="text" name="BeamNum" id="BeamNum" class="form-control" validate="{required:true}" data-bind="value: BeamNum" />
-                            </div>
-                        </div>
-                        <div class="form-group col-lg-6">
-                            <label class="col-sm-5 control-label">焊缝数量:</label>
-                            <div class="col-sm-7">
-
-                                <input type="text" name="Quantity" id="Quantity" class="form-control" validate="{required:true}" data-bind="value: Quantity" />
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="form-group col-lg-6">
-                            <label class="col-sm-5 control-label">宽度:</label>
-                            <div class="col-sm-7">
-                                <input type="text" name="WidthVal" id="WidthVal" class="form-control" validate="{required:true}" data-bind="value: WidthVal" />
-                            </div>
-                        </div>
-
-                    </div>
-                    <div class="row">
-                        <div class="form-group col-lg-6">
-                            <label class="col-sm-5 control-label">焊缝长度:</label>
-                            <div class="col-sm-7">
-                                <select class="single-select form-control" name="WeldLengthSel" validate="{required:true}" id="WeldLengthSel">
-
-                                    <option value="长">长</option>
-                                    <option value="宽">宽</option>
-                                    <option value="长+宽">长+宽</option>
-                                    <option value="2*宽+长">2*宽+长</option>
-                                    <option value="2*长+宽">2*长+宽</option>
-                                    <option value="2*(长+宽)">2*(长+宽)</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-group col-lg-6">
-                            <label class="col-sm-5 control-label">焊缝长度值:</label>
-                            <div class="col-sm-7">
-                                <input type="text" name="WeldLength" id="WeldLength" class="form-control" validate="{required:true}" data-bind="value: WeldLength" />
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="form-group col-lg-6">
-                            <label class="col-sm-5 control-label">焊缝质量:</label>
-                            <div class="col-sm-7">
-
-                                <input type="text" name="WeldQuanlity" id="WeldQuanlity" class="form-control" validate="{required:true}" data-bind="value: WeldQuanlity" />
-                            </div>
-                        </div>
-                    </div>
+                                    <input type="text" name="WeldQuanlity" id="WeldQuanlity" class="form-control" validate="{required:true}" data-bind="value: WeldQuanlity" />
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
                 </form>
             </div>
 
@@ -309,29 +357,6 @@
             this.style.left = nl + 'px';
             this.style.top = nt + 'px';
         });
-        $(document).on('change', '#BoardNumber', function () {
-            var postVaule = { "FigureNumber": $('#FigureNumber').val(), "BoardNumber": $('#BoardNumber').val() }
-            var jsonVaule = JSON.stringify(postVaule);
-
-            $.ajax({
-                url: "/WeldCategory/GetWeldingProperty",
-                type: "post",
-                contentType: "application/json",
-                data: jsonVaule,
-                success: function (data) {
-                    if (data != null) {
-                        if (data.result.indexOf('Success') > -1) {
-                            $('#LengthVal').val(data.data1.LengthVal);
-                            $('#Thickness').val(data.Thickness);
-                            $('#WidthVal').val(data.WidthVal);
-                        }
-                    }
-                    else {
-                        alert('没有对应数据');
-                    }
-                }
-            });
-        });
         //$('#iframei').on('mouseup', function (e) {
         //    //开关关闭
         //    isDown = false;
@@ -346,6 +371,30 @@
         //    // 弹出框动作
         //    $('#frameContainer').show();
         //});
+        $(document).on('change', '#BoardNumber', function () {
+            var postVaule = { "FigureNumber": $("#FigureNumber").val(), "BoardNumber": $("#BoardNumber").val() }
+            var jsonVaule = JSON.stringify(postVaule);
+
+            $.ajax({
+                url: "/WeldCategory/GetWeldingProperty",
+                type: "post",
+                contentType: "application/json",
+                data: jsonVaule,
+                success: function (Data) {
+                    if (Data != null) {
+                        if (Data.result.indexOf('Success') > -1) {
+                            $("#WidthVal").val(Data.data1.WidthVal);
+                            $("#LengthVal").val(Data.data1.LengthVal);
+
+                        }
+                    }
+                    else {
+                        artDialog.alert("未查询到图号对应的焊缝信息.")
+                    }
+                }
+            });
+        }
+        }
         $(document).on('change', '#WeldLengthSel', function () {
             var txt = $('#WeldLengthSel option:selected').val();
 
