@@ -189,8 +189,15 @@
                             </td>
                             <td>
                                 <div class="col-sm-7">
-
-                                    <input type="text" name="ThicknessId" id="Thickness" class="form-control" validate="{required:true}" data-bind="value: Thickness" />
+                                    <select class="single-select form-control" name="Thickness" id="Thickness" data-placeholder="请选择板厚" validate="{required:true}">
+                                        @foreach (string a in ViewBag.ThickTypes)
+                                        {
+                                            if (!string.IsNullOrEmpty(a))
+                                            {
+                                                <option value="@a">@a</option>
+                                            }
+                                        }
+                                    </select>
                                 </div>
                             </td>
 
@@ -216,13 +223,13 @@
 
                         </tr>
                         <tr class="row">
-                            @*<td>
+                            <td>
                                 <label class="col-sm-5 control-label">焊材类型:</label>
                             </td>
                             <td>
                                 <div class="col-sm-7">
                                     <select class="single-select form-control" name="WeldingType" id="WeldingType" data-placeholder="请选择焊材类型" validate="{required:true}" >
-                                        @foreach (string a in ViewBag.WeldTypes)
+                                        @foreach (string a in ViewBag.WeldingModels)
                                         {
                                             if (!string.IsNullOrEmpty(a))
                                             {
@@ -231,7 +238,7 @@
                                         }
                                     </select>
                                 </div>
-                            </td>*@
+                            </td>
                             <td>
                                 <label class="col-sm-5 control-label">焊缝截面积:</label>
                             </td>
@@ -390,7 +397,7 @@
                             $("#WidthVal").val(Data.data1.WidthVal);
                             $("#LengthVal").val(Data.data1.LengthVal);
                             $("#BeamNum").val(Data.data1.BeamNum);
-                            $("#Quantity").val(Data.data1.WeldNum);
+                            //$("#Quantity").val(Data.data1.WeldNum);
                         }
                     }
                     else {

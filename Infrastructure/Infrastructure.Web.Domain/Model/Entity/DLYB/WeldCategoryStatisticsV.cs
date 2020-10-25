@@ -32,7 +32,8 @@ namespace Infrastructure.Web.Domain.Entity
         public string SectionalArea { get; set; }
         [Column("Welding_Model")]
         public string WeldingModel { get; set; }
-
+        //[Column("Welding_Type")]
+        //public string WeldingType { get; set; }
         public string DepartmentID { get; set; }
 
         public DateTime? CreatedDate { get; set; }
