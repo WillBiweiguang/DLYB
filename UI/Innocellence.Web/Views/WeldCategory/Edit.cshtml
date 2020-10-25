@@ -25,20 +25,43 @@
         position: relative;
         /*margin-right: 20px;*/
     }
+
     .control-label {
-        
     }
-    table{width:100%;}
-    tr{width:100%;}
-    td{
-        vertical-align:central;
-        height:42px;
+
+    table {
+        width: 100%;
     }
-    .first-td{width:100px; }
-    .second-td{width:220px;}
-    .thrid-td{width:100px}
-    label{width:100%;text-align:right;}
-    .form-control{min-width:160px!important;}
+
+    tr {
+        width: 100%;
+    }
+
+    td {
+        vertical-align: central;
+        height: 42px;
+    }
+
+    .first-td {
+        width: 100px;
+    }
+
+    .second-td {
+        width: 220px;
+    }
+
+    .thrid-td {
+        width: 100px
+    }
+
+    label {
+        width: 100%;
+        text-align: right;
+    }
+
+    .form-control {
+        min-width: 160px !important;
+    }
 </style>
 <!--Action boxes-->
 
@@ -60,6 +83,9 @@
                     <input type="hidden" id="Ids" name="Ids" value="@Model.Ids" />
                     <input type="hidden" id="beamId" name="beamId" value="@ViewBag.BeamId" />
                     <input type="hidden" id="HandleID" name="HandleID" value="" data-bind="value: HandleID" />
+                    <input type="hidden" name="LengthVal" id="LengthVal" class="form-control" data-bind="value: LengthVal" />
+                    <input type="hidden" name="WidthVal" id="WidthVal" class="form-control" data-bind="value: WidthVal" />
+                    <input type="hidden" name="BeamNum" id="BeamNum" class="form-control" data-bind="value: BeamNum" />
                     <table>
                         <tr class="row">
                             <td class="first-td">
@@ -130,14 +156,32 @@
                                 </div>
                             </td>
                         </tr>
+                        <tr class="row">
+                            <td>
+                                <label class="col-sm-5 control-label">焊接边数:</label>
+                            </td>
+                            <td>
+                                <div class="col-sm-7">
+                                    <select class="single-select form-control" name="WeldLengthSel" validate="{required:true}" id="WeldLengthSel">
 
+                                        <option value="长">长</option>
+                                        <option value="宽">宽</option>
+                                        <option value="长+宽">长+宽</option>
+                                        <option value="2*宽+长">2*宽+长</option>
+                                        <option value="2*长+宽">2*长+宽</option>
+                                        <option value="2*(长+宽)">2*(长+宽)</option>
+                                    </select>
+                                </div>
+                            </td>
+
+                        </tr>
                         <tr class="row">
                             <td>
                                 <label class="col-sm-5 control-label">长度:</label>
                             </td>
                             <td>
                                 <div class="col-sm-7">
-                                    <input type="text" name="LengthVal" id="LengthVal" class="form-control" validate="{required:true}" data-bind="value: LengthVal" />
+                                    <input type="text" name="WeldLength" id="WeldLength" class="form-control" validate="{required:true}" data-bind="value: WeldLength" />
                                 </div>
                             </td>
                             <td>
@@ -173,6 +217,15 @@
                         </tr>
                         <tr class="row">
                             <td>
+                                <label class="col-sm-5 control-label">焊材类型:</label>
+                            </td>
+                            <td>
+                                <div class="col-sm-7">
+
+                                    <input type="text" name="WeldingNumber" id="WeldingNumber" class="form-control" validate="{required:true}" data-bind="value: WeldingNumber" />
+                                </div>
+                            </td>
+                            <td>
                                 <label class="col-sm-5 control-label">焊缝截面积:</label>
                             </td>
                             <td>
@@ -186,24 +239,17 @@
                                 </div>
                             </td>
 
-                            @*<td>
-                                <label class="col-sm-5 control-label">焊接边数:</label>
-                            </td>
-                            <td>
-                                <div class="col-sm-7">
 
-                                    <input type="text" name="WeldingNumber" id="WeldingNumber" class="form-control" validate="{required:true}" data-bind="value: WeldingNumber" />
-                                </div>
-                            </td>*@
                         </tr>
+                        
                         <tr class="row">
                             <td>
-                                <label class="col-sm-5 control-label">梁段数量:</label>
+                                <label class="col-sm-5 control-label">焊缝质量:</label>
                             </td>
                             <td>
                                 <div class="col-sm-7">
 
-                                    <input type="text" name="BeamNum" id="BeamNum" class="form-control" validate="{required:true}" data-bind="value: BeamNum" />
+                                    <input type="text" name="WeldQuanlity" id="WeldQuanlity" class="form-control" validate="{required:true}" data-bind="value: WeldQuanlity" />
                                 </div>
                             </td>
                             <td>
@@ -213,55 +259,6 @@
                                 <div class="col-sm-7">
 
                                     <input type="text" name="Quantity" id="Quantity" class="form-control" validate="{required:true}" data-bind="value: Quantity" />
-                                </div>
-                            </td>
-                        </tr>
-
-                        <tr class="row">
-                            <td>
-                                <label class="col-sm-5 control-label">宽度:</label>
-                            </td>
-                            <td>
-                                <div class="col-sm-7">
-                                    <input type="text" name="WidthVal" id="WidthVal" class="form-control" validate="{required:true}" data-bind="value: WidthVal" />
-                                </div>
-                            </td>
-
-                        </tr>
-                        <tr class="row">
-                            <td>
-                                <label class="col-sm-5 control-label">焊缝长度:</label>
-                            </td>
-                            <td>
-                                <div class="col-sm-7">
-                                    <select class="single-select form-control" name="WeldLengthSel" validate="{required:true}" id="WeldLengthSel">
-
-                                        <option value="长">长</option>
-                                        <option value="宽">宽</option>
-                                        <option value="长+宽">长+宽</option>
-                                        <option value="2*宽+长">2*宽+长</option>
-                                        <option value="2*长+宽">2*长+宽</option>
-                                        <option value="2*(长+宽)">2*(长+宽)</option>
-                                    </select>
-                                </div>
-                            </td>
-                            <td>
-                                <label class="col-sm-5 control-label">焊缝长度值:</label>
-                            </td>
-                            <td>
-                                <div class="col-sm-7">
-                                    <input type="text" name="WeldLength" id="WeldLength" class="form-control" validate="{required:true}" data-bind="value: WeldLength" />
-                                </div>
-                            </td>
-                        </tr>
-                        <tr class="row">
-                            <td>
-                                <label class="col-sm-5 control-label">焊缝质量:</label>
-                            </td>
-                            <td>
-                                <div class="col-sm-7">
-
-                                    <input type="text" name="WeldQuanlity" id="WeldQuanlity" class="form-control" validate="{required:true}" data-bind="value: WeldQuanlity" />
                                 </div>
                             </td>
                         </tr>
@@ -385,7 +382,8 @@
                         if (Data.result.indexOf('Success') > -1) {
                             $("#WidthVal").val(Data.data1.WidthVal);
                             $("#LengthVal").val(Data.data1.LengthVal);
-
+                            $("#BeamNum").val(Data.data1.BeamNum);
+                            $("#Quantity").val(Data.data1.WeldNum);
                         }
                     }
                     else {
@@ -399,35 +397,37 @@
 
             if (txt == '长') {
                 $("#WeldLength").val($("#LengthVal").val());
-                $("#WeldQuanlity").val($("#WeldLength").val() * $("#BeamNum").val()
-                    * $("#Quantity").val() * $("#SectionArea").val() * 7.85 / 1000000)
+                
             }
             if (txt == '宽') {
                 $("#WeldLength").val($("#WidthVal").val());
-                $("#WeldQuanlity").val($("#WeldLength").val() * $("#BeamNum").val()
-                    * $("#Quantity").val() * $("#SectionArea").val() * 7.85 / 1000000)
+               
             }
             if (txt == '长+宽') {
                 $("#WeldLength").val(parseInt($("#LengthVal").val()) + parseInt($("#WidthVal").val()));
-                $("#WeldQuanlity").val($("#WeldLength").val() * $("#BeamNum").val()
-                    * $("#Quantity").val() * $("#SectionArea").val() * 7.85 / 1000000)
+               
             }
             if (txt == '2*宽+长') {
                 $("#WeldLength").val(2 * parseInt($("#WidthVal").val()) + parseInt($("#LengthVal").val()));
-                $("#WeldQuanlity").val($("#WeldLength").val() * $("#BeamNum").val()
-                    * $("#Quantity").val() * $("#SectionArea").val() * 7.85 / 1000000)
+               
             }
             if (txt == '2*长+宽') {
                 $("#WeldLength").val(2 * parseInt($("#LengthVal").val()) + parseInt($("#WidthVal").val()));
-                $("#WeldQuanlity").val($("#WeldLength").val() * $("#BeamNum").val()
-                    * $("#Quantity").val() * $("#SectionArea").val() * 7.85 / 1000000)
+               
             }
             if (txt == '2*(长+宽)') {
                 $("#WeldLength").val(2 * (parseInt($("#LengthVal").val()) + parseInt($("#WidthVal").val())));
-                $("#WeldQuanlity").val($("#WeldLength").val() * $("#BeamNum").val()
-                    * $("#Quantity").val() * $("#SectionArea").val() * 7.85 / 1000000)
+             
             }
 
+        });
+        $(document).on('change', '#SectionArea', function () {
+            if ($("#Quantity").val()==0) {
+                alert('请输入焊缝数量！');
+                return;
+            }
+            $("#WeldQuanlity").val($("#WeldLength").val() * $("#BeamNum").val()
+                * $("#Quantity").val() * $("#SectionArea").val() * 7.85 / 1000000)
         });
 
         function saveWeldData(list, mode) {
