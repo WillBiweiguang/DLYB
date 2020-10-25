@@ -518,6 +518,7 @@
             var url = '/tasklist/weldingdetail?beamid=' + id;
             var frame = '<iframe id="iframei" src="' + url + '" style="position:absolute; border:none; visibility:inherit; top:38px; left:0px;  height:100%; width:100%; z-index:-1; filter: progid:DXImageTransform.Microsoft.Alpha(style=0,opacity=0);"></iframe>';
             $('#rightPanel').append(frame);
+            $('.widget-title').text('焊材详情统计');
             $('#rightPanel').show(300);
             $('body').append('<div class="modal-backdrop in"></div>');
         }
@@ -527,6 +528,7 @@
             var url = '/tasklist/WeldingDownload';
             var frame = '<iframe id="iframe2" src="' + url + '" style="position:absolute; border:none; visibility:inherit; top:38px; left:0px;  height:100%; width:100%; z-index:-1; filter: progid:DXImageTransform.Microsoft.Alpha(style=0,opacity=0);"></iframe>';
             $('#downloadPanel').append(frame);
+            $('.widget-title').text('批量下载');
             $('#downloadPanel').show(300);
             $('body').append('<div class="modal-backdrop in"></div>');
         });

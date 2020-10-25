@@ -33,6 +33,8 @@ namespace Infrastructure.Web.Domain.Entity
         [Column("Welding_Model")]
         public string WeldingModel { get; set; }
 
+        public string DepartmentID { get; set; }
+
         public DateTime? CreatedDate { get; set; }
 
         public int? CreatedUserID { get; set; }

@@ -23,7 +23,9 @@ namespace Infrastructure.Web.Domain.ModelsView
         public int? UpdatedUserID { get; set; }
 
         public bool IsDeleted { get; set; }
-        
+
+        public string CreatedUserName { get; set; }
+
         public IViewModel ConvertAPIModel(object obj) {
             var entity = (WeldGeometry)obj;
             Id = entity.Id;

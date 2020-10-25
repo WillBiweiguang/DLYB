@@ -22,9 +22,11 @@ namespace DLYB.Web.Controllers
     public class AddressController : BaseController<Address,AddressView>
     {
         private readonly IAddressService _addressService;
-        public AddressController(IAddressService addressService) : base(addressService)
+        private readonly ISysUserService _sysUserService;
+        public AddressController(IAddressService addressService,ISysUserService userService) : base(addressService)
         {
-            _addressService = addressService;            
+            _addressService = addressService;
+            _sysUserService = userService;
         }
         // GET: Address
         public override ActionResult Index()
@@ -61,6 +63,12 @@ namespace DLYB.Web.Controllers
             }
             int rowCount = gridRequest.PageCondition.RowCount;
             List<AddressView> listEx = GetListEx(expression, gridRequest.PageCondition);
+            var userIds = listEx.Select(x => x.CreatedUserID).ToArray();
+            var users = _sysUserService.GetList<SysUserView>(10, x => userIds.Contains(x.Id)).ToList();
+            listEx.ForEach(x =>
+            {
+                x.CreatedUserName = users.FirstOrDefault(e => e.Id == x.UpdatedUserID)?.UserTrueName;
+            });
             return this.GetPageResult(listEx, gridRequest);
         }     
     }

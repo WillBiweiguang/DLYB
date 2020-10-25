@@ -12,8 +12,8 @@
     <div class="col-sm-12">
         <form class="form-inline" id="SearchForm">
             <div class="form-group">
-                <input class="form-control" type="text" id="search_condition" name="search_condition" placeholder="厂址">
-                <a href="#" class="btn btn-info btn-sm" id="btnSearch" data-toggle="tooltip" data-placement="top" title="查询条件"><i class="fa fa-search">查询</i></a>
+                @*<input class="form-control" type="text" id="search_condition" name="search_condition" placeholder="类型">
+                <a href="#" class="btn btn-info btn-sm" id="btnSearch" data-toggle="tooltip" data-placement="top" title="查询条件"><i class="fa fa-search">查询</i></a>*@
             </div>
             <div class="form-group pull-right">
                 <a href="#" class="btn btn-info btn-sm" id="btnAdd" data-toggle="tooltip" data-placement="top" title="添加">
@@ -97,9 +97,9 @@
                 "paging": true,
                 "info": false,
                 "aoColumns": [
-                    { "mData": 'Id' },
+                    { "mData": 'Index' },
                     { "mData": 'ThickType' },
-                    { "mData": 'CreatedUserID' },
+                    { "mData": 'CreatedUserName' },
                     { "mData": 'UpdatedDate' }
                 ],
                 "columnDefs": [
