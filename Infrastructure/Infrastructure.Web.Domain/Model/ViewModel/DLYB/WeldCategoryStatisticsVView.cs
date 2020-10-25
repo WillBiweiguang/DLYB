@@ -13,11 +13,11 @@ namespace Infrastructure.Web.Domain.ModelsView
         public string ProjectName { get; set; }
         
         public string AddressName { get; set; }
-        
+        //
         public string HanJieType { get; set; }
         
         public string WeldLocationType { get; set; }
-        
+        //∫∏∑Ï¿‡–Õ
         public string WeldType { get; set; }
         
         public string ThickType { get; set; }
@@ -27,7 +27,8 @@ namespace Infrastructure.Web.Domain.ModelsView
         public string SectionalArea { get; set; }
 
         public string WeldingModel { get; set; }
-
+        
+        public string WeldingType { get; set; }
         public DateTime? CreatedDate { get; set; }
 
         public int? CreatedUserID { get; set; }
@@ -52,6 +53,7 @@ namespace Infrastructure.Web.Domain.ModelsView
             GrooveType = entity.GrooveType;
             SectionalArea = entity.SectionalArea;
             WeldingModel =entity.WeldingModel;
+            WeldingType = entity.WeldingType;
             CreatedDate = entity.CreatedDate;
             CreatedUserID = entity.CreatedUserID;
             UpdatedDate = entity.UpdatedDate;

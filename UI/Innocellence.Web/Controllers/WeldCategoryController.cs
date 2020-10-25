@@ -129,6 +129,7 @@ namespace Innocellence.FaultSearch.Controllers
                     ViewBag.Areas = statistics.Select(x => x.SectionalArea).Distinct().ToList();
                     ViewBag.weldGeometries = statistics.Select(x => x.WeldType).Distinct().ToList();
                     ViewBag.weldLocations = statistics.Select(x => x.WeldLocationType).Distinct().ToList();
+                    ViewBag.WeldingTypes = statistics.Select(x => x.WeldingType).Distinct().ToList();
                     return View(model);
                 }
                 else
