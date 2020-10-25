@@ -16,6 +16,10 @@ namespace Infrastructure.Web.Domain.ModelsView
         public double Thickness { get; set; }
         public double LengthVal { get; set; }
         public double WidthVal { get; set; }
+        //焊缝数量
+        public double WeldNum { get; set; }
+        //梁段数量
+        public double BeamNum { get; set; }
         public DateTime? CreatedDate { get; set; }
 
         public int? CreatedUserID { get; set; }
@@ -40,6 +44,8 @@ namespace Infrastructure.Web.Domain.ModelsView
             Thickness = entity.Thickness;
             LengthVal = entity.LengthVal;
             WidthVal = entity.WidthVal;
+            WeldNum = entity.WeldNum;
+            BeamNum = entity.BeamNum;
             CreatedDate = entity.CreatedDate;
             CreatedUserID = entity.CreatedUserID;
             UpdatedDate = entity.UpdatedDate;

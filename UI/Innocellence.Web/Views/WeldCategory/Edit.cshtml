@@ -85,7 +85,7 @@
                     <input type="hidden" id="HandleID" name="HandleID" value="" data-bind="value: HandleID" />
                     <input type="hidden" name="LengthVal" id="LengthVal" class="form-control" data-bind="value: LengthVal" />
                     <input type="hidden" name="WidthVal" id="WidthVal" class="form-control" data-bind="value: WidthVal" />
-                    <input type="hidden" name="BeamNum" id="BeamNum" class="form-control" data-bind="value: BeamNum" />
+                    <input type="hidden" name="BeamNum" id="BeamNum" class="form-control" value="4"/>
                     <table>
                         <tr class="row">
                             <td class="first-td">
@@ -216,15 +216,22 @@
 
                         </tr>
                         <tr class="row">
-                            <td>
+                            @*<td>
                                 <label class="col-sm-5 control-label">焊材类型:</label>
                             </td>
                             <td>
                                 <div class="col-sm-7">
-
-                                    <input type="text" name="WeldingNumber" id="WeldingNumber" class="form-control" validate="{required:true}" data-bind="value: WeldingNumber" />
+                                    <select class="single-select form-control" name="WeldingType" id="WeldingType" data-placeholder="请选择焊材类型" validate="{required:true}" >
+                                        @foreach (string a in ViewBag.WeldTypes)
+                                        {
+                                            if (!string.IsNullOrEmpty(a))
+                                            {
+                                                <option value="@a">@a</option>
+                                            }
+                                        }
+                                    </select>
                                 </div>
-                            </td>
+                            </td>*@
                             <td>
                                 <label class="col-sm-5 control-label">焊缝截面积:</label>
                             </td>
@@ -421,9 +428,17 @@
             }
 
         });
-        $(document).on('change', '#SectionArea', function () {
-            if ($("#Quantity").val()==0) {
-                alert('请输入焊缝数量！');
+        $("#SectionArea").blur(function () {
+            if ($("#Quantity").val() == 0 || $("#WeldLength").val() == 0 || $("#SectionArea").val() == 0) {
+                alert('请输入焊缝数量或者长度或者焊缝面积！');
+                return;
+            }
+            $("#WeldQuanlity").val($("#WeldLength").val() * $("#BeamNum").val()
+                * $("#Quantity").val() * $("#SectionArea").val() * 7.85 / 1000000)
+        });
+        $("#Quantity").blur(function () {
+            if ($("#Quantity").val() == 0 || $("#WeldLength").val() == 0 || $("#SectionArea").val()==0) {
+                alert('请输入焊缝数量或者长度或者焊缝面积！');
                 return;
             }
             $("#WeldQuanlity").val($("#WeldLength").val() * $("#BeamNum").val()

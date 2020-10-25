@@ -18,6 +18,10 @@ namespace Infrastructure.Web.Domain.Entity
         public string FigureNumber { get; set; }
         public string BoardNumber { get; set; }
         public double Thickness { get; set; }
+        //焊缝数量
+        public double WeldNum { get; set; }
+        //梁段数量
+        public double BeamNum { get; set; }
         public double LengthVal { get; set; }
         public double WidthVal { get; set; }
         public DateTime? CreatedDate { get; set; }
