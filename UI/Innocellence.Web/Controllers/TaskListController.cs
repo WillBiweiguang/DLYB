@@ -255,10 +255,13 @@ namespace DLYB.Web.Controllers
             using (FileStream file = new FileStream(templateFilename, FileMode.Open, FileAccess.Read))
             {
                 var workbook = new XSSFWorkbook(file);
-                var sheet1 = workbook.GetSheet("焊材");
-                
-                //var answer = _pollingResultService.GetList(Id);
-                var reportList1 = _wcsvService.Repository.Entities.Where(a => !a.IsDeleted).ToList();
+                var sheet1 = workbook.GetSheet("焊材");                
+                var query = _wcsvService.Repository.Entities.Where(a => !a.IsDeleted);
+                if (!string.IsNullOrEmpty(objLoginInfo.Department))
+                {
+                    query.Where(a => a.DepartmentID == objLoginInfo.Department);
+                }
+                var reportList1 = query.ToList();
                 int i = 1;
                 string beamName = "";
                 int projectId = 0;
