@@ -357,7 +357,7 @@
                                 opstr = opstr + '<a href="#" onclick="approveTask(\'' + full.Id + '\',1);return false;" class="artDailog btn btn-info  btn-xs" style="margin-right:4px;" data-toggle="tooltip" data-placement="top" title="通过">通过</a>';
                                 opstr = opstr + '<a href="#" onclick="approveTask(\'' + full.Id + '\',0);return false;" class="artDailog btn btn-info  btn-xs" style="margin-right:4px;" data-toggle="tooltip" data-placement="top" title="驳回">驳回</a>';
                             }
-                            if ((full.TaskStatus == tastStatus.new || full.TaskStatus == tastStatus.rejected) && userId == full.CreatedUserID) {
+                            if ((full.TaskStatus == tastStatus.new || full.TaskStatus == tastStatus.rejected) && (isapprover || userId == full.CreatedUserID)) {
                                 opstr = opstr + '<a href="#" onclick="raiseApproval(\'' + full.Id + '\');return false;" class="artDailog btn btn-info  btn-xs" style="margin-right:4px;" data-toggle="tooltip" data-placement="top" title="提交审核"><i class="ace-icon glyphicon glyphicon-cog"></i></a>';
                             }
                             opstr = opstr + '<a href="#" onclick="weldcategory(' + full.ProjectId + ',' + full.BeamId + ', 1);return false;" class="artDailog btn btn-info  btn-xs" style="margin-right:4px;" data-toggle="tooltip" data-placement="top" title="查看焊缝标注"><i class="ace-icon glyphicon  glyphicon-eye-open"></i></a>';

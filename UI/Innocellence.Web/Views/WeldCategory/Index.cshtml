@@ -426,6 +426,8 @@
                     saveFile();
                     event.returnValue = dialogText;
                     return dialogText;
+                } else {
+                    saveFile();
                 }
             }
         });
@@ -633,6 +635,10 @@
                     ids += $(ctr).val() + ',';
                 }
             });
+            if (ids.length <= 1) {
+                alert('未选择数据');
+                return;
+            }
             showEditForm(ids);
         }
     </script>
