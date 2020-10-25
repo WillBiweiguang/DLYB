@@ -22,9 +22,11 @@ namespace DLYB.Web.Controllers
     public class WeldingController : BaseController<Welding,WeldingView>
     {
         private readonly IWeldingService _weldingService;
-        public WeldingController(IWeldingService weldingService) : base(weldingService)
+        private readonly ISysUserService _sysUserService;
+        public WeldingController(IWeldingService weldingService, ISysUserService userService) : base(weldingService)
         {
             _weldingService = weldingService;
+            _sysUserService = userService;
         }
         // GET: Address
         public override ActionResult Index()

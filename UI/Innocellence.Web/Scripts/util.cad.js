@@ -355,132 +355,6 @@ function GetWelding() {
     saveWeldData(weldData);
 }
 
-// 新版的，现在有问题
-//function GetWelding() {
-//    //焊缝识别部分 Start
-//    var myDate = new Date();
-//    var strtimestart = myDate.toLocaleString();
-//    var mxOcx = document.all.item("MxDrawXCtrl");
-//    //实例化一个构造选择集进行过滤,该类封装了选择集及其处理函数。
-//    var ss = mxOcx.NewSelectionSet();
-//    //构造一个过滤链表
-//    var spFilte = mxOcx.NewResbuf();
-//    spFilte.AddStringEx("HATCH", 5020);
-//    //得到当前空间的所有实体
-//    ss.AllSelect(spFilte);
-//    var ArrowArray = [];
-//    for (var i = 0; i < ss.Count; i++) {
-//        var ent = ss.Item(i);
-//        var HatchArrow = ent;
-//        var PolylineArray = HatchArrow.GetPolylines();
-//        var PAnum = PolylineArray.Count;
-//        if (PAnum == 1) {
-//            var polyline = PolylineArray.AtObject(0);
-//            var num = polyline.numVerts;
-//            if (num == 4) {
-//                var pt1 = polyline.GetPointAt(0);
-//                var pt2 = polyline.GetPointAt(1);
-//                var pt3 = polyline.GetPointAt(2);
-//                var pt4 = polyline.GetPointAt(3);
-//                var jd_d = 0.1
-//                if (polyline.IsClosedStatus == true)//相同
-//                {
-//                    var mL1 = pt1.DistanceTo(pt2);
-//                    var mL2 = pt1.DistanceTo(pt3);
-//                    var mL3 = pt2.DistanceTo(pt3);
-//                    if ((mL1 <= mL2 + jd_d && mL1 >= mL2 - jd_d) || (mL2 <= mL1 + jd_d && mL2 >= mL1 - jd_d)) {
-//                        var x = (pt2.x + pt3.x) / 2;
-//                        var y = (pt2.y + pt3.y) / 2;
-//                        var midP = mxOcx.NewPoint();
-//                        midP.x = x;
-//                        midP.y = y;
-//                        var MObjectID = HatchArrow.handle;
-//                        var myArrowtest = new myArrow(MObjectID, pt1, pt2, pt3, midP)
-//                        ArrowArray[ArrowArray.length] = myArrowtest;
-//                    }
-//                    else if ((mL2 <= mL3 + jd_d && mL2 >= mL3 - jd_d) || (mL3 <= mL2 + jd_d && mL3 >= mL2 - jd_d)) {
-//                        var x = (pt1.x + pt2.x) / 2;
-//                        var y = (pt1.y + pt2.y) / 2;
-//                        var midP = mxOcx.NewPoint();
-//                        midP.x = x;
-//                        midP.y = y;
-//                        var MObjectID = HatchArrow.handle;
-//                        var myArrowtest = new myArrow(MObjectID, pt3, pt1, pt2, midP)
-//                        ArrowArray[ArrowArray.length] = myArrowtest;
-//                    }
-//                    else if ((mL1 <= mL3 + jd_d && mL1 >= mL3 - jd_d) || (mL3 <= mL1 + jd_d && mL3 >= mL1 - jd_d)) {
-//                        var x = (pt1.x + pt3.x) / 2;
-//                        var y = (pt1.y + pt3.y) / 2;
-//                        var midP = mxOcx.NewPoint();
-//                        midP.x = x;
-//                        midP.y = y;
-//                        var MObjectID = HatchArrow.handle;
-//                        var myArrowtest = new myArrow(MObjectID, pt2, pt1, pt3, midP)
-//                        ArrowArray[ArrowArray.length] = myArrowtest;
-//                    }
-//                }
-//            }
-//        }
-//    }
-//    var NSArrowArray = DeletSameArrow(ArrowArray);
-
-//    for (var i = 0; i < NSArrowArray.length; i++) {
-//        var myWeld = GetWeldingType(NSArrowArray[i]);
-//        if (myWeld == null || myWeld.myWelType == "") {
-//            continue;
-//        }
-//        ////根据类型修改颜色
-//        //ChangeColorByType(myWeld);
-
-//        //根据类型修改图层
-//        ChangeWeldLayerbyHandle(myWeld);
-
-
-//        //在箭头处画圆
-//        DrawCircleOfArrow(myWeld);
-
-//        //可在此处逐个获取识别到的焊缝符号的信息
-
-//        //myWeld——为识别到的焊缝符号，myWeld.myWelArrow.myArrowObjectID 保存的是箭头的handle
-//        //myWeld.myWelType  是焊缝的类型代号字符串
-//        //1-不开坡口对接焊   "N_PoKDuiJieH"
-//        //2 -单面-单侧-坡口-背面封底-对接焊缝    "Y_DMDCPoKDuiJieH"
-//        //3 单面-双侧-坡口-背面封底-对接焊缝----3(12)  "Y_DMSCPoKDuiJieH"
-//        //4 -双面-单侧-坡口-对接焊缝   "Y_SMDCPoKDuiJieH"
-//        //5 双面-双侧-坡口-对接焊缝----  "Y_SMSCPoKDuiJieH"
-//        //6 单面-单侧-坡口-角焊缝-----(15) "Y_DMDCPoKJiaoH"
-//        //7 单面-坡口-盖板-角焊缝-----(16)  "Y_DMPoKGaiBJiaoH"
-//        //8 双面-坡口-背面坡口-角焊缝-----(17) "Y_SMPoKBeiPJiaoH"
-//        //10  双面-坡口-熔透----  "Y_SMPoKRTH"
-//        //11 双面坡口盖板熔透,有图形(20) "Y_SMPoKGaiBRTH"
-//        //13 单面-角焊缝----13(22)    "Y_DMJiaoH"
-//        //14-双面角焊缝   "Y_SMJiaoH"
-//    }
-
-//    // var cirId=DrawCircleOfArrow(m_ResWeldArr[0].myWelArrow.myArrowObjectID) //实现使用箭头handle 在箭头处画圆
-
-
-//    //var strFlieName=mxOcx.GetFileName();
-//    //mxOcx.SaveDwgFile(strFlieName);
-//    mxOcx.UpdateDisplay();
-
-//    //焊缝识别部分 End 
-
-//    //保存焊缝符号数据 START
-//    if (NSArrowArray.length == 0) {
-//        alert('未识别到焊缝');
-//        return;
-//    }
-//    //保存焊缝数据到DB
-//    var weldData = [];
-//    for (var i = 0; i < NSArrowArray.length; i++) {
-//        var handleArray = GetWeldHandle(NSArrowArray[i]);
-//        weldData.push({ WeldType: NSArrowArray[i].myWelType, HandleID: NSArrowArray[i].myWelArrow.myArrowObjectID + ',' + handleArray.toString() });
-//    }
-//    saveWeldData(weldData);
-//    //保存焊缝符号数据 END
-//}
-
 //在给定handle实体处画圈
 function DrawCircleOfArrow(m_Weld) {
     var mxOcx = document.all.item("MxDrawXCtrl");
@@ -513,6 +387,7 @@ function deleClrByID(myId) {
     ent = database.ObjectIdToObject(myId);
     ent.Erase();
 }
+
 function GetWeldingType(myArrow) {
     var myWeld = new myWelding(null, null, null, 0, "", null, 0, null, null, null, null, null, 0, null, null, null, null, 0, null, null, null, "",
         null, "", null, "", 0, null, "", null, "", null, "", 0, null, null, 0, null, null, null, 0,
@@ -549,7 +424,7 @@ function GetWeldingType(myArrow) {
             PolyLArray3[PolyLArray3.length] = mployLine;
         }
     }
-    var myDimes = GetDimensArrowLine(myArrow, PolyLArray2, PolyLArray3);
+    var myDimes = GetDimensArrowLine(myArrow, PolyLArray2, PolyLArray3)
     var myTempWeldingArray = null;
     if (myDimes == null) {
         return null;
@@ -891,9 +766,11 @@ function GetWeldingType(myArrow) {
     var myWeldingData = GetIntersectLineArray(myTempWeldingArray, NS_PolylineArray2, NS_PolylineArray3, NS_PolylineArray4_10)
     var m_ResWeldArr = null;
     m_ResWeldArr = FirstDivideWelding(myWeldingData, NS_PolylineArray2, NS_PolylineArray3, NS_PolylineArray4_10)
+    if (m_ResWeldArr.myWelType == "") {
+        m_ResWeldArr.myWelType = "Unrecognized"
+    }
     return m_ResWeldArr;
 }
-
 
 //根据类型修改颜色
 function ChangeColorByType(myWeldArray)
@@ -1074,8 +951,8 @@ function GetDimensArrowLine(myArrowDatas, TwoP_Polyline, ThreeP_Polyline) {
 //---4----
 function GetIntersectLineArray(myWeldArray, TwoP_PolyLArray, ThreeP_PolyLArray, FourMP_PolyLArray) {
 
-    var myGuaiP = myWeldArray.myWelGUIP;
-    var myWeiP = myWeldArray.myWelWEIP;
+    var myGuaiP = myWeldArray.myWelGUIP
+    var myWeiP = myWeldArray.myWelWEIP
 
     for (var twoi = 0; twoi < TwoP_PolyLArray.length; twoi++) {
 
@@ -1653,7 +1530,7 @@ function FirstDivideWelding(myWeldArray, TwoP_PolyLArray, ThreeP_PolyLArray, Fou
                 var dis;
                 dis = GetDisFromTwoPoint(myWeldArray.myWelGUIP, myWeldArray.myWelWEIP);
                 var res_PolyLineArr = [];
-                res_PolyLineArr = GetGraphFromArea(myWeldArray.myWelMSline_1.myPolyStartP.x, myWeldArray.myWelMSline_1.myPolyEndP.x, myWeldArray.myWelMSline_1.myPolyStartP.y, dis, "up", TwoP_PolyLArray, ThreeP_PolyLArray)
+                res_PolyLineArr = GetGraphFromArea(myWeldArray.myWelMSline_1.myPolyStartP.x, myWeldArray.myWelMSline_1.myPolyEndP.x, myWeldArray.myWelMSline_1.myPolyStartP.y, dis, "up", TwoP_PolyLArray, ThreeP_PolyLArray, FourMP_PolyLArray)
                 if (res_PolyLineArr.length == 2) {
                     myWeldArray.myWelUP_num = 2;
                     myWeldArray.myWelUPline_1 = res_PolyLineArr[0];
@@ -1664,7 +1541,7 @@ function FirstDivideWelding(myWeldArray, TwoP_PolyLArray, ThreeP_PolyLArray, Fou
                     myWeldArray.myWelUPline_1 = res_PolyLineArr[0];
                 }
                 var res_XPolyLineArr = [];
-                res_XPolyLineArr = GetGraphFromArea(myWeldArray.myWelMXline_1.myPolyStartP.x, myWeldArray.myWelMXline_1.myPolyEndP.x, myWeldArray.myWelMXline_1.myPolyStartP.y, dis, "down", TwoP_PolyLArray, ThreeP_PolyLArray)
+                res_XPolyLineArr = GetGraphFromArea(myWeldArray.myWelMXline_1.myPolyStartP.x, myWeldArray.myWelMXline_1.myPolyEndP.x, myWeldArray.myWelMXline_1.myPolyStartP.y, dis, "down", TwoP_PolyLArray, ThreeP_PolyLArray, FourMP_PolyLArray)
                 if (res_XPolyLineArr.length == 2) {
                     myWeldArray.myWelDOWN_num = 2;
                     myWeldArray.myWelDOWNline_1 = res_XPolyLineArr[0];
@@ -1713,7 +1590,7 @@ function FirstDivideWelding(myWeldArray, TwoP_PolyLArray, ThreeP_PolyLArray, Fou
                             mtemEP = myWeldArray.myWelMSline_2.myPolyStartP;
                         }
                         var upGrapLine = [];
-                        upGrapLine = GetGraphFromArea(mtempSP.x, mtemEP.x, mtempSP.y, dis, "up", TwoP_PolyLArray, ThreeP_PolyLArray)
+                        upGrapLine = GetGraphFromArea(mtempSP.x, mtemEP.x, mtempSP.y, dis, "up", TwoP_PolyLArray, ThreeP_PolyLArray, FourMP_PolyLArray)
                         if (upGrapLine.length == 2) {
                             myWeldArray.myWelUP_num = 2;
                             myWeldArray.myWelUPline_1 = upGrapLine[0];
@@ -1736,7 +1613,7 @@ function FirstDivideWelding(myWeldArray, TwoP_PolyLArray, ThreeP_PolyLArray, Fou
                             mtemEP = myWeldArray.myWelMXline_2.myPolyStartP;
                         }
                         var DownGrapLine = [];
-                        DownGrapLine = GetGraphFromArea(mtempSP.x, mtemEP.x, mtempSP.y, dis, "down", TwoP_PolyLArray, ThreeP_PolyLArray)
+                        DownGrapLine = GetGraphFromArea(mtempSP.x, mtemEP.x, mtempSP.y, dis, "down", TwoP_PolyLArray, ThreeP_PolyLArray, FourMP_PolyLArray)
                         if (DownGrapLine.length == 2) {
                             myWeldArray.myWelDOWN_num = 2;
                             myWeldArray.myWelDOWNline_1 = DownGrapLine[0];
@@ -1854,7 +1731,8 @@ function FirstDivideWelding(myWeldArray, TwoP_PolyLArray, ThreeP_PolyLArray, Fou
                     }
                 }
                 else if (m_mtlLineArr.length == 0) {
-                    if (CheckAngleIn(myWeldArray.myWelMSline_1.myPolyMid, myWeldArray.myWelMSline_1.myPolyStartP, myWeldArray.myWelMSline_1.myPolyEndP, 53, 40)) {
+                    //2020-10-19
+                    if (CheckAngleIn(myWeldArray.myWelMSline_1.myPolyMid, myWeldArray.myWelMSline_1.myPolyStartP, myWeldArray.myWelMSline_1.myPolyEndP, 53, 35)) {
                         if (myWeldArray.myWelMSStorEdorMd_1 == "Mid") {
                             myWeldArray.myWelType = "Y_DMDCPoKJiaoH"
                         }
@@ -1969,7 +1847,7 @@ function FirstDivideWelding(myWeldArray, TwoP_PolyLArray, ThreeP_PolyLArray, Fou
                         mtemEP = myWeldArray.myWelMSline_2.myPolyStartP;
                     }
                     var upGrapLine = [];
-                    upGrapLine = GetGraphFromArea(mtempSP.x, mtemEP.x, mtempSP.y, dis, "up", TwoP_PolyLArray, ThreeP_PolyLArray)
+                    upGrapLine = GetGraphFromArea(mtempSP.x, mtemEP.x, mtempSP.y, dis, "up", TwoP_PolyLArray, ThreeP_PolyLArray, FourMP_PolyLArray)
                     if (upGrapLine.length == 2) {
                         myWeldArray.myWelUP_num = 2;
                         myWeldArray.myWelUPline_1 = upGrapLine[0];
@@ -2011,7 +1889,7 @@ function FirstDivideWelding(myWeldArray, TwoP_PolyLArray, ThreeP_PolyLArray, Fou
                                 mtemEP = myWeldArray.myWelMXline_2.myPolyStartP;
                             }
                             var mtDLineArr = [];
-                            mtDLineArr = GetGraphFromArea(mtempSP.x, mtemEP.x, mtempSP.y, dis, "down", TwoP_PolyLArray, ThreeP_PolyLArray)
+                            mtDLineArr = GetGraphFromArea(mtempSP.x, mtemEP.x, mtempSP.y, dis, "down", TwoP_PolyLArray, ThreeP_PolyLArray, FourMP_PolyLArray)
                             if (mtDLineArr.length == 2) {
                                 myWeldArray.myWelDOWN_num = 2;
                                 myWeldArray.myWelDOWNline_1 = mtDLineArr[0];
@@ -2043,7 +1921,8 @@ function FirstDivideWelding(myWeldArray, TwoP_PolyLArray, ThreeP_PolyLArray, Fou
         if (myWeldArray.myWelMidline_1.myPolyPNum == 6) {
             var templine = FindLineFromArray(myWeldArray.myWelMidline_1.myPolyLineObjectID, FourMP_PolyLArray)
             //2020-10-16
-            if (CheckAngleIn(templine.GetPointAt(2), templine.GetPointAt(1), templine.GetPointAt(4), 110, 88)) {
+            if (CheckAngleIn(templine.GetPointAt(2), templine.GetPointAt(1), templine.GetPointAt(4), 110, 88)
+                || CheckAngleIn(templine.GetPointAt(1), templine.GetPointAt(2), templine.GetPointAt(5), 110, 88)) {
                 myWeldArray.myWelType = "Y_SMJiaoH"
             }
         }
@@ -2068,6 +1947,21 @@ function FirstDivideWelding(myWeldArray, TwoP_PolyLArray, ThreeP_PolyLArray, Fou
                 myWeldArray.myWelType = "Y_SMJiaoH"
             }
         }
+        //2020-10-20
+        else if ((myWeldArray.myWelMSline_1.myPolyPNum == 5 && myWeldArray.myWelMSStorEdorMd_1 != "Mid"
+            && myWeldArray.myWelMXline_1.myPolyPNum == 3 && myWeldArray.myWelMXStorEdorMd_1 != "Mid")) {
+            if (CheckAngleIn(myWeldArray.myWelMXline_1.myPolyMid, myWeldArray.myWelMXline_1.myPolyStartP, myWeldArray.myWelMXline_1.myPolyEndP, 55, 34)) {
+                myWeldArray.myWelType = "Y_SMJiaoH"
+            }
+        }
+        //2020-10-20
+        if (myWeldArray.myWelMSline_1.myPolyPNum == 3 && myWeldArray.myWelMSStorEdorMd_1 != "Mid"
+            && myWeldArray.myWelMXline_1.myPolyPNum == 5 && myWeldArray.myWelMXStorEdorMd_1 != "Mid") {
+
+            if (CheckAngleIn(myWeldArray.myWelMSline_1.myPolyMid, myWeldArray.myWelMSline_1.myPolyStartP, myWeldArray.myWelMSline_1.myPolyEndP, 55, 34)) {
+                myWeldArray.myWelType = "Y_SMJiaoH"
+            }
+        }
         else if (myWeldArray.myWelMSline_1.myPolyPNum == 3 && myWeldArray.myWelMSStorEdorMd_1 == "Mid"
             && myWeldArray.myWelMXline_1.myPolyPNum == 3 && myWeldArray.myWelMXStorEdorMd_1 == "Mid") {
             if (CheckAngleIn(myWeldArray.myWelMSline_1.myPolyMid, myWeldArray.myWelMSline_1.myPolyStartP, myWeldArray.myWelMSline_1.myPolyEndP, 51, 43)
@@ -2075,7 +1969,7 @@ function FirstDivideWelding(myWeldArray, TwoP_PolyLArray, ThreeP_PolyLArray, Fou
                 var dis;
                 dis = GetDisFromTwoPoint(myWeldArray.myWelGUIP, myWeldArray.myWelWEIP);
                 var res_PolyLineArr = [];
-                res_PolyLineArr = GetGraphFromArea(myWeldArray.myWelMSline_1.myPolyStartP.x, myWeldArray.myWelMSline_1.myPolyEndP.x, myWeldArray.myWelMSline_1.myPolyStartP.y, dis, "up", TwoP_PolyLArray, ThreeP_PolyLArray)
+                res_PolyLineArr = GetGraphFromArea(myWeldArray.myWelMSline_1.myPolyStartP.x, myWeldArray.myWelMSline_1.myPolyEndP.x, myWeldArray.myWelMSline_1.myPolyStartP.y, dis, "up", TwoP_PolyLArray, ThreeP_PolyLArray, FourMP_PolyLArray)
                 if (res_PolyLineArr.length == 2) {
                     myWeldArray.myWelUP_num = 2;
                     myWeldArray.myWelUPline_1 = res_PolyLineArr[0];
@@ -2086,7 +1980,7 @@ function FirstDivideWelding(myWeldArray, TwoP_PolyLArray, ThreeP_PolyLArray, Fou
                     myWeldArray.myWelUPline_1 = res_PolyLineArr[0];
                 }
                 var res_XPolyLineArr = [];
-                res_XPolyLineArr = GetGraphFromArea(myWeldArray.myWelMXline_1.myPolyStartP.x, myWeldArray.myWelMXline_1.myPolyEndP.x, myWeldArray.myWelMXline_1.myPolyStartP.y, dis, "down", TwoP_PolyLArray, ThreeP_PolyLArray)
+                res_XPolyLineArr = GetGraphFromArea(myWeldArray.myWelMXline_1.myPolyStartP.x, myWeldArray.myWelMXline_1.myPolyEndP.x, myWeldArray.myWelMXline_1.myPolyStartP.y, dis, "down", TwoP_PolyLArray, ThreeP_PolyLArray, FourMP_PolyLArray)
                 if (res_XPolyLineArr.length == 2) {
                     myWeldArray.myWelDOWN_num = 2;
                     myWeldArray.myWelDOWNline_1 = res_XPolyLineArr[0];
@@ -2134,7 +2028,7 @@ function FirstDivideWelding(myWeldArray, TwoP_PolyLArray, ThreeP_PolyLArray, Fou
                         mtemEP = myWeldArray.myWelMSline_2.myPolyStartP;
                     }
                     var upGrapLine = [];
-                    upGrapLine = GetGraphFromArea(mtempSP.x, mtemEP.x, mtempSP.y, dis, "up", TwoP_PolyLArray, ThreeP_PolyLArray)
+                    upGrapLine = GetGraphFromArea(mtempSP.x, mtemEP.x, mtempSP.y, dis, "up", TwoP_PolyLArray, ThreeP_PolyLArray, FourMP_PolyLArray)
                     if (upGrapLine.length == 2) {
                         myWeldArray.myWelUP_num = 2;
                         myWeldArray.myWelUPline_1 = upGrapLine[0];
@@ -2157,7 +2051,7 @@ function FirstDivideWelding(myWeldArray, TwoP_PolyLArray, ThreeP_PolyLArray, Fou
                         mtemEP = myWeldArray.myWelMXline_2.myPolyStartP;
                     }
                     var DownGrapLine = [];
-                    DownGrapLine = GetGraphFromArea(mtempSP.x, mtemEP.x, mtempSP.y, dis, "down", TwoP_PolyLArray, ThreeP_PolyLArray)
+                    DownGrapLine = GetGraphFromArea(mtempSP.x, mtemEP.x, mtempSP.y, dis, "down", TwoP_PolyLArray, ThreeP_PolyLArray, FourMP_PolyLArray)
                     if (DownGrapLine.length == 2) {
                         myWeldArray.myWelDOWN_num = 2;
                         myWeldArray.myWelDOWNline_1 = DownGrapLine[0];
@@ -2326,7 +2220,7 @@ function FirstDivideWelding(myWeldArray, TwoP_PolyLArray, ThreeP_PolyLArray, Fou
                         var dis;
                         dis = GetDisFromTwoPoint(myWeldArray.myWelGUIP, myWeldArray.myWelWEIP);
                         var res_PolyLineArr = [];
-                        res_PolyLineArr = GetGraphFromArea(myWeldArray.myWelMSline_1.myPolyStartP.x, myWeldArray.myWelMSline_1.myPolyEndP.x, myWeldArray.myWelMidline_1.myPolyStartP.y, dis, "up", TwoP_PolyLArray, ThreeP_PolyLArray)
+                        res_PolyLineArr = GetGraphFromArea(myWeldArray.myWelMSline_1.myPolyStartP.x, myWeldArray.myWelMSline_1.myPolyEndP.x, myWeldArray.myWelMidline_1.myPolyStartP.y, dis, "up", TwoP_PolyLArray, ThreeP_PolyLArray, FourMP_PolyLArray)
                         if (res_PolyLineArr.length == 2) {
                             myWeldArray.myWelUP_num = 2;
                             myWeldArray.myWelUPline_1 = res_PolyLineArr[0];
@@ -2337,7 +2231,7 @@ function FirstDivideWelding(myWeldArray, TwoP_PolyLArray, ThreeP_PolyLArray, Fou
                             myWeldArray.myWelUPline_1 = res_PolyLineArr[0];
                         }
                         var res_XPolyLineArr = [];
-                        res_XPolyLineArr = GetGraphFromArea(myWeldArray.myWelMXline_1.myPolyStartP.x, myWeldArray.myWelMXline_1.myPolyEndP.x, myWeldArray.myWelMidline_1.myPolyEndP.y, dis, "down", TwoP_PolyLArray, ThreeP_PolyLArray)
+                        res_XPolyLineArr = GetGraphFromArea(myWeldArray.myWelMXline_1.myPolyStartP.x, myWeldArray.myWelMXline_1.myPolyEndP.x, myWeldArray.myWelMidline_1.myPolyEndP.y, dis, "down", TwoP_PolyLArray, ThreeP_PolyLArray, FourMP_PolyLArray)
                         if (res_XPolyLineArr.length == 2) {
                             myWeldArray.myWelDOWN_num = 2;
                             myWeldArray.myWelDOWNline_1 = res_XPolyLineArr[0];
@@ -2363,7 +2257,7 @@ function FirstDivideWelding(myWeldArray, TwoP_PolyLArray, ThreeP_PolyLArray, Fou
                         var dis;
                         dis = GetDisFromTwoPoint(myWeldArray.myWelGUIP, myWeldArray.myWelWEIP);
                         var res_PolyLineArr = [];
-                        res_PolyLineArr = GetGraphFromArea(myWeldArray.myWelMSline_1.myPolyStartP.x, myWeldArray.myWelMSline_1.myPolyEndP.x, myWeldArray.myWelMidline_1.myPolyEndP.y, dis, "up", TwoP_PolyLArray, ThreeP_PolyLArray)
+                        res_PolyLineArr = GetGraphFromArea(myWeldArray.myWelMSline_1.myPolyStartP.x, myWeldArray.myWelMSline_1.myPolyEndP.x, myWeldArray.myWelMidline_1.myPolyEndP.y, dis, "up", TwoP_PolyLArray, ThreeP_PolyLArray, FourMP_PolyLArray)
                         if (res_PolyLineArr.length == 2) {
                             myWeldArray.myWelUP_num = 2;
                             myWeldArray.myWelUPline_1 = res_PolyLineArr[0];
@@ -2374,7 +2268,7 @@ function FirstDivideWelding(myWeldArray, TwoP_PolyLArray, ThreeP_PolyLArray, Fou
                             myWeldArray.myWelUPline_1 = res_PolyLineArr[0];
                         }
                         var res_XPolyLineArr = [];
-                        res_XPolyLineArr = GetGraphFromArea(myWeldArray.myWelMXline_1.myPolyStartP.x, myWeldArray.myWelMXline_1.myPolyEndP.x, myWeldArray.myWelMidline_1.myPolyStartP.y, dis, "down", TwoP_PolyLArray, ThreeP_PolyLArray)
+                        res_XPolyLineArr = GetGraphFromArea(myWeldArray.myWelMXline_1.myPolyStartP.x, myWeldArray.myWelMXline_1.myPolyEndP.x, myWeldArray.myWelMidline_1.myPolyStartP.y, dis, "down", TwoP_PolyLArray, ThreeP_PolyLArray, FourMP_PolyLArray)
                         if (res_XPolyLineArr.length == 2) {
                             myWeldArray.myWelDOWN_num = 2;
                             myWeldArray.myWelDOWNline_1 = res_XPolyLineArr[0];
@@ -2587,7 +2481,8 @@ function GetInterLineFromVerLine(StartP, EndP, TwoP_PolyLineArray) {
     }
     return mResLineArr;
 }
-function GetGraphFromArea(StartX, EndX, mY, dis, direction, TwoP_PolyLineArray, ThreeP_PolyLineArray) {
+
+function GetGraphFromArea(StartX, EndX, mY, dis, direction, TwoP_PolyLineArray, ThreeP_PolyLineArray, FourMP_PolyLineArray) {
     var bl = false;
     var max_X = 0;
     var min_X = 0;
@@ -2597,6 +2492,7 @@ function GetGraphFromArea(StartX, EndX, mY, dis, direction, TwoP_PolyLineArray, 
 
     var twoLnum = 0;
     var threeLnum = 0;
+    var fourMLnum = 0;
     var res_PolyLineArray = [];
 
     if (StartX > EndX) {
@@ -2617,12 +2513,12 @@ function GetGraphFromArea(StartX, EndX, mY, dis, direction, TwoP_PolyLineArray, 
     }
     for (var i = 0; i < TwoP_PolyLineArray.length; i++) {
         if (TwoP_PolyLineArray[i].GetPointAt(0).x <= max_X && TwoP_PolyLineArray[i].GetPointAt(0).x >= min_X
-			&& TwoP_PolyLineArray[i].GetPointAt(0).y <= max_Y && TwoP_PolyLineArray[i].GetPointAt(0).y >= min_Y
-			&& TwoP_PolyLineArray[i].GetPointAt(1).x <= max_X && TwoP_PolyLineArray[i].GetPointAt(1).x >= min_X
-			&& TwoP_PolyLineArray[i].GetPointAt(1).y <= max_Y && TwoP_PolyLineArray[i].GetPointAt(1).y >= min_Y) {
+            && TwoP_PolyLineArray[i].GetPointAt(0).y <= max_Y && TwoP_PolyLineArray[i].GetPointAt(0).y >= min_Y
+            && TwoP_PolyLineArray[i].GetPointAt(1).x <= max_X && TwoP_PolyLineArray[i].GetPointAt(1).x >= min_X
+            && TwoP_PolyLineArray[i].GetPointAt(1).y <= max_Y && TwoP_PolyLineArray[i].GetPointAt(1).y >= min_Y) {
 
             var mtline = new myPolyLine(TwoP_PolyLineArray[i].handle, 2, TwoP_PolyLineArray[i].GetPointAt(0),
-                                                          TwoP_PolyLineArray[i].GetPointAt(1), null, null)
+                TwoP_PolyLineArray[i].GetPointAt(1), null, null)
             res_PolyLineArray[res_PolyLineArray.length] = mtline;
             twoLnum = twoLnum + 1;
         }
@@ -2630,19 +2526,36 @@ function GetGraphFromArea(StartX, EndX, mY, dis, direction, TwoP_PolyLineArray, 
 
     for (var j = 0; j < ThreeP_PolyLineArray.length; j++) {
         if (ThreeP_PolyLineArray[j].GetPointAt(0).x <= max_X && ThreeP_PolyLineArray[j].GetPointAt(0).x >= min_X
-			&& ThreeP_PolyLineArray[j].GetPointAt(0).y <= max_Y && ThreeP_PolyLineArray[j].GetPointAt(0).y >= min_Y
-			&& ThreeP_PolyLineArray[j].GetPointAt(2).x <= max_X && ThreeP_PolyLineArray[j].GetPointAt(2).x >= min_X
-			&& ThreeP_PolyLineArray[j].GetPointAt(2).y <= max_Y && ThreeP_PolyLineArray[j].GetPointAt(2).y >= min_Y
+            && ThreeP_PolyLineArray[j].GetPointAt(0).y <= max_Y && ThreeP_PolyLineArray[j].GetPointAt(0).y >= min_Y
+            && ThreeP_PolyLineArray[j].GetPointAt(2).x <= max_X && ThreeP_PolyLineArray[j].GetPointAt(2).x >= min_X
+            && ThreeP_PolyLineArray[j].GetPointAt(2).y <= max_Y && ThreeP_PolyLineArray[j].GetPointAt(2).y >= min_Y
             && ThreeP_PolyLineArray[j].GetPointAt(1).x <= max_X && ThreeP_PolyLineArray[j].GetPointAt(1).x >= min_X
             && ThreeP_PolyLineArray[j].GetPointAt(1).y <= max_Y && ThreeP_PolyLineArray[j].GetPointAt(1).y >= min_Y) {
 
             var mtline = new myPolyLine(ThreeP_PolyLineArray[j].handle, 3, ThreeP_PolyLineArray[j].GetPointAt(0),
-                                                          ThreeP_PolyLineArray[j].GetPointAt(2), ThreeP_PolyLineArray[j].GetPointAt(1), null)
+                ThreeP_PolyLineArray[j].GetPointAt(2), ThreeP_PolyLineArray[j].GetPointAt(1), null)
             res_PolyLineArray[res_PolyLineArray.length] = mtline;
             threeLnum = threeLnum + 1;
         }
     }
-    if (twoLnum == 1 && threeLnum == 1) {
+    for (var t = 0; t < FourMP_PolyLineArray.length; t++) {
+        var reBl = true;
+        for (var ft = 0; ft < FourMP_PolyLineArray[t].numVerts; ft++) {
+            if (!(FourMP_PolyLineArray[t].GetPointAt(ft).x <= max_X && FourMP_PolyLineArray[t].GetPointAt(ft).x >= min_X
+                && FourMP_PolyLineArray[t].GetPointAt(ft).y <= max_Y && FourMP_PolyLineArray[t].GetPointAt(ft).y >= min_Y)) {
+                reBl = false;
+                break;
+            }
+        }
+        if (reBl == true) {
+            var fnum = FourMP_PolyLineArray[t].numVerts;
+            var mtline = new myPolyLine(FourMP_PolyLineArray[t].handle, fnum, FourMP_PolyLineArray[t].GetPointAt(0),
+                FourMP_PolyLineArray[t].GetPointAt(fnum - 1), FourMP_PolyLineArray[t].GetPointAt(1), null)
+            res_PolyLineArray[res_PolyLineArray.length] = mtline;
+            fourMLnum = fourMLnum + 1;
+        }
+    }
+    if (twoLnum == 1 && threeLnum == 1 && fourMLnum == 0) {
         if (CheckAngleIn(res_PolyLineArray[0].myPolyEndP, res_PolyLineArray[0].myPolyStartP, res_PolyLineArray[1].myPolyMid, 47, 43)) {
             return res_PolyLineArray;
         }
@@ -2651,9 +2564,20 @@ function GetGraphFromArea(StartX, EndX, mY, dis, direction, TwoP_PolyLineArray, 
             return res_PolyLineArray;
         }
     }
-    else if (twoLnum == 0 && threeLnum == 1) {
-        if (CheckAngleIn(res_PolyLineArray[0].myPolyMid, res_PolyLineArray[0].myPolyStartP, res_PolyLineArray[0].myPolyEndP, 48, 43)
+    else if (twoLnum == 0 && threeLnum == 1 && fourMLnum == 0) {
+        //2020-10-19
+        if (CheckAngleIn(res_PolyLineArray[0].myPolyMid, res_PolyLineArray[0].myPolyStartP, res_PolyLineArray[0].myPolyEndP, 50, 40)
             || CheckAngleIn(res_PolyLineArray[0].myPolyMid, res_PolyLineArray[0].myPolyStartP, res_PolyLineArray[0].myPolyEndP, 92, 88)) {
+            return res_PolyLineArray;
+        }
+        else {
+            res_PolyLineArray = [];
+            return res_PolyLineArray;
+        }
+    }
+    else if (twoLnum == 0 && threeLnum == 0 && fourMLnum == 1) {
+        if (CheckAngleIn(res_PolyLineArray[0].myPolyMid, res_PolyLineArray[0].myPolyStartP, res_PolyLineArray[0].myPolyEndP, 50, 40)
+            || CheckAngleIn(res_PolyLineArray[0].myPolyMid, res_PolyLineArray[0].myPolyStartP, res_PolyLineArray[0].myPolyEndP, 91, 89)) {
             return res_PolyLineArray;
         }
         else {
@@ -2666,7 +2590,8 @@ function GetGraphFromArea(StartX, EndX, mY, dis, direction, TwoP_PolyLineArray, 
         return res_PolyLineArray;
     }
 }
-function IsSamePoint(pA1,pA2)
+
+function IsSamePoint(pA1, pA2)
 {
     var d=0.005;
     if(pA1.x==pA2.x&&pA1.y==pA2.y&&pA1.z==pA2.z)
@@ -4712,23 +4637,23 @@ function DynWorldDrawPoKouWeld2(pCustomEntity,
 
 function CheckISExtendedLine(L1Sart, L1End, L2Sart, L2End, mStr) {
     var mRes = "";
-    var k1 = (L1End.y - L1Sart.y) / (L1End.x - L1Sart.x);
-    var k2 = (L2End.y - L2Sart.y) / (L2End.x - L2Sart.x);
+    var k1 = (L1End.y - L1Sart.y) / (L1End.x - L1Sart.x)
+    var k2 = (L2End.y - L2Sart.y) / (L2End.x - L2Sart.x)
     if (k1 == k2) {
         if (mStr == "Start") {
             if (IsNearPoint(L1Sart, L2Sart, 0.05)) {
-                mRes = "Start";
+                mRes = "Start"
             }
             else if (IsNearPoint(L1End, L2Sart, 0.05)) {
-                mRes = "End";
+                mRes = "End"
             }
         }
         else if (mStr == "End") {
             if (IsNearPoint(L1Sart, L2End, 0.05)) {
-                mRes = "Start";
+                mRes = "Start"
             }
             else if (IsNearPoint(L1End, L2End, 0.05)) {
-                mRes = "End";
+                mRes = "End"
             }
         }
     }
@@ -4787,6 +4712,9 @@ function GetColorIDByType(myWeldArray) {
     //14-双面角焊缝   "Y_SMJiaoH"
     if (myWeldArray.myWelType == "") {
         return;
+    }
+    else if (myWeldArray.myWelType == "Unrecognized") {
+        colID = 7;
     }
     else if (myWeldArray.myWelType == "N_PoKDuiJieH") //1
     {
