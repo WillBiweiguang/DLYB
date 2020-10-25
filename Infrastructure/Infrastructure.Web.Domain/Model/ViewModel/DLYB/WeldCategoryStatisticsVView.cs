@@ -28,7 +28,7 @@ namespace Infrastructure.Web.Domain.ModelsView
 
         public string WeldingModel { get; set; }
         
-        public string WeldingType { get; set; }
+        //public string WeldingType { get; set; }
         public DateTime? CreatedDate { get; set; }
 
         public int? CreatedUserID { get; set; }
@@ -53,7 +53,6 @@ namespace Infrastructure.Web.Domain.ModelsView
             GrooveType = entity.GrooveType;
             SectionalArea = entity.SectionalArea;
             WeldingModel =entity.WeldingModel;
-            WeldingType = entity.WeldingType;
             CreatedDate = entity.CreatedDate;
             CreatedUserID = entity.CreatedUserID;
             UpdatedDate = entity.UpdatedDate;

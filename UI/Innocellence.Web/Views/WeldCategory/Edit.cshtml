@@ -190,7 +190,15 @@
                             <td>
                                 <div class="col-sm-7">
 
-                                    <input type="text" name="Thickness" id="Thickness" class="form-control" validate="{required:true}" data-bind="value: Thickness" />
+                                    <select class="single-select form-control" name="Thickness" id="Thickness" data-placeholder="请选择板厚" validate="{required:true}">
+                                        @foreach (string a in ViewBag.ThickTypes)
+                                        {
+                                            if (!string.IsNullOrEmpty(a))
+                                            {
+                                                <option value="@a">@a</option>
+                                            }
+                                        }
+                                    </select>
                                 </div>
                             </td>
 
@@ -222,7 +230,7 @@
                             <td>
                                 <div class="col-sm-7">
                                     <select class="single-select form-control" name="WeldingType" id="WeldingType" data-placeholder="请选择焊材类型" validate="{required:true}" >
-                                        @foreach (string a in ViewBag.WeldingTypes)
+                                        @foreach (string a in ViewBag.WeldingModels)
                                         {
                                             if (!string.IsNullOrEmpty(a))
                                             {
@@ -390,7 +398,7 @@
                             $("#WidthVal").val(Data.data1.WidthVal);
                             $("#LengthVal").val(Data.data1.LengthVal);
                             $("#BeamNum").val(Data.data1.BeamNum);
-                            $("#Quantity").val(Data.data1.WeldNum);
+                            //$("#Quantity").val(Data.data1.WeldNum);
                         }
                     }
                     else {
