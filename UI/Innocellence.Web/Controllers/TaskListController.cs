@@ -123,13 +123,22 @@ namespace DLYB.Web.Controllers
             listEx = TableListHelper.GenerateIndex(listEx, gridRequest.PageCondition);
             return this.GetPageResult(listEx, gridRequest);
         }
+
         public ActionResult GetWeldingDownloadList()
         {
             GridRequest gridRequest = new GridRequest(Request);
             string strCondition = Request["search_condition"];
             Expression<Func<WeldCategoryStatisticsV, bool>> expression = FilterHelper.GetExpression<WeldCategoryStatisticsV>(gridRequest.FilterGroup);
             expression = expression.AndAlso<WeldCategoryStatisticsV>(x => x.IsDeleted != true );
-
+            if (!string.IsNullOrEmpty(objLoginInfo.Department))
+            {
+                var departmentId = objLoginInfo.Department.Split('_')[0];
+                expression = expression.AndAlso<WeldCategoryStatisticsV>(x => x.DepartmentID == departmentId);
+            }
+            if (!string.IsNullOrEmpty(strCondition))
+            {
+                expression = expression.AndAlso<WeldCategoryStatisticsV>(x => x.ProjectName.Contains(strCondition));
+            }
             int rowCount = gridRequest.PageCondition.RowCount;
            
             List<WeldCategoryStatisticsVView> listEx = _wcsvService.GetList<WeldCategoryStatisticsVView>(expression, gridRequest.PageCondition);
