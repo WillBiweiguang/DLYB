@@ -101,7 +101,6 @@
                             <th>@T("焊缝长度")</th>
                             <th>@T("焊缝质量")</th>
                             <th>@T("数量")</th>
-                            <th>@T("长度")</th>
                             <th style="width:10%;">@T("操作")</th>
                         </tr>
                     </thead>
@@ -363,8 +362,7 @@
                     { "mData": 'SectionArea' },
                     { "mData": 'WeldLength' },
                     { "mData": 'WeldQuanlity' },
-                    { "mData": 'Quantity' },
-                    { "mData": 'LengthVal' }
+                    { "mData": 'Quantity' }
                 ],
                 "columnDefs": [
                     {
@@ -374,7 +372,7 @@
                         }
                     },
                     {
-                        "targets": 14,
+                        "targets": 13,
                         "render": function (data, type, full, meta) {
                             var oprStr = '';
                             if (!isViewModel) {

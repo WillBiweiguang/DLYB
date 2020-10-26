@@ -13,7 +13,10 @@
     .datagrid-mask-msg {
         height: 36px !important;
     }
-
+    label.ClassName::before {
+        content: '* ';
+        color: red;
+    }
     .main-container {
         overflow: scroll;
         min-height: 700px;
@@ -89,7 +92,7 @@
                     <table>
                         <tr class="row">
                             <td class="first-td">
-                                <label for="FigureNumber" class="col-sm-5 control-label">图号:</label>
+                                <label for="FigureNumber" class="col-sm-5 control-label ClassName">图号:</label>
                             </td>
                             <td class="second-td">
                                 <div class="col-sm-7">
@@ -105,7 +108,7 @@
                                 </div>
                             </td>
                             <td class="thrid-td">
-                                <label for="BoardNumber" class="col-sm-5 control-label">板件号:</label>
+                                <label for="BoardNumber" class="col-sm-5 control-label ClassName">板件号:</label>
                             </td>
                             <td>
                                 <div class="col-sm-7">
@@ -123,7 +126,7 @@
                         </tr>
                         <tr class="row">
                             <td>
-                                <label class="col-sm-5 control-label">焊缝类型:</label>
+                                <label class="col-sm-5 control-label ClassName">焊缝类型:</label>
                             </td>
                             <td>
                                 <div class="col-sm-7">
@@ -140,7 +143,7 @@
                             </td>
 
                             <td>
-                                <label class="col-sm-5 control-label">焊缝位置:</label>
+                                <label class="col-sm-5 control-label ClassName">焊缝位置:</label>
                             </td>
                             <td>
                                 <div class="col-sm-7">
@@ -158,7 +161,7 @@
                         </tr>
                         <tr class="row">
                             <td>
-                                <label class="col-sm-5 control-label">焊接边数:</label>
+                                <label class="col-sm-5 control-label ClassName">焊接边数:</label>
                             </td>
                             <td>
                                 <div class="col-sm-7">
@@ -177,7 +180,7 @@
                         </tr>
                         <tr class="row">
                             <td>
-                                <label class="col-sm-5 control-label">长度:</label>
+                                <label class="col-sm-5 control-label">焊缝长度:</label>
                             </td>
                             <td>
                                 <div class="col-sm-7">
@@ -185,7 +188,7 @@
                                 </div>
                             </td>
                             <td>
-                                <label class="col-sm-5 control-label">板厚:</label>
+                                <label class="col-sm-5 control-label ClassName">板厚:</label>
                             </td>
                             <td>
                                 <div class="col-sm-7">
@@ -208,11 +211,11 @@
                             </td>
                             <td>
                                 <div class="col-sm-7">
-                                    <input type="text" name="MentalDensity" id="MentalDensity" class="form-control" validate="{required:true}" data-bind="value: MentalDensity" />
+                                    <input type="text" name="MentalDensity" id="MentalDensity" class="form-control"  data-bind="value: MentalDensity" />
                                 </div>
                             </td>
                             <td>
-                                <label class="col-sm-5 control-label">消耗系数:</label>
+                                <label class="col-sm-5 control-label ClassName">消耗系数:</label>
                             </td>
                             <td>
                                 <div class="col-sm-7">
@@ -224,7 +227,7 @@
                         </tr>
                         <tr class="row">
                             <td>
-                                <label class="col-sm-5 control-label">焊材类型:</label>
+                                <label class="col-sm-5 control-label ClassName">焊材类型:</label>
                             </td>
                             <td>
                                 <div class="col-sm-7">
@@ -240,7 +243,7 @@
                                 </div>
                             </td>
                             <td>
-                                <label class="col-sm-5 control-label">焊缝截面积:</label>
+                                <label class="col-sm-5 control-label ClassName">焊缝截面积:</label>
                             </td>
                             <td>
                                 <div class="col-sm-7">
@@ -257,22 +260,23 @@
                         </tr>
                         
                         <tr class="row">
+                          
+                            <td>
+                                <label class="col-sm-5 control-label ClassName">焊缝数量:</label>
+                            </td>
+                            <td>
+                                <div class="col-sm-7">
+
+                                    <input type="text" name="Quantity" id="Quantity" class="form-control" validate="{required:true}" data-bind="value: Quantity" />
+                                </div>
+                            </td>
                             <td>
                                 <label class="col-sm-5 control-label">焊缝质量:</label>
                             </td>
                             <td>
                                 <div class="col-sm-7">
 
-                                    <input type="text" name="WeldQuanlity" id="WeldQuanlity" class="form-control" validate="{required:true}" data-bind="value: WeldQuanlity" />
-                                </div>
-                            </td>
-                            <td>
-                                <label class="col-sm-5 control-label">焊缝数量:</label>
-                            </td>
-                            <td>
-                                <div class="col-sm-7">
-
-                                    <input type="text" name="Quantity" id="Quantity" class="form-control" validate="{required:true}" data-bind="value: Quantity" />
+                                    <input type="text" name="WeldQuanlity" id="WeldQuanlity" class="form-control"  data-bind="value: WeldQuanlity" />
                                 </div>
                             </td>
                         </tr>
@@ -397,11 +401,14 @@
                             $("#WidthVal").val(Data.data1.WidthVal);
                             $("#LengthVal").val(Data.data1.LengthVal);
                             $("#BeamNum").val(Data.data1.BeamNum);
-                            //$("#Quantity").val(Data.data1.WeldNum);
+                            $("#Quantity").val(Data.data1.WeldNum);
+                            $("#WeldQuanlity").val($("#WeldLength").val() * $("#BeamNum").val()
+                                * $("#Quantity").val() * $("#SectionArea").val() * 7.85 / 1000000);
+                            $("#WeldQuanlity").val(Math.floor($("#WeldQuanlity").val() * 100) / 100); 
                         }
                     }
                     else {
-                        artDialog.alert("未查询到图号对应的焊缝信息.")
+                        alert("未查询到图号对应的焊缝信息.")
                     }
                 }
             });
@@ -434,23 +441,31 @@
              
             }
 
-        });
-        $("#SectionArea").blur(function () {
-            if ($("#Quantity").val() == 0 || $("#WeldLength").val() == 0 || $("#SectionArea").val() == 0) {
-                alert('请输入焊缝数量或者长度或者焊缝面积！');
-                return;
-            }
             $("#WeldQuanlity").val($("#WeldLength").val() * $("#BeamNum").val()
                 * $("#Quantity").val() * $("#SectionArea").val() * 7.85 / 1000000)
+            $("#WeldQuanlity").val(Math.floor($("#WeldQuanlity").val() * 100) / 100); 
         });
-        $("#Quantity").blur(function () {
-            if ($("#Quantity").val() == 0 || $("#WeldLength").val() == 0 || $("#SectionArea").val()==0) {
-                alert('请输入焊缝数量或者长度或者焊缝面积！');
-                return;
-            }
+        $(document).on('change', '#SectionArea', function () {
             $("#WeldQuanlity").val($("#WeldLength").val() * $("#BeamNum").val()
                 * $("#Quantity").val() * $("#SectionArea").val() * 7.85 / 1000000)
+            $("#WeldQuanlity").val(Math.floor($("#WeldQuanlity").val() * 100) / 100); 
         });
+        //$("#SectionArea").blur(function () {
+        //    //if ($("#Quantity").val() == 0 || $("#WeldLength").val() == 0 || $("#SectionArea").val() == 0) {
+        //    //    alert('请输入焊缝数量或者长度或者焊缝面积！');
+        //    //    return;
+        //    //}
+        //    $("#WeldQuanlity").val($("#WeldLength").val() * $("#BeamNum").val()
+        //        * $("#Quantity").val() * $("#SectionArea").val() * 7.85 / 1000000)
+        //});
+        //$("#Quantity").blur(function () {
+        //    //if ($("#Quantity").val() == 0 || $("#WeldLength").val() == 0 || $("#SectionArea").val()==0) {
+        //    //    alert('请输入焊缝数量或者长度或者焊缝面积！');
+        //    //    return;
+        //    //}
+        //    $("#WeldQuanlity").val($("#WeldLength").val() * $("#BeamNum").val()
+        //        * $("#Quantity").val() * $("#SectionArea").val() * 7.85 / 1000000)
+        //});
 
         function saveWeldData(list, mode) {
             if (!list) {
