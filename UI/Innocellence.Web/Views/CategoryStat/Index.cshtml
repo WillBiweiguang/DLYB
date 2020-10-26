@@ -549,6 +549,8 @@
                         .Select(function (x) { return x.GrooveType }).Distinct().ToArray();
                     showChild1(GrooveType, queryResult);
                     $('#GrooveType').removeAttr("disabled");
+                    $('#GrooveType option:eq(1)').attr("selected", true);
+                    $('#GrooveType').change();
                 }
             });
             // 工件厚度1
@@ -567,7 +569,8 @@
                     .Select(function (x) { return x.WorksThickness1 }).Distinct().ToArray();
                 showChild1(WorksThickness1, queryResult);
                 $('#WorksThickness1').removeAttr("disabled");
-
+                $('#WorksThickness1 option:eq(1)').attr("selected", true);
+                $('#WorksThickness1').change();
             });
             // 工件厚度2
             $('#WorksThickness1').change(function () {
@@ -583,6 +586,8 @@
                     .Select(function (x) { return x.WorksThickness2 }).Distinct().ToArray();
                 showChild1(WorksThickness2, queryResult);
                 $('#WorksThickness2').removeAttr("disabled");
+                $('#WorksThickness2 option:eq(1)').attr("selected", true);
+                $('#WorksThickness2').change();
             });
             $('#WorksThickness2').change(function () {
                 var queryResult = Enumerable.From(BiddingQuerys)
@@ -624,6 +629,8 @@
                         .Distinct()
                         .ToArray();
                     showChild1(WeldGeometry, queryResult);
+                    $('#WeldGeometry option:eq(1)').attr("selected", true);
+                    $('#WeldGeometry').change();
                 }
             });
 

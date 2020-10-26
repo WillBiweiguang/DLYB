@@ -117,7 +117,7 @@
     <!-- #section:basics/navbar.layout -->
     <div id="navbar" class="navbar navbar-default">
         <script type="text/javascript">
-            try { ace.settings.check('navbar', 'fixed');} catch (e) { }
+            try { ace.settings.check('navbar', 'fixed'); } catch (e) { }
         </script>
 
         <div class="navbar-container" id="navbar-container">
@@ -170,7 +170,7 @@
                         <a data-toggle="dropdown" href="#" class="dropdown-toggle" style="background-color:#009CDA;">
                             <span class="user-info">
                                 <p>您好,</p>
-                                @ViewBag.UserTrueName                               
+                                @ViewBag.UserTrueName
                             </span>
 
                             <i class="ace-icon fa fa-caret-down"></i>
@@ -365,7 +365,7 @@
     <script type="text/javascript">
         var menu = view.menuModule();
 
-        try { ace.settings.check('sidebar', 'collapsed');} catch (ex) { }
+        try { ace.settings.check('sidebar', 'collapsed'); } catch (ex) { }
 
         $('.nav-list .active').removeClass();
 
@@ -412,8 +412,8 @@
             for (var i = 0; i < hrefs.length; i++) {
                 var item = hrefs[i];
                 if (item != '#' &&
-                         (((item.indexOf('*') > 0) && pall.indexOf(item.replace('*', '')) >= 0)
-                                       || item == p)) {
+                    (((item.indexOf('*') > 0) && pall.indexOf(item.replace('*', '')) >= 0)
+                        || item == p)) {
                     return true;
                 }
             }
@@ -434,7 +434,7 @@
             if (oControl.is('li')) {
                 var a = oControl.find('a');
                 var html = a[0].outerHTML;
-                if (isCurrent(a[0])) { html = a[0].text;}
+                if (isCurrent(a[0])) { html = a[0].text; }
                 strHtml = '<li>' + html + '</li>' + strHtml;
             }
         }
@@ -446,7 +446,7 @@
             }
             e.preventDefault();
             var url = $this.attr('href');
-            if(url==null){return;}
+            if (url == null) { return; }
             menu.activeMenu(url.toUpperCase());
             window.location.href = url;
         }
@@ -464,7 +464,8 @@
     <script src="~/Scripts/jquery.dataTables.js"></script>
     <script src="~/Scripts/jquery.dataTables.bootstrap.js"></script>
     <script src="~/Scripts/jquery.metadata.js"></script>
-    <script src="//cdn.bootcss.com/jquery-validate/1.9.0/jquery.validate.min.js"></script><!--jquery.validate cdn-->
+    @*<script src="//cdn.bootcss.com/jquery-validate/1.9.0/jquery.validate.min.js"></script>*@
+    <script src="//cdn.bootcss.com/jquery-validate/1.12.0/jquery.validate.min.js"></script>
     <script src="~/Scripts/additional-methods.js"></script>
     <script src="~/Scripts/date-time/moment.min.js"></script>
     <script src="~/Scripts/date-time/bootstrap-datepicker.js"></script>
