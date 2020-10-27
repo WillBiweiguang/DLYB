@@ -65,6 +65,11 @@
     .form-control {
         min-width: 160px !important;
     }
+    .ui-dialog-content {
+        width: 300px!important;
+        max-width: 300px !important;
+        max-height: 200px !important;
+    }
 </style>
 <!--Action boxes-->
 
@@ -335,11 +340,11 @@
 
             LEAP.Common.MainPop = $("#ModalTable").formPopup({
                 fnAfterSuccess: function (r) {
-                    alert('保存成功');
+                    bootbox.alert('保存成功');
                     window.close();
                 },
                 fnAfterPostError: function (r) {
-                    alert('保存失败');
+                    //alert('保存失败');
                 }
             });
             LEAP.Common.MainPop.ShowUpdateInfo(@Model.Id);

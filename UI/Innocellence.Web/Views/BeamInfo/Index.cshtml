@@ -217,10 +217,14 @@
         });
         function uploadFile(obj) {          
             var pid = $('#project_id').val();
-            if (!pid) {
+            if (!pid) {                
                 pid = $('#ProjectName').val();
             }
-            var strUrl = "PostFile?ProjectId=" + pid;
+            if (!pid) {
+                bootbox.alert('没有选择项目，请刷新页面重试');
+                return;
+            }
+            var strUrl = "PostFile?ProjectId=" + pid + '&v=' + Math.random();
             $(obj).FileUpload({
                 self: obj,
                 url: strUrl,
@@ -251,6 +255,7 @@
             $(select).chosen({ allow_single_deselect: true, width: '362px' }).change(function () { console.log('change'); });
             $(select).bind("change", function () {
                 $(select).trigger('chosen:updated');
+                $('#project_id').val($('#ProjectName').val());
             });
             setTimeout(function () {
                 var w = Math.min($('.chosen-select').parent().width(), 362);

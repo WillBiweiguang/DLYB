@@ -263,7 +263,10 @@ namespace Infrastructure.Web.UI
                 {
                     foreach (ModelError me in s.Value.Errors)
                     {
-                        sbError.AppendFormat("{0}\r\n", me.ErrorMessage);
+                        if (sbError.Length <= 90)
+                        {
+                            sbError.AppendFormat("{0}\r\n", me.ErrorMessage);
+                        }
                     }
                 }
             }
