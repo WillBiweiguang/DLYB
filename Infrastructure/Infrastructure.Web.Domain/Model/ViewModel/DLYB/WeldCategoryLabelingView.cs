@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using Infrastructure.Core;
 using Infrastructure.Web.Domain.Entity;
@@ -11,22 +12,35 @@ namespace Infrastructure.Web.Domain.ModelsView
 		public Int32 Id { get;set; }
 
         public int BeamId { get; set; }
+        [Required(ErrorMessage = "图号是必填项")]
         public string FigureNumber { get; set; }
+        [Required(ErrorMessage = "板件号是必填项")]
         public string BoardNumber { get; set; }
+        [Required(ErrorMessage = "焊缝类型是必填项")]
         public string WeldType { get; set; }
+        [Required(ErrorMessage ="板厚是必填项")]
         public double Thickness { get; set; }
+        [Required(ErrorMessage = "焊缝位置是必填项")]
         public string WeldLocation { get; set; }
+        [Required(ErrorMessage = "消耗系数是必填项")]
         public double ConsumeFactor { get; set; }
+        [Required(ErrorMessage = "熔敷密度是必填项")]
         public double MentalDensity { get; set; }
+        [Required(ErrorMessage = "焊缝截面积是必填项")]
         public double SectionArea { get; set; }
+        [Required(ErrorMessage = "焊缝长度是必填项")]
         public double WeldLength { get; set; }
+        [Required(ErrorMessage = "焊缝质量是必填项")]
         public double WeldQuanlity { get; set; }
+        [Required(ErrorMessage = "焊缝数量是必填项")]
         public string WeldingNumber { get; set; }
+        [Required(ErrorMessage = "焊缝数量是必填项")]
         public double Quantity { get; set; }
-        public double BeamNum { get; set; }
-        public double LengthVal { get; set; }
-        public double WidthVal { get; set; }
-        public double WeldingQuanlity { get; set; }
+        public double? BeamNum { get; set; }
+        public double? LengthVal { get; set; }
+        public double? WidthVal { get; set; }
+        [Required(ErrorMessage = "焊缝质量是必填项")]
+        public double? WeldingQuanlity { get; set; }
         public DateTime? CreatedDate { get; set; }
 
         public int? CreatedUserID { get; set; }

@@ -109,6 +109,7 @@ namespace Innocellence.Web.Controllers
             {
                 return Json(GetErrorJson(), JsonRequestBehavior.AllowGet);
             }
+            string repeatFiles = "";
             if (Request.Files.Count > 0)
             {
                 for (int i = 0; i < Request.Files.Count; i++)
@@ -135,7 +136,7 @@ namespace Innocellence.Web.Controllers
                     }
                     string path = "/Files/BeamInfo/" + ProjectId + SLASH + objModal.DwgFile;
                     var beam = _beamInfoService.GetList<BeamInfoView>(1, x => !x.IsDeleted && x.ProjectId == ProjectId && x.DwgFile == objModal.DwgFile).FirstOrDefault();
-                    if (beam == null || System.IO.File.Exists(Server.MapPath(path)))
+                    if (beam == null || !System.IO.File.Exists(Server.MapPath(path)))
                     {
                         file.SaveAs(Server.MapPath(path));
                         if (!_beamInfoService.Repository.Entities.Any(x => x.ProjectId == ProjectId && x.DwgFile == objModal.DwgFile && !x.IsDeleted))
@@ -148,7 +149,18 @@ namespace Innocellence.Web.Controllers
                             _projectService.UpdateView(project);
                         }
                     }
+                    else
+                    {
+                        repeatFiles += objModal.DwgFile + ",";
+                    }
                 }
+            }
+            if (!string.IsNullOrEmpty(repeatFiles))
+            {
+                repeatFiles = repeatFiles.TrimEnd(',');
+                AjaxResult<int> result = new AjaxResult<int>();            
+                result.Message = new JsonMessage(103, "文件：" + repeatFiles + "已存在，请勿重复上传");
+                return Json(result, JsonRequestBehavior.AllowGet);
             }
             return Json(doJson(null), JsonRequestBehavior.AllowGet);
         }

@@ -37,23 +37,23 @@
                     </a>
                 </div>
             </div>*@
-        <form class="form-inline" id="SearchForm">
+        <form class="form-inline" id="SearchForm" onsubmit="return false;">
             <div class="form-group">
                 <input class="form-control" type="text" id="search_condition" name="search_condition" placeholder="图号">
                 <input id="locatedId" name="locatedId" type="hidden" value="0" />
                 <a href="#" class="btn btn-info btn-sm" id="btnSearch" data-toggle="tooltip" data-placement="top" title="查询" data-original-title="查询"><i class="fa fa-search">查询</i></a>
-                <input type="button" id="btnShowAll" class="btn btn-info  btn-sm" value="显示所有" style="display:none" onclick="showAll();">
             </div>
             <div class="form-group">
+                <a href="#" id="btnShowAll" class="btn btn-info  btn-sm" value="显示所有" style="display:none" onclick="showAll();">显示所有</a>
                 @if (ViewBag.ViewModel == 0)
                 {
-                    <input type="button" class="btn btn-info  btn-sm" value="焊接符号识别" data-toggle="tooltip" title="焊接符号识别" onclick="myclick5();">
-                    <input type="button" class="btn btn-info  btn-sm" value="提交审核" data-toggle="tooltip" title="提交审核" onclick="requestApprove();">
+                <a href="#" class="btn btn-info  btn-sm" value="焊接符号识别" data-toggle="tooltip" title="焊接符号识别" onclick="myclick5();">焊接符号识别</a>
+                <a href="#" class="btn btn-info  btn-sm" value="提交审核" data-toggle="tooltip" title="提交审核" onclick="requestApprove();">提交审核</a>
                     @*<input type="button" class="btn btn-sm" value="隐藏图层" onclick="DoCmd(3);">
             <input type="button" class="btn btn-sm" value="显示图层" onclick="DoCmd(4);">*@
-                    <input type="button" class="btn btn-info  btn-sm" value="顺时针转90度" data-toggle="tooltip" title="顺时针转90度" onclick="DoCmd(6);">
-                    <input type="button" class="btn btn-info  btn-sm" value="逆时针转90度" data-toggle="tooltip" title="逆时针转90度" onclick="DoCmd(7)">
-                    <input type="button" class="btn btn-info  btn-sm" value="批量编辑" data-toggle="tooltip" title="批量编辑" onclick="batchEdit()">
+                <a href="#" class="btn btn-info  btn-sm" value="顺时针转90度" data-toggle="tooltip" title="顺时针转90度" onclick="DoCmd(6);">顺时针转90度</a>
+                <a href="#" class="btn btn-info  btn-sm" value="逆时针转90度" data-toggle="tooltip" title="逆时针转90度" onclick="DoCmd(7)">逆时针转90度</a>
+                <a href="#" class="btn btn-info  btn-sm" value="批量编辑" data-toggle="tooltip" title="批量编辑" onclick="batchEdit()">批量编辑</a>
                 }
             </div>
             <div class="form-group pull-right">
@@ -337,7 +337,7 @@
             + ((screen.width - 600) / 2) + 'px;resizable:yes;center:yes;status:no;'
             ; //编辑模态窗口参数
         var tableModalSetting = {}; //数据列表窗口参数
-        var isViewModel = @ViewBag.ViewModel;
+        var isViewModel = '@ViewBag.ViewModel';
         var lstPaging = {};
         var isApproval = 0;
 
@@ -375,11 +375,11 @@
                         "targets": 13,
                         "render": function (data, type, full, meta) {
                             var oprStr = '';
-                            if (!isViewModel) {
+                            if (isViewModel != '1') {
                                 oprStr += '<a href="#" onclick="showEditForm(\'' + full.Id + '\');return false;" class="artDailog btn btn-info  btn-xs" style="margin-right:4px;" data-toggle="tooltip" data-placement="top" title="编辑"><i class="fa fa-pencil"></i></a>';
                             }
                             oprStr += '<a href="#" onclick="DingWei(\'' + full.HandleID + '\');return false;" class="artDailog btn btn-info  btn-xs" style="margin-right:4px;" data-toggle="tooltip" data-placement="top" title="定位">定位</a>';
-                            if (!isViewModel) {
+                            if (isViewModel != '1') {
                                 oprStr += '<a href="#" onclick="DeleteData(\'' + full.Id + '\',2);return false;" class="btn btn-danger btn-xs" id="btnDelete" data-toggle="tooltip" data-placement="top" title="删除"><i class="fa fa-trash-o"></i></a>';
                             }
                             return oprStr;
@@ -390,6 +390,13 @@
                     $('[data-toggle="tooltip"]').tooltip({ position: 'top' });
                 }
             }));
+            //$('#SearchForm').on('keydown', function (event) {
+            //    if (event.which == 13) {
+            //        $('#btnSearch').trigger('click');
+            //        event.cancelBubble = true;
+            //        event.stopPropagation();
+            //    }
+            //});
             //inital select2
             $('.select2').css("width", "362px").select2({ allowClear: true });
             $('#btnCollapse').on('click', function () {
@@ -581,7 +588,7 @@
             }
             if (saveFile()) {
                 var beamId = $('#beamId').val();
-                $.get('RequestApproval?beamId=' + beamId).done(function (r) {
+                $.get('RequestApproval?beamId=' + beamId + '&v=' + Math.random()).done(function (r) {
                     if (r.result == 'success') {
                         alert('提交成功');
                         isApproval = 1;

@@ -26,10 +26,10 @@ namespace Infrastructure.Web.Domain.Entity
         public double WeldLength { get; set; }
         public double WeldQuanlity { get; set; }
         public string WeldingNumber { get; set; }
-        public double BeamNum { get; set; }
+        public double? BeamNum { get; set; }
         public double Quantity { get; set; }
-        public double LengthVal { get; set; }
-        public double WidthVal { get; set; }
+        public double? LengthVal { get; set; }
+        public double? WidthVal { get; set; }
         public string HandleID { get; set; }
         public DateTime? CreatedDate { get; set; }
 

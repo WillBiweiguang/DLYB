@@ -230,7 +230,7 @@ namespace DLYB.Web.Controllers
                     row.CreateCell(j++).SetCellValue(v.WeldLength);
                     row.CreateCell(j++).SetCellValue(v.WeldingNumber);
                     row.CreateCell(j++).SetCellValue(v.Quantity);
-                    row.CreateCell(j++).SetCellValue(v.BeamNum);
+                    row.CreateCell(j++).SetCellValue(v.BeamNum.HasValue ? v.BeamNum.Value : 0);
                     row.CreateCell(j++).SetCellValue(v.WeldQuanlity);
                     row.CreateCell(j++).SetCellValue(v.ConsumeFactor);
                     row.CreateCell(j++).SetCellValue(v.ConsumeFactor * v.WeldQuanlity);

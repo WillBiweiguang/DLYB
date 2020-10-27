@@ -20,7 +20,7 @@
 <!--Action boxes-->
 <div class="row">
     <div class="col-sm-12">
-        <form class="form-inline" id="SearchForm">
+        <form class="form-inline" id="SearchForm" onsubmit="return false;">
             <input type="hidden" id="project_id" name="project_id" value="@ViewBag.ProjectId" />
             <input type="hidden" id="currentUserId" value="@ViewBag.CurUserId" />
             @*<div class="form-group">
@@ -228,12 +228,12 @@
                 rewriteDocumentId: '',
                 processBarId: 'progress-bar',
                 callBack: function (data) {
-                    if (data.error) {
-                        alert(data.error.message);
+                    if (data.Message.Status != 200) {
+                        bootbox.alert(data.Message.Text);
                         LEAP.Common.MainPop.options.dataTable.fnDraw(false);
                         //location.reload();
                     } else {
-                        alert("上传成功");
+                        bootbox.alert("上传成功");
                         LEAP.Common.MainPop.options.dataTable.fnDraw(false);
                         //location.reload();                        
                     }
