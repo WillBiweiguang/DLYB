@@ -215,8 +215,12 @@
         $(document).on('click', '#btnSave', function (e) {
             $('.form-horizontal').submit();
         });
-        function uploadFile(obj) {            
-            var strUrl = "PostFile?ProjectId=" + $('#project_id').val();
+        function uploadFile(obj) {          
+            var pid = $('#project_id').val();
+            if (!pid) {
+                pid = $('#ProjectName').val();
+            }
+            var strUrl = "PostFile?ProjectId=" + pid;
             $(obj).FileUpload({
                 self: obj,
                 url: strUrl,
