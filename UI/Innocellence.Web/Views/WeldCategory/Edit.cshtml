@@ -402,9 +402,7 @@
                             $("#LengthVal").val(Data.data1.LengthVal);
                             $("#BeamNum").val(Data.data1.BeamNum);
                             $("#Quantity").val(Data.data1.WeldNum);
-                            $("#WeldQuanlity").val($("#WeldLength").val() * $("#BeamNum").val()
-                                * $("#Quantity").val() * $("#SectionArea").val() * 7.85 / 1000000);
-                            $("#WeldQuanlity").val(Math.floor($("#WeldQuanlity").val() * 100) / 100); 
+                            WeldQuantity();
                         }
                     }
                     else {
@@ -441,31 +439,67 @@
              
             }
 
-            $("#WeldQuanlity").val($("#WeldLength").val() * $("#BeamNum").val()
-                * $("#Quantity").val() * $("#SectionArea").val() * 7.85 / 1000000)
-            $("#WeldQuanlity").val(Math.floor($("#WeldQuanlity").val() * 100) / 100); 
+            WeldQuantity();
         });
         $(document).on('change', '#SectionArea', function () {
+            WeldQuantity();
+        });
+
+        $(document).on('change', '#Quantity', function () {
+            WeldQuantity();
+        });
+
+        $("#Quantity").blur(function () {
+            WeldQuantity();
+        });
+        function WeldQuantity() {
             $("#WeldQuanlity").val($("#WeldLength").val() * $("#BeamNum").val()
                 * $("#Quantity").val() * $("#SectionArea").val() * 7.85 / 1000000)
             $("#WeldQuanlity").val(Math.floor($("#WeldQuanlity").val() * 100) / 100); 
-        });
-        //$("#SectionArea").blur(function () {
-        //    //if ($("#Quantity").val() == 0 || $("#WeldLength").val() == 0 || $("#SectionArea").val() == 0) {
-        //    //    alert('请输入焊缝数量或者长度或者焊缝面积！');
-        //    //    return;
-        //    //}
-        //    $("#WeldQuanlity").val($("#WeldLength").val() * $("#BeamNum").val()
-        //        * $("#Quantity").val() * $("#SectionArea").val() * 7.85 / 1000000)
-        //});
-        //$("#Quantity").blur(function () {
-        //    //if ($("#Quantity").val() == 0 || $("#WeldLength").val() == 0 || $("#SectionArea").val()==0) {
-        //    //    alert('请输入焊缝数量或者长度或者焊缝面积！');
-        //    //    return;
-        //    //}
-        //    $("#WeldQuanlity").val($("#WeldLength").val() * $("#BeamNum").val()
-        //        * $("#Quantity").val() * $("#SectionArea").val() * 7.85 / 1000000)
-        //});
+        }
+        //焊缝数量
+        $("input[name='Quantity']").keyup(function () {
+            var tmptxt = $(this).val();
+            $(this).val(tmptxt.replace(/\D|^0/g, ''));
+        }).bind("paste", function () {
+            var tmptxt = $(this).val();
+            $(this).val(tmptxt.replace(/\D|^0/g, ''));
+            }).css("ime-mode", "disabled");   
+        //焊缝长度
+        $("input[name='WeldLength']").keyup(function () {
+            var tmptxt = $(this).val();
+            $(this).val(tmptxt.replace(/\D|^0/g, ''));
+        }).bind("paste", function () {
+            var tmptxt = $(this).val();
+            $(this).val(tmptxt.replace(/\D|^0/g, ''));
+            }).css("ime-mode", "disabled");
+
+        //熔度
+        $("input[name='MentalDensity']").keyup(function () {
+            var tmptxt = $(this).val();
+            $(this).val(tmptxt.replace(/\D|^0/g, ''));
+        }).bind("paste", function () {
+            var tmptxt = $(this).val();
+            $(this).val(tmptxt.replace(/\D|^0/g, ''));
+            }).css("ime-mode", "disabled");  
+
+        //消耗系数
+        $("input[name='ConsumeFactor']").keyup(function () {
+            var tmptxt = $(this).val();
+            $(this).val(tmptxt.replace(/\D|^0/g, ''));
+        }).bind("paste", function () {
+            var tmptxt = $(this).val();
+            $(this).val(tmptxt.replace(/\D|^0/g, ''));
+            }).css("ime-mode", "disabled");  
+
+        //焊缝质量
+        $("input[name='WeldQuanlity']").keyup(function () {
+            var tmptxt = $(this).val();
+            $(this).val(tmptxt.replace(/\D|^0/g, ''));
+        }).bind("paste", function () {
+            var tmptxt = $(this).val();
+            $(this).val(tmptxt.replace(/\D|^0/g, ''));
+            }).css("ime-mode", "disabled");  
 
         function saveWeldData(list, mode) {
             if (!list) {
