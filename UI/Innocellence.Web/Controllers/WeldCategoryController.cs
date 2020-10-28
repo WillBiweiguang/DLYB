@@ -45,6 +45,7 @@ namespace Innocellence.FaultSearch.Controllers
         public override ActionResult Index()
         {
             int beamId = -1;
+            ViewBag.ViewModel = 0;
             if (int.TryParse(Request["beamId"], out beamId))
             {
                 var beam = _beamInfoService.GetList<BeamInfoView>(1, x => x.Id == beamId).FirstOrDefault();
