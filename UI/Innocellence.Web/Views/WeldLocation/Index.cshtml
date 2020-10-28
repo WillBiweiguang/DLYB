@@ -30,8 +30,8 @@
                         <tr>
                             <th style="width:5%;text-align:center;">@T("序号")</th>
                             <th>@T("类型")</th>
-                            <th>@T("提交人")</th>
-                            <th>@T("提交日期")</th>
+                            @*<th>@T("提交人")</th>
+                            <th>@T("提交日期")</th>*@
                             
                             <th style="width:10%;">@T("操作")</th>
                         </tr>
@@ -97,14 +97,14 @@
                 "paging": true,
                 "info": false,
                 "aoColumns": [
-                    { "mData": 'Id' },
+                    { "mData": 'Index' },
                     { "mData": 'WeldLocationType' },
-                    { "mData": 'CreatedUserName' },
-                    { "mData": 'UpdatedDate' }
+                    //{ "mData": 'CreatedUserName' },
+                    //{ "mData": 'UpdatedDate' }
                 ],
                 "columnDefs": [
                     {
-                        "targets": 4,
+                        "targets": 2,
                         "render": function (data, type, full, meta) {
                             return '<a href="#" onclick="LEAP.Common.MainPop.ShowUpdateInfo(\'' + full.Id + '\');return false;" class="artDailog btn btn-info  btn-xs" style="margin-right:4px;" data-toggle="tooltip" data-placement="top" title="编辑"><i class="fa fa-pencil"></i></a>' +
                                 '<a href="#" onclick="LEAP.Common.MainPop.RowClick(\'' + full.Id + '\',2);return false;" class="btn btn-danger btn-xs" id="btnDelete" data-toggle="tooltip" data-placement="top" title="删除">' +
