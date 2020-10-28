@@ -6,10 +6,11 @@ var isBrowner = false;
         mxOcx.DoCommand(iCmd);
 }
 function myclick5() {
-    alert('1.请确保DWG图纸是正向的，否则可能造成无法识别，可以通过点击旋转按钮旋转图纸。\n2.识别焊缝期间浏览器会失去响应，请耐心等待。');
-    //$("body").mLoading({ text: "识别中，请稍候" });
-    //$('#frameContainer').show();    
-    DoReg();
+    if (confirm('1.请确保DWG图纸是正向的，否则可能造成无法识别，可以通过点击旋转按钮旋转图纸。\n2.识别焊缝期间浏览器会失去响应，请耐心等待。')) {
+        //$("body").mLoading({ text: "识别中，请稍候" });
+        //$('#frameContainer').show();    
+        DoReg();
+    }
 }
 function DoCommandEventFunc(iCmd) {
     if (iCmd === 1) {
