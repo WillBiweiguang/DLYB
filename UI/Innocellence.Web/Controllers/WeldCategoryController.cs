@@ -179,7 +179,7 @@ namespace Innocellence.FaultSearch.Controllers
                     item.Quantity = objModal.Quantity;
                     item.LengthVal = objModal.LengthVal;
                     item.WidthVal = objModal.WidthVal;
-
+                    item.WeldingType = objModal.WeldingType;
                     _BaseService.UpdateView(item);
                 }
             }            
