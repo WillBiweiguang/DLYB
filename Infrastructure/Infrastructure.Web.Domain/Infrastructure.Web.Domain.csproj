@@ -246,6 +246,7 @@
     <Compile Include="Model\ViewModel\AccountViewModels.cs" />
     <Compile Include="Model\ViewModel\CategoryView.cs" />
     <Compile Include="Model\ViewModel\DLYB\HistoricalCostView.cs" />
+    <Compile Include="Model\ViewModel\DLYB\LiMaiApiViewModel.cs" />
     <Compile Include="Model\ViewModel\DLYB\ViewModelBase.cs" />
     <Compile Include="Model\ViewModel\DLYB\BoardPackageView .cs" />
     <Compile Include="Model\ViewModel\DLYB\WeldCategoryStatisticsViewModel.cs" />

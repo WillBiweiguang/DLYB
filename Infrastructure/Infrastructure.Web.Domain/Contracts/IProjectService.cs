@@ -9,5 +9,9 @@ using Infrastructure.Web.Domain.ModelsView;
 
 namespace Infrastructure.Web.Domain.Contracts
 {
-    public interface IProjectService : IDependency, IBaseService<Project> { }
+    public interface IProjectService : IDependency, IBaseService<Project>
+    {
+        IList<HanjiProportionModel> HancaiQuanlityByType(LiMaiApiViewModel query);
+        IList<HanjiProportionModel> HancaiQuanlity(LiMaiApiViewModel query);
+    }
 }

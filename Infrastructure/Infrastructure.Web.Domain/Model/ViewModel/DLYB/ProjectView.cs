@@ -33,6 +33,8 @@ namespace Infrastructure.Web.Domain.ModelsView
 
         public string DepartmentName { get; set; }
 
+        public DateTime? CompleteDate { get; set; }
+
         public IViewModel ConvertAPIModel(object obj) {
             var entity = (Project)obj;
             Id = entity.Id;
@@ -46,6 +48,7 @@ namespace Infrastructure.Web.Domain.ModelsView
             UpdatedUserID = entity.UpdatedUserID;
             IsDeleted = entity.IsDeleted;
             DepartmentID = entity.DepartmentID;
+            CompleteDate = entity.CompleteDate;
             return this;
         }
 	}

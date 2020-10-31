@@ -255,7 +255,10 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Attributes\VerifyParamAttribute.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\API\ApiBaseController.cs" />
+    <Compile Include="Controllers\LimaiApiController.cs" />
     <Compile Include="Controllers\PlatformManageController.cs" />
     <Compile Include="Controllers\HistoricalCostController.cs" />
     <Compile Include="Controllers\CategoryStatController.cs" />

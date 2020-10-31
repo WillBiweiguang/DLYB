@@ -19,6 +19,12 @@ namespace DLYB.Web
                 
                 defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional }
             );
+
+            routes.MapRoute(
+            name: "Limai",
+            url: "Api/{controller}/{action}",
+            namespaces: new[] { "DLYB.Web.Controllers.API" }
+            );
         }
     }
 }
