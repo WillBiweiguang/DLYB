@@ -51,6 +51,9 @@ namespace Infrastructure.Web.Domain.ModelsView
         public double? LengthVal { get; set; }
         public double? WidthVal { get; set; }
         public double? WeldingQuanlity { get; set; }
+
+        public string WeldingType { get; set; }
+
         public DateTime? CreatedDate { get; set; }
 
         public int? CreatedUserID { get; set; }
@@ -88,6 +91,7 @@ namespace Infrastructure.Web.Domain.ModelsView
             Quantity = entity.Quantity;
             LengthVal = entity.LengthVal;
             WidthVal = entity.WidthVal;
+            WeldingType = entity.WeldingType;
             HandleID = entity.HandleID;
             CreatedDate = entity.CreatedDate;
             CreatedUserID = entity.CreatedUserID;
