@@ -16,10 +16,11 @@ namespace Infrastructure.Web.Domain.ModelsView
 
     public class HanjiProportionModel
     {
-        public string DepartmentID { get; set; }
+        public string Department { get; set; }
         public string ProjectName { get; set; }
         public string BridgeType { get; set; }
         public string HanjiType { get; set; }
+        public string HanjiTotal { get; set; }
         public double HancaiTotal { get; set; }
     }
 

@@ -90,7 +90,7 @@ namespace Innocellence.Web.Controllers
             var tasklist = _taskListService.GetList<TaskListView>(int.MaxValue, x => !x.IsDeleted && projectIDs.Contains(x.ProjectId)).ToList();
             listEx.ForEach(w => {
                 var p = projects.FirstOrDefault(x => x.Id == w.ProjectId);
-                var task = tasklist.FirstOrDefault(x => x.ProjectId == w.ProjectId && (x.BeamId == w.Id || x.DWGFile == w.DwgFile));
+                var task = tasklist.FirstOrDefault(x => x.ProjectId == w.ProjectId && x.BeamId == w.Id);
                 if (p != null)
                 {
                     w.ProjectName = p.ProjectName;
@@ -143,11 +143,11 @@ namespace Innocellence.Web.Controllers
                         {
                             _beamInfoService.InsertView(objModal);
                         }
-                        if (project != null && project.Status != ProjectStauts.NotComplete)
-                        {
-                            project.Status = ProjectStauts.NotComplete;
-                            _projectService.UpdateView(project);
-                        }
+                        //if (project != null && project.Status != ProjectStauts.NotComplete)
+                        //{
+                        //    project.Status = ProjectStauts.NotComplete;
+                        //    _projectService.UpdateView(project);
+                        //}
                     }
                     else
                     {

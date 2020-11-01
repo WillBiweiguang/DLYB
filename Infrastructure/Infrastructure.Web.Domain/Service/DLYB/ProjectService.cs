@@ -54,16 +54,17 @@ namespace Infrastructure.Web.Domain.Services
 
         public IList<HanjiProportionModel> HancaiQuanlityByType(LiMaiApiViewModel query)
         {
-            string sql = @"select p.ProjectName, p.DepartmentID, p.ProjectType as BridgeType, sum(t.WeldQuanlity) as HancaiTotal, t.WeldingType 
+            string sql = @"select p.ProjectName, p.AffiliatedInstitution as Department, p.ProjectType as BridgeType, sum(t.ConsumeFactor  * t.WeldQuanlity / 100) as HanjiTotal, 
+sum(t.WeldQuanlity) as HancaiTotal, t.WeldingType as HanjiType
 from t_weldcategorylabeling t
 inner join t_BeamInfo b on t.BeamId = b.Id
 inner join t_ProjectInfo p on b.ProjectId = p.Id
 where t.IsDeleted <> 1 and b.IsDeleted <> 1 and p.IsDeleted <> 1 {0}
-group by p.ProjectName,p.DepartmentID, p.ProjectType, t.WeldingType ";
+group by p.ProjectName,p.AffiliatedInstitution, p.ProjectType, t.WeldingType ";
             string whereCondition = "";
             if(!string.IsNullOrEmpty(query.DepartmentId))
             {
-                whereCondition += string.Format(" and p.DepartmentID = '{0}'", query.DepartmentId);
+                whereCondition += string.Format(" and (p.DepartmentID = '{0}' or p.AffiliatedInstitution = '{0}')", query.DepartmentId);
             }
             if (!string.IsNullOrEmpty(query.ProjectName))
             {
@@ -87,16 +88,17 @@ group by p.ProjectName,p.DepartmentID, p.ProjectType, t.WeldingType ";
 
         public IList<HanjiProportionModel> HancaiQuanlity(LiMaiApiViewModel query)
         {
-            string sql = @"select p.ProjectName, p.DepartmentID, p.ProjectType as BridgeType, sum(t.WeldQuanlity) as HancaiTotal 
+            string sql = @"select p.ProjectName, p.AffiliatedInstitution as Department , p.ProjectType as BridgeType, 
+sum(t.ConsumeFactor  * t.WeldQuanlity / 100) as HanjiTotal, sum(t.WeldQuanlity) as HancaiTotal 
 from t_weldcategorylabeling t
 inner join t_BeamInfo b on t.BeamId = b.Id
 inner join t_ProjectInfo p on b.ProjectId = p.Id
 where t.IsDeleted <> 1 and b.IsDeleted <> 1 and p.IsDeleted <> 1 {0}
-group by p.ProjectName,p.DepartmentID, p.ProjectType ";
+group by p.ProjectName,p.AffiliatedInstitution, p.ProjectType ";
             string whereCondition = "";
             if (!string.IsNullOrEmpty(query.DepartmentId))
             {
-                whereCondition += string.Format(" and p.DepartmentID = '{0}'", query.DepartmentId);
+                whereCondition += string.Format(" and (p.DepartmentID = '{0}' or p.AffiliatedInstitution = '{0}')", query.DepartmentId);
             }
             if (!string.IsNullOrEmpty(query.ProjectName))
             {
