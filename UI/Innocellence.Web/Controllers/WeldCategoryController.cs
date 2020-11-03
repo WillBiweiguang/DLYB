@@ -24,19 +24,21 @@ namespace Innocellence.FaultSearch.Controllers
         private readonly IWeldCategoryStatisticsVService _weldCategoryStatisticsVService;
         private readonly IProjectService _projectService;
         private readonly IBoardPackageService _boardPackageService;
+        private readonly ITempInfoService _tempInfoService;
 
         private readonly string baseUrl = "http://42.202.130.245:3001/";
         public WeldCategoryController(IWeldCategoryLabelingService weldCategoryService,
             IBeamInfoService beamInfoService, IWeldGeometryService weldGeometryService,
             IWeldLocationService weldLocationService, ITaskListService taskListService,
-            IBoardPackageService boardPackageService,
-        IWeldCategoryStatisticsVService weldCategoryStatisticsVService,IProjectService projectService) : base(weldCategoryService)
+            IBoardPackageService boardPackageService, ITempInfoService tempInfoService,
+        IWeldCategoryStatisticsVService weldCategoryStatisticsVService, IProjectService projectService) : base(weldCategoryService)
         {
             _weldCategoryService = weldCategoryService;
             _beamInfoService = beamInfoService;
             _weldGeometryService = weldGeometryService;
             _weldLocationService = weldLocationService;
             _boardPackageService = boardPackageService;
+            _tempInfoService = tempInfoService;
             baseUrl = ConfigurationManager.AppSettings["WebUrl"];
             _taskListService = taskListService;
             _weldCategoryStatisticsVService = weldCategoryStatisticsVService;
@@ -76,8 +78,8 @@ namespace Innocellence.FaultSearch.Controllers
                 }
             }
             var statistics = _weldCategoryStatisticsVService.GetList<WeldCategoryStatisticsVView>(int.MaxValue, x => !x.IsDeleted && x.BeamId == beamId).ToList();
-            ViewBag.Figures = _weldCategoryService.Repository.Entities.Select(x => x.FigureNumber).Distinct().Select(x => new SelectListItem { Value = x, Text = x }).ToList();
-            ViewBag.Boards = _weldCategoryService.Repository.Entities.Select(x => x.BoardNumber).Distinct().Select(x => new SelectListItem { Value = x, Text = x }).ToList();
+            ViewBag.Figures = _tempInfoService.Repository.Entities.Select(x => x.FigureNumber).Distinct().Select(x => new SelectListItem { Value = x, Text = x }).ToList();
+            ViewBag.Boards = _tempInfoService.Repository.Entities.Select(x => x.BoardNumber).Distinct().Select(x => new SelectListItem { Value = x, Text = x }).ToList();
             ViewBag.Areas = statistics.Select(x => x.SectionalArea).Distinct().ToList();
             ViewBag.weldGeometries = statistics.Select(x => x.WeldType).Distinct().ToList();
             ViewBag.weldLocations = statistics.Select(x => x.WeldLocationType).Distinct().ToList();
@@ -125,13 +127,13 @@ namespace Innocellence.FaultSearch.Controllers
                     ViewBag.ProjectId = beam.ProjectId;
                     ViewBag.FileName = beam.DwgFile;
                     var statistics = _weldCategoryStatisticsVService.GetList<WeldCategoryStatisticsVView>(int.MaxValue, x => !x.IsDeleted && x.BeamId == beam.Id).ToList();
-                    ViewBag.Figures = _weldCategoryService.Repository.Entities.Select(x => x.FigureNumber).Distinct().Select(x => new SelectListItem { Value = x, Text = x }).ToList();
-                    ViewBag.Boards = _weldCategoryService.Repository.Entities.Select(x => x.BoardNumber).Distinct().Select(x => new SelectListItem { Value = x, Text = x }).ToList();
+                    ViewBag.Figures = _tempInfoService.Repository.Entities.Select(x => x.FigureNumber).Distinct().Select(x => new SelectListItem { Value = x, Text = x }).ToList();
+                    ViewBag.Boards = _tempInfoService.Repository.Entities.Select(x => x.BoardNumber).Distinct().Select(x => new SelectListItem { Value = x, Text = x }).ToList();
                     ViewBag.Areas = statistics.Select(x => x.SectionalArea).Distinct().ToList();
                     ViewBag.weldGeometries = statistics.Select(x => x.WeldType).Distinct().ToList();
                     ViewBag.weldLocations = statistics.Select(x => x.WeldLocationType).Distinct().ToList();
                     ViewBag.WeldingModels = statistics.Select(x => x.WeldingModel).Distinct().ToList();
-                    ViewBag.ThickTypes = statistics.Select(x => x.ThickType).Distinct().ToList(); 
+                    ViewBag.ThickTypes = statistics.Select(x => x.ThickType).Distinct().ToList();
                     return View(model);
                 }
                 else
@@ -139,7 +141,7 @@ namespace Innocellence.FaultSearch.Controllers
                     return PartialView("InnerError", "无法找到焊缝记录，请在焊缝列表中寻找对应焊缝内容并修改。");
                 }
             }
-            return PartialView("InnerError","无法找到焊缝记录，请在焊缝列表中寻找对应焊缝内容并修改。");
+            return PartialView("InnerError", "无法找到焊缝记录，请在焊缝列表中寻找对应焊缝内容并修改。");
         }
 
         [HttpPost]
@@ -182,7 +184,7 @@ namespace Innocellence.FaultSearch.Controllers
                     item.WeldingType = objModal.WeldingType;
                     _BaseService.UpdateView(item);
                 }
-            }            
+            }
             return Json(doJson(null), JsonRequestBehavior.AllowGet);
         }
 
@@ -196,9 +198,9 @@ namespace Innocellence.FaultSearch.Controllers
             GridRequest gridRequest = new GridRequest(Request);
             string strCondition = Request["search_condition"];
             string locatedId = Request["locatedId"];
-            int beamId = 0;            
+            int beamId = 0;
             Expression<Func<WeldCategoryLabeling, bool>> expression = FilterHelper.GetExpression<WeldCategoryLabeling>(gridRequest.FilterGroup);
-            
+
             if (int.TryParse(Request["beamId"], out beamId))
             {
                 expression = expression.AndAlso<WeldCategoryLabeling>(x => x.IsDeleted != true && x.BeamId == beamId);
@@ -228,7 +230,8 @@ namespace Innocellence.FaultSearch.Controllers
         public JsonResult GetWeldingByHandle(int beamId, string handleId)
         {
             var item = _weldCategoryService.GetList<WeldCategoryLabelingView>(1, x => !x.IsDeleted && x.BeamId == beamId && x.HandleID.Contains(handleId)).FirstOrDefault();
-            if (item != null) {
+            if (item != null)
+            {
                 return new JsonResult { Data = new { result = "success", data = item.HandleID, item.Id }, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
             }
             return new JsonResult { Data = new { result = "failed" }, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
@@ -236,10 +239,10 @@ namespace Innocellence.FaultSearch.Controllers
         [HttpPost]
         public JsonResult GetWeldingProperty(string figureNumber, string boardNumber)
         {
-            var item = _boardPackageService.Repository.Entities.Where(x => !x.IsDeleted && x.FigureNumber == figureNumber && x.BoardNumber== boardNumber).FirstOrDefault();
+            var item = _tempInfoService.Repository.Entities.Where(x => x.FigureNumber == figureNumber && x.BoardNumber == boardNumber).Select(X=> new { LengthVal = X.LengthVal, WidthVal = X.WidthVal, WeldNum = X.WeldNum }).FirstOrDefault();
             if (item != null)
             {
-                return new JsonResult { Data = new { result = "success", data1 = item}, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
+                return new JsonResult { Data = new { result = "success", data1 = item }, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
             }
             return new JsonResult { Data = new { result = "failed" }, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
         }
@@ -250,7 +253,7 @@ namespace Innocellence.FaultSearch.Controllers
                 return new JsonResult { Data = new { result = "failed" }, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
             }
             var beam = _beamInfoService.GetList<BeamInfoView>(1, x => x.Id == beamId && !x.IsDeleted).FirstOrDefault();
-            if(beam == null)
+            if (beam == null)
             {
                 return new JsonResult { Data = new { result = "failed" }, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
             }
@@ -258,7 +261,7 @@ namespace Innocellence.FaultSearch.Controllers
 
             foreach (var weldInfo in weldList)
             {
-                if (!string.IsNullOrEmpty( weldInfo.HandleID) && !string.IsNullOrEmpty(weldInfo.WeldType))
+                if (!string.IsNullOrEmpty(weldInfo.HandleID) && !string.IsNullOrEmpty(weldInfo.WeldType))
                 {
                     var existedItem = existing.FirstOrDefault(x => x.BeamId == beamId && x.HandleID.Contains(weldInfo.HandleID));
                     if (existedItem != null)
@@ -350,7 +353,7 @@ namespace Innocellence.FaultSearch.Controllers
                 }
                 return new JsonResult { Data = new { result = "success" }, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
             }
-            return new JsonResult { Data = new { result = "failed", msg="提交失败" }, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
+            return new JsonResult { Data = new { result = "failed", msg = "提交失败" }, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
         }
         private string GetFilePath(int projectId, string dwgfile)
         {
