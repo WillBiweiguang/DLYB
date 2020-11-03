@@ -1,7 +1,9 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Infrastructure.Core.Tasks
 {
+    [Table("t_ScheduleTask")]
     public partial class ScheduleTask : EntityBase<int>
     {
         /// <summary>

@@ -35,5 +35,9 @@ namespace Infrastructure.Web.Domain.Entity
         public string DepartmentID { get; set; }
 
         public DateTime? CompleteDate { get; set; }
+
+        public string LmProjectId { get; set; }
+        public string LmAffiliatedId { get; set; }
+        public string LmBridgeTypeId { get; set; }
     }
 }

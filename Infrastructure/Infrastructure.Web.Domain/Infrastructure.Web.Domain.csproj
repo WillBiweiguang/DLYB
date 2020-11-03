@@ -212,6 +212,7 @@
     <Compile Include="Contracts\ICommonService.cs" />
     <Compile Include="Contracts\ILogsService.cs" />
     <Compile Include="Contracts\ISysUserService.cs" />
+    <Compile Include="Job\SyncLimaiProjectJob.cs" />
     <Compile Include="Model\CommonEntity\UploadMessage.cs" />
     <Compile Include="Model\Entity\DLYB\HistoricalCost.cs" />
     <Compile Include="Model\Entity\DLYB\BoardPackage.cs" />
@@ -319,6 +320,10 @@
     <ProjectReference Include="..\Infrastructure.Utility\Infrastructure.Utility.csproj">
       <Project>{946e0a0a-8280-46b3-893e-1b00a554ccab}</Project>
       <Name>Infrastructure.Utility</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Infrastructure.Web\Infrastructure.Web.csproj">
+      <Project>{D2AC8387-FC21-4E8E-810B-C0A637D44222}</Project>
+      <Name>Infrastructure.Web</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

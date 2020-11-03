@@ -35,6 +35,9 @@ namespace Infrastructure.Web.Domain.ModelsView
 
         public DateTime? CompleteDate { get; set; }
 
+        public string LmProjectId { get; set; }
+        public string LmAffiliatedId { get; set; }
+        public string LmBridgeTypeId { get; set; }
         public IViewModel ConvertAPIModel(object obj) {
             var entity = (Project)obj;
             Id = entity.Id;
@@ -49,6 +52,9 @@ namespace Infrastructure.Web.Domain.ModelsView
             IsDeleted = entity.IsDeleted;
             DepartmentID = entity.DepartmentID;
             CompleteDate = entity.CompleteDate;
+            LmProjectId = entity.LmProjectId;
+            LmAffiliatedId = entity.LmAffiliatedId;
+            LmBridgeTypeId = entity.LmBridgeTypeId;
             return this;
         }
 	}
