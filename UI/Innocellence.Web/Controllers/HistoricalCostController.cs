@@ -83,14 +83,6 @@ namespace DLYB.Web.Controllers
                 string path = "/Files/HistoricalCost/" + file.FileName;
                 file.SaveAs(Server.MapPath(path));
                 _service.InsertView(objModal);
-                //if (string.IsNullOrEmpty(Id) || Id == "0")
-                //{
-                //    _service.InsertView(objModal);
-                //}
-                //else
-                //{
-                //    _service.UpdateView(objModal);
-                //}
             }
             return Json(doJson(null), JsonRequestBehavior.AllowGet);
         }
@@ -125,7 +117,7 @@ namespace DLYB.Web.Controllers
             {
                 if (users.Any(u => u.Id == x.CreatedUserID))
                 {
-                    x.CreatedUserName = users.FirstOrDefault(u => u.Id == x.CreatedUserID).UserName;
+                    x.CreatedUserName = users.FirstOrDefault(u => u.Id == x.CreatedUserID).UserTrueName;
                 }
             });
             return this.GetPageResult(listEx, gridRequest);

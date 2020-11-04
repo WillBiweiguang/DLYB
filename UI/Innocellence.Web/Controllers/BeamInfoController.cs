@@ -79,8 +79,8 @@ namespace Innocellence.Web.Controllers
             }
             if (!string.IsNullOrEmpty(objLoginInfo.Department))
             {
-                var departmentid = objLoginInfo.Department.Split('_').First();
-                var projectIds = _projectService.GetList<ProjectView>(int.MaxValue, x => !x.IsDeleted && x.DepartmentID == departmentid).Select(x => x.Id).ToArray();
+                var department = objLoginInfo.Department.Split('_')[1];
+                var projectIds = _projectService.GetList<ProjectView>(int.MaxValue, x => !x.IsDeleted && x.AffiliatedInstitution == department).Select(x => x.Id).ToArray();
                 expression = expression.AndAlso<BeamInfo>(x => projectIds.Contains(x.ProjectId));
             }
             int rowCount = gridRequest.PageCondition.RowCount;

@@ -41,6 +41,8 @@ namespace Infrastructure.Web.Domain.ModelsView
 
         public int BeamId { get; set; }
 
+        public string AffiliatedInstitution { get; set; }
+
         public IViewModel ConvertAPIModel(object obj) {
             var entity = (WeldCategoryStatisticsV)obj;
             Id = entity.Id;
@@ -59,6 +61,7 @@ namespace Infrastructure.Web.Domain.ModelsView
             UpdatedUserID = entity.UpdatedUserID;
             IsDeleted = entity.IsDeleted;
             BeamId = entity.BeamId;
+            AffiliatedInstitution = entity.AffiliatedInstitution;
             return this;
         }
 	}

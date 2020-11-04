@@ -76,8 +76,8 @@ namespace DLYB.Web.Controllers
             //过滤机构
             if (!string.IsNullOrEmpty(objLoginInfo.Department))
             {
-                var departmentid = objLoginInfo.Department.Split('_').First();
-                var projectIds = _projectService.GetList<ProjectView>(int.MaxValue, x => !x.IsDeleted && x.DepartmentID == departmentid).Select(x => x.Id).ToArray();
+                var department = objLoginInfo.Department.Split('_')[1];
+                var projectIds = _projectService.GetList<ProjectView>(int.MaxValue, x => !x.IsDeleted && x.AffiliatedInstitution == department).Select(x => x.Id).ToArray();
                 expression = expression.AndAlso<TaskList>(x => projectIds.Contains(x.ProjectId));
             }
             //过滤角色
@@ -136,8 +136,8 @@ namespace DLYB.Web.Controllers
             expression = expression.AndAlso<WeldCategoryStatisticsV>(x => x.IsDeleted != true);
             if (!string.IsNullOrEmpty(objLoginInfo.Department))
             {
-                var departmentId = objLoginInfo.Department.Split('_')[0];
-                expression = expression.AndAlso<WeldCategoryStatisticsV>(x => x.DepartmentID == departmentId);
+                var department = objLoginInfo.Department.Split('_')[1];
+                expression = expression.AndAlso<WeldCategoryStatisticsV>(x => x.AffiliatedInstitution == department);
             }
             if (!string.IsNullOrEmpty(strCondition))
             {
@@ -269,8 +269,8 @@ namespace DLYB.Web.Controllers
 
                 if (!string.IsNullOrEmpty(objLoginInfo.Department))
                 {
-                    var departmentid = objLoginInfo.Department.Split('_').First();
-                    expression = expression.AndAlso<WeldCategoryStatisticsV>(x => x.DepartmentID == departmentid);
+                    var department = objLoginInfo.Department.Split('_')[1];
+                    expression = expression.AndAlso<WeldCategoryStatisticsV>(x => x.AffiliatedInstitution == department);
                     //query.Where(a => a.DepartmentID == departmentid);
                 }
                 if (!string.IsNullOrEmpty(strCondition))

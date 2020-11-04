@@ -35,6 +35,7 @@ namespace Infrastructure.Web.Domain.Entity
         //[Column("Welding_Type")]
         //public string WeldingType { get; set; }
         public string DepartmentID { get; set; }
+        public string AffiliatedInstitution { get; set; }
 
         public DateTime? CreatedDate { get; set; }
 

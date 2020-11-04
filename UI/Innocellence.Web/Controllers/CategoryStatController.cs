@@ -16,6 +16,7 @@ using Infrastructure.Web.UI;
 using Infrastructure.Utility.Filter;
 using System.Linq.Expressions;
 using Infrastructure.Utility.Data;
+using Infrastructure.Web.Domain.Common;
 
 namespace DLYB.Web.Controllers
 {
@@ -43,6 +44,7 @@ namespace DLYB.Web.Controllers
             ViewBag.GrooveTypes = _GrooveTypeService.GetGrooveTypeQuerys();
             ViewBag.BeamId = Request["beamId"];
             ViewBag.ProjectId = Request["ProjectId"];
+            ViewBag.IsAdmin = this.objLoginInfo.Menus.Any(x => x.Id == (int)EnumMenuId.WeldingMetaManage);
             int pid = 0;
             if (int.TryParse(Request["ProjectId"], out pid)){
                 var project = _projectService.Repository.Entities.FirstOrDefault(x => x.Id == pid);

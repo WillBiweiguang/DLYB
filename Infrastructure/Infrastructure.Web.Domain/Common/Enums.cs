@@ -37,6 +37,7 @@ namespace Infrastructure.Web.Domain.Common
         Admin = 3,
         Manager = 1,
         TaskView = 6,
-        TaskApprove = 7
+        TaskApprove = 7,
+        WeldingMetaManage = 8
     }
 }

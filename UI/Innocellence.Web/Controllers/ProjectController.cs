@@ -44,7 +44,7 @@ namespace Innocellence.Web.Controllers
             var mode = Request["mode"];
             if (!string.IsNullOrEmpty(objLoginInfo.Department))
             {
-                ViewBag.departmentId = objLoginInfo.Department.Split('_')[0];
+                ViewBag.departmentId = objLoginInfo.Department.Split('_')[1];
             }
             ViewBag.list = _objHistoricalCostService.GetList<HistoricalCostView>(int.MaxValue, x => !x.IsDeleted).ToList();
             ViewBag.Layout = "~/Views/Shared/_Layout.cshtml";
@@ -77,8 +77,8 @@ namespace Innocellence.Web.Controllers
 
             if (!string.IsNullOrEmpty(objLoginInfo.Department))
             {
-                var departmentId = objLoginInfo.Department.Split('_')[0];
-                expression = expression.AndAlso<Project>(x => x.DepartmentID == departmentId);
+                var department = objLoginInfo.Department.Split('_')[1];
+                expression = expression.AndAlso<Project>(x => x.AffiliatedInstitution == department);
             }
 
             int rowCount = gridRequest.PageCondition.RowCount;
@@ -87,8 +87,7 @@ namespace Innocellence.Web.Controllers
             var users = _sysUserService.GetList<SysUserView>(10, x => userIds.Contains(x.Id)).ToList();
             listEx.ForEach(x =>
             {
-                x.DepartmentName = Departments.Any(e => e.Key.ToString() == x.DepartmentID)
-                ? Departments.First(e => e.Key.ToString() == x.DepartmentID).Value : "";
+                x.DepartmentName = x.AffiliatedInstitution;
                 x.UpdateUserName = users.FirstOrDefault(e => e.Id == x.UpdatedUserID)?.UserTrueName;
             });
             return this.GetPageResult(listEx, gridRequest);
@@ -99,8 +98,8 @@ namespace Innocellence.Web.Controllers
             Expression<Func<Project, bool>> expression = x => !x.IsDeleted && x.ProjectName.Contains(keyword.Trim());
             if (!string.IsNullOrEmpty(objLoginInfo.Department))
             {
-                var departmentId = objLoginInfo.Department.Split('_')[0];
-                expression = expression.AndAlso<Project>(x => x.DepartmentID == departmentId);
+                var department = objLoginInfo.Department.Split('_')[1];
+                expression = expression.AndAlso<Project>(x => x.AffiliatedInstitution == department);
             }
             var list = _projectService.GetList<ProjectView>(int.MaxValue, expression)
         .Select(x => new { key = x.Id, value = x.ProjectName }).ToList();

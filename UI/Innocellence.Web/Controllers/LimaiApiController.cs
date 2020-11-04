@@ -43,12 +43,5 @@ namespace DLYB.Web.Controllers.API
             var list = _projectService.HancaiQuanlity(search);
             return new JsonResult { Data = new { Status = "200", Data= JsonConvert.SerializeObject(list) }, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
         }
-        //[System.Web.Mvc.HttpPost]
-        //[VerifyParam(Param = "")]
-        //public JsonResult HancaiProportionByType(LiMaiApiViewModel search)
-        //{
-        //    var list = _projectService.HancaiQuanlity(search);
-        //    return new JsonResult { Data = new { Status = "200", Data = JsonConvert.SerializeObject(list) }, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
-        //}
     }
 }

@@ -54,33 +54,34 @@ namespace Infrastructure.Web.Domain.Services
 
         public IList<HanjiProportionModel> HancaiQuanlityByType(LiMaiApiViewModel query)
         {
-            string sql = @"select p.ProjectName, p.AffiliatedInstitution as Department, p.ProjectType as BridgeType, sum(t.ConsumeFactor  * t.WeldQuanlity / 100) as HanjiTotal, 
+            string sql = @"select p.ProjectName, p.LmProjectId AS ProjectId, p.AffiliatedInstitution as Department, p.LmAffiliatedId AS AffiliatedId,  
+p.ProjectType as BridgeType, p.LmBridgeTypeId as BridgeTypeId, sum(t.ConsumeFactor  * t.WeldQuanlity / 100) as HanjiTotal, 
 sum(t.WeldQuanlity) as HancaiTotal, t.WeldingType as HanjiType
 from t_weldcategorylabeling t
 inner join t_BeamInfo b on t.BeamId = b.Id
 inner join t_ProjectInfo p on b.ProjectId = p.Id
 where t.IsDeleted <> 1 and b.IsDeleted <> 1 and p.IsDeleted <> 1 {0}
-group by p.ProjectName,p.AffiliatedInstitution, p.ProjectType, t.WeldingType ";
+group by p.ProjectName,p.LmProjectId, p.AffiliatedInstitution,p.LmAffiliatedId, p.ProjectType, p.LmBridgeTypeId, t.WeldingType ";
             string whereCondition = "";
-            if(!string.IsNullOrEmpty(query.DepartmentId))
+            if (!string.IsNullOrEmpty(query.DepartmentId))
             {
-                whereCondition += string.Format(" and (p.DepartmentID = '{0}' or p.AffiliatedInstitution = '{0}')", query.DepartmentId);
+                whereCondition += string.Format(" and (p.LmAffiliatedId = '{0}' )", query.DepartmentId);
             }
-            if (!string.IsNullOrEmpty(query.ProjectName))
+            if (!string.IsNullOrEmpty(query.ProjectId))
             {
-                whereCondition += string.Format(" and p.ProjectName = '{0}'", query.ProjectName);
+                whereCondition += string.Format(" and p.LmProjectId = '{0}'", query.ProjectId);
             }
-            if (!string.IsNullOrEmpty(query.BridgeType))
+            if (!string.IsNullOrEmpty(query.BridgeTypeId))
             {
-                whereCondition += string.Format(" and p.ProjectType = '{0}'", query.BridgeType);
+                whereCondition += string.Format(" and p.LmBridgeTypeId = '{0}'", query.BridgeTypeId);
             }
             if (query.StartDate.HasValue)
             {
-                whereCondition += string.Format(" and p.CreatedDate > '{0}'", query.StartDate.Value.ToString("yyyy-MM-dd"));
+                whereCondition += string.Format(" and p.CompleteDate >= '{0}'", query.StartDate.Value.ToString("yyyy-MM-dd"));
             }
             if (query.EndDate.HasValue)
             {
-                whereCondition += string.Format(" and p.CompleteDate < '{0}'", query.EndDate.Value.AddDays(1).ToString("yyyy-MM-dd"));
+                whereCondition += string.Format(" and p.CompleteDate <= '{0}'", query.EndDate.Value.AddDays(1).ToString("yyyy-MM-dd"));
             }
             sql = string.Format(sql, whereCondition);
             return Repository.UnitOfWork.SqlQuery<HanjiProportionModel>(sql).ToList();
@@ -88,33 +89,33 @@ group by p.ProjectName,p.AffiliatedInstitution, p.ProjectType, t.WeldingType ";
 
         public IList<HanjiProportionModel> HancaiQuanlity(LiMaiApiViewModel query)
         {
-            string sql = @"select p.ProjectName, p.AffiliatedInstitution as Department , p.ProjectType as BridgeType, 
+            string sql = @"select p.ProjectName, p.AffiliatedInstitution as Department , p.ProjectType as BridgeType, p.LmProjectId, p.LmAffiliatedId, p.LmBridgeTypeId,
 sum(t.ConsumeFactor  * t.WeldQuanlity / 100) as HanjiTotal, sum(t.WeldQuanlity) as HancaiTotal 
 from t_weldcategorylabeling t
 inner join t_BeamInfo b on t.BeamId = b.Id
 inner join t_ProjectInfo p on b.ProjectId = p.Id
 where t.IsDeleted <> 1 and b.IsDeleted <> 1 and p.IsDeleted <> 1 {0}
-group by p.ProjectName,p.AffiliatedInstitution, p.ProjectType ";
+group by p.ProjectName,p.AffiliatedInstitution, p.ProjectType,p.LmProjectId,p.LmAffiliatedId,p.LmBridgeTypeId";
             string whereCondition = "";
             if (!string.IsNullOrEmpty(query.DepartmentId))
             {
-                whereCondition += string.Format(" and (p.DepartmentID = '{0}' or p.AffiliatedInstitution = '{0}')", query.DepartmentId);
+                whereCondition += string.Format(" and (p.LmAffiliatedId = '{0}' )", query.DepartmentId);
             }
-            if (!string.IsNullOrEmpty(query.ProjectName))
+            if (!string.IsNullOrEmpty(query.ProjectId))
             {
-                whereCondition += string.Format(" and p.ProjectName = '{0}'", query.ProjectName);
+                whereCondition += string.Format(" and p.LmProjectId = '{0}'", query.ProjectId);
             }
-            if (!string.IsNullOrEmpty(query.BridgeType))
+            if (!string.IsNullOrEmpty(query.BridgeTypeId))
             {
-                whereCondition += string.Format(" and p.ProjectType = '{0}'", query.BridgeType);
+                whereCondition += string.Format(" and p.LmBridgeTypeId = '{0}'", query.BridgeTypeId);
             }
             if (query.StartDate.HasValue)
             {
-                whereCondition += string.Format(" and p.CreatedDate > '{0}'", query.StartDate.Value.ToString("yyyy-MM-dd"));
+                whereCondition += string.Format(" and p.CompleteDate >= '{0}'", query.StartDate.Value.ToString("yyyy-MM-dd"));
             }
             if (query.EndDate.HasValue)
             {
-                whereCondition += string.Format(" and p.CompleteDate < '{0}'", query.EndDate.Value.AddDays(1).ToString("yyyy-MM-dd"));
+                whereCondition += string.Format(" and p.CompleteDate <= '{0}'", query.EndDate.Value.AddDays(1).ToString("yyyy-MM-dd"));
             }
             sql = string.Format(sql, whereCondition);
             return Repository.UnitOfWork.SqlQuery<HanjiProportionModel>(sql).ToList();

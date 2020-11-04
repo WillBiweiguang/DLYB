@@ -3,6 +3,7 @@ using Infrastructure.Web.Domain.Contracts;
 using Infrastructure.Web.Tasks;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -22,7 +23,8 @@ namespace Infrastructure.Web.Domain.Job
 
         public void Execute()
         {
-            if(DateTime.Now.Hour != 2)
+            var jobHour = ConfigurationManager.AppSettings["SyncLimaiHour"];
+            if (DateTime.Now.Hour != int.Parse(jobHour))
             {
                 return;
             }
