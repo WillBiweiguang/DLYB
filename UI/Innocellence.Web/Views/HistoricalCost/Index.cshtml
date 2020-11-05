@@ -71,7 +71,10 @@
         accept="application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
         validate="{required:true}" />*@
                             <input id="upload-input" class="form-control " type="file" name="file" onchange="return uploadFile(this);"
-                                   accept="application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"/>
+                                   accept="application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" />
+                            <div class="progress" style="margin-bottom: 0px;margin-top:5px;">
+                                <div id="progress-bar" class="progress-bar" style="width:0">0</div>
+                            </div>
                         </div>
                     </div>
                 </form>
@@ -148,7 +151,6 @@
         });
 
         function uploadFile(obj) {
-            //$('#btnSave').prop("disabled", true);
             var strUrl = "PostFile?ProjectId=" + $('#project_id').val();
             $(obj).FileUpload({
                 self: obj,
@@ -160,8 +162,10 @@
                     if (data.error) {
                         bootbox.alert(data.error.message);
                     } else {
-                        //$('#btnSave').prop("disabled", false);
+                        bootbox.alert("上传成功");
+                        LEAP.Common.MainPop.options.dataTable.fnDraw(false);
                     }
+                    $('#upload-input').val('');
                 }
             });
         }

@@ -20,8 +20,9 @@ namespace Infrastructure.Web.Domain.ModelsView
         public string ProjectName { get; set; }
         public string BridgeType { get; set; }
         public string HanjiType { get; set; }
-        public string HanjiTotal { get; set; }
+        public double HanjiTotal { get; set; }
         public double HancaiTotal { get; set; }
+        public string ProjectId { get; set; }
     }
 
     public class HancaiProportion

@@ -315,7 +315,7 @@ function GetWelding() {
         if (myWeld == null || myWeld.myWelType == "") {
             continue;
         }
-        m_ResWeldArr.push(myWeld);
+        
         //根据类型修改颜色
         //ChangeColorByType(myWeld);
 
@@ -323,7 +323,9 @@ function GetWelding() {
         ChangeWeldLayerbyHandle(myWeld);
 
         //在箭头处画圆
-        DrawCircleOfArrow(myWeld);
+        var circleHandle = DrawCircleOfArrow(myWeld);
+        myWeld.circleHandle = circleHandle;
+        m_ResWeldArr.push(myWeld);
         //可在此处逐个获取识别到的焊缝符号的信息
 
         //myWeld——为识别到的焊缝符号，myWeld.myWelArrow.myArrowObjectID 保存的是箭头的handle
@@ -352,7 +354,7 @@ function GetWelding() {
     var weldData = [];
     for (var i = 0; i < m_ResWeldArr.length; i++) {
         var handleArray = GetWeldHandle(m_ResWeldArr[i]);
-        weldData.push({ WeldType: m_ResWeldArr[i].myWelType, HandleID: m_ResWeldArr[i].myWelArrow.myArrowObjectID + ',' + handleArray.toString() });
+        weldData.push({ WeldType: m_ResWeldArr[i].myWelType, HandleID: m_ResWeldArr[i].myWelArrow.myArrowObjectID + ',' + handleArray.toString() + ',' + m_ResWeldArr[i].circleHandle });
     }
     saveWeldData(weldData);
 }
@@ -422,7 +424,7 @@ function GetWeldingType(myArrow) {
         if (mployLine.numVerts == 2) {
             PolyLArray2[PolyLArray2.length] = mployLine;
         }
-        else if (mployLine.numVerts == 3) {
+        else if (mployLine.numVerts == 3 && mployLine.IsClosedStatus == false) {
             PolyLArray3[PolyLArray3.length] = mployLine;
         }
     }
@@ -3503,28 +3505,39 @@ function MouseEvent(dX, dY, lType) {
         }
     }
     if (lType == 3) {
-        if (isViewModel) { return; }
-        // 鼠标右键按下 后选中鼠标附件实体，并显示右键菜单
-        var filter = mxOcx.NewResbuf();
-        var ent = mxOcx.FindEntAtPoint(dX, dY, filter);
+        //获取当前选中的实体
 
+        var ss = mxOcx.NewSelectionSet();
+        var spFilte = mxOcx.NewResbuf();
+        var ent
+        //用户选择对象  得到用户选取的实体
+        ss.Select2(8, null, null, null, spFilte);
+        if (ss.Count == 1) {
+            ent = ss.Item(0);
+        }
+        else {
+            // 鼠标右键按下 后选中鼠标附件实体，并显示右键菜单
+            var filter = mxOcx.NewResbuf();
+            var ent = mxOcx.FindEntAtPoint(dX, dY, filter);
+        }
         var sPopMenu;
         if (ent != null) {
             mxOcx.ClearCurrentSelect();
             mxOcx.AddCurrentSelect(ent.ObjectID, true, true);
-            
+
             sPopMenu = "http://" + window.location.host + "/Content/testPOPMenu.mnu"; //mxOcx.GetOcxAppPath() + "\\testPOPMenu.mnu";
         }
         else {
             sPopMenu = "http://" + window.location.host + "/Content/testPOPMenuWeld.mnu";  //mxOcx.GetOcxAppPath() + "\\testPOPMenuWeld.mnu";
         }
-        console.log(sPopMenu);
+
 
         mxOcx.TrackPopupMenu(dX, dY, sPopMenu);
         // 设置1，表示鼠标事件，不再往下传递.
         mxOcx.SetEventRet(1);
     }
 }
+
 // 移动自定义实体夹点
 function MoveGripPointsFun(pCustomEntity, lGridIndex, dOffsetX, dOffsetY) {
 

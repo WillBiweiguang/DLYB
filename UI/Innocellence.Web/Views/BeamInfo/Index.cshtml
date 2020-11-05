@@ -225,6 +225,9 @@
                 return;
             }
             var strUrl = "PostFile?ProjectId=" + pid + '&v=' + Math.random();
+            if (!$(obj).val()) {
+                return;
+            }
             $(obj).FileUpload({
                 self: obj,
                 url: strUrl,
