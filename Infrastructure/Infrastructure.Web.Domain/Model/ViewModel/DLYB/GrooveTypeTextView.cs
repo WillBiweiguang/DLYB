@@ -6,28 +6,26 @@ using Infrastructure.Web.Domain.Entity;
 
 namespace Infrastructure.Web.Domain.ModelsView
 {
-    public partial class GrooveTypeView : ViewModelBase, IViewModel
+    public partial class GrooveTypeTextView : ViewModelBase, IViewModel
     {
         public Int32 Id { get; set; }
-
         public string GrooveType { get; set; }
         public string WeldGeometry { get; set; }
-        public double Thickness { get; set; }
-        public double? WorksThickness1 { get; set; }
-        public double? WorksThickness2 { get; set; }
-        public double? WorksThicknessH1 { get; set; }
-        public double? WorksThicknessH2 { get; set; }
-        public double? WorksThicknessH3 { get; set; }
-        public double? WeldLeg1 { get; set; }
-        public double? GrooveClearance { get; set; }
-        public double? BluntThickness { get; set; }
-        public double? GrooveAngleA1 { get; set; }
-        public double? GrooveAngleA2 { get; set; }
-        public double? GrooveArcR1 { get; set; }
-        public double? GrooveArcR2 { get; set; }
-        public double? CircleArcR { get; set; }
-        public double? GrooveThicknessT { get; set; }
-
+        public string Thickness { get; set; }
+        public string WorksThickness1 { get; set; }
+        public string WorksThickness2 { get; set; }
+        public string WorksThicknessH1 { get; set; }
+        public string WorksThicknessH2 { get; set; }
+        public string WorksThicknessH3 { get; set; }
+        public string WeldLeg1 { get; set; }
+        public string GrooveClearance { get; set; }
+        public string BluntThickness { get; set; }
+        public string GrooveAngleA1 { get; set; }
+        public string GrooveAngleA2 { get; set; }
+        public string GrooveArcR1 { get; set; }
+        public string GrooveArcR2 { get; set; }
+        public string CircleArcR { get; set; }
+        public string GrooveThicknessT { get; set; }
         public string PreviewImage { get; set; }
         public DateTime? CreatedDate { get; set; }
 
@@ -41,10 +39,11 @@ namespace Infrastructure.Web.Domain.ModelsView
 
         public IViewModel ConvertAPIModel(object obj)
         {
-            var entity = (GrooveTypes)obj;
+            var entity = (GrooveTypesText)obj;
             Id = entity.Id;
             GrooveType = entity.GrooveType;
             WeldGeometry = entity.WeldGeometry;
+            GrooveType = entity.GrooveType;
             Thickness = entity.Thickness;
             WorksThickness1 = entity.WorksThickness1;
             WorksThickness2 = entity.WorksThickness2;

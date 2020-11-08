@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Infrastructure.Web.Domain.ModelsView.GrooveTypeView>
+﻿@model IEnumerable<Infrastructure.Web.Domain.ModelsView.GrooveTypeTextView>
 @section easyui_css{
     <link rel="stylesheet" href="~/Style/EasyUI/easyui.css" />
 }
@@ -31,8 +31,6 @@
                             <th style="width:5%;text-align:center;">@T("序号")</th>
                             <th>@T("接口形式")</th>
                             <th>@T("焊缝类型")</th>
-                            <th>@T("工件厚度1")</th>
-                            <th>@T("工件厚度2")</th>
                             <th>@T("坡口深度h")</th>
                             <th>@T("余高H")</th>
                             <th>@T("组对间隙c")</th>
@@ -82,7 +80,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="row">
+                    @*<div class="row">
                         <div class="form-group col-lg-6">
                             <div class="row">
                                 <label class="col-sm-5 control-label">工件厚度1:</label>
@@ -99,7 +97,7 @@
                                        validate="{required:true}" />
                             </div>
                         </div>
-                    </div>
+                    </div>*@
                     <div class="row">
                         <div class="form-group col-lg-6">
                             <label class="col-sm-5 control-label">坡口深度h:</label>
@@ -220,8 +218,6 @@
                     { "mData": 'Id' },
                     { "mData": 'GrooveType' },
                     { "mData": 'WeldGeometry' },
-                    { "mData": 'WorksThickness1' },
-                    { "mData": 'WorksThickness2' },
                     { "mData": 'WorksThicknessH1' },
                     { "mData": 'WorksThicknessH2' },
                     { "mData": 'GrooveClearance' },
@@ -236,7 +232,7 @@
                 ],
                 "columnDefs": [
                     {
-                        "targets": 15,
+                        "targets": 13,
                         "render": function (data, type, full, meta) {
                             return '<img src="' + full.PreviewImage + '" style="max-width:100px" />'
                                 ;

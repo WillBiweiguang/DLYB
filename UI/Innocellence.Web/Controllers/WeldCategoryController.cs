@@ -239,7 +239,7 @@ namespace Innocellence.FaultSearch.Controllers
         [HttpPost]
         public JsonResult GetWeldingProperty(string figureNumber, string boardNumber)
         {
-            var item = _tempInfoService.Repository.Entities.Where(x => x.FigureNumber == figureNumber && x.BoardNumber == boardNumber).Select(X=> new { LengthVal = X.LengthVal, WidthVal = X.WidthVal, WeldNum = X.WeldNum }).FirstOrDefault();
+            var item = _tempInfoService.Repository.Entities.Where(x => x.FigureNumber == figureNumber && x.BoardNumber == boardNumber).Select(X=> new { LengthVal = X.LengthVal, WidthVal = X.WidthVal, WeldNum = X.WeldNum, BeamNum=X.BeamNum }).FirstOrDefault();
             if (item != null)
             {
                 return new JsonResult { Data = new { result = "success", data1 = item }, JsonRequestBehavior = JsonRequestBehavior.AllowGet };

@@ -192,6 +192,7 @@
     <Compile Include="Configuration\CategoryConfiguration.generated.cs" />
     <Compile Include="Configuration\CommonConfiguration.generated.cs" />
     <Compile Include="Configuration\IdentityConfiguration.generated.cs" />
+    <Compile Include="Contracts\IGrooveTypeTextService.cs" />
     <Compile Include="Contracts\ITempInfoService.cs" />
     <Compile Include="Contracts\IHistoricalCostService.cs" />
     <Compile Include="Contracts\IBoardPackageService.cs" />
@@ -215,6 +216,7 @@
     <Compile Include="Contracts\ISysUserService.cs" />
     <Compile Include="Job\SyncLimaiProjectJob.cs" />
     <Compile Include="Model\CommonEntity\UploadMessage.cs" />
+    <Compile Include="Model\Entity\DLYB\GrooveTypesText.cs" />
     <Compile Include="Model\Entity\DLYB\TempInfo.cs" />
     <Compile Include="Model\Entity\DLYB\HistoricalCost.cs" />
     <Compile Include="Model\Entity\DLYB\BoardPackage.cs" />
@@ -248,6 +250,7 @@
     <Compile Include="Model\ModelMap.cs" />
     <Compile Include="Model\ViewModel\AccountViewModels.cs" />
     <Compile Include="Model\ViewModel\CategoryView.cs" />
+    <Compile Include="Model\ViewModel\DLYB\GrooveTypeTextView.cs" />
     <Compile Include="Model\ViewModel\DLYB\TempInfoView.cs" />
     <Compile Include="Model\ViewModel\DLYB\HistoricalCostView.cs" />
     <Compile Include="Model\ViewModel\DLYB\LiMaiApiViewModel.cs" />
@@ -281,6 +284,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Service\DLYB\GrooveTypeTextService.cs" />
     <Compile Include="Service\DLYB\TempInfoService.cs" />
     <Compile Include="Service\DLYB\HistoricalService.cs" />
     <Compile Include="Service\DLYB\BoardPackageService.cs" />

@@ -1,713 +1,727 @@
 ﻿@model IEnumerable<Infrastructure.Web.Domain.ModelsView.WeldCategoryStatisticsVView>
-@section easyui_css{
-    <link rel="stylesheet" href="~/Style/EasyUI/easyui.css" />
-}
-@{
-    ViewBag.Title = "焊缝类型统计";
-}
-<style>
-    .datagrid-mask-msg {
-        height: 36px !important;
+    @section easyui_css{
+        <link rel="stylesheet" href="~/Style/EasyUI/easyui.css" />
     }
-
-    .form-control {
-        display: inline;
-        max-width: 300px;
+    @{
+        ViewBag.Title = "焊缝类型统计";
     }
-
-    .func-btn {
-        border-radius: 0 !important;
-        background-color: #fff;
-        border: 1px solid #d5d5d5;
-        padding: 4px 2px 5px;
-        font-size: 14px;
-        font-family: inherit;
-        -webkit-box-shadow: none !important;
-        box-shadow: none !important;
-        -webkit-transition-duration: .1s;
-        transition-duration: .1s;
-        vertical-align: middle;
-        width: 110px;
-        float: right;
-        text-align: center;
-        cursor: pointer;
-    }
-
-    .modal-backdrop {
-        z-index: 998;
-    }
-
-    .modal {
-        z-index: 999;
-    }
-
-    #rightPanel {
-        background-color: white;
-    }
-
-        #rightPanel .widget-box {
-            margin-top: 0px;
+    <style>
+        .datagrid-mask-msg {
+            height: 36px !important;
         }
-</style>
-<!--Action boxes-->
-<div class="row">
-    <div class="col-sm-12">
-        <form class="form-inline" id="SearchForm">
-            <div class="form-group">
-                <input class="form-control" type="text" id="search_condition" name="search_condition" placeholder="厂址">
-                <a href="#" class="btn btn-info btn-sm" id="btnSearch" data-toggle="tooltip" data-placement="top" title="查询条件"><i class="fa fa-search">查询</i></a>
-            </div>
-            <div class="form-group pull-right">
 
-                <a href="/BeamInfo/Index?projectid=@ViewBag.ProjectId" class="btn btn-info btn-sm" id="btnReturn" data-toggle="tooltip" data-placement="top" title="返回">
-                    文件管理
-                </a>
+        .form-control {
+            display: inline;
+            max-width: 300px;
+        }
 
-                <a href="~/weldcategory/index?beamId=@ViewBag.BeamId" class="btn btn-info btn-sm" data-toggle="tooltip" data-placement="top" title="焊缝类型标注">
-                    焊缝类型标注
-                </a>
+        .func-btn {
+            border-radius: 0 !important;
+            background-color: #fff;
+            border: 1px solid #d5d5d5;
+            padding: 4px 2px 5px;
+            font-size: 14px;
+            font-family: inherit;
+            -webkit-box-shadow: none !important;
+            box-shadow: none !important;
+            -webkit-transition-duration: .1s;
+            transition-duration: .1s;
+            vertical-align: middle;
+            width: 110px;
+            float: right;
+            text-align: center;
+            cursor: pointer;
+        }
 
-                <a href="#" class="btn btn-info btn-sm" id="btnAdd" data-toggle="tooltip" data-placement="top" title="添加">
-                    <i class="fa fa-plus">添加</i>
-                </a>
-            </div>
-        </form>
-        <div class="clearfix"></div>
+        .modal-backdrop {
+            z-index: 998;
+        }
 
-        <div class="widget-box">
-            <div class="widget-content nopadding">
-                <table id="cateList" class="table table-bordered table-hover data-table">
-                    <thead>
-                        <tr>
-                            <th style="width:5%;text-align:center;">@T("序号")</th>
-                            <th>@T("项目名称")</th>
-                            <th>@T("厂址")</th>
-                            <th>@T("焊接位置")</th>
-                            <th>@T("焊缝类型")</th>
-                            <th>@T("焊缝位置")</th>
-                            <th>@T("坡口形式")</th>
-                            <th>@T("焊缝截面积") (mm<sup>2</sup>)</th>
-                            <th>@T("焊材型号")</th>
-                            <th style="width:10%;">@T("操作")</th>
-                        </tr>
-                    </thead>
-                </table>
-            </div>
-        </div>
-    </div>
-</div>
+        .modal {
+            z-index: 999;
+        }
 
-<div id="ModalTable" class="modal" tabindex="-1">
-    <div id="leftPanel" class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="blue bigger">请填写统计信息</h4>
-            </div>
+        #rightPanel {
+            background-color: white;
+        }
 
-            <div class="modal-body">
-                <form action="Post" id="ff" method="get" class="form-horizontal" datasource="Get">
-                    <input type="hidden" id="ID" name="ID" value="0" />
-                    <input type="hidden" id="ProjectId" name="ProjectId" value="@ViewBag.ProjectId" />
-                    <input type="hidden" id="BeamId" name="BeamId" value="@ViewBag.BeamId" />
-                    @*<input type="hidden" id="CreatedDate" name="CreatedDate" data-bind="value: CreatedDate" validate="{required:false}" value="1970-01-01"/>
-                        <input type="hidden" id="CreatedUserID" name="CreatedUserID" data-bind="value: CreatedUserID" validate="{required:false}" value="0" />*@
-                    <div class="form-group">
-                        <label class="col-sm-3 control-label">项目:</label>
-                        <div class="col-sm-9">
-                            @if (string.IsNullOrEmpty(ViewBag.ProjectId))
-                            {
-                                <select class="chosen-select form-control" id="ProjectName" name="ProjectId" style="display:none" data-bind="value:ProjectId" validate="{required:true}"></select>
-                            }
-                            else
-                            {
-                                <input type="text" class="form-control" value="@ViewBag.ProjectName" readonly />
-                            }
-
-                            @*<span class="func-btn redirect-btn" href="/Project/Index?mode=1">项目管理</span>*@
-                            @*<input type="text" name="GrooveType" class="form-control" placeholder="请输入" data-bind="value: ProjectName"
-                                validate="{required:true}" />*@
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="col-sm-3 control-label">梁段:</label>
-                        <div class="col-sm-9">
-                            @if (string.IsNullOrEmpty(ViewBag.BeamId))
-                            {
-                                <select class="chosen-select form-control" id="beamName" name="BeamId" style="display:none" data-bind="value:BeamId"></select>
-                            }
-                            else
-                            {
-                                <input type="text" class="form-control" value="@ViewBag.BeamName" readonly />
-                            }
-
-                            @*<span class="func-btn redirect-btn" href="/Project/Index?mode=1">项目管理</span>*@
-                            @*<input type="text" name="GrooveType" class="form-control" placeholder="请输入" data-bind="value: ProjectName"
-                                validate="{required:true}" />*@
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="col-sm-3 control-label">厂址:</label>
-                        <div class="col-sm-9">
-                            <select class="single-select form-control" id="AddressName" name="AddressId" style="" data-bind="value:AddressId" validate="{required:true}" data-geturl="/Address/GetDropdownList"></select>
-                            @if (ViewBag.IsAdmin)
-                            {
-                            <span class="func-btn redirect-btn" href="/Address/Index">厂址管理</span>
-                            }
-                            @*<input type="text" name="GrooveType" class="form-control" placeholder="请输入" data-bind="value: AddressName"
-                                validate="{required:true}" />*@
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="col-sm-3 control-label">焊缝类型:</label>
-                        <div class="col-sm-9">
-                            <select class="single-select form-control" id="WeldType" name="WeldTypeId" style="" data-bind="value:WeldTypeId" validate="{required:true}" data-geturl="/WeldGeometry/GetDropdownList"></select>
-                            @if (ViewBag.IsAdmin)
-                            {
-                                <span class="func-btn redirect-btn" href="/WeldGeometry/Index">焊缝类型管理</span>
-                            }
-                                @*<input type="text" name="Thickness" class="form-control" placeholder="请输入" data-bind="value: Thickness"
-            validate="{required:true}" />*@
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="col-sm-3 control-label">焊缝位置:</label>
-                        <div class="col-sm-9">
-                            <select class="single-select form-control" id="WeldLocationType" name="WeldLocationId" style="" data-bind="value: WeldLocationId" validate="{required:true}" data-geturl="/WeldLocation/GetDropdownList"></select>
-                            @if (ViewBag.IsAdmin)
-                            {
-                                <span class="func-btn redirect-btn" href="/WeldLocation/Index">焊缝位置管理</span>
-                            }
-                                @*<input type="text" name="WeldLocationType" class="form-control" placeholder="请输入" data-bind="value: WorksThicknessH1"
-            validate="{required:true}" />*@
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="col-sm-3 control-label">焊接位置:</label>
-                        <div class="col-sm-9">
-                            <select class="single-select form-control" id="HanJieType" name="HanjieId" style="" data-bind="value: HanjieId" validate="{required:true}" data-geturl="/HanjieLocation/GetDropdownList"></select>
-                            @if (ViewBag.IsAdmin)
-                            {
-                                <span class="func-btn redirect-btn" href="/HanJieLocation/Index">焊接位置管理</span>
-                            }
-                                @*<input type="text" name="WeldGeometry" class="form-control" placeholder="请输入" data-bind="value: WeldGeometry"
-            validate="{required:true}" />*@
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="col-sm-3 control-label">板厚(mm):</label>
-                        <div class="col-sm-9">
-                            <select class="single-select form-control" id="ThickType" name="ThicknessId" style="" data-bind="value: ThicknessId" validate="{required:true}" data-geturl="/Thickness/GetDropdownList"></select>
-                            @if (ViewBag.IsAdmin)
-                            {
-                                <span class="func-btn redirect-btn" href="/Thickness/Index">板厚管理</span>
-                            }
-                                @*<input type="text" name="WorksThicknessH2" class="form-control" placeholder="请输入" data-bind="value: WorksThicknessH2"
-            validate="{required:true}" />*@
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="col-sm-3 control-label">坡口形式:</label>
-                        <div class="col-sm-9">
-                            <select class="single-select form-control" id="GrooveTypeId" name="GrooveTypeId" style="" data-bind="value: GrooveTypeId" validate="{required:true}" data-geturl="/GrooveType/GetDropdownList"></select>
-                            @if (ViewBag.IsAdmin)
-                            {
-                                <span class="func-btn redirect-btn" href="/GrooveType/Index">坡口形式管理</span>
-                            }
-                                @*<input type="text" name="GrooveClearance" class="form-control" placeholder="请输入" data-bind="value: GrooveClearance"
-            validate="{required:true}" />*@
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="col-sm-3 control-label">焊材类型:</label>
-                        <div class="col-sm-9">
-                            <select class="single-select form-control" id="WeldingType" name="WeldingId" style="width:100px;display: inline;" data-bind="value: WeldingId" validate="{required:true}" data-geturl="/Welding/GetDropdownList"></select>
-                            <input id="WeldingModel" name="WeldingModel" data-bind="value: WeldingModel" class="form-control" style="width: calc(100% - 140px);max-width: 179px; display: inline;" />
-                            @if (ViewBag.IsAdmin)
-                            {
-                                <span class="func-btn redirect-btn" href="/Welding/Index">焊材类型管理</span>
-                            }
-                                @*<input type="text" name="WeldingType" class="form-control" placeholder="请输入" data-bind="value: BluntThickness"
-            validate="{required:true}" />*@
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="col-sm-3 control-label">焊缝截面积:</label>
-                        <div class="col-sm-9">
-                            <input type="text" id="SectionalArea" name="SectionalArea" class="form-control" placeholder="请输入" data-bind="value: SectionalArea"
-                                   validate="{required:true}" />
-                            <span class="func-btn pop-btn">焊缝截面积管理</span>
-                        </div>
-                    </div>
-                </form>
-            </div>
-
-            <div class="modal-footer">
-                <button class="btn btn-sm" data-dismiss="modal">
-                    <i class="ace-icon fa fa-times"></i>
-                    取消
-                </button>
-
-                <button class="btn btn-sm btn-info" data-action="save">
-                    <i class="ace-icon fa fa-check"></i>
-                    保存
-                </button>
-            </div>
-        </div>
-    </div>
-    <div id="rightPanel" class="modal-dialog" style="z-index:1050; top:10px;left:15%; position:absolute; float:right; height:100%;width:70%;display:none;">
-        <div class="widget-header">
-            <h4 class="widget-title"></h4>
-            <div class="widget-toolbar">
-                <a href="#" id="closePanel">
-                    <i class="ace-icon fa fa-times"></i>
-                </a>
-            </div>
-        </div>
-        <iframe id='iframei' src="javascript:0" style="position:absolute; border:none; visibility:inherit; top:38px; left:0px;  height:100%; width:100%; z-index:-1; filter: progid:DXImageTransform.Microsoft.Alpha(style=0,opacity=0);"></iframe>
-    </div>
-</div>
-
-<div id="ModalTableGrooveCalc" class="modal" tabindex="-1" style="z-index:9000">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="blue bigger">截面积计算</h4>
-            </div>
-
-            <div class="modal-body">
-                <form action="Post" id="ff" method="get" class="form-horizontal" datasource="Get">
-                    <input type="hidden" id="ID" name="ID" value="0" />
-                    @*<input type="hidden" id="CreatedDate" name="CreatedDate" data-bind="value: CreatedDate" validate="{required:false}" value="1970-01-01"/>
-                        <input type="hidden" id="CreatedUserID" name="CreatedUserID" data-bind="value: CreatedUserID" validate="{required:false}" value="0" />*@
-                    <div style="width:70%;float:left">
-
-                        <div class="row">
-                            <div class="form-group col-lg-8">
-                                <label class="col-sm-5 control-label">焊缝类型:</label>
-                                <div class="col-sm-7">
-                                    <select class="single-select form-control" name="WeldGeometry" id="WeldGeometry" data-placeholder="请选择焊缝类型" data-bind="value: WeldGeometry">
-                                        @*@foreach (GrooveTypeView a in ViewBag.GrooveTypes)
-                                            {
-                                                <option value="@a.WeldGeometry">@a.WeldGeometry</option>
-                                            }*@
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="form-group col-lg-8">
-                                <label class="col-sm-5 control-label">坡口类型:</label>
-                                <div class="col-sm-7">
-                                    <select class="single-select form-control" name="GrooveType" id="GrooveType" data-placeholder="请选择坡口类型" data-bind="value: GrooveType">
-
-                                        @*@foreach (GrooveTypeView a in ViewBag.GrooveTypes)
-                                            {
-                                                <option value="~/Content/images/anchor.gif">@a.GrooveType</option>
-                                            }*@
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="form-group col-lg-8">
-                                <label class="col-sm-5 control-label">工件厚度1:</label>
-                                <div class="col-sm-7">
-                                    <select class="single-select form-control" name="WorksThickness1" id="WorksThickness1" data-placeholder="请选择" data-bind="value: WorksThickness1">
-
-                                        @*@foreach (GrooveTypeView a in ViewBag.GrooveTypes)
-                                            {
-                                                <option value="~/Content/images/anchor.gif">@a.GrooveType</option>
-                                            }*@
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="form-group col-lg-8">
-                                <label class="col-sm-5 control-label">工件厚度2:</label>
-                                <div class="col-sm-7">
-                                    <select class="single-select form-control" name="WorksThickness2" id="WorksThickness2" data-placeholder="请选择" data-bind="value: WorksThickness2">
-
-                                        @*@foreach (GrooveTypeView a in ViewBag.GrooveTypes)
-                                            {
-                                                <option value="~/Content/images/anchor.gif">@a.GrooveType</option>
-                                            }*@
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div style="width:29%;float:right">
-                        <img style="width:100%;height:auto" id="PreviewImage" src="" />
-                    </div>
-                    <div style="border:1px solid;padding-top:3px;clear:both">
-                        <div class="row">
-                            <div class="form-group col-lg-6">
-                                <label class="col-sm-5 control-label">坡口深度h:</label>
-                                <div class="col-sm-7">
-                                    <input type="text" name="WorksThicknessH1" id="WorksThicknessH1" class="form-control" placeholder="请输入" data-bind="value: WorksThicknessH1"
-                                           validate="{required:true}" />
-                                </div>
-                            </div>
-                            <div class="form-group col-lg-6">
-                                <label class="col-sm-5 control-label">余高H:</label>
-                                <div class="col-sm-7">
-                                    <input type="text" name="WorksThicknessH2" id="WorksThicknessH2" class="form-control" placeholder="请输入" data-bind="value: WorksThicknessH2"
-                                           validate="{required:true}" />
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="form-group col-lg-6">
-                                <label class="col-sm-5 control-label">组对间隙c:</label>
-                                <div class="col-sm-7">
-                                    <input type="text" name="GrooveClearance" id="GrooveClearance" class="form-control" placeholder="请输入" data-bind="value: GrooveClearance"
-                                           validate="{required:true}" />
-                                </div>
-                            </div>
-                            <div class="form-group col-lg-6">
-                                <label class="col-sm-5 control-label">钝边高度p:</label>
-                                <div class="col-sm-7">
-                                    <input type="text" name="BluntThickness" id="BluntThickness" class="form-control" placeholder="请输入" data-bind="value: BluntThickness"
-                                           validate="{required:true}" />
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="form-group col-lg-6">
-                                <label class="col-sm-5 control-label">坡口角度a1:</label>
-                                <div class="col-sm-7">
-                                    <input type="text" name="GrooveAngleA1" id="GrooveAngleA1" class="form-control" placeholder="请输入" data-bind="value: GrooveAngleA1"
-                                           validate="{required:true}" />
-                                </div>
-                            </div>
-                            <div class="form-group col-lg-6">
-                                <label class="col-sm-5 control-label">坡口角度a:</label>
-                                <div class="col-sm-7">
-                                    <input type="text" name="GrooveAngleA2" id="GrooveAngleA2" class="form-control" placeholder="请输入" data-bind="value: GrooveAngleA2"
-                                           validate="{required:true}" />
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="form-group col-lg-6">
-                                <label class="col-sm-5 control-label">熔宽l:</label>
-                                <div class="col-sm-7">
-                                    <input type="text" name="GrooveArcR1" id="GrooveArcR1" class="form-control" placeholder="请输入" data-bind="value: GrooveArcR1"
-                                           validate="{required:true}" />
-                                </div>
-                            </div>
-                            <div class="form-group col-lg-6">
-                                <label class="col-sm-5 control-label">焊脚尺寸K:</label>
-                                <div class="col-sm-7">
-                                    <input type="text" name="GrooveArcR2" id="GrooveArcR2" class="form-control" placeholder="请输入" data-bind="value: GrooveArcR2"
-                                           validate="{required:true}" />
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="form-group col-lg-6">
-                                <label class="col-sm-5 control-label">圆弧半径R:</label>
-                                <div class="col-sm-7">
-                                    <input type="text" name="CircleArcR" id="CircleArcR" class="form-control" placeholder="请输入" data-bind="value: CircleArcR"
-                                           validate="{required:true}" />
-                                </div>
-                            </div>
-                            <div class="form-group col-lg-6">
-                                <label class="col-sm-5 control-label">开坡口板厚t:</label>
-                                <div class="col-sm-7">
-                                    <input type="text" name="GrooveThicknessT" id="GrooveThicknessT" class="form-control" placeholder="请输入" data-bind="value: GrooveThicknessT"
-                                           validate="{required:true}" />
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            @*<div class="form-group col-lg-6">
-                                <label class="col-sm-5 control-label">深度h1:</label>
-                                <div class="col-sm-7">
-                                    <input type="text" name="WorksThicknessH3" id="WorksThicknessH3" class="form-control" placeholder="请输入" data-bind="value: WorksThicknessH3"
-                                           validate="{required:true}" />
-                                </div>
-                            </div>*@
-                            <div class="form-group col-lg-6">
-                                <label class="col-sm-5 control-label">焊脚尺寸K1:</label>
-                                <div class="col-sm-7">
-                                    <input type="text" name="WeldLeg1" id="WeldLeg1" class="form-control" placeholder="请输入" data-bind="value: WeldLeg1"
-                                           validate="{required:true}" />
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </form>
-            </div>
-
-            <div class="modal-footer">
-                <button class="btn btn-sm btn-info" onclick="calculateSection()">
-                    <i class="ace-icon fa fa-check"></i>
-                    截面积计算
-                </button>
-                <input type="text" id="SectionResult" placeholder="请输入" style="width:300px" />
-                <button class="btn btn-sm" data-dismiss="modal">
-                    <i class="ace-icon fa fa-times"></i>
-                    取消
-                </button>
-
-                <button class="btn btn-sm btn-info" data-action="" onclick="saveArea();">
-                    <i class="ace-icon fa fa-check"></i>
-                    保存
-                </button>
-            </div>
-        </div>
-    </div>
-</div>
-
-
-@section scripts_Foot
-{
-    <script src="~/Scripts/EasyUI/jquery.easyui.min.js"></script>
-    <script src="http://static.runoob.com/assets/jquery-validation-1.14.0/dist/localization/messages_zh.js"></script>
-    <script src="~/Scripts/linq/linq.min.js"></script>
-    <script src="~/Scripts/ace/chosen.jquery.js"></script>
-    <script src="~/Scripts/util.common.js"></script>
-    <script type="text/javascript">
-        //$('[data-toggle="tooltip"]').tooltip();
-        var popMenu;
-        var IdCur;
-        var popObj;
-
-        var initDataTable = function () {
-            reinitMainPop('#ModalTable');
-            datatableSetting = clearDatatableSetting();
-            LEAP.Common.MainPop.options.dataTable = $('#cateList').dataTable(jQuery.extend(true, datatableSetting, {
-                "ajax": {
-                    "url": "GetList"
-                },
-                "paging": true,
-                "info": false,
-                "aoColumns": [
-                    { "mData": 'Index' },
-                    { "mData": 'ProjectName' },
-                    { "mData": 'AddressName' },
-                    { "mData": 'HanJieType' },
-                    { "mData": 'WeldType' },
-                    { "mData": 'WeldLocationType' },
-                    { "mData": 'GrooveType' },
-                    { "mData": 'SectionalArea' },
-                    { "mData": 'WeldingModel' },
-                ],
-                "columnDefs": [
-                    {
-                        "targets": 9,
-                        "render": function (data, type, full, meta) {
-                            return '<a href="#" onclick="LEAP.Common.MainPop.ShowUpdateInfo(\'' + full.Id + '\');return false;" class="artDailog btn btn-info  btn-xs" style="margin-right:4px;" data-toggle="tooltip" data-placement="top" title="编辑"><i class="fa fa-pencil"></i></a>' +
-                                '<a href="#" onclick="LEAP.Common.MainPop.RowClick(\'' + full.Id + '\',2);return false;" class="btn btn-danger btn-xs" id="btnDelete" data-toggle="tooltip" data-placement="top" title="删除">' +
-                                '<i class="fa fa-trash-o"></i></a>';
-                        }
-                    }],
-                fnDrawCallback: function () {
-                    $('[data-toggle="tooltip"]').tooltip();
-                }
-            }));
-        };
-        var refreshSelect = function (obj) {
-            if (obj && $(obj).prop('nodeName').toUpperCase() == 'select'.toUpperCase()) {
-                BindSelect(obj);
-                popObj = undefined;
+            #rightPanel .widget-box {
+                margin-top: 0px;
             }
-        };
-        $(document).ready(function () {
-            initDataTable();
-            //inital select2
-            $('.select2').css("width", "362px").select2({ allowClear: true });
-            //获取项目信息
+    </style>
+    <!--Action boxes-->
+    <div class="row">
+        <div class="col-sm-12">
+            <form class="form-inline" id="SearchForm">
+                <div class="form-group">
+                    <input class="form-control" type="text" id="search_condition" name="search_condition" placeholder="厂址">
+                    <a href="#" class="btn btn-info btn-sm" id="btnSearch" data-toggle="tooltip" data-placement="top" title="查询条件"><i class="fa fa-search">查询</i></a>
+                </div>
+                <div class="form-group pull-right">
 
-            BindChosen('/Project/GetDropdownList', $('#ProjectName'), InitChosen);
-            $.each($('.single-select '), function (i, obj) {
-                BindSelect(obj);
-            });
-            $(document).on('change', '#WeldingType', function () {
-                var id = $('#WeldingType option:selected').val();
-                $('#WeldingModel').val('');
-                if (id) {
-                    GetWeldingModel(id);
-                }
-            });
-            $('.redirect-btn').on('click', function () {
-                $('#rightPanel').remove('iframe');
-                $('#rightPanel .widget-title').text($(this).text());
-                var url = $(this).attr('href');
-                var frame = '<iframe id="iframei" src="' + url + '" style="position:absolute; border:none; visibility:inherit; top:38px; left:0px;  height:100%; width:100%; z-index:-1; filter: progid:DXImageTransform.Microsoft.Alpha(style=0,opacity=0);"></iframe>';
-                $('#rightPanel').append(frame);
-                popObj = $(this).parent().find('select');
-                $('#rightPanel').show(300);
-            });
-            $('#ModalTable').on('hide.bs.modal', function () {
-                // 弹出框关闭动作
-                $('#leftPanel').css('margin', '30px auto');
-                $('#leftPanel').css('float', '');
-                $('#rightPanel').hide();
-            });
-            $(document).on('click', '.pop-btn', function () {
-                $('#ModalTableGrooveCalc').modal(500);
-            });
-            //Groove Calc
-            var WeldGeometry = document.getElementById('WeldGeometry');
-            var GrooveType = document.getElementById('GrooveType');
-            var WorksThickness1 = document.getElementById('WorksThickness1');
-            var WorksThickness2 = document.getElementById('WorksThickness2');
-            $("#WeldGeometry").change(function () {
-                $('#GrooveType').empty();
-                $('#WorksThickness1').empty();
+                    <a href="/BeamInfo/Index?projectid=@ViewBag.ProjectId" class="btn btn-info btn-sm" id="btnReturn" data-toggle="tooltip" data-placement="top" title="返回">
+                        文件管理
+                    </a>
 
-                $('#WorksThickness2').empty();
-                if ($("#WeldGeometry").val() != '') {
-                    //showChild(TherapeuticArea, TradeName, tradeNameArr, $('#TradeName'));
-                    var queryResult = Enumerable.From(BiddingQuerys)
-                        .Where(function (x) { return x.WeldGeometry == WeldGeometry.value })
-                        .Select(function (x) { return x.GrooveType }).Distinct().ToArray();
-                    showChild1(GrooveType, queryResult);
-                    $('#GrooveType').removeAttr("disabled");
-                    $('#GrooveType option:eq(1)').attr("selected", true);
-                    $('#GrooveType').change();
-                }
-            });
-            // 工件厚度1
-            $('#GrooveType').change(function () {
+                    <a href="~/weldcategory/index?beamId=@ViewBag.BeamId" class="btn btn-info btn-sm" data-toggle="tooltip" data-placement="top" title="焊缝类型标注">
+                        焊缝类型标注
+                    </a>
 
-                $('#WorksThickness1').empty();
+                    <a href="#" class="btn btn-info btn-sm" id="btnAdd" data-toggle="tooltip" data-placement="top" title="添加">
+                        <i class="fa fa-plus">添加</i>
+                    </a>
+                </div>
+            </form>
+            <div class="clearfix"></div>
 
-                $('#WorksThickness2').empty();
+            <div class="widget-box">
+                <div class="widget-content nopadding">
+                    <table id="cateList" class="table table-bordered table-hover data-table">
+                        <thead>
+                            <tr>
+                                <th style="width:5%;text-align:center;">@T("序号")</th>
+                                <th>@T("项目名称")</th>
+                                <th>@T("厂址")</th>
+                                <th>@T("焊接位置")</th>
+                                <th>@T("焊缝类型")</th>
+                                <th>@T("焊缝位置")</th>
+                                <th>@T("坡口形式")</th>
+                                <th>@T("焊缝截面积") (mm<sup>2</sup>)</th>
+                                <th>@T("焊材型号")</th>
+                                <th style="width:10%;">@T("操作")</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="ModalTable" class="modal" tabindex="-1">
+        <div id="leftPanel" class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="blue bigger">请填写统计信息</h4>
+                </div>
+
+                <div class="modal-body">
+                    <form action="Post" id="ff" method="get" class="form-horizontal" datasource="Get">
+                        <input type="hidden" id="ID" name="ID" value="0" />
+                        <input type="hidden" id="ProjectId" name="ProjectId" value="@ViewBag.ProjectId" />
+                        <input type="hidden" id="BeamId" name="BeamId" value="@ViewBag.BeamId" />
+                        @*<input type="hidden" id="CreatedDate" name="CreatedDate" data-bind="value: CreatedDate" validate="{required:false}" value="1970-01-01"/>
+                            <input type="hidden" id="CreatedUserID" name="CreatedUserID" data-bind="value: CreatedUserID" validate="{required:false}" value="0" />*@
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">项目:</label>
+                            <div class="col-sm-9">
+                                @if (string.IsNullOrEmpty(ViewBag.ProjectId))
+                                {
+                                    <select class="chosen-select form-control" id="ProjectName" name="ProjectId" style="display:none" data-bind="value:ProjectId" validate="{required:true}"></select>
+                                }
+                                else
+                                {
+                                    <input type="text" class="form-control" value="@ViewBag.ProjectName" readonly />
+                                }
+
+                                @*<span class="func-btn redirect-btn" href="/Project/Index?mode=1">项目管理</span>*@
+                                @*<input type="text" name="GrooveType" class="form-control" placeholder="请输入" data-bind="value: ProjectName"
+                                    validate="{required:true}" />*@
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">梁段:</label>
+                            <div class="col-sm-9">
+                                @if (string.IsNullOrEmpty(ViewBag.BeamId))
+                                {
+                                    <select class="chosen-select form-control" id="beamName" name="BeamId" style="display:none" data-bind="value:BeamId"></select>
+                                }
+                                else
+                                {
+                                    <input type="text" class="form-control" value="@ViewBag.BeamName" readonly />
+                                }
+
+                                @*<span class="func-btn redirect-btn" href="/Project/Index?mode=1">项目管理</span>*@
+                                @*<input type="text" name="GrooveType" class="form-control" placeholder="请输入" data-bind="value: ProjectName"
+                                    validate="{required:true}" />*@
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">厂址:</label>
+                            <div class="col-sm-9">
+                                <select class="single-select form-control" id="AddressName" name="AddressId" style="" data-bind="value:AddressId" validate="{required:true}" data-geturl="/Address/GetDropdownList"></select>
+                                @if (ViewBag.IsAdmin)
+                                {
+                                    <span class="func-btn redirect-btn" href="/Address/Index">厂址管理</span>
+                                }
+                                @*<input type="text" name="GrooveType" class="form-control" placeholder="请输入" data-bind="value: AddressName"
+                                    validate="{required:true}" />*@
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">焊缝类型:</label>
+                            <div class="col-sm-9">
+                                <select class="single-select form-control" id="WeldType" name="WeldTypeId" style="" data-bind="value:WeldTypeId" validate="{required:true}" data-geturl="/WeldGeometry/GetDropdownList"></select>
+                                @if (ViewBag.IsAdmin)
+                                {
+                                    <span class="func-btn redirect-btn" href="/WeldGeometry/Index">焊缝类型管理</span>
+                                }
+                                @*<input type="text" name="Thickness" class="form-control" placeholder="请输入" data-bind="value: Thickness"
+                                    validate="{required:true}" />*@
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">焊缝位置:</label>
+                            <div class="col-sm-9">
+                                <select class="single-select form-control" id="WeldLocationType" name="WeldLocationId" style="" data-bind="value: WeldLocationId" validate="{required:true}" data-geturl="/WeldLocation/GetDropdownList"></select>
+                                @if (ViewBag.IsAdmin)
+                                {
+                                    <span class="func-btn redirect-btn" href="/WeldLocation/Index">焊缝位置管理</span>
+                                }
+                                @*<input type="text" name="WeldLocationType" class="form-control" placeholder="请输入" data-bind="value: WorksThicknessH1"
+                                    validate="{required:true}" />*@
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">焊接位置:</label>
+                            <div class="col-sm-9">
+                                <select class="single-select form-control" id="HanJieType" name="HanjieId" style="" data-bind="value: HanjieId" validate="{required:true}" data-geturl="/HanjieLocation/GetDropdownList"></select>
+                                @if (ViewBag.IsAdmin)
+                                {
+                                    <span class="func-btn redirect-btn" href="/HanJieLocation/Index">焊接位置管理</span>
+                                }
+                                @*<input type="text" name="WeldGeometry" class="form-control" placeholder="请输入" data-bind="value: WeldGeometry"
+                                    validate="{required:true}" />*@
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">板厚(mm):</label>
+                            <div class="col-sm-9">
+                                <select class="single-select form-control" id="ThickType" name="ThicknessId" style="" data-bind="value: ThicknessId" validate="{required:true}" data-geturl="/Thickness/GetDropdownList"></select>
+                                @if (ViewBag.IsAdmin)
+                                {
+                                    <span class="func-btn redirect-btn" href="/Thickness/Index">板厚管理</span>
+                                }
+                                @*<input type="text" name="WorksThicknessH2" class="form-control" placeholder="请输入" data-bind="value: WorksThicknessH2"
+                                    validate="{required:true}" />*@
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">坡口形式:</label>
+                            <div class="col-sm-9">
+                                <select class="single-select form-control" id="GrooveTypeId" name="GrooveTypeId" style="" data-bind="value: GrooveTypeId" validate="{required:true}" data-geturl="/GrooveType/GetDropdownList"></select>
+                                @if (ViewBag.IsAdmin)
+                                {
+                                    <span class="func-btn redirect-btn" href="/GrooveTypeText/Index">坡口形式管理</span>
+                                }
+                                @*<input type="text" name="GrooveClearance" class="form-control" placeholder="请输入" data-bind="value: GrooveClearance"
+                                    validate="{required:true}" />*@
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">焊材类型:</label>
+                            <div class="col-sm-9">
+                                <select class="single-select form-control" id="WeldingType" name="WeldingId" style="width:100px;display: inline;" data-bind="value: WeldingId" validate="{required:true}" data-geturl="/Welding/GetDropdownList"></select>
+                                <input id="WeldingModel" name="WeldingModel" data-bind="value: WeldingModel" class="form-control" style="width: calc(100% - 140px);max-width: 179px; display: inline;" />
+                                @if (ViewBag.IsAdmin)
+                                {
+                                    <span class="func-btn redirect-btn" href="/Welding/Index">焊材类型管理</span>
+                                }
+                                @*<input type="text" name="WeldingType" class="form-control" placeholder="请输入" data-bind="value: BluntThickness"
+                                    validate="{required:true}" />*@
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">焊缝截面积:</label>
+                            <div class="col-sm-9">
+                                <input type="text" id="SectionalArea" name="SectionalArea" class="form-control" placeholder="请输入" data-bind="value: SectionalArea"
+                                       validate="{required:true}" />
+                                <span class="func-btn pop-btn">焊缝截面积管理</span>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="modal-footer">
+                    <button class="btn btn-sm" data-dismiss="modal">
+                        <i class="ace-icon fa fa-times"></i>
+                        取消
+                    </button>
+
+                    <button class="btn btn-sm btn-info" data-action="save">
+                        <i class="ace-icon fa fa-check"></i>
+                        保存
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div id="rightPanel" class="modal-dialog" style="z-index:1050; top:10px;left:15%; position:absolute; float:right; height:100%;width:70%;display:none;">
+            <div class="widget-header">
+                <h4 class="widget-title"></h4>
+                <div class="widget-toolbar">
+                    <a href="#" id="closePanel">
+                        <i class="ace-icon fa fa-times"></i>
+                    </a>
+                </div>
+            </div>
+            <iframe id='iframei' src="javascript:0" style="position:absolute; border:none; visibility:inherit; top:38px; left:0px;  height:100%; width:100%; z-index:-1; filter: progid:DXImageTransform.Microsoft.Alpha(style=0,opacity=0);"></iframe>
+        </div>
+    </div>
+
+    <div id="ModalTableGrooveCalc" class="modal" tabindex="-1" style="z-index:9000">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="blue bigger">截面积计算</h4>
+                </div>
+
+                <div class="modal-body">
+                    <form action="Post" id="ff" method="get" class="form-horizontal" datasource="Get">
+                        <input type="hidden" id="ID" name="ID" value="0" />
+                        @*<input type="hidden" id="CreatedDate" name="CreatedDate" data-bind="value: CreatedDate" validate="{required:false}" value="1970-01-01"/>
+                            <input type="hidden" id="CreatedUserID" name="CreatedUserID" data-bind="value: CreatedUserID" validate="{required:false}" value="0" />*@
+                        <div style="width:70%;float:left">
+
+                            <div class="row">
+                                <div class="form-group col-lg-8">
+                                    <label class="col-sm-5 control-label">焊缝类型:</label>
+                                    <div class="col-sm-7">
+                                        <select class="single-select form-control" name="WeldGeometry" id="WeldGeometry" data-placeholder="请选择焊缝类型" data-bind="value: WeldGeometry">
+                                            @*@foreach (GrooveTypeView a in ViewBag.GrooveTypes)
+                                                {
+                                                    <option value="@a.WeldGeometry">@a.WeldGeometry</option>
+                                                }*@
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-lg-8">
+                                    <label class="col-sm-5 control-label">坡口类型:</label>
+                                    <div class="col-sm-7">
+                                        <select class="single-select form-control" name="GrooveType" id="GrooveType" data-placeholder="请选择坡口类型" data-bind="value: GrooveType">
+
+                                            @*@foreach (GrooveTypeView a in ViewBag.GrooveTypes)
+                                                {
+                                                    <option value="~/Content/images/anchor.gif">@a.GrooveType</option>
+                                                }*@
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-lg-8">
+                                    <label class="col-sm-5 control-label">工件厚度1:</label>
+                                    <div class="col-sm-7">
+                                        <select class="single-select form-control" name="WorksThickness1" id="WorksThickness1" data-placeholder="请选择" data-bind="value: WorksThickness1">
+
+                                            @*@foreach (GrooveTypeView a in ViewBag.GrooveTypes)
+                                                {
+                                                    <option value="~/Content/images/anchor.gif">@a.GrooveType</option>
+                                                }*@
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-lg-8">
+                                    <label class="col-sm-5 control-label">工件厚度2:</label>
+                                    <div class="col-sm-7">
+                                        <select class="single-select form-control" name="WorksThickness2" id="WorksThickness2" data-placeholder="请选择" data-bind="value: WorksThickness2">
+
+                                            @*@foreach (GrooveTypeView a in ViewBag.GrooveTypes)
+                                                {
+                                                    <option value="~/Content/images/anchor.gif">@a.GrooveType</option>
+                                                }*@
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div style="width:29%;float:right">
+                            <img style="width:100%;height:auto" id="PreviewImage" src="" />
+                        </div>
+                        <div style="border:1px solid;padding-top:3px;clear:both">
+                            <div class="row">
+                                <div class="form-group col-lg-6" id="poh">
+                                    <label class="col-sm-5 control-label">坡口深度h:</label>
+                                    <div class="col-sm-7">
+                                        <input type="text" name="WorksThicknessH1" id="WorksThicknessH1" class="form-control" placeholder="请输入" data-bind="value: WorksThicknessH1"
+                                               validate="{required:true}" />
+                                    </div>
+                                </div>
+                                <div class="form-group col-lg-6" id="ygH">
+                                    <label class="col-sm-5 control-label">余高H:</label>
+                                    <div class="col-sm-7">
+                                        <input type="text" name="WorksThicknessH2" id="WorksThicknessH2" class="form-control" placeholder="请输入" data-bind="value: WorksThicknessH2"
+                                               validate="{required:true}" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-lg-6" id="zdjfC">
+                                    <label class="col-sm-5 control-label">组对间隙c:</label>
+                                    <div class="col-sm-7">
+                                        <input type="text" name="GrooveClearance" id="GrooveClearance" class="form-control" placeholder="请输入" data-bind="value: GrooveClearance"
+                                               validate="{required:true}" />
+                                    </div>
+                                </div>
+                                <div class="form-group col-lg-6" id="dbgdP">
+                                    <label class="col-sm-5 control-label">钝边高度p:</label>
+                                    <div class="col-sm-7">
+                                        <input type="text" name="BluntThickness" id="BluntThickness" class="form-control" placeholder="请输入" data-bind="value: BluntThickness"
+                                               validate="{required:true}" />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="form-group col-lg-6" id="pkjdA1">
+                                    <label class="col-sm-5 control-label">坡口角度a1:</label>
+                                    <div class="col-sm-7">
+                                        <input type="text" name="GrooveAngleA1" id="GrooveAngleA1" class="form-control" placeholder="请输入" data-bind="value: GrooveAngleA1"
+                                               validate="{required:true}" />
+                                    </div>
+                                </div>
+                                <div class="form-group col-lg-6" id="pojdA">
+                                    <label class="col-sm-5 control-label">坡口角度a:</label>
+                                    <div class="col-sm-7">
+                                        <input type="text" name="GrooveAngleA2" id="GrooveAngleA2" class="form-control" placeholder="请输入" data-bind="value: GrooveAngleA2"
+                                               validate="{required:true}" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-lg-6" id="rkL">
+                                    <label class="col-sm-5 control-label">熔宽l:</label>
+                                    <div class="col-sm-7">
+                                        <input type="text" name="GrooveArcR1" id="GrooveArcR1" class="form-control" placeholder="请输入" data-bind="value: GrooveArcR1"
+                                               validate="{required:true}" />
+                                    </div>
+                                </div>
+                                <div class="form-group col-lg-6" id="hjccK">
+                                    <label class="col-sm-5 control-label">焊脚尺寸K:</label>
+                                    <div class="col-sm-7">
+                                        <input type="text" name="GrooveArcR2" id="GrooveArcR2" class="form-control" placeholder="请输入" data-bind="value: GrooveArcR2"
+                                               validate="{required:true}" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-lg-6" id="yhbjR">
+                                    <label class="col-sm-5 control-label">圆弧半径R:</label>
+                                    <div class="col-sm-7">
+                                        <input type="text" name="CircleArcR" id="CircleArcR" class="form-control" placeholder="请输入" data-bind="value: CircleArcR"
+                                               validate="{required:true}" />
+                                    </div>
+                                </div>
+                                <div class="form-group col-lg-6" id="kkbhT">
+                                    <label class="col-sm-5 control-label">开坡口板厚t:</label>
+                                    <div class="col-sm-7">
+                                        <input type="text" name="GrooveThicknessT" id="GrooveThicknessT" class="form-control" placeholder="请输入" data-bind="value: GrooveThicknessT"
+                                               validate="{required:true}" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                @*<div class="form-group col-lg-6">
+                                        <label class="col-sm-5 control-label">深度h1:</label>
+                                        <div class="col-sm-7">
+                                            <input type="text" name="WorksThicknessH3" id="WorksThicknessH3" class="form-control" placeholder="请输入" data-bind="value: WorksThicknessH3"
+                                                   validate="{required:true}" />
+                                        </div>
+                                    </div>*@
+                                <div class="form-group col-lg-6" id="hjccK1">
+                                    <label class="col-sm-5 control-label">焊脚尺寸K1:</label>
+                                    <div class="col-sm-7">
+                                        <input type="text" name="WeldLeg1" id="WeldLeg1" class="form-control" placeholder="请输入" data-bind="value: WeldLeg1"
+                                               validate="{required:true}" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="modal-footer">
+                    <button class="btn btn-sm btn-info" onclick="calculateSection()">
+                        <i class="ace-icon fa fa-check"></i>
+                        截面积计算
+                    </button>
+                    <input type="text" id="SectionResult" placeholder="请输入" style="width:300px" />
+                    <button class="btn btn-sm" data-dismiss="modal">
+                        <i class="ace-icon fa fa-times"></i>
+                        取消
+                    </button>
+
+                    <button class="btn btn-sm btn-info" data-action="" onclick="saveArea();">
+                        <i class="ace-icon fa fa-check"></i>
+                        保存
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
 
 
-                //showChild(TradeName, DosageForm, dosageFormArr, $('#DosageForm'));
-                var queryResult = Enumerable.From(BiddingQuerys)
-                    .Where(function (x) {
-                        return x.WeldGeometry == WeldGeometry.value && x.GrooveType == GrooveType.value
-                    })
-                    .Select(function (x) { return x.WorksThickness1 }).Distinct().ToArray();
-                showChild1(WorksThickness1, queryResult);
-                $('#WorksThickness1').removeAttr("disabled");
-                $('#WorksThickness1 option:eq(1)').attr("selected", true);
-                $('#WorksThickness1').change();
-            });
-            // 工件厚度2
-            $('#WorksThickness1').change(function () {
+    @section scripts_Foot
+{
+        <script src="~/Scripts/EasyUI/jquery.easyui.min.js"></script>
+        <script src="http://static.runoob.com/assets/jquery-validation-1.14.0/dist/localization/messages_zh.js"></script>
+        <script src="~/Scripts/linq/linq.min.js"></script>
+        <script src="~/Scripts/ace/chosen.jquery.js"></script>
+        <script src="~/Scripts/util.common.js"></script>
+        <script type="text/javascript">
+            //$('[data-toggle="tooltip"]').tooltip();
+            var popMenu;
+            var IdCur;
+            var popObj;
 
-                $('#WorksThickness2').empty();
-
-
-                //showChild(TradeName, DosageForm, dosageFormArr, $('#DosageForm'));
-                var queryResult = Enumerable.From(BiddingQuerys)
-                    .Where(function (x) {
-                        return x.WeldGeometry == WeldGeometry.value && x.GrooveType == GrooveType.value && x.WorksThickness1 == WorksThickness1.value;
-                    })
-                    .Select(function (x) { return x.WorksThickness2 }).Distinct().ToArray();
-                showChild1(WorksThickness2, queryResult);
-                $('#WorksThickness2').removeAttr("disabled");
-                $('#WorksThickness2 option:eq(1)').attr("selected", true);
-                $('#WorksThickness2').change();
-            });
-            $('#WorksThickness2').change(function () {
-                var queryResult = Enumerable.From(BiddingQuerys)
-                    .Where(function (x) {
-                        return x.WeldGeometry == WeldGeometry.value && x.GrooveType == GrooveType.value && x.WorksThickness1 == WorksThickness1.value
-                            && x.WorksThickness2 == WorksThickness2.value;
-                    }).ToArray();
-                $("#PreviewImage").attr('src', queryResult[0].PreviewImage);
-                $("#WorksThicknessH1").val(queryResult[0].WorksThicknessH1);
-                $("#WorksThicknessH2").val(queryResult[0].WorksThicknessH2);
-                $("#GrooveClearance").val(queryResult[0].GrooveClearance);
-                $("#BluntThickness").val(queryResult[0].BluntThickness);
-                $("#GrooveAngleA1").val(queryResult[0].GrooveAngleA1);
-                $("#GrooveAngleA2").val(queryResult[0].GrooveAngleA2);
-                $("#GrooveArcR1").val(queryResult[0].GrooveArcR1);
-                $("#GrooveArcR2").val(queryResult[0].GrooveArcR2);
-                $("#GrooveThicknessT").val(queryResult[0].GrooveThicknessT);
-                $("#CircleArcR").val(queryResult[0].CircleArcR);
-                //$("#WorksThicknessH3").val(queryResult[0].WorksThicknessH3);
-                $("#WeldLeg1").val(queryResult[0].WeldLeg1);
-
-            });
-            $.ajax({
-                cache: true,
-                type: "GET",
-                url: "/GrooveType/GetGrooveTypeSearchQuerys",
-                async: true,
-                error: function (request) {
-                    artDialog.alert("查询条件信息获取失败。");
-                },
-                success: function (data) {
-                    if (data == null) {
-                        artDialog.alert("查询条件信息获取失败。");
-                        return;
+            var initDataTable = function () {
+                reinitMainPop('#ModalTable');
+                datatableSetting = clearDatatableSetting();
+                LEAP.Common.MainPop.options.dataTable = $('#cateList').dataTable(jQuery.extend(true, datatableSetting, {
+                    "ajax": {
+                        "url": "GetList"
+                    },
+                    "paging": true,
+                    "info": false,
+                    "aoColumns": [
+                        { "mData": 'Index' },
+                        { "mData": 'ProjectName' },
+                        { "mData": 'AddressName' },
+                        { "mData": 'HanJieType' },
+                        { "mData": 'WeldType' },
+                        { "mData": 'WeldLocationType' },
+                        { "mData": 'GrooveType' },
+                        { "mData": 'SectionalArea' },
+                        { "mData": 'WeldingModel' },
+                    ],
+                    "columnDefs": [
+                        {
+                            "targets": 9,
+                            "render": function (data, type, full, meta) {
+                                return '<a href="#" onclick="LEAP.Common.MainPop.ShowUpdateInfo(\'' + full.Id + '\');return false;" class="artDailog btn btn-info  btn-xs" style="margin-right:4px;" data-toggle="tooltip" data-placement="top" title="编辑"><i class="fa fa-pencil"></i></a>' +
+                                    '<a href="#" onclick="LEAP.Common.MainPop.RowClick(\'' + full.Id + '\',2);return false;" class="btn btn-danger btn-xs" id="btnDelete" data-toggle="tooltip" data-placement="top" title="删除">' +
+                                    '<i class="fa fa-trash-o"></i></a>';
+                            }
+                        }],
+                    fnDrawCallback: function () {
+                        $('[data-toggle="tooltip"]').tooltip();
                     }
-                    BiddingQuerys = data;
-                    var queryResult = Enumerable.From(BiddingQuerys)
-                        .Select(function (x) { return x.WeldGeometry })
-                        .Distinct()
-                        .ToArray();
-                    showChild1(WeldGeometry, queryResult);
-                    $('#WeldGeometry option:eq(1)').attr("selected", true);
-                    $('#WeldGeometry').change();
+                }));
+            };
+            var refreshSelect = function (obj) {
+                if (obj && $(obj).prop('nodeName').toUpperCase() == 'select'.toUpperCase()) {
+                    BindSelect(obj);
+                    popObj = undefined;
                 }
-            });
+            };
+            $(document).ready(function () {
+                initDataTable();
+                //inital select2
+                $('.select2').css("width", "362px").select2({ allowClear: true });
+                //获取项目信息
+
+                BindChosen('/Project/GetDropdownList', $('#ProjectName'), InitChosen);
+                $.each($('.single-select '), function (i, obj) {
+                    BindSelect(obj);
+                });
+                $(document).on('change', '#WeldingType', function () {
+                    var id = $('#WeldingType option:selected').val();
+                    $('#WeldingModel').val('');
+                    if (id) {
+                        GetWeldingModel(id);
+                    }
+                });
+                $('.redirect-btn').on('click', function () {
+                    $('#rightPanel').remove('iframe');
+                    $('#rightPanel .widget-title').text($(this).text());
+                    var url = $(this).attr('href');
+                    var frame = '<iframe id="iframei" src="' + url + '" style="position:absolute; border:none; visibility:inherit; top:38px; left:0px;  height:100%; width:100%; z-index:-1; filter: progid:DXImageTransform.Microsoft.Alpha(style=0,opacity=0);"></iframe>';
+                    $('#rightPanel').append(frame);
+                    popObj = $(this).parent().find('select');
+                    $('#rightPanel').show(300);
+                });
+                $('#ModalTable').on('hide.bs.modal', function () {
+                    // 弹出框关闭动作
+                    $('#leftPanel').css('margin', '30px auto');
+                    $('#leftPanel').css('float', '');
+                    $('#rightPanel').hide();
+                });
+                $(document).on('click', '.pop-btn', function () {
+                    $('#ModalTableGrooveCalc').modal(500);
+                });
+                //Groove Calc
+                var WeldGeometry = document.getElementById('WeldGeometry');
+                var GrooveType = document.getElementById('GrooveType');
+                var WorksThickness1 = document.getElementById('WorksThickness1');
+                var WorksThickness2 = document.getElementById('WorksThickness2');
+                $("#WeldGeometry").change(function () {
+                    $('#GrooveType').empty();
+                    $('#WorksThickness1').empty();
+
+                    $('#WorksThickness2').empty();
+                    if ($("#WeldGeometry").val() != '') {
+                        //showChild(TherapeuticArea, TradeName, tradeNameArr, $('#TradeName'));
+                        var queryResult = Enumerable.From(BiddingQuerys)
+                            .Where(function (x) { return x.WeldGeometry == WeldGeometry.value })
+                            .Select(function (x) { return x.GrooveType }).Distinct().ToArray();
+                        showChild1(GrooveType, queryResult);
+                        $('#GrooveType').removeAttr("disabled");
+                        $('#GrooveType option:eq(1)').attr("selected", true);
+                        $('#GrooveType').change();
+                    }
+                });
+                // 工件厚度1
+                $('#GrooveType').change(function () {
+
+                    $('#WorksThickness1').empty();
+
+                    $('#WorksThickness2').empty();
 
 
-            function showChild1(child, childArr) {
-                //child.empty();
-                var count = childArr.length;
+                    //showChild(TradeName, DosageForm, dosageFormArr, $('#DosageForm'));
+                    var queryResult = Enumerable.From(BiddingQuerys)
+                        .Where(function (x) {
+                            return x.WeldGeometry == WeldGeometry.value && x.GrooveType == GrooveType.value
+                        })
+                        .Select(function (x) { return x.WorksThickness1 }).Distinct().ToArray();
+                    showChild1(WorksThickness1, queryResult);
+                    $('#WorksThickness1').removeAttr("disabled");
+                    $('#WorksThickness1 option:eq(1)').attr("selected", true);
+                    $('#WorksThickness1').change();
+                    ShowControl();
+                });
+                // 工件厚度2
+                $('#WorksThickness1').change(function () {
 
-                var childOption = document.createElement('option');
-                //ie不支持option对象的value,所以加childOption.text
-                childOption.value = childOption.text = '';
-                child.options.add(childOption);
+                    $('#WorksThickness2').empty();
 
-                for (var i = 0; i < count; i++) {
-                    //判断所选的值即父类，与当前节点第一个数组元素是否相市'
-                    //不取第一个数组元市'因为第一个是父类，所以j市'开始，而不市'
 
-                    childOption = document.createElement('option');
+                    //showChild(TradeName, DosageForm, dosageFormArr, $('#DosageForm'));
+                    var queryResult = Enumerable.From(BiddingQuerys)
+                        .Where(function (x) {
+                            return x.WeldGeometry == WeldGeometry.value && x.GrooveType == GrooveType.value && x.WorksThickness1 == WorksThickness1.value;
+                        })
+                        .Select(function (x) { return x.WorksThickness2 }).Distinct().ToArray();
+                    showChild1(WorksThickness2, queryResult);
+                    $('#WorksThickness2').removeAttr("disabled");
+                    $('#WorksThickness2 option:eq(1)').attr("selected", true);
+                    $('#WorksThickness2').change();
+                });
+                $('#WorksThickness2').change(function () {
+                    var queryResult = Enumerable.From(BiddingQuerys)
+                        .Where(function (x) {
+                            return x.WeldGeometry == WeldGeometry.value && x.GrooveType == GrooveType.value && x.WorksThickness1 == WorksThickness1.value
+                                && x.WorksThickness2 == WorksThickness2.value;
+                        }).ToArray();
+                    
+                    $("#PreviewImage").attr('src', queryResult[0].PreviewImage);
+                    $("#WorksThicknessH1").val(queryResult[0].WorksThicknessH1);
+                    $("#WorksThicknessH2").val(queryResult[0].WorksThicknessH2);
+                    $("#GrooveClearance").val(queryResult[0].GrooveClearance);
+                    $("#BluntThickness").val(queryResult[0].BluntThickness);
+                    $("#GrooveAngleA1").val(queryResult[0].GrooveAngleA1);
+                    $("#GrooveAngleA2").val(queryResult[0].GrooveAngleA2);
+                    $("#GrooveArcR1").val(queryResult[0].GrooveArcR1);
+                    $("#GrooveArcR2").val(queryResult[0].GrooveArcR2);
+                    $("#GrooveThicknessT").val(queryResult[0].GrooveThicknessT);
+                    $("#CircleArcR").val(queryResult[0].CircleArcR);
+                    //$("#WorksThicknessH3").val(queryResult[0].WorksThicknessH3);
+                    $("#WeldLeg1").val(queryResult[0].WeldLeg1);
+
+                });
+                $.ajax({
+                    cache: true,
+                    type: "GET",
+                    url: "/GrooveType/GetGrooveTypeSearchQuerys",
+                    async: true,
+                    error: function (request) {
+                        artDialog.alert("查询条件信息获取失败。");
+                    },
+                    success: function (data) {
+                        if (data == null) {
+                            artDialog.alert("查询条件信息获取失败。");
+                            return;
+                        }
+                        BiddingQuerys = data;
+                        var queryResult = Enumerable.From(BiddingQuerys)
+                            .Select(function (x) { return x.WeldGeometry })
+                            .Distinct()
+                            .ToArray();
+                        showChild1(WeldGeometry, queryResult);
+                        $('#WeldGeometry option:eq(1)').attr("selected", true);
+                        $('#WeldGeometry').change();
+                    }
+                });
+
+
+                function showChild1(child, childArr) {
+                    //child.empty();
+                    var count = childArr.length;
+
+                    var childOption = document.createElement('option');
                     //ie不支持option对象的value,所以加childOption.text
-                    childOption.value = childOption.text = childArr[i];
+                    childOption.value = childOption.text = '';
                     child.options.add(childOption);
 
+                    for (var i = 0; i < count; i++) {
+                        //判断所选的值即父类，与当前节点第一个数组元素是否相市'
+                        //不取第一个数组元市'因为第一个是父类，所以j市'开始，而不市'
+
+                        childOption = document.createElement('option');
+                        //ie不支持option对象的value,所以加childOption.text
+                        childOption.value = childOption.text = childArr[i];
+                        child.options.add(childOption);
+
+                    }
+                }
+
+                $('select[name=WeldGeometry]').val('');
+                $('select[name=GrooveType]').val('');
+
+                $('#closePanel').on('click', function () {
+                    $('#rightPanel').hide(300);
+                    $('#iframei').remove();
+                    refreshSelect(popObj);
+                });
+            });
+
+            //应当出去js包
+            function InitChosen(select) {
+                $(select).chosen({ allow_single_deselect: true }).change(function () { console.log('change'); });
+                $(select).bind("change", function () {
+                    $(select).trigger('chosen:updated');
+                });
+                setTimeout(function () {
+                    var pwidth = Math.min($(select).parent().width(), 300);
+                    $(select).next().css({ 'width': pwidth });
+                }, 1000);
+
+                //resize the chosen on window resize
+                $(window).on('resize.chosen', function () {
+                    var w = Math.min($('.chosen-select').parent().width(), 300);
+                    $('.chosen-select').next().css({ 'width': w });
+                }).trigger('resize.chosen');
+            }
+
+            function BindSelect(select) {
+                var url = $(select).attr('data-geturl');
+                if (url) {
+                    $(select).children().remove();
+                    $(select).append('<option value></option>');
+                    $.ajax(url)
+                        .done(function (data) {
+                            $.each(data, function (i, op) {
+                                $(select).append('<option value="' + op.key + '">' + op.value + '</option>');
+                            });
+                        });
                 }
             }
 
-            $('select[name=WeldGeometry]').val('');
-            $('select[name=GrooveType]').val('');
-
-            $('#closePanel').on('click', function () {
-                $('#rightPanel').hide(300);
-                $('#iframei').remove();
-                refreshSelect(popObj);
-            });
-        });
-
-        //应当出去js包
-        function InitChosen(select) {
-            $(select).chosen({ allow_single_deselect: true }).change(function () { console.log('change'); });
-            $(select).bind("change", function () {
-                $(select).trigger('chosen:updated');
-            });
-            setTimeout(function () {
-                var pwidth = Math.min($(select).parent().width(), 300);
-                $(select).next().css({ 'width': pwidth });
-            }, 1000);
-
-            //resize the chosen on window resize
-            $(window).on('resize.chosen', function () {
-                var w = Math.min($('.chosen-select').parent().width(), 300);
-                $('.chosen-select').next().css({ 'width': w });
-            }).trigger('resize.chosen');
-        }
-
-        function BindSelect(select) {
-            var url = $(select).attr('data-geturl');
-            if (url) {
+            function BindChosen(url, select, callback, search) {
                 $(select).children().remove();
                 $(select).append('<option value></option>');
                 $.ajax(url)
@@ -715,165 +729,282 @@
                         $.each(data, function (i, op) {
                             $(select).append('<option value="' + op.key + '">' + op.value + '</option>');
                         });
+                        if (callback) {
+                            callback(select);
+                        }
                     });
             }
-        }
 
-        function BindChosen(url, select, callback, search) {
-            $(select).children().remove();
-            $(select).append('<option value></option>');
-            $.ajax(url)
-                .done(function (data) {
-                    $.each(data, function (i, op) {
-                        $(select).append('<option value="' + op.key + '">' + op.value + '</option>');
+            function GetWeldingModel(id) {
+                $.ajax({ url: '/Welding/GetModelById', data: { id: id } })
+                    .done(function (data) {
+                        $('#WeldingModel').val(data);
                     });
-                    if (callback) {
-                        callback(select);
-                    }
-                });
-        }
+            }
+            function HideControl() {
+                $("#poh").hide();
+                $("#ygH").hide();
+                $("#zdjfC").hide();
+                $("#dbgdP").hide();
+                $("#pkjdA1").hide();
+                $("#pojdA").hide();
+                $("#rkL").hide();
 
-        function GetWeldingModel(id) {
-            $.ajax({ url: '/Welding/GetModelById', data: { id: id } })
-                .done(function (data) {
-                    $('#WeldingModel').val(data);
-                });
-        }
-        //Groove Calc
-        function calculateSection() {
-            if ($("#WeldGeometry").val() == '对接焊缝' && $("#GrooveType").val() == 'I形坡口') {
-                $("#SectionResult").val($("#GrooveClearance").val() * $("#GrooveThicknessT").val()
-                    + $("#GrooveArcR1").val() * $("#WorksThicknessH2").val());
+                $("#hjccK").hide();
+                $("#yhbjR").hide();
+                $("#kkbhT").hide();
+                $("#hjccK1").hide();
             }
-            else if ($("#WeldGeometry").val() == '对接焊缝' && $("#GrooveType").val() == '单边V形坡口') {
-                $("#SectionResult").val($("#GrooveClearance").val() * $("#GrooveThicknessT").val()
-                    + ($("#GrooveThicknessT").val() - $("#BluntThickness").val()) * ($("#GrooveThicknessT").val()
-                        - $("#BluntThickness").val()) * Math.tan($("#GrooveAngleA2").val()) * 0.5 + (($("#GrooveThicknessT").val()
-                            - $("#BluntThickness").val()) * Math.tan($("#GrooveAngleA2").val())
-                            + $("#GrooveClearance").val() + 4) * $("#WorksThicknessH2").val() * 0.5)
+            function ShowControl() {
+                HideControl();
+                if ($("#WeldGeometry").val() == '对接焊缝' && $("#GrooveType").val() == 'I形坡口') {
+                    $("#zdjfC").show();
+                    $("#rkL").show();
+                    $("#kkbhT").show();
+                    $("#ygH").show();
+                }
+                else if ($("#WeldGeometry").val() == '对接焊缝' && $("#GrooveType").val() == '单边V形坡口') {
+                    $("#zdjfC").show();
+                    $("#kkbhT").show();
+                    $("#dbgdP").show();
+                    $("#pojdA").show();
+                    $("#ygH").show();
+                }
+                else if ($("#WeldGeometry").val() == '对接焊缝' && $("#GrooveType").val() == 'V形坡口') {
+                    $("#zdjfC").show();
+                    $("#kkbhT").show();
+                    $("#dbgdP").show();
+                    $("#pojdA").show();
+                    $("#ygH").show();
+                }
+                else if ($("#WeldGeometry").val() == '对接焊缝' && $("#GrooveType").val() == 'K形坡口') {
+                    $("#zdjfC").show();
+                    $("#kkbhT").show();
+                    $("#dbgdP").show();
+                    $("#pojdA").show();
+                    $("#ygH").show();
+                    $("#pkjdA1").show();
+                    $("#poh").show();
+                }
+                else if ($("#WeldGeometry").val() == '对接焊缝' && $("#GrooveType").val() == 'X形坡口') {
+                    $("#zdjfC").show();
+                    $("#kkbhT").show();
+                    $("#dbgdP").show();
+                    $("#pojdA").show();
+                    $("#ygH").show();
+                    $("#pkjdA1").show();
+                    $("#poh").show();
+                }
+                else if ($("#WeldGeometry").val() == '对接焊缝' && $("#GrooveType").val() == 'J形坡口') {
+                    $("#zdjfC").show();
+                    $("#kkbhT").show();
+                    $("#dbgdP").show();
+                    $("#pojdA").show();
+                    $("#ygH").show();
+                    $("#yhbjR").show();
+                }
+                else if ($("#WeldGeometry").val() == '对接焊缝' && $("#GrooveType").val() == 'U形坡口') {
+                    $("#zdjfC").show();
+                    $("#kkbhT").show();
+                    $("#dbgdP").show();
+                    $("#pojdA").show();
+                    $("#ygH").show();
+                    $("#yhbjR").show();
+                }
+                else if ($("#WeldGeometry").val() == '对接焊缝' && $("#GrooveType").val() == '双面J形坡口') {
+                    $("#zdjfC").show();
+                    $("#kkbhT").show();
+                    $("#dbgdP").show();
+                    $("#pojdA").show();
+                    $("#ygH").show();
+                    $("#yhbjR").show();
+                    $("#poh").show();
+                }
+                else if ($("#WeldGeometry").val() == '对接焊缝' && $("#GrooveType").val() == '双面U形坡口') {
+                    $("#zdjfC").show();
+                    $("#kkbhT").show();
+                    $("#dbgdP").show();
+                    $("#pojdA").show();
+                    $("#ygH").show();
+                    $("#yhbjR").show();
+                    $("#poh").show();
+                }
+                else if ($("#WeldGeometry").val() == '熔透及部分熔透角焊缝' && $("#GrooveType").val() == '单边V形坡口') {
+                    $("#zdjfC").show();
+                    $("#kkbhT").show();
+                    $("#dbgdP").show();
+                    $("#pojdA").show();
+                    $("#hjccK").show();
+                    $("#hjccK1").show();
+                }
+                else if ($("#WeldGeometry").val() == '熔透及部分熔透角焊缝' && $("#GrooveType").val() == 'K形坡口') {
+                    $("#zdjfC").show();
+                    $("#kkbhT").show();
+                    $("#dbgdP").show();
+                    $("#pojdA").show();
+                    $("#hjccK").show();
+                    $("#hjccK1").show();
+                    $("#pojdA1").show();
+                    $("#poh").show();
+                }
+                else if ($("#WeldGeometry").val() == '熔透及部分熔透角焊缝' && $("#GrooveType").val() == 'J形坡口') {
+                    $("#zdjfC").show();
+                    $("#kkbhT").show();
+                    $("#dbgdP").show();
+                    $("#pojdA").show();
+                    $("#hjccK").show();
+                    $("#hjccK1").show();
+                    $("#yhbjR").show();
+                }
+                else if ($("#WeldGeometry").val() == '熔透及部分熔透角焊缝' && $("#GrooveType").val() == '单侧棱角焊缝') {
+                    $("#zdjfC").show();
+                    $("#kkbhT").show();
+                    $("#poh").show();
+                    $("#pojdA").show();
+                    $("#hjccK").show();
+                    $("#hjccK1").show();
+                }
+                else if ($("#WeldGeometry").val() == '贴角焊缝' && $("#GrooveType").val() == 'T形接头') {
+                    $("#hjccK").show();
+                    $("#hjccK1").show();
+                }
+                
             }
-            else if ($("#WeldGeometry").val() == '对接焊缝' && $("#GrooveType").val() == 'V形坡口') {
-                $("#SectionResult").val($("#GrooveClearance").val() * $("#GrooveThicknessT").val() + ($("#GrooveThicknessT").val()
-                    - $("#BluntThickness").val()) * ($("#GrooveThicknessT").val() - $("#BluntThickness").val()) * Math.tan(0.5 * $("#GrooveAngleA2").val())
-                    + (($("#GrooveThicknessT").val() -
-                        $("#BluntThickness").val()) * Math.tan(0.5 * $("#GrooveAngleA2").val()) * 2
-                        + $("#GrooveClearance").val() + 4) * $("#WorksThicknessH2").val() * 0.5);
+            //Groove Calc
+            function calculateSection() {
+                if ($("#WeldGeometry").val() == '对接焊缝' && $("#GrooveType").val() == 'I形坡口') {
+                    $("#SectionResult").val($("#GrooveClearance").val() * $("#GrooveThicknessT").val()
+                        + $("#GrooveArcR1").val() * $("#WorksThicknessH2").val());
+                }
+                else if ($("#WeldGeometry").val() == '对接焊缝' && $("#GrooveType").val() == '单边V形坡口') {
+                    $("#SectionResult").val($("#GrooveClearance").val() * $("#GrooveThicknessT").val()
+                        + ($("#GrooveThicknessT").val() - $("#BluntThickness").val()) * ($("#GrooveThicknessT").val()
+                            - $("#BluntThickness").val()) * Math.tan($("#GrooveAngleA2").val()) * 0.5 + (($("#GrooveThicknessT").val()
+                                - $("#BluntThickness").val()) * Math.tan($("#GrooveAngleA2").val())
+                                + $("#GrooveClearance").val() + 4) * $("#WorksThicknessH2").val() * 0.5)
+                }
+                else if ($("#WeldGeometry").val() == '对接焊缝' && $("#GrooveType").val() == 'V形坡口') {
+                    $("#SectionResult").val($("#GrooveClearance").val() * $("#GrooveThicknessT").val() + ($("#GrooveThicknessT").val()
+                        - $("#BluntThickness").val()) * ($("#GrooveThicknessT").val() - $("#BluntThickness").val()) * Math.tan(0.5 * $("#GrooveAngleA2").val())
+                        + (($("#GrooveThicknessT").val() -
+                            $("#BluntThickness").val()) * Math.tan(0.5 * $("#GrooveAngleA2").val()) * 2
+                            + $("#GrooveClearance").val() + 4) * $("#WorksThicknessH2").val() * 0.5);
+                }
+                else if ($("#WeldGeometry").val() == '对接焊缝' && $("#GrooveType").val() == 'K形坡口') {
+                    $("#SectionResult").val($("#GrooveClearance").val() * $("#GrooveThicknessT").val() +
+                        $("#WorksThicknessH1").val() * $("#WorksThicknessH1").val() * Math.tan($("#GrooveAngleA1").val()) * 0.5
+                        + ($("#WorksThicknessH1").val() * Math.tan($("#GrooveAngleA2").val())
+                            + $("#GrooveClearance").val() + 4) * $("#WorksThicknessH1").val() * 0.5 +
+                        ($("#GrooveThicknessT").val() - $("#BluntThickness").val() - $("#WorksThicknessH1").val())
+                        * ($("#GrooveThicknessT").val() - $("#BluntThickness").val() - $("#WorksThicknessH1").val())
+                        * Math.tan($("#GrooveAngleA1").val()) * 0.5 + (($("#GrooveThicknessT").val() - $("#BluntThickness").val() - $("#WorksThicknessH1").val())
+                            * Math.tan($("#GrooveAngleA2").val()) + $("#GrooveClearance").val() + 4) * $("#WorksThicknessH1").val() * 0.5)
+                }
+                else if ($("#WeldGeometry").val() == '对接焊缝' && $("#GrooveType").val() == 'X形坡口') {
+                    $("#SectionResult").val($("#GrooveClearance").val() * $("#GrooveThicknessT").val() +
+                        $("#WorksThicknessH1").val() * $("#WorksThicknessH1").val() * Math.tan(0.5 * $("#GrooveAngleA1").val()) +
+                        ($("#WorksThicknessH1").val() * Math.tan(0.5 * $("#GrooveAngleA1").val()) * 2
+                            + $("#GrooveClearance").val() + 4) * $("#WorksThicknessH2").val() * 0.5 +
+                        ($("#GrooveThicknessT").val() - $("#BluntThickness").val()
+                            - $("#WorksThicknessH1").val()) * ($("#GrooveThicknessT").val()
+                                - $("#BluntThickness").val() - $("#WorksThicknessH1").val()) * Math.tan(0.5 * $("#GrooveAngleA1").val())
+                        + (($("#GrooveThicknessT").val() - $("#BluntThickness").val() - $("#WorksThicknessH1").val()) * Math.tan(0.5 * $("#GrooveAngleA1").val()) * 2
+                            + $("#GrooveClearance").val() + 4) * $("#WorksThicknessH2").val() * 0.5);
+                }
+                else if ($("#WeldGeometry").val() == '对接焊缝' && $("#GrooveType").val() == 'J形坡口') {
+                    $("#SectionResult").val($("#GrooveClearance").val() * $("#GrooveThicknessT").val() +
+                        0.25 * 3.14 * $("#CircleArcR").val() * $("#CircleArcR").val() +
+                        ($("#CircleArcR").val() + $("#CircleArcR").val()
+                            + ($("#GrooveThicknessT").val() - $("#BluntThickness").val() - $("#CircleArcR").val()) * Math.tan($("#GrooveAngleA2").val())) * ($("#GrooveThicknessT").val()
+                                - $("#BluntThickness").val() - $("#CircleArcR").val()) * 0.5 +
+                        ($("#GrooveClearance").val() + $("#CircleArcR").val()
+                            + ($("#GrooveThicknessT").val() - $("#BluntThickness").val()
+                                - $("#CircleArcR").val()) * Math.tan($("#GrooveAngleA2").val()) + 4) * $("#WorksThicknessH2").val() * 0.5
+                    );
+                }
+                else if ($("#WeldGeometry").val() == '对接焊缝' && $("#GrooveType").val() == 'U形坡口') {
+                    $("#SectionResult").val($("#GrooveClearance").val() * $("#GrooveThicknessT").val() +
+                        0.5 * 3.14 * $("#CircleArcR").val() * $("#CircleArcR").val() +
+                        ($("#CircleArcR").val() + $("#CircleArcR").val() + ($("#GrooveThicknessT").val()
+                            - $("#BluntThickness").val() - $("#CircleArcR").val()) * Math.tan($("#GrooveAngleA2").val())) * ($("#GrooveThicknessT").val()
+                                - $("#BluntThickness").val() - $("#CircleArcR").val()) +
+                        ($("#GrooveClearance").val() + $("#CircleArcR").val() + ($("#GrooveThicknessT").val()
+                            - $("#BluntThickness").val() - $("#CircleArcR").val()) * Math.tan($("#GrooveAngleA2").val()) + 4) * $("#WorksThicknessH2").val());
+                }
+                else if ($("#WeldGeometry").val() == '对接焊缝' && $("#GrooveType").val() == '双面J形坡口') {
+                    $("#SectionResult").val($("#GrooveClearance").val() * $("#GrooveThicknessT").val() +
+                        0.5 * 3.14 * $("#CircleArcR").val() * $("#CircleArcR").val() +
+                        ($("#CircleArcR").val() + $("#CircleArcR").val() + ($("#WorksThicknessH1").val()
+                            - $("#CircleArcR").val()) * Math.tan($("#GrooveAngleA2").val())) * ($("#WorksThicknessH1").val() - $("#CircleArcR").val()) * 0.5 +
+                        ($("#GrooveClearance").val() + $("#CircleArcR").val() + ($("#WorksThicknessH1").val()
+                            - $("#CircleArcR").val()) * Math.tan($("#GrooveAngleA2").val()) + 4) * $("#WorksThicknessH2").val() * 0.5 +
+                        ($("#CircleArcR").val() + $("#CircleArcR").val() + ($("#GrooveThicknessT").val() - $("#WorksThicknessH1").val()
+                            - $("#BluntThickness").val() - $("#CircleArcR").val()) * Math.tan($("#GrooveAngleA2").val())) * ($("#GrooveThicknessT").val()
+                                - $("#WorksThicknessH1").val() - $("#BluntThickness").val() - $("#CircleArcR").val()) * 0.5 +
+                        ($("#GrooveClearance").val() + $("#CircleArcR").val() + ($("#GrooveThicknessT").val()
+                            - $("#WorksThicknessH1").val() - $("#BluntThickness").val()
+                            - $("#CircleArcR").val()) * Math.tan($("#GrooveAngleA2").val()) + 4) * $("#WorksThicknessH2").val() * 0.5)
+                }
+                else if ($("#WeldGeometry").val() == '对接焊缝' && $("#GrooveType").val() == '双面U形坡口') {
+                    $("#SectionResult").val($("#GrooveClearance").val() * $("#GrooveThicknessT").val() +
+                        3.14 * $("#CircleArcR").val() * $("#CircleArcR").val() +
+                        ($("#CircleArcR").val() + $("#CircleArcR").val() + ($("#WorksThicknessH1").val()
+                            - $("#CircleArcR").val()) * Math.tan($("#GrooveAngleA2").val())) * ($("#WorksThicknessH1").val() - $("#CircleArcR").val()) +
+                        ($("#GrooveClearance").val() + $("#CircleArcR").val() + ($("#WorksThicknessH1").val()
+                            - $("#CircleArcR").val()) * Math.tan($("#GrooveAngleA2").val()) + 4) * $("#WorksThicknessH2").val() +
+                        ($("#CircleArcR").val() + $("#CircleArcR").val() + ($("#GrooveThicknessT").val() - $("#WorksThicknessH1").val()
+                            - $("#BluntThickness").val() - $("#CircleArcR").val()) * Math.tan($("#GrooveAngleA2").val())) * ($("#GrooveThicknessT").val()
+                                - $("#WorksThicknessH1").val() - $("#BluntThickness").val() - $("#CircleArcR").val()) +
+                        ($("#GrooveClearance").val() + $("#CircleArcR").val() + ($("#GrooveThicknessT").val()
+                            - $("#WorksThicknessH1").val() - $("#BluntThickness").val()
+                            - $("#CircleArcR").val()) * Math.tan($("#GrooveAngleA2").val()) + 4) * $("#WorksThicknessH2").val());
+                }
+                else if ($("#WeldGeometry").val() == '熔透及部分熔透角焊缝' && $("#GrooveType").val() == '单边V形坡口') {
+                    $("#SectionResult").val($("#GrooveClearance").val() * $("#GrooveThicknessT").val() + ($("#GrooveThicknessT").val()
+                        - $("#BluntThickness").val()) * ($("#GrooveThicknessT").val() - $("#BluntThickness").val()) * Math.tan($("#GrooveAngleA2").val()) * 0.5 +
+                        (($("#GrooveThicknessT").val() - $("#BluntThickness").val()) * Math.tan($("#GrooveAngleA2").val())
+                            + $("#GrooveClearance").val() + 2) * $("#GrooveArcR2").val() * 0.5 +
+                        ($("#WeldLeg1").val() + $("#GrooveClearance").val()) * $("#WeldLeg1").val() * 0.5)
+                }
+                else if ($("#WeldGeometry").val() == '熔透及部分熔透角焊缝' && $("#GrooveType").val() == 'K形坡口') {
+                    $("#SectionResult").val($("#GrooveClearance").val() * $("#GrooveThicknessT").val() +
+                        $("#WorksThicknessH1").val() * $("#WorksThicknessH1").val() * Math.tan($("#GrooveAngleA2").val()) * 0.5
+                        + ($("#WorksThicknessH1").val() * Math.tan($("#GrooveAngleA2").val()) + $("#GrooveClearance").val() + 2) * $("#GrooveArcR2").val() * 0.5 +
+                        ($("#GrooveThicknessT").val() - $("#WorksThicknessH1").val() - $("#BluntThickness").val()) * ($("#GrooveThicknessT").val()
+                            - $("#WorksThicknessH1").val() - $("#BluntThickness").val()) * Math.tan($("#GrooveAngleA1").val()) * 0.5 + (($("#GrooveThicknessT").val()
+                                - $("#WorksThicknessH1").val() - $("#BluntThickness").val()) * Math.tan($("#GrooveAngleA1").val())
+                                + $("#GrooveClearance").val() + 2) * $("#WeldLeg1").val() * 0.5);
+                }
+                else if ($("#WeldGeometry").val() == '熔透及部分熔透角焊缝' && $("#GrooveType").val() == 'J形坡口') {
+                    $("#SectionResult").val($("#GrooveClearance").val() * $("#GrooveThicknessT").val() +
+                        0.25 * 3.14 * $("#CircleArcR").val() * $("#CircleArcR").val() +
+                        ($("#CircleArcR").val() + $("#CircleArcR").val() + ($("#GrooveThicknessT").val()
+                            - $("#BluntThickness").val() - $("#CircleArcR").val()) * Math.tan($("#GrooveAngleA2").val())) * ($("#GrooveThicknessT").val() - $("#BluntThickness").val()
+                                - $("#CircleArcR").val()) * 0.5 +
+                        ($("#GrooveClearance").val() + $("#CircleArcR").val() + ($("#GrooveThicknessT").val()
+                            - $("#BluntThickness").val() - $("#CircleArcR").val()) * Math.tan($("#GrooveAngleA2").val()) + 4) * $("#GrooveArcR2").val() * 0.5 +
+                        $("#WeldLeg1").val() * $("#WeldLeg1").val() * 0.5);
+                }
+                else if ($("#WeldGeometry").val() == '熔透及部分熔透角焊缝' && $("#GrooveType").val() == '单侧棱角焊缝') {
+                    $("#SectionResult").val($("#GrooveClearance").val() * $("#GrooveThicknessT").val()
+                        + $("#WorksThicknessH1").val() * $("#WorksThicknessH1").val() * Math.tan($("#GrooveAngleA2").val()) * 0.5 +
+                        ($("#WorksThicknessH1").val() * Math.tan($("#GrooveAngleA2").val()) + $("#GrooveClearance").val() + 2) * $("#GrooveArcR2").val() * 0.5 +
+                        ($("#WeldLeg1").val() + $("#GrooveClearance").val()) * $("#WeldLeg1").val() * 0.5);
+                }
+                else if ($("#WeldGeometry").val() == '贴角焊缝' && $("#GrooveType").val() == 'T形接头') {
+                    $("#SectionResult").val($("#GrooveArcR2").val() * $("#GrooveArcR2").val() * 0.5 + $("#WeldLeg1").val() * $("#WeldLeg1").val() * 0.5);
+                }
+                else {
+                    $("#SectionResult").val("");
+                }
             }
-            else if ($("#WeldGeometry").val() == '对接焊缝' && $("#GrooveType").val() == 'K形坡口') {
-                $("#SectionResult").val($("#GrooveClearance").val() * $("#GrooveThicknessT").val() +
-                    $("#WorksThicknessH1").val() * $("#WorksThicknessH1").val() * Math.tan($("#GrooveAngleA1").val()) * 0.5
-                    + ($("#WorksThicknessH1").val() * Math.tan($("#GrooveAngleA2").val())
-                    + $("#GrooveClearance").val() + 4) * $("#WorksThicknessH1").val() * 0.5 +
-                    ($("#GrooveThicknessT").val() - $("#BluntThickness").val() - $("#WorksThicknessH1").val())
-                * ($("#GrooveThicknessT").val() - $("#BluntThickness").val() - $("#WorksThicknessH1").val())
-                    * Math.tan($("#GrooveAngleA1").val()) * 0.5 + (($("#GrooveThicknessT").val() - $("#BluntThickness").val() - $("#WorksThicknessH1").val())
-                    * Math.tan($("#GrooveAngleA2").val()) + $("#GrooveClearance").val() + 4) * $("#WorksThicknessH1").val() * 0.5)
+            function saveArea() {
+                var area = $('#SectionResult').val();
+                if (area) {
+                    $('#SectionalArea').val(area);
+                    $('#ModalTableGrooveCalc').modal('hide');
+                }
             }
-            else if ($("#WeldGeometry").val() == '对接焊缝' && $("#GrooveType").val() == 'X形坡口') {
-                $("#SectionResult").val($("#GrooveClearance").val() * $("#GrooveThicknessT").val() +
-                    $("#WorksThicknessH1").val() * $("#WorksThicknessH1").val() * Math.tan(0.5 * $("#GrooveAngleA1").val()) +
-                    ($("#WorksThicknessH1").val() * Math.tan(0.5 * $("#GrooveAngleA1").val()) * 2
-                        + $("#GrooveClearance").val() + 4) * $("#WorksThicknessH2").val() * 0.5 +
-                    ($("#GrooveThicknessT").val() - $("#BluntThickness").val()
-                        - $("#WorksThicknessH1").val()) * ($("#GrooveThicknessT").val()
-                            - $("#BluntThickness").val() - $("#WorksThicknessH1").val()) * Math.tan(0.5 * $("#GrooveAngleA1").val())
-                    + (($("#GrooveThicknessT").val() - $("#BluntThickness").val() - $("#WorksThicknessH1").val()) * Math.tan(0.5 * $("#GrooveAngleA1").val()) * 2
-                        + $("#GrooveClearance").val() + 4) * $("#WorksThicknessH2").val() * 0.5);
-            }
-            else if ($("#WeldGeometry").val() == '对接焊缝' && $("#GrooveType").val() == 'J形坡口') {
-                $("#SectionResult").val($("#GrooveClearance").val() * $("#GrooveThicknessT").val() +
-                    0.25 * 3.14 * $("#CircleArcR").val() * $("#CircleArcR").val() +
-                    ($("#CircleArcR").val() + $("#CircleArcR").val()
-                        + ($("#GrooveThicknessT").val() - $("#BluntThickness").val() - $("#CircleArcR").val()) * Math.tan($("#GrooveAngleA2").val())) * ($("#GrooveThicknessT").val()
-                            - $("#BluntThickness").val() - $("#CircleArcR").val()) * 0.5 +
-                    ($("#GrooveClearance").val() + $("#CircleArcR").val()
-                        + ($("#GrooveThicknessT").val() - $("#BluntThickness").val()
-                            - $("#CircleArcR").val()) * Math.tan($("#GrooveAngleA2").val()) + 4) * $("#WorksThicknessH2").val() * 0.5
-                );
-            }
-            else if ($("#WeldGeometry").val() == '对接焊缝' && $("#GrooveType").val() == 'U形坡口') {
-                $("#SectionResult").val($("#GrooveClearance").val() * $("#GrooveThicknessT").val() +
-                    0.5 * 3.14 * $("#CircleArcR").val() * $("#CircleArcR").val() +
-                    ($("#CircleArcR").val() + $("#CircleArcR").val() + ($("#GrooveThicknessT").val()
-                        - $("#BluntThickness").val() - $("#CircleArcR").val()) * Math.tan($("#GrooveAngleA2").val())) * ($("#GrooveThicknessT").val()
-                            - $("#BluntThickness").val() - $("#CircleArcR").val()) +
-                    ($("#GrooveClearance").val() + $("#CircleArcR").val() + ($("#GrooveThicknessT").val()
-                        - $("#BluntThickness").val() - $("#CircleArcR").val()) * Math.tan($("#GrooveAngleA2").val()) + 4) * $("#WorksThicknessH2").val());
-            }
-            else if ($("#WeldGeometry").val() == '对接焊缝' && $("#GrooveType").val() == '双面J形坡口') {
-                $("#SectionResult").val($("#GrooveClearance").val() * $("#GrooveThicknessT").val() +
-                    0.5 * 3.14 * $("#CircleArcR").val() * $("#CircleArcR").val() +
-                    ($("#CircleArcR").val() + $("#CircleArcR").val() + ($("#WorksThicknessH1").val()
-                        - $("#CircleArcR").val()) * Math.tan($("#GrooveAngleA2").val())) * ($("#WorksThicknessH1").val() - $("#CircleArcR").val()) * 0.5 +
-                    ($("#GrooveClearance").val() + $("#CircleArcR").val() + ($("#WorksThicknessH1").val()
-                        - $("#CircleArcR").val()) * Math.tan($("#GrooveAngleA2").val()) + 4) * $("#WorksThicknessH2").val() * 0.5 +
-                    ($("#CircleArcR").val() + $("#CircleArcR").val() + ($("#GrooveThicknessT").val() - $("#WorksThicknessH1").val()
-                        - $("#BluntThickness").val() - $("#CircleArcR").val()) * Math.tan($("#GrooveAngleA2").val())) * ($("#GrooveThicknessT").val()
-                            - $("#WorksThicknessH1").val() - $("#BluntThickness").val() - $("#CircleArcR").val()) * 0.5 +
-                    ($("#GrooveClearance").val() + $("#CircleArcR").val() + ($("#GrooveThicknessT").val()
-                        - $("#WorksThicknessH1").val() - $("#BluntThickness").val()
-                        - $("#CircleArcR").val()) * Math.tan($("#GrooveAngleA2").val()) + 4) * $("#WorksThicknessH2").val() * 0.5)
-            }
-            else if ($("#WeldGeometry").val() == '对接焊缝' && $("#GrooveType").val() == '双面U形坡口') {
-                $("#SectionResult").val($("#GrooveClearance").val() * $("#GrooveThicknessT").val() +
-                    3.14 * $("#CircleArcR").val() * $("#CircleArcR").val() +
-                    ($("#CircleArcR").val() + $("#CircleArcR").val() + ($("#WorksThicknessH1").val()
-                        - $("#CircleArcR").val()) * Math.tan($("#GrooveAngleA2").val())) * ($("#WorksThicknessH1").val() - $("#CircleArcR").val()) +
-                    ($("#GrooveClearance").val() + $("#CircleArcR").val() + ($("#WorksThicknessH1").val()
-                        - $("#CircleArcR").val()) * Math.tan($("#GrooveAngleA2").val()) + 4) * $("#WorksThicknessH2").val() +
-                    ($("#CircleArcR").val() + $("#CircleArcR").val() + ($("#GrooveThicknessT").val() - $("#WorksThicknessH1").val()
-                        - $("#BluntThickness").val() - $("#CircleArcR").val()) * Math.tan($("#GrooveAngleA2").val())) * ($("#GrooveThicknessT").val()
-                            - $("#WorksThicknessH1").val() - $("#BluntThickness").val() - $("#CircleArcR").val()) +
-                    ($("#GrooveClearance").val() + $("#CircleArcR").val() + ($("#GrooveThicknessT").val()
-                        - $("#WorksThicknessH1").val() - $("#BluntThickness").val()
-                        - $("#CircleArcR").val()) * Math.tan($("#GrooveAngleA2").val()) + 4) * $("#WorksThicknessH2").val());
-            }
-            else if ($("#WeldGeometry").val() == '熔透及部分熔透角焊缝' && $("#GrooveType").val() == '单边V形坡口') {
-                $("#SectionResult").val($("#GrooveClearance").val() * $("#GrooveThicknessT").val() + ($("#GrooveThicknessT").val()
-                    - $("#BluntThickness").val()) * ($("#GrooveThicknessT").val() - $("#BluntThickness").val()) * Math.tan($("#GrooveAngleA2").val()) * 0.5 +
-                    (($("#GrooveThicknessT").val() - $("#BluntThickness").val()) * Math.tan($("#GrooveAngleA2").val())
-                        + $("#GrooveClearance").val() + 2) * $("#GrooveArcR2").val() * 0.5 +
-                    ($("#WeldLeg1").val() + $("#GrooveClearance").val()) * $("#WeldLeg1").val() * 0.5)
-            }
-            else if ($("#WeldGeometry").val() == '熔透及部分熔透角焊缝' && $("#GrooveType").val() == 'K形坡口') {
-                $("#SectionResult").val($("#GrooveClearance").val() * $("#GrooveThicknessT").val() +
-                    $("#WorksThicknessH1").val() * $("#WorksThicknessH1").val() * Math.tan($("#GrooveAngleA2").val()) * 0.5
-                    + ($("#WorksThicknessH1").val() * Math.tan($("#GrooveAngleA2").val()) + $("#GrooveClearance").val() + 2) * $("#GrooveArcR2").val() * 0.5 +
-                    ($("#GrooveThicknessT").val() - $("#WorksThicknessH1").val() - $("#BluntThickness").val()) * ($("#GrooveThicknessT").val()
-                        - $("#WorksThicknessH1").val() - $("#BluntThickness").val()) * Math.tan($("#GrooveAngleA1").val()) * 0.5 + (($("#GrooveThicknessT").val()
-                            - $("#WorksThicknessH1").val() - $("#BluntThickness").val()) * Math.tan($("#GrooveAngleA1").val())
-                            + $("#GrooveClearance").val() + 2) * $("#WeldLeg1").val() * 0.5);
-            }
-            else if ($("#WeldGeometry").val() == '熔透及部分熔透角焊缝' && $("#GrooveType").val() == 'J形坡口') {
-                $("#SectionResult").val($("#GrooveClearance").val() * $("#GrooveThicknessT").val() +
-                    0.25 * 3.14 * $("#CircleArcR").val() * $("#CircleArcR").val() +
-                    ($("#CircleArcR").val() + $("#CircleArcR").val() + ($("#GrooveThicknessT").val()
-                        - $("#BluntThickness").val() - $("#CircleArcR").val()) * Math.tan($("#GrooveAngleA2").val())) * ($("#GrooveThicknessT").val() - $("#BluntThickness").val()
-                            - $("#CircleArcR").val()) * 0.5 +
-                    ($("#GrooveClearance").val() + $("#CircleArcR").val() + ($("#GrooveThicknessT").val()
-                        - $("#BluntThickness").val() - $("#CircleArcR").val()) * Math.tan($("#GrooveAngleA2").val()) + 4) * $("#GrooveArcR2").val() * 0.5 +
-                    $("#WeldLeg1").val() * $("#WeldLeg1").val() * 0.5);
-            }
-            else if ($("#WeldGeometry").val() == '熔透及部分熔透角焊缝' && $("#GrooveType").val() == '单侧棱角焊缝') {
-                $("#SectionResult").val($("#GrooveClearance").val() * $("#GrooveThicknessT").val()
-                    + $("#WorksThicknessH1").val() * $("#WorksThicknessH1").val() * Math.tan($("#GrooveAngleA2").val()) * 0.5 +
-                    ($("#WorksThicknessH1").val() * Math.tan($("#GrooveAngleA2").val()) + $("#GrooveClearance").val() + 2) * $("#GrooveArcR2").val() * 0.5 +
-                    ($("#WeldLeg1").val() + $("#GrooveClearance").val()) * $("#WeldLeg1").val() * 0.5);
-            }
-            else if ($("#WeldGeometry").val() == '贴角焊缝' && $("#GrooveType").val() == 'T形接头') {
-                $("#SectionResult").val($("#GrooveArcR2").val() * $("#GrooveArcR2").val() * 0.5 + $("#WeldLeg1").val() * $("#WeldLeg1").val() * 0.5);
-            }
-            else {
-                $("#SectionResult").val("");
-            }
-        }
-        function saveArea() {
-            var area = $('#SectionResult').val();
-            if (area) {
-                $('#SectionalArea').val(area);
-                $('#ModalTableGrooveCalc').modal('hide');
-            }
-        }
-    </script>
-}
+        </script>
+    }
 
