@@ -741,132 +741,247 @@
                         $('#WeldingModel').val(data);
                     });
             }
-            function HideControl() {
-                $("#poh").hide();
-                $("#ygH").hide();
-                $("#zdjfC").hide();
-                $("#dbgdP").hide();
-                $("#pkjdA1").hide();
-                $("#pojdA").hide();
-                $("#rkL").hide();
+            function RemoveControl() {
+                //坡口深度h
+                $("#WorksThicknessH1").removeAttr('disabled');
+                //余高H
+                $("#WorksThicknessH2").removeAttr('disabled');
+                //组对间隙c:
+                $("#GrooveClearance").removeAttr('disabled');
+                //钝边高度p:
+                $("#BluntThickness").removeAttr('disabled');
+                //坡口角度
+                $("#GrooveAngleA1").removeAttr('disabled');
+                //坡口角度
+                $("#GrooveAngleA2").removeAttr('disabled');
+                //熔宽l
+                $("#GrooveArcR1").removeAttr('disabled');
+                //焊脚尺寸
+                $("#GrooveArcR2").removeAttr('disabled');
 
-                $("#hjccK").hide();
-                $("#yhbjR").hide();
-                $("#kkbhT").hide();
-                $("#hjccK1").hide();
+                //圆弧半径R
+                $("#CircleArcR").removeAttr('disabled');
+                //开坡口板厚t
+                $("#GrooveThicknessT").removeAttr('disabled');
+                $("#WeldLeg1").removeAttr('disabled');
             }
             function ShowControl() {
-                HideControl();
                 if ($("#WeldGeometry").val() == '对接焊缝' && $("#GrooveType").val() == 'I形坡口') {
-                    $("#zdjfC").show();
-                    $("#rkL").show();
-                    $("#kkbhT").show();
-                    $("#ygH").show();
+                    RemoveControl();
+                  
+                    $("#WorksThicknessH1").attr('disabled', 'disabled');
+                   
+                    //钝边高度p:
+                    $("#BluntThickness").attr('disabled', 'disabled');
+                    //坡口角度a1
+                    $("#GrooveAngleA1").attr('disabled', 'disabled');
+                    //坡口角度a
+                    $("#GrooveAngleA2").attr('disabled', 'disabled');
+                    
+                    //焊脚尺寸
+                    $("#GrooveArcR2").attr('disabled', 'disabled');
+
+                    //圆弧半径R
+                    $("#CircleArcR").attr('disabled', 'disabled');
+                    $("#WeldLeg1").attr('disabled', 'disabled');
+                   
                 }
                 else if ($("#WeldGeometry").val() == '对接焊缝' && $("#GrooveType").val() == '单边V形坡口') {
-                    $("#zdjfC").show();
-                    $("#kkbhT").show();
-                    $("#dbgdP").show();
-                    $("#pojdA").show();
-                    $("#ygH").show();
+                    RemoveControl();
+                    $("#WorksThicknessH1").attr('disabled', 'disabled');
+                 
+                   
+                    //坡口角度
+                    $("#GrooveAngleA1").attr('disabled', 'disabled');
+                    //熔宽l
+                    $("#GrooveArcR1").attr('disabled', 'disabled');
+                    //焊脚尺寸
+                    $("#GrooveArcR2").attr('disabled', 'disabled');
+
+                    //圆弧半径R
+                    $("#CircleArcR").attr('disabled', 'disabled');
+
+                    $("#WeldLeg1").attr('disabled', 'disabled');
+                  
                 }
                 else if ($("#WeldGeometry").val() == '对接焊缝' && $("#GrooveType").val() == 'V形坡口') {
-                    $("#zdjfC").show();
-                    $("#kkbhT").show();
-                    $("#dbgdP").show();
-                    $("#pojdA").show();
-                    $("#ygH").show();
+                    RemoveControl();
+                    $("#WorksThicknessH1").attr('disabled', 'disabled');
+                   
+                    //坡口角度
+                    $("#GrooveAngleA1").attr('disabled', 'disabled');
+                    //熔宽l
+                    $("#GrooveArcR1").attr('disabled', 'disabled');
+                    //焊脚尺寸
+                    $("#GrooveArcR2").attr('disabled', 'disabled');
+
+                    //圆弧半径R
+                    $("#CircleArcR").attr('disabled', 'disabled');
+
+                    $("#WeldLeg1").attr('disabled', 'disabled');
                 }
                 else if ($("#WeldGeometry").val() == '对接焊缝' && $("#GrooveType").val() == 'K形坡口') {
-                    $("#zdjfC").show();
-                    $("#kkbhT").show();
-                    $("#dbgdP").show();
-                    $("#pojdA").show();
-                    $("#ygH").show();
-                    $("#pkjdA1").show();
-                    $("#poh").show();
+                    RemoveControl();
+                   
+                   
+                    //熔宽l
+                    $("#GrooveArcR1").attr('disabled', 'disabled');
+                    //焊脚尺寸
+                    $("#GrooveArcR2").attr('disabled', 'disabled');
+
+                    //圆弧半径R
+                    $("#CircleArcR").attr('disabled', 'disabled');
+
+                    $("#WeldLeg1").attr('disabled', 'disabled');
+                    
                 }
                 else if ($("#WeldGeometry").val() == '对接焊缝' && $("#GrooveType").val() == 'X形坡口') {
-                    $("#zdjfC").show();
-                    $("#kkbhT").show();
-                    $("#dbgdP").show();
-                    $("#pojdA").show();
-                    $("#ygH").show();
-                    $("#pkjdA1").show();
-                    $("#poh").show();
+                    RemoveControl();
+                    
+                    //熔宽l
+                    $("#GrooveArcR1").attr('disabled', 'disabled');
+                    //焊脚尺寸
+                    $("#GrooveArcR2").attr('disabled', 'disabled');
+
+                    //圆弧半径R
+                    $("#CircleArcR").attr('disabled', 'disabled');
+                    $("#WeldLeg1").attr('disabled', 'disabled');
                 }
                 else if ($("#WeldGeometry").val() == '对接焊缝' && $("#GrooveType").val() == 'J形坡口') {
-                    $("#zdjfC").show();
-                    $("#kkbhT").show();
-                    $("#dbgdP").show();
-                    $("#pojdA").show();
-                    $("#ygH").show();
-                    $("#yhbjR").show();
+                    RemoveControl();
+                    $("#WorksThicknessH1").attr('disabled', 'disabled');
+                   
+                    //坡口角度
+                    $("#GrooveAngleA1").attr('disabled', 'disabled');
+                    //熔宽l
+                    $("#GrooveArcR1").attr('disabled', 'disabled');
+                    //焊脚尺寸
+                    $("#GrooveArcR2").attr('disabled', 'disabled');
+                    $("#WeldLeg1").attr('disabled', 'disabled');
+
                 }
                 else if ($("#WeldGeometry").val() == '对接焊缝' && $("#GrooveType").val() == 'U形坡口') {
-                    $("#zdjfC").show();
-                    $("#kkbhT").show();
-                    $("#dbgdP").show();
-                    $("#pojdA").show();
-                    $("#ygH").show();
-                    $("#yhbjR").show();
+                    RemoveControl();
+                    $("#WorksThicknessH1").attr('disabled', 'disabled');
+                   
+                   
+                    //坡口角度
+                    $("#GrooveAngleA1").attr('disabled', 'disabled');
+                    //熔宽l
+                    $("#GrooveArcR1").attr('disabled', 'disabled');
+                    //焊脚尺寸
+                    $("#GrooveArcR2").attr('disabled', 'disabled');
+                    $("#WeldLeg1").attr('disabled', 'disabled');
+                  
                 }
                 else if ($("#WeldGeometry").val() == '对接焊缝' && $("#GrooveType").val() == '双面J形坡口') {
-                    $("#zdjfC").show();
-                    $("#kkbhT").show();
-                    $("#dbgdP").show();
-                    $("#pojdA").show();
-                    $("#ygH").show();
-                    $("#yhbjR").show();
-                    $("#poh").show();
+                    RemoveControl();
+                  
+                    //坡口角度
+                    $("#GrooveAngleA1").attr('disabled', 'disabled');
+                    //熔宽l
+                    $("#GrooveArcR1").attr('disabled', 'disabled');
+                    //焊脚尺寸
+                    $("#GrooveArcR2").attr('disabled', 'disabled');
+                    $("#WeldLeg1").attr('disabled', 'disabled');
+                  
                 }
                 else if ($("#WeldGeometry").val() == '对接焊缝' && $("#GrooveType").val() == '双面U形坡口') {
-                    $("#zdjfC").show();
-                    $("#kkbhT").show();
-                    $("#dbgdP").show();
-                    $("#pojdA").show();
-                    $("#ygH").show();
-                    $("#yhbjR").show();
-                    $("#poh").show();
+                    RemoveControl();
+                  
+                    //坡口角度
+                    $("#GrooveAngleA1").attr('disabled', 'disabled');
+                    //熔宽l
+                    $("#GrooveArcR1").attr('disabled', 'disabled');
+                    //焊脚尺寸
+                    $("#GrooveArcR2").attr('disabled', 'disabled');
+                    $("#WeldLeg1").attr('disabled', 'disabled');
                 }
                 else if ($("#WeldGeometry").val() == '熔透及部分熔透角焊缝' && $("#GrooveType").val() == '单边V形坡口') {
-                    $("#zdjfC").show();
-                    $("#kkbhT").show();
-                    $("#dbgdP").show();
-                    $("#pojdA").show();
-                    $("#hjccK").show();
-                    $("#hjccK1").show();
+                    RemoveControl();
+                    $("#WorksThicknessH1").attr('disabled', 'disabled');
+                    //余高H
+                    $("#WorksThicknessH2").attr('disabled', 'disabled');
+                  
+                    //坡口角度
+                    $("#GrooveAngleA1").attr('disabled', 'disabled');
+                    //熔宽l
+                    $("#GrooveArcR1").attr('disabled', 'disabled');
+                  
+
+                    //圆弧半径R
+                    $("#CircleArcR").attr('disabled', 'disabled');
+                  
                 }
                 else if ($("#WeldGeometry").val() == '熔透及部分熔透角焊缝' && $("#GrooveType").val() == 'K形坡口') {
-                    $("#zdjfC").show();
-                    $("#kkbhT").show();
-                    $("#dbgdP").show();
-                    $("#pojdA").show();
-                    $("#hjccK").show();
-                    $("#hjccK1").show();
-                    $("#pojdA1").show();
-                    $("#poh").show();
+                    RemoveControl();
+                  
+                    //余高H
+                    $("#WorksThicknessH2").attr('disabled', 'disabled');
+                   
+                 
+                  
+                    //熔宽l
+                    $("#GrooveArcR1").attr('disabled', 'disabled');
+                  
+                    //圆弧半径R
+                    $("#CircleArcR").attr('disabled', 'disabled');
+                 
                 }
                 else if ($("#WeldGeometry").val() == '熔透及部分熔透角焊缝' && $("#GrooveType").val() == 'J形坡口') {
-                    $("#zdjfC").show();
-                    $("#kkbhT").show();
-                    $("#dbgdP").show();
-                    $("#pojdA").show();
-                    $("#hjccK").show();
-                    $("#hjccK1").show();
-                    $("#yhbjR").show();
+                    RemoveControl();
+                    $("#WorksThicknessH1").attr('disabled', 'disabled');
+                    //余高H
+                    $("#WorksThicknessH2").attr('disabled', 'disabled');
+                
+                    //坡口角度
+                    $("#GrooveAngleA1").attr('disabled', 'disabled');
+                 
+                    //熔宽l
+                    $("#GrooveArcR1").attr('disabled', 'disabled');
+                 
+                  
                 }
                 else if ($("#WeldGeometry").val() == '熔透及部分熔透角焊缝' && $("#GrooveType").val() == '单侧棱角焊缝') {
-                    $("#zdjfC").show();
-                    $("#kkbhT").show();
-                    $("#poh").show();
-                    $("#pojdA").show();
-                    $("#hjccK").show();
-                    $("#hjccK1").show();
+                    RemoveControl();
+                   
+                    //余高H
+                    $("#WorksThicknessH2").attr('disabled', 'disabled');
+                   
+                    //钝边高度p:
+                    $("#BluntThickness").attr('disabled', 'disabled');
+                   
+                    //坡口角度
+                    $("#GrooveAngleA1").attr('disabled', 'disabled');
+                    //熔宽l
+                    $("#GrooveArcR1").attr('disabled', 'disabled');
+                   
+                    //圆弧半径R
+                    $("#CircleArcR").attr('disabled', 'disabled');
+                  
+                   
                 }
                 else if ($("#WeldGeometry").val() == '贴角焊缝' && $("#GrooveType").val() == 'T形接头') {
-                    $("#hjccK").show();
-                    $("#hjccK1").show();
+                    RemoveControl();
+                    $("#WorksThicknessH1").attr('disabled', 'disabled');
+                    //余高H
+                    $("#WorksThicknessH2").attr('disabled', 'disabled');
+                    //组对间隙c:
+                    $("#GrooveClearance").attr('disabled', 'disabled');
+                    //钝边高度p:
+                    $("#BluntThickness").attr('disabled', 'disabled');
+                    //坡口角度
+                    $("#GrooveAngleA1").attr('disabled', 'disabled');
+                    //坡口角度
+                    $("#GrooveAngleA2").attr('disabled', 'disabled');
+                    //熔宽l
+                    $("#GrooveArcR1").attr('disabled', 'disabled');
+                  
+                    //圆弧半径R
+                    $("#CircleArcR").attr('disabled', 'disabled');
+                    //开坡口板厚t
+                    $("#GrooveThicknessT").attr('disabled', 'disabled');
+                  
                 }
                 
             }
