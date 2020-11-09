@@ -184,6 +184,18 @@ namespace Innocellence.Web.Controllers
             return Json(doJson(null), JsonRequestBehavior.AllowGet);
         }
 
+        public ActionResult UpdateBeamNum(int beamId, int beamNum)
+        {
+            var beam = _beamInfoService.GetList<BeamInfoView>(1, x => !x.IsDeleted && x.Id == beamId).FirstOrDefault();
+            if (beam == null || beamNum <= 0)
+            {
+                return Json(GetErrorJson(), JsonRequestBehavior.AllowGet);
+            }
+            beam.BeamNum = beamNum;
+            _beamInfoService.UpdateView(beam);
+            return Json(doJson(null), JsonRequestBehavior.AllowGet);
+        }
+
         public override bool AfterDelete(string sIds)
         {
             if (!string.IsNullOrEmpty(sIds))

@@ -37,7 +37,9 @@ namespace Infrastructure.Web.Domain.ModelsView
                 return "";
             } }
         public int TaskStatus { get; set; }
-        
+
+        public int BeamNum { get; set; }
+
         public IViewModel ConvertAPIModel(object obj)
         {
             var entity = (BeamInfo)obj;
@@ -53,6 +55,7 @@ namespace Infrastructure.Web.Domain.ModelsView
             UpdatedUserID = entity.UpdatedUserID;
             IsDeleted = entity.IsDeleted;
             ProcessStatus = entity.ProcessStatus;
+            BeamNum = entity.BeamNum;
             return this;
         }
 	}

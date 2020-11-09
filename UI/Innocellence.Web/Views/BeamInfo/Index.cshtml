@@ -66,6 +66,7 @@
                             <th>@T("项目")</th>
                             <th>@T("梁段名")</th>
                             <th>@T("文件名")</th>
+                            <th>@T("梁段数量")</th>
                             @*<th>@T("上传进度")</th>*@
                             <th>@T("状态")</th>
                             <th style="width:25%;">@T("操作")</th>
@@ -137,7 +138,33 @@
     </div>
 </div>
 
+<div id="ModalNum" class="modal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button id="closeNum" type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="blue bigger">输入梁段数量</h4>
+            </div>
+            <div class="modal-body">
+                    <input type="hidden" id="beamId" name="beamId" value="0" />
+                    <div class="form-group" style="margin-bottom:30px;">
+                        <label class="col-sm-3 control-label">项目:</label>
+                        <div class="col-sm-9">
+                            <input type="text" style="margin-top:-5px;" id="beamNum" name="beamNum" class="form-control" placeholder="请输入" data-bind="value: beamNum"
+                                   validate="{required:true}" onkeyup="value=value.replace(/[^\d]/g,'')" />
+                        </div>
+                    </div>
+            </div>
 
+            <div class="modal-footer">
+                <button class="btn btn-sm btn-info"  id="btnSaveNum">
+                        <i class="ace-icon fa fa-check"></i>
+                        完成
+                    </button>
+            </div>
+        </div>
+    </div>
+</div>
 @section scripts_Foot
 {
     <script src="~/Scripts/ace/chosen.jquery.js?v=1"></script>
@@ -158,12 +185,13 @@
                     { "mData": 'ProjectName' },
                     { "mData": 'BridgeComponent' },
                     { "mData": 'DwgFile' },
+                    { "mData": 'BeamNum' },
                     //{ "mData": 'TheModel' },
                     { "mData": 'Status' }
                 ],
                 "columnDefs": [
                     {
-                        "targets": 5,
+                        "targets": 6,
                         "render": function (data, type, full, meta) {
                             var opstr = '';
                             //opstr = opstr + '<a href="#" onclick="tasklist(\'' + full.Id + '\');return false;" class="artDailog btn btn-info  btn-xs" style="margin-right:4px;" data-toggle="tooltip" data-placement="top" title="审核列表"><i class="ace-icon glyphicon glyphicon-list"></i></a>';
@@ -175,6 +203,7 @@
                                 if (full.CreatedUserID == $('#currentUserId').val()) {
                                     opstr = opstr + '<a href="#" onclick="LEAP.Common.MainPop.RowClick(\'' + full.Id + '\',2);return false;" class="btn btn-danger btn-xs" id="btnDelete" data-toggle="tooltip" data-placement="top" title="删除"><i class="fa fa-trash-o"></i></a>';
                                 }
+                                opstr = opstr + '<a href="#" onclick="updateNum(' + full.Id + ');return false;" class="artDailog btn btn-info  btn-xs" style="margin-right:4px;" data-toggle="tooltip" data-placement="top" title="修改数量">修改数量</a>';
                                 //opstr = opstr + '<a href="#" onclick="weldcategory(\'' + full.Id + '\');return false;" class="artDailog btn btn-info  btn-xs" style="margin-right:4px;" data-toggle="tooltip" data-placement="top" title="焊缝类别标注"><i class="ace-icon glyphicon  glyphicon-credit-card"></i></a>' +
                                 //    '<a href="#" onclick="LEAP.Common.MainPop.RowClick(\'' + full.Id + '\',2);return false;" class="btn btn-danger btn-xs" id="btnDelete" data-toggle="tooltip" data-placement="top" title="删除">' +
                                 //    '<i class="fa fa-trash-o"></i></a>';
@@ -195,6 +224,29 @@
             setTimeout(function () {
                 $('.chosen-container').removeAttr('style');
             }, 3000);
+            $('#btnSaveNum').bind('click', function () {
+                if (!$('#beamNum').val()) {
+                    bootbox.alert('请输入数量');
+                }
+                if ($('#beamNum').val() <= 0) {
+                    bootbox.alert('请输入大约1的数字');
+                }
+                $.ajax('UpdateBeamNum?beamid=' + $('#beamId').val() + '&beamNum=' + $('#beamNum').val())
+                    .done(function (data) {
+                        if (data.Message.Status == 200) {
+                            bootbox.alert('更新成功');
+                            LEAP.Common.MainPop.options.dataTable.fnDraw(false);
+                        }
+                        else {
+                            bootbox.alert('更新失败，' + data.Message.Text);
+                        }
+                        $('#closeNum').click();
+                    });
+            });
+            $('#closeNum').bind('click', function () {
+                $('#beamId').val('');
+                $('#beamNum').val('');
+            });
         });
         function CategoryStat(pid, id) {
             window.location = '/CategoryStat/index?ProjectId=' + pid + '&beamId=' + id;
@@ -291,6 +343,11 @@
                 });
         }
 
+        function updateNum(id) {
+            $('#beamId').val(id);
+            $('#beamNum').val('');
+            $('#ModalNum').modal(300);
+        }
 
     </script>
 }
