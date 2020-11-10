@@ -258,6 +258,8 @@
     <Compile Include="Attributes\VerifyParamAttribute.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\API\ApiBaseController.cs" />
+    <Compile Include="Controllers\TempInfoController.cs" />
+    <Compile Include="Controllers\GrooveTypeTextController.cs" />
     <Compile Include="Controllers\LimaiApiController.cs" />
     <Compile Include="Controllers\PlatformManageController.cs" />
     <Compile Include="Controllers\HistoricalCostController.cs" />
@@ -1001,6 +1003,9 @@
     <Content Include="Views\TaskList\WeldingDownload.cshtml" />
     <Content Include="Views\Shared\InnerError.cshtml" />
     <Content Include="Views\Thickness\_ViewStart.cshtml" />
+    <Content Include="Views\GrooveTypeText\_ViewStart.cshtml" />
+    <Content Include="Views\GrooveTypeText\Index.cshtml" />
+    <Content Include="Views\TempInfo\Index.cshtml" />
     <None Include="Views\WeldCategory\cadwelding.cshtml" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
