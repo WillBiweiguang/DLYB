@@ -565,7 +565,7 @@
         }
 
         function GetRecogedHandls() {
-            $.get('/WeldCategory/GetAllHandles', { 'beamId': $('#beamId').val() }).done(function (r) {
+            $.get('/WeldCategory/GetAllHandles', { 'beamId': $('#beamId').val(), 'v': Math.random() }).done(function (r) {
                 if (r.result == 'success') {
                     existingHandles = r.data;
                 } 

@@ -325,7 +325,7 @@ function GetWelding() {
 
         //在箭头处画圆      
         myWeld.circleHandle = '';
-        if (existingHandles.indexOf(m_Weld.myWelArrow.myArrowObjectID) <= -1) {
+        if (existingHandles.indexOf(myWeld.myWelArrow.myArrowObjectID) <= -1) {
             var circleHandle = DrawCircleOfArrow(myWeld);
             myWeld.circleHandle = circleHandle;
         }
