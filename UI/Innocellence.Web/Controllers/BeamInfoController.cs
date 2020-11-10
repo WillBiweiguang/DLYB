@@ -119,6 +119,7 @@ namespace Innocellence.Web.Controllers
                     objModal = objModal ?? new BeamInfoView();
                     objModal.DwgFile = System.IO.Path.GetFileName(file.FileName);
                     objModal.ProjectId = ProjectId;
+                    objModal.BeamNum = 1;
                     var project = _projectService.GetList<ProjectView>(1, x => !x.IsDeleted && x.Id == ProjectId).FirstOrDefault();
                     if (project != null)
                     {
