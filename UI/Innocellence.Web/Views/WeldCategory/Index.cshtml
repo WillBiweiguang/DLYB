@@ -47,7 +47,7 @@
             <div class="form-group">
                 @if (ViewBag.ViewModel == 0)
                 {
-                    <input type="button" id="weldingFinding" class="btn btn-info  btn-sm" value="焊接符号识别" data-toggle="tooltip" title="焊接符号识别" onclick="myclick5();">
+                    <input type="button" id="weldingFinding" class="btn btn-info  btn-sm" value="焊接符号识别" data-toggle="tooltip" title="焊接符号识别" onclick="GetRecogedHandls();">
                     <input type="button" class="btn btn-info  btn-sm" value="提交审核" data-toggle="tooltip" title="提交审核" onclick="requestApprove();">
                     @*<input type="button" class="btn btn-sm" value="隐藏图层" onclick="DoCmd(3);">
             <input type="button" class="btn btn-sm" value="显示图层" onclick="DoCmd(4);">*@
@@ -561,6 +561,15 @@
                 } else {
                     alert('未获取到焊缝位置或点击的元素不是焊缝');
                 }
+            });
+        }
+
+        function GetRecogedHandls() {
+            $.get('/WeldCategory/GetAllHandles', { 'beamId': $('#beamId').val() }).done(function (r) {
+                if (r.result == 'success') {
+                    existingHandles = r.data;
+                } 
+                myclick5();
             });
         }
 

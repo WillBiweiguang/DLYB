@@ -5,6 +5,7 @@ using Infrastructure.Web.Domain.Contracts;
 using Infrastructure.Web.Domain.Entity;
 using Infrastructure.Web.Domain.ModelsView;
 using Infrastructure.Web.UI;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -83,8 +84,21 @@ namespace Innocellence.FaultSearch.Controllers
             ViewBag.Areas = statistics.Select(x => x.SectionalArea).Distinct().ToList();
             ViewBag.weldGeometries = statistics.Select(x => x.WeldType).Distinct().ToList();
             ViewBag.weldLocations = statistics.Select(x => x.WeldLocationType).Distinct().ToList();
+            ViewBag.ForthNav = "焊缝符号识别";
             return View();
         }
+
+        public JsonResult GetAllHandles(int beamId)
+        {
+            var data = _weldCategoryService.GetList<WeldCategoryLabelingView>(int.MaxValue, x => x.BeamId == beamId && !x.IsDeleted).ToList();
+            if(data !=null && data.Count > 0)
+            {
+                var handles = data.Select(x => x.HandleID).ToList();
+                return new JsonResult { Data = new { result = "success", data = string.Join("|", handles) }, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
+            }
+            return new JsonResult { Data = new { result = "failed" }, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
+        }
+
 
         //弹出层列表，目前暂时没有用
         public ActionResult WeldDataTable(int beamId = 0)
@@ -263,7 +277,7 @@ namespace Innocellence.FaultSearch.Controllers
             {
                 if (!string.IsNullOrEmpty(weldInfo.HandleID) && !string.IsNullOrEmpty(weldInfo.WeldType))
                 {
-                    var existedItem = existing.FirstOrDefault(x => x.BeamId == beamId && x.HandleID.Contains(weldInfo.HandleID));
+                    var existedItem = existing.FirstOrDefault(x => !x.IsDeleted && x.BeamId == beamId && x.HandleID.Contains(weldInfo.HandleID));
                     if (existedItem != null)
                     {
                         if (existedItem.WeldType != weldInfo.WeldType)

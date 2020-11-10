@@ -1,5 +1,6 @@
 var mxOcx = document.getElementById("MxDrawXCtrl");
 var lastCircleHandle = 0;
+var existingHandles = '';
 var isBrowner = false;
     // 执行控件命令
  function DoCmd(iCmd) {     
@@ -322,9 +323,12 @@ function GetWelding() {
         //根据类型修改图层
         ChangeWeldLayerbyHandle(myWeld);
 
-        //在箭头处画圆
-        var circleHandle = DrawCircleOfArrow(myWeld);
-        myWeld.circleHandle = circleHandle;
+        //在箭头处画圆      
+        myWeld.circleHandle = '';
+        if (existingHandles.indexOf(m_Weld.myWelArrow.myArrowObjectID) <= -1) {
+            var circleHandle = DrawCircleOfArrow(myWeld);
+            myWeld.circleHandle = circleHandle;
+        }
         m_ResWeldArr.push(myWeld);
         //可在此处逐个获取识别到的焊缝符号的信息
 

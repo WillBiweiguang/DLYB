@@ -37,6 +37,13 @@ namespace DLYB.Web.Controllers
         {
             string projectId = Request["projectId"];
             ViewBag.ProjectId = projectId;
+            int pid = 0;
+            if (int.TryParse(Request["projectId"], out pid))
+            {
+                var project = _projectService.Repository.Entities.FirstOrDefault(x => x.Id == pid);
+                ViewBag.ProjectName = project.ProjectName;
+            }
+            ViewBag.ThirdNav = "历史消耗";
             return View();
         }
 

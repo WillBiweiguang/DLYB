@@ -47,6 +47,7 @@ namespace Innocellence.Web.Controllers
                 ViewBag.ProjectName = project?.ProjectName;
             }
             ViewBag.ProjectId = projectId;
+            ViewBag.ThirdNav = "文件管理";
             return View();
         }
 
