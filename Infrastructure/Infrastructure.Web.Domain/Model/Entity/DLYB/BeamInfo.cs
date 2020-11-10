@@ -32,5 +32,7 @@ namespace Infrastructure.Web.Domain.Entity
         public bool IsDeleted { get; set; }
 
         public int ProcessStatus { get; set; }
+
+        public int BeamNum { get; set; }
     }
 }

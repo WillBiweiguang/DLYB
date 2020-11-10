@@ -63,6 +63,7 @@ namespace DLYB.Web.Controllers
             ViewBag.UserId = objLoginInfo.Id;
             ViewBag.list = _weldCategoryService.Repository.Entities.Where(a => !a.IsDeleted).ToList();
             ViewBag.Stat = _wcsvService.Repository.Entities.Where(a => !a.IsDeleted).ToList();
+            ViewBag.ThirdNav = "审核列表";
             return View();
         }
 

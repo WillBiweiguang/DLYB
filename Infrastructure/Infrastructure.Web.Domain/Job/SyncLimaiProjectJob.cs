@@ -23,11 +23,11 @@ namespace Infrastructure.Web.Domain.Job
 
         public void Execute()
         {
-            var jobHour = ConfigurationManager.AppSettings["SyncLimaiHour"];
-            if (DateTime.Now.Hour != int.Parse(jobHour))
-            {
-                return;
-            }
+            //var jobHour = ConfigurationManager.AppSettings["SyncLimaiHour"];
+            //if (DateTime.Now.Hour != int.Parse(jobHour))
+            //{
+            //    return;
+            //}
             Logger.Info("executing job start");
             string sql = @" Insert into t_ProjectInfo
 (ProjectName,ProjectType,AffiliatedInstitution,Status,CreatedUserID,CreatedDate,

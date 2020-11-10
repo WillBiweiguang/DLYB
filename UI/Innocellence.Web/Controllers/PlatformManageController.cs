@@ -64,6 +64,7 @@ namespace DLYB.Web.Controllers
             var departmentList = Departments.Select(x => new SelectListItem { Value = x.Key.ToString(), Text = x.Value }).ToList();
             //departmentList.Insert(0, new SelectListItem { Value = "0", Text = "" });
             ViewBag.Department = departmentList;
+            ViewBag.ThirdNav = "系统管理";
             return View();
         }
 

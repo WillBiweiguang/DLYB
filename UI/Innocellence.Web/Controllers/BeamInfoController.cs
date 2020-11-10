@@ -47,6 +47,7 @@ namespace Innocellence.Web.Controllers
                 ViewBag.ProjectName = project?.ProjectName;
             }
             ViewBag.ProjectId = projectId;
+            ViewBag.ThirdNav = "文件管理";
             return View();
         }
 
@@ -118,6 +119,7 @@ namespace Innocellence.Web.Controllers
                     objModal = objModal ?? new BeamInfoView();
                     objModal.DwgFile = System.IO.Path.GetFileName(file.FileName);
                     objModal.ProjectId = ProjectId;
+                    objModal.BeamNum = 1;
                     var project = _projectService.GetList<ProjectView>(1, x => !x.IsDeleted && x.Id == ProjectId).FirstOrDefault();
                     if (project != null)
                     {
@@ -181,6 +183,18 @@ namespace Innocellence.Web.Controllers
                 string path = "/Files/BeamInfo/" + beam.ProjectId + SLASH + beam.DwgFile;
                 file.SaveAs(Server.MapPath(path));
             }
+            return Json(doJson(null), JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult UpdateBeamNum(int beamId, int beamNum)
+        {
+            var beam = _beamInfoService.GetList<BeamInfoView>(1, x => !x.IsDeleted && x.Id == beamId).FirstOrDefault();
+            if (beam == null || beamNum <= 0)
+            {
+                return Json(GetErrorJson(), JsonRequestBehavior.AllowGet);
+            }
+            beam.BeamNum = beamNum;
+            _beamInfoService.UpdateView(beam);
             return Json(doJson(null), JsonRequestBehavior.AllowGet);
         }
 
