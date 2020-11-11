@@ -12,6 +12,7 @@ namespace Infrastructure.Web.Domain.ModelsView
         public string ProjectId { get; set; }
         public string ProjectName { get; set; }
         public string BeamName { get; set; }
+        public string FileName { get; set; }
         public string AffiliatedInstitution { get; set; }
         public string AffiliatedId { get; set; }
         public string BridgeType { get; set; }
@@ -45,6 +46,7 @@ namespace Infrastructure.Web.Domain.ModelsView
             Id = entity.Id;
             ProjectId = entity.ProjectId;
             ProjectName = entity.ProjectName;
+            FileName = entity.FileName;
             BeamName = entity.BeamName;
             AffiliatedInstitution = entity.AffiliatedInstitution;
             AffiliatedId = entity.AffiliatedId;

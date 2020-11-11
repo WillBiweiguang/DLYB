@@ -76,11 +76,15 @@ namespace Innocellence.FaultSearch.Controllers
                             ViewBag.ViewModel = 0;
                         }
                     }
+                    var fileName = beam.DwgFile.Substring(0, beam.DwgFile.IndexOf("dwg") - 1);
+                    var projectName= string.IsNullOrEmpty(beam.ProjectName) ? _projectService.Repository.Entities.FirstOrDefault(x => x.Id == beam.ProjectId).ProjectName
+                        : beam.ProjectName;
+                    ViewBag.Figures = _tempInfoService.Repository.Entities.Where(x => x.BeamName == fileName && x.ProjectName == projectName).Select(x => x.FigureNumber).Distinct().Select(x => new SelectListItem { Value = x, Text = x }).ToList();
+                    ViewBag.Boards = _tempInfoService.Repository.Entities.Where(x => x.BeamName == fileName && x.ProjectName == projectName).Select(x => x.BoardNumber).Distinct().Select(x => new SelectListItem { Value = x, Text = x }).ToList();
                 }
             }
             var statistics = _weldCategoryStatisticsVService.GetList<WeldCategoryStatisticsVView>(int.MaxValue, x => !x.IsDeleted && x.BeamId == beamId).ToList();
-            ViewBag.Figures = _tempInfoService.Repository.Entities.Select(x => x.FigureNumber).Distinct().Select(x => new SelectListItem { Value = x, Text = x }).ToList();
-            ViewBag.Boards = _tempInfoService.Repository.Entities.Select(x => x.BoardNumber).Distinct().Select(x => new SelectListItem { Value = x, Text = x }).ToList();
+           
             ViewBag.Areas = statistics.Select(x => x.SectionalArea).Distinct().ToList();
             ViewBag.weldGeometries = statistics.Select(x => x.WeldType).Distinct().ToList();
             ViewBag.weldLocations = statistics.Select(x => x.WeldLocationType).Distinct().ToList();
@@ -140,9 +144,12 @@ namespace Innocellence.FaultSearch.Controllers
                     ViewBag.BeamId = beam.Id;
                     ViewBag.ProjectId = beam.ProjectId;
                     ViewBag.FileName = beam.DwgFile;
+                    var fileName = beam.DwgFile.Substring(0, beam.DwgFile.IndexOf("dwg") - 1);
+                    var projectName= string.IsNullOrEmpty(beam.ProjectName) ? _projectService.Repository.Entities.FirstOrDefault(x => x.Id == beam.ProjectId).ProjectName
+                        : beam.ProjectName;
                     var statistics = _weldCategoryStatisticsVService.GetList<WeldCategoryStatisticsVView>(int.MaxValue, x => !x.IsDeleted && x.BeamId == beam.Id).ToList();
-                    ViewBag.Figures = _tempInfoService.Repository.Entities.Select(x => x.FigureNumber).Distinct().Select(x => new SelectListItem { Value = x, Text = x }).ToList();
-                    ViewBag.Boards = _tempInfoService.Repository.Entities.Select(x => x.BoardNumber).Distinct().Select(x => new SelectListItem { Value = x, Text = x }).ToList();
+                    ViewBag.Figures = _tempInfoService.Repository.Entities.Where(x => x.BeamName == fileName && x.ProjectName == projectName).Select(x => x.FigureNumber).Distinct().Select(x => new SelectListItem { Value = x, Text = x }).ToList();
+                    ViewBag.Boards = _tempInfoService.Repository.Entities.Where(x => x.BeamName == fileName && x.ProjectName == projectName).Select(x => x.BoardNumber).Distinct().Select(x => new SelectListItem { Value = x, Text = x }).ToList();
                     ViewBag.Areas = statistics.Select(x => x.SectionalArea).Distinct().ToList();
                     ViewBag.weldGeometries = statistics.Select(x => x.WeldType).Distinct().ToList();
                     ViewBag.weldLocations = statistics.Select(x => x.WeldLocationType).Distinct().ToList();

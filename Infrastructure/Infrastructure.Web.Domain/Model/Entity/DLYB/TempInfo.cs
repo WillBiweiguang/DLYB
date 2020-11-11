@@ -16,6 +16,7 @@ namespace Infrastructure.Web.Domain.Entity
         public override int Id { get => base.Id; set => base.Id = value; }
         public string ProjectId { get; set; }
         public string ProjectName { get; set; }
+        public string FileName { get; set; }
         public string BeamName { get; set; }
         public string AffiliatedInstitution { get; set; }
         public string AffiliatedId { get; set; }
