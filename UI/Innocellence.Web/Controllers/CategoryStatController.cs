@@ -64,7 +64,7 @@ namespace DLYB.Web.Controllers
                 }
                
             }
-            ViewBag.ForthNav = "焊缝统计";
+            ViewBag.ForthNav = "焊缝类别统计";
             return View();
         }
 
