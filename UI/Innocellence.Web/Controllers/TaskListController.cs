@@ -107,7 +107,7 @@ namespace DLYB.Web.Controllers
             {
                 expression = expression.AndAlso<TaskList>(x => x.TaskStatus == status);
             }
-            int rowCount = gridRequest.PageCondition.RowCount;
+            int rowCount = gridRequest.PageCondition.RowCount;            
             List<TaskListView> listEx = GetListEx(expression, gridRequest.PageCondition);
             var projectIDs = listEx.Select(x => x.ProjectId).ToList();
             var projects = _projectService.GetList<ProjectView>(int.MaxValue, x => projectIDs.Contains(x.Id)).ToList();
@@ -344,6 +344,16 @@ namespace DLYB.Web.Controllers
             //option = 1 审核，0 驳回
             task.TaskStatus = option == 1 ? (int)TaskStatus.Approved : (int)TaskStatus.Rejected;
             _TaskListService.UpdateView(task);
+
+            //更新项目状态
+            if (option == 1)
+            {
+                var project = _projectService.GetList<ProjectView>(1, x => !x.IsDeleted && x.Id == task.ProjectId).FirstOrDefault();
+                if (project != null)
+                {
+                    _projectService.UpdateProjectStatus(project);
+                }
+            }
             return new JsonResult { Data = new { result = ApiReturnCode.Success }, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
         }
 

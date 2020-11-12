@@ -145,11 +145,11 @@ namespace Innocellence.Web.Controllers
                         {
                             _beamInfoService.InsertView(objModal);
                         }
-                        //if (project != null && project.Status != ProjectStauts.NotComplete)
-                        //{
-                        //    project.Status = ProjectStauts.NotComplete;
-                        //    _projectService.UpdateView(project);
-                        //}
+                        if(project.Status != ProjectStauts.NotComplete)
+                        {
+                            project.Status = ProjectStauts.NotComplete;
+                            _projectService.UpdateView(project);
+                        }
                     }
                     else
                     {
@@ -204,14 +204,12 @@ namespace Innocellence.Web.Controllers
             {
                 int[] arrID = sIds.TrimEnd(',').Split(',').Select(a => int.Parse(a)).ToArray();
                 var id = arrID[0];
+                //删除任务列表
+                var taskids = _taskListService.GetList<TaskListView>(int.MaxValue, x => arrID.Contains(x.BeamId)).Select(x => x.Id).ToArray();
+                _taskListService.Repository.Delete(taskids);
                 var beam = _beamInfoService.GetList<BeamInfoView>(1, x => x.Id == id).FirstOrDefault();
-                if (beam != null
-                    && (_beamInfoService.Repository.Entities.Any(x => !x.IsDeleted && x.ProjectId == beam.ProjectId && x.ProcessStatus != (int)BeamProcessStatus.Complete)
-                    || _taskListService.Repository.Entities.Any(x => !x.IsDeleted && x.ProjectId == beam.ProjectId && x.TaskStatus != (int)TaskStatus.Approved)))
-                {
-                    var project = _projectService.GetList<ProjectView>(1, x => !x.IsDeleted && x.Id == beam.ProjectId).FirstOrDefault();
-                    _projectService.UpdateView(project);
-                }
+                _projectService.UpdateProjectStatus(beam.ProjectId);
+
             }
             return base.AfterDelete(sIds);
         }

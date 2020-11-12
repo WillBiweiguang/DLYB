@@ -13,5 +13,7 @@ namespace Infrastructure.Web.Domain.Contracts
     {
         IList<HanjiProportionModel> HancaiQuanlityByType(LiMaiApiViewModel query);
         IList<HanjiProportionModel> HancaiQuanlity(LiMaiApiViewModel query);
+        void UpdateProjectStatus(ProjectView project);
+        void UpdateProjectStatus(int projectId);
     }
 }
