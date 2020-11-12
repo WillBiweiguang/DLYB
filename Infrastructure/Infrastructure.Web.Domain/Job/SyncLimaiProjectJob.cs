@@ -39,7 +39,7 @@ FROM
 (select distinct projectId,ProjectName,AffiliatedInstitution,AffiliatedId,BridgeType,BridgeTypeId from t_TempInfo) AS T
 WHERE NOT EXISTS(Select 1 From t_ProjectInfo P WHERE T.ProjectId = P.lmProjectId) 
 ";
-            _projectService.Repository.UnitOfWork.SqlQuery<int>(sql);
+            _projectService.Repository.UnitOfWork.ExecuteSqlCommand(Core.TransactionalBehavior.DoNotEnsureTransaction, sql);
             string sqlUpdate = @"Update t_ProjectInfo P
 INNER JOIN (select distinct projectId,ProjectName,AffiliatedInstitution,AffiliatedId,BridgeType,BridgeTypeId from t_TempInfo) AS T ON P.LmProjectId = T.projectId
 set P.ProjectName = T.ProjectName, P.AffiliatedInstitution = T.AffiliatedInstitution, P.ProjectType = T.BridgeType,
@@ -47,7 +47,8 @@ P.LmAffiliatedId = T.AffiliatedId, P.LmBridgeTypeId = T.BridgeTypeId
 WHERE P.ProjectName <> T.ProjectName OR P.AffiliatedInstitution <> T.AffiliatedInstitution OR P.ProjectType <> T.BridgeType OR
 P.LmAffiliatedId <> T.AffiliatedId OR P.LmBridgeTypeId <> T.BridgeTypeId
 ";
-            _projectService.Repository.UnitOfWork.SqlQuery<int>(sqlUpdate);
+            _projectService.Repository.UnitOfWork.ExecuteSqlCommand(Core.TransactionalBehavior.DoNotEnsureTransaction, sqlUpdate);
+            //_projectService.Repository.UnitOfWork.SqlQuery<int>(sqlUpdate);
             Logger.Info("executing job end");
         }
     }
