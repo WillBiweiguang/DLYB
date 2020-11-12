@@ -230,6 +230,7 @@ $(document).ready(function () {
 
     $('#SearchForm').on('keydown', function (event) {
         if (event.which == 13) {
+            event.stopPropagation();
             $('#btnSearch').trigger('click');
         }
     });

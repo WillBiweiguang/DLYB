@@ -71,6 +71,10 @@ namespace DLYB.Web.Controllers
         {
             GridRequest gridRequest = new GridRequest(Request);
             string strCondition = Request["search_condition"];
+            string projectName = Request["project_name"];
+            string taskStatus = Request["task_status"];
+            int status = 0;
+            int.TryParse(taskStatus, out status);
             Expression<Func<TaskList, bool>> expression = FilterHelper.GetExpression<TaskList>(gridRequest.FilterGroup);
 
             expression = expression.AndAlso<TaskList>(x => x.IsDeleted != true);
@@ -86,7 +90,24 @@ namespace DLYB.Web.Controllers
             {
                 expression = expression.AndAlso<TaskList>(x => x.CreatedUserID == objLoginInfo.Id);
             }
-            int rowCount = gridRequest.PageCondition.RowCount;
+            //TODO 需要连其他表查询的，都需要改为视图提高速度。
+            //文件名
+            if (!string.IsNullOrEmpty(strCondition))
+            {
+                expression = expression.AndAlso<TaskList>(x => x.DWGFile.Contains(strCondition));
+            }
+            //项目名
+            if (!string.IsNullOrEmpty(projectName))
+            {
+                var pids = _projectService.GetList<ProjectView>(1000, x => !x.IsDeleted && x.ProjectName.Contains(projectName)).Select(x => x.Id).ToList();
+                expression = expression.AndAlso<TaskList>(x => pids.Contains(x.ProjectId));
+            }
+            //状态
+            if (status >0)
+            {
+                expression = expression.AndAlso<TaskList>(x => x.TaskStatus == status);
+            }
+            int rowCount = gridRequest.PageCondition.RowCount;            
             List<TaskListView> listEx = GetListEx(expression, gridRequest.PageCondition);
             var projectIDs = listEx.Select(x => x.ProjectId).ToList();
             var projects = _projectService.GetList<ProjectView>(int.MaxValue, x => projectIDs.Contains(x.Id)).ToList();
@@ -323,6 +344,16 @@ namespace DLYB.Web.Controllers
             //option = 1 审核，0 驳回
             task.TaskStatus = option == 1 ? (int)TaskStatus.Approved : (int)TaskStatus.Rejected;
             _TaskListService.UpdateView(task);
+
+            //更新项目状态
+            if (option == 1)
+            {
+                var project = _projectService.GetList<ProjectView>(1, x => !x.IsDeleted && x.Id == task.ProjectId).FirstOrDefault();
+                if (project != null)
+                {
+                    _projectService.UpdateProjectStatus(project);
+                }
+            }
             return new JsonResult { Data = new { result = ApiReturnCode.Success }, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
         }
 

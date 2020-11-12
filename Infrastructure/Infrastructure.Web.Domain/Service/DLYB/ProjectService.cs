@@ -30,8 +30,8 @@ using System.Security.Claims;
 using Infrastructure.Web.Domain.Service.Common;
 using System.Security.Principal;
 using Infrastructure.Web.Domain.ModelsView;
-
-
+using Infrastructure.Web.Domain.Common;
+using TaskStatus = Infrastructure.Web.Domain.Common.TaskStatus;
 
 namespace Infrastructure.Web.Domain.Services
 {
@@ -119,6 +119,32 @@ group by p.ProjectName,p.AffiliatedInstitution, p.ProjectType,p.LmProjectId,p.Lm
             }
             sql = string.Format(sql, whereCondition);
             return Repository.UnitOfWork.SqlQuery<HanjiProportionModel>(sql).ToList();
+        }
+
+        public void UpdateProjectStatus(ProjectView project)
+        {
+            //确认是否完成项目
+            if (!_beamInfoService.Repository.Entities.Any(x => !x.IsDeleted && x.ProjectId == project.Id && x.ProcessStatus != (int)BeamProcessStatus.Complete)
+                 && !_taskListService.Repository.Entities.Any(x => !x.IsDeleted && x.ProjectId == project.Id && x.TaskStatus != (int)TaskStatus.Approved))
+            {
+                project.Status = ProjectStauts.Complete;
+                UpdateView(project);
+            }
+            else if (_beamInfoService.Repository.Entities.Any(x => !x.IsDeleted && x.ProjectId == project.Id && x.ProcessStatus != (int)BeamProcessStatus.Complete)
+                 || _taskListService.Repository.Entities.Any(x => !x.IsDeleted && x.ProjectId == project.Id && x.TaskStatus != (int)TaskStatus.Approved))
+            {
+                project.Status = ProjectStauts.NotComplete;
+                UpdateView(project);
+            }
+        }
+
+        public void UpdateProjectStatus(int projectId)
+        {
+            var project = GetList<ProjectView>(1, x => !x.IsDeleted && x.Id == projectId).FirstOrDefault();
+            if (project != null)
+            {
+                UpdateProjectStatus(project);
+            }
         }
     }
 }

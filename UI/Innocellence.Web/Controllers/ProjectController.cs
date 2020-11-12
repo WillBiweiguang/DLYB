@@ -59,7 +59,8 @@ namespace Innocellence.Web.Controllers
 
         {
             string projectId = Request["project_id"];
-            int pid = string.IsNullOrEmpty(projectId) ? 0 : int.Parse(projectId);
+            int pid = 0;
+            
 
             GridRequest gridRequest = new GridRequest(Request);
             string strCondition = Request["search_condition"];
@@ -70,7 +71,7 @@ namespace Innocellence.Web.Controllers
             {
                 expression = expression.AndAlso<Project>(x => x.ProjectName.Contains(strCondition));
             }
-            if (pid != 0)
+            if (int.TryParse(projectId, out pid) && pid > 0)
             {
                 expression = expression.AndAlso<Project>(x => x.Id == pid);
             }
