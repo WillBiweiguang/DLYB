@@ -54,11 +54,12 @@ namespace Innocellence.FaultSearch.Controllers
                 var beam = _beamInfoService.GetList<BeamInfoView>(1, x => x.Id == beamId).FirstOrDefault();
                 if (beam != null)
                 {
+                    var projectName = string.IsNullOrEmpty(beam.ProjectName) ? _projectService.Repository.Entities.FirstOrDefault(x => x.Id == beam.ProjectId).ProjectName
+                       : beam.ProjectName;
                     ViewBag.BeamId = beamId;
                     ViewBag.BeamName = beam.DwgFile;
                     ViewBag.ProjectId = beam.ProjectId;
-                    ViewBag.ProjectName = string.IsNullOrEmpty(beam.ProjectName) ? _projectService.Repository.Entities.FirstOrDefault(x => x.Id == beam.ProjectId).ProjectName
-                        : beam.ProjectName;
+                    ViewBag.ProjectName = projectName;
                     ViewBag.FileName = beam.DwgFile;
                     ViewBag.FilePath = GetFilePath(beam.ProjectId, beam.DwgFile);
                     ViewBag.FileServerPath = GetFileAbsolutePath(beam.ProjectId, beam.DwgFile);
@@ -77,8 +78,7 @@ namespace Innocellence.FaultSearch.Controllers
                         }
                     }
                     var fileName = beam.DwgFile.Substring(0, beam.DwgFile.IndexOf("dwg") - 1);
-                    var projectName= string.IsNullOrEmpty(beam.ProjectName) ? _projectService.Repository.Entities.FirstOrDefault(x => x.Id == beam.ProjectId).ProjectName
-                        : beam.ProjectName;
+                   
                     ViewBag.Figures = _tempInfoService.Repository.Entities.Where(x => x.BeamName == fileName && x.ProjectName == projectName).Select(x => x.FigureNumber).Distinct().Select(x => new SelectListItem { Value = x, Text = x }).ToList();
                     ViewBag.Boards = _tempInfoService.Repository.Entities.Where(x => x.BeamName == fileName && x.ProjectName == projectName).Select(x => x.BoardNumber).Distinct().Select(x => new SelectListItem { Value = x, Text = x }).ToList();
                 }
