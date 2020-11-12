@@ -71,6 +71,10 @@ namespace DLYB.Web.Controllers
         {
             GridRequest gridRequest = new GridRequest(Request);
             string strCondition = Request["search_condition"];
+            string projectName = Request["project_name"];
+            string taskStatus = Request["task_status"];
+            int status = 0;
+            int.TryParse(taskStatus, out status);
             Expression<Func<TaskList, bool>> expression = FilterHelper.GetExpression<TaskList>(gridRequest.FilterGroup);
 
             expression = expression.AndAlso<TaskList>(x => x.IsDeleted != true);
@@ -85,6 +89,23 @@ namespace DLYB.Web.Controllers
             if (objLoginInfo.Menus != null && !objLoginInfo.Menus.Any(x => x.Id == (int)EnumMenuId.TaskApprove))
             {
                 expression = expression.AndAlso<TaskList>(x => x.CreatedUserID == objLoginInfo.Id);
+            }
+            //TODO 需要连其他表查询的，都需要改为视图提高速度。
+            //文件名
+            if (!string.IsNullOrEmpty(strCondition))
+            {
+                expression = expression.AndAlso<TaskList>(x => x.DWGFile.Contains(strCondition));
+            }
+            //项目名
+            if (!string.IsNullOrEmpty(projectName))
+            {
+                var pids = _projectService.GetList<ProjectView>(1000, x => !x.IsDeleted && x.ProjectName.Contains(projectName)).Select(x => x.Id).ToList();
+                expression = expression.AndAlso<TaskList>(x => pids.Contains(x.ProjectId));
+            }
+            //状态
+            if (status >0)
+            {
+                expression = expression.AndAlso<TaskList>(x => x.TaskStatus == status);
             }
             int rowCount = gridRequest.PageCondition.RowCount;
             List<TaskListView> listEx = GetListEx(expression, gridRequest.PageCondition);
