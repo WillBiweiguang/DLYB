@@ -41,26 +41,42 @@ namespace Innocellence.Web.Controllers
         {
             return View();
         }
-        
+
         public override ActionResult GetList()
         {
             GridRequest gridRequest = new GridRequest(Request);
             string strCondition = Request["search_condition"];
-           
+
             Expression<Func<TempInfo, bool>> expression = FilterHelper.GetExpression<TempInfo>(gridRequest.FilterGroup);
-           
-         
-           if (!string.IsNullOrEmpty(strCondition))
+
+
+            if (!string.IsNullOrEmpty(strCondition))
             {
-                expression = expression.AndAlso<TempInfo>(x => x.BeamName.Contains(strCondition)||
-                x.BoardNumber.Contains(strCondition)||x.ProjectName.Contains(strCondition)||x.FigureNumber.Contains(strCondition));
+                expression = expression.AndAlso<TempInfo>(x => x.BeamName.Contains(strCondition) ||
+                x.FileName.Contains(strCondition) || x.ProjectName.Contains(strCondition) || x.FigureNumber.Contains(strCondition));
             }
-         
+
             int rowCount = gridRequest.PageCondition.RowCount;
+
             List<TempInfoView> listEx = GetListEx(expression, gridRequest.PageCondition);
-           
+
             return this.GetPageResult(listEx, gridRequest);
         }
-      
+        public ActionResult GetData()
+        {
+            GridRequest gridRequest = new GridRequest(Request);
+            var list = _TempInfoService.Repository.Entities.Distinct().
+                  OrderBy(x => x.Id).
+                Skip(gridRequest.PageCondition.PageSize * gridRequest.PageCondition.RowCount).
+                Take(gridRequest.PageCondition.PageSize);
+
+            return Json(new
+            {
+                sEcho = Request["draw"],
+                iTotalRecords = gridRequest.PageCondition.RowCount,
+                iTotalDisplayRecords = gridRequest.PageCondition.RowCount,
+                aaData = list.ToList()
+            }, JsonRequestBehavior.AllowGet);
+        }
     }
 }
