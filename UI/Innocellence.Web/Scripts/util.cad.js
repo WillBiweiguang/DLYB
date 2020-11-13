@@ -1,6 +1,6 @@
 var mxOcx = document.getElementById("MxDrawXCtrl");
 var lastCircleHandle = 0;
-var existingHandles = '';
+var existingHandles = [];
 var isBrowner = false;
     // 执行控件命令
  function DoCmd(iCmd) {     
@@ -311,6 +311,24 @@ function GetWelding() {
     }
     var NSArrowArray = DeletSameArrow(ArrowArray);
     var m_ResWeldArr = [];
+    //20201112 删除现有的circle
+    var database = mxOcx.GetDatabase();
+    if (existingHandles && existingHandles.length > 0) {
+        for (var i = 0; i < existingHandles.length; i++) {
+            if (existingHandles[i]) {
+                try {
+                    var circle;
+                    circle = database.HandleToObject(existingHandles[i]);
+                    if (circle) {
+                        circle.Erase();
+                    }
+                }
+                catch (err) {
+                    console.log(err);
+                }
+            }
+        }
+    }
     for (var i = 0; i < NSArrowArray.length; i++) {
         var myWeld = GetWeldingType(NSArrowArray[i]);
         if (myWeld == null || myWeld.myWelType == "") {
@@ -324,11 +342,9 @@ function GetWelding() {
         ChangeWeldLayerbyHandle(myWeld);
 
         //在箭头处画圆      
-        myWeld.circleHandle = '';
-        if (existingHandles.indexOf(myWeld.myWelArrow.myArrowObjectID) <= -1) {
-            var circleHandle = DrawCircleOfArrow(myWeld);
-            myWeld.circleHandle = circleHandle;
-        }
+        var circleHandle = DrawCircleOfArrow(myWeld);
+        myWeld.circleHandle = circleHandle;
+        
         m_ResWeldArr.push(myWeld);
         //可在此处逐个获取识别到的焊缝符号的信息
 
@@ -358,9 +374,9 @@ function GetWelding() {
     var weldData = [];
     for (var i = 0; i < m_ResWeldArr.length; i++) {
         var handleArray = GetWeldHandle(m_ResWeldArr[i]);
-        weldData.push({ WeldType: m_ResWeldArr[i].myWelType, HandleID: m_ResWeldArr[i].myWelArrow.myArrowObjectID + ',' + handleArray.toString() + ',' + m_ResWeldArr[i].circleHandle });
+        weldData.push({ WeldType: m_ResWeldArr[i].myWelType, HandleID: m_ResWeldArr[i].myWelArrow.myArrowObjectID + ',' + handleArray.toString(), CircleId: m_ResWeldArr[i].circleHandle });
     }
-    saveWeldData(weldData);
+    saveWeldData(weldData, 0);
 }
 
 //在给定handle实体处画圈

@@ -100,6 +100,7 @@ namespace Infrastructure.Web.Domain.ModelsView
             UpdatedDate = entity.UpdatedDate;
             UpdatedUserID = entity.UpdatedUserID;
             IsDeleted = entity.IsDeleted;
+            CircleId = entity.CircleId;
             return this;
         }
 	}
