@@ -314,28 +314,29 @@
                                     <a href="/BeamInfo/Index?ProjectId=@ViewBag.ProjectId">@ViewBag.ProjectName</a>
                                 </li>
                             }
-                            if (!string.IsNullOrEmpty(ViewBag.SecondNav))
-                            {
-                                <li>
-                                    <i class="ace-icon fa active"></i>
-                                    <span>@ViewBag.SecondNav</span>
-                                </li>
-                            }
-                            if (!string.IsNullOrEmpty(ViewBag.ThirdNav))
-                            {
-                                <li>
-                                    <i class="ace-icon fa active"></i>
-                                    <span>@ViewBag.ThirdNav</span>
-                                </li>
-                            }
-                            if (!string.IsNullOrEmpty(ViewBag.ForthNav))
-                            {
-                                <li>
-                                    <i class="ace-icon fa active"></i>
-                                    <span>@ViewBag.ForthNav</span>
-                                </li>
-                            }
                         }
+                        @if (!string.IsNullOrEmpty(ViewBag.SecondNav))
+                        {
+                        <li>
+                            <i class="ace-icon fa active"></i>
+                            <span>@ViewBag.SecondNav</span>
+                        </li>
+                        }
+                        @if (!string.IsNullOrEmpty(ViewBag.ThirdNav))
+                        {
+                        <li>
+                            <i class="ace-icon fa active"></i>
+                            <span>@ViewBag.ThirdNav</span>
+                        </li>
+                        }
+                        @if (!string.IsNullOrEmpty(ViewBag.ForthNav))
+                        {
+                        <li>
+                            <i class="ace-icon fa active"></i>
+                            <span>@ViewBag.ForthNav</span>
+                        </li>
+                        }
+
                     </ul>
                     <!-- /.breadcrumb -->
                     <!-- #section:basics/content.searchbox -->

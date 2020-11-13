@@ -149,7 +149,7 @@
             <div class="modal-body">
                     <input type="hidden" id="beamId" name="beamId" value="0" />
                     <div class="form-group" style="margin-bottom:30px;">
-                        <label class="col-sm-3 control-label">项目:</label>
+                        <label class="col-sm-3 control-label">数量:</label>
                         <div class="col-sm-9">
                             <input type="text" style="margin-top:-5px;" id="beamNum" name="beamNum" class="form-control" placeholder="请输入" data-bind="value: beamNum"
                                    validate="{required:true}" onkeyup="value=value.replace(/[^\d]/g,'')" />
@@ -215,9 +215,7 @@
                         }
                     }],
                 fnDrawCallback: function () {
-
                     $('[data-toggle="tooltip"]').tooltip();
-
                 }
             }));
             //inital select2
@@ -226,22 +224,22 @@
                 $('.chosen-container').removeAttr('style');
             }, 3000);
             $('#btnSaveNum').bind('click', function () {
-                if (!$('#beamNum').val()) {
-                    bootbox.alert('请输入数量');
-                }
-                if ($('#beamNum').val() <= 0) {
-                    bootbox.alert('请输入大约1的数字');
-                }
+                //if ($('#beamNum').val() == '') {
+                //    bootbox.alert('请输入数量');
+                //}
+                //if ($('#beamNum').val() <= 0) {
+                //    bootbox.alert('请输入大于1的数字');
+                //}
                 $.ajax('UpdateBeamNum?beamid=' + $('#beamId').val() + '&beamNum=' + $('#beamNum').val())
                     .done(function (data) {
                         if (data.Message.Status == 200) {
-                            bootbox.alert('更新成功');
+                            //bootbox.alert('更新成功');
                             LEAP.Common.MainPop.options.dataTable.fnDraw(false);
+                            $('#closeNum').click();
                         }
                         else {
-                            bootbox.alert('更新失败，' + data.Message.Text);
-                        }
-                        $('#closeNum').click();
+                            //bootbox.alert('更新失败: ' + data.Message.Text);
+                        }                        
                     });
             });
             $('#closeNum').bind('click', function () {

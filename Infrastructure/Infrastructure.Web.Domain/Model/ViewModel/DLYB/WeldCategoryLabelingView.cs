@@ -68,7 +68,7 @@ namespace Infrastructure.Web.Domain.ModelsView
 
         public int? CopyOriginId { get; set; }
 
-        public int? CircleId { get; set; }
+        public string CircleId { get; set; }
 
         public string Ids { get; set; }
 
