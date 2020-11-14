@@ -1,115 +1,118 @@
 ﻿@model IEnumerable<Infrastructure.Web.Domain.ModelsView.WeldCategoryLabelingView>
-    @{ 
+    @{
         Layout = "~/Views/Shared/_LayoutWithoutMenu.cshtml";
     }
-@section easyui_css{
-    <link rel="stylesheet" href="~/Style/EasyUI/easyui.css" />
-}
-<style>
-    .datagrid-mask-msg {
-        height: 36px !important;
+    @section easyui_css{
+        <link rel="stylesheet" href="~/Style/EasyUI/easyui.css" />
     }
-    .table_bottom_total {
-        height: 37px;
-        padding: 7px;
-        float: right;
-    }
-</style>
-<!--Action boxes-->
-<div class="row">
-    <div class="col-sm-12">
-        <input type="hidden" id="beamId" value="@ViewBag.BeamId" />
-        <form class="form-inline" id="SearchForm">            
-            <a href="ExportToExcel?beamId=@ViewBag.BeamId" class="btn btn-sm btn-success" data-toggle="tooltip" data-placement="top" title="导出Excel" id="btnScoreExport">
-                <i class="fa fa-download"></i> 导出Excel
-            </a>
-        </form>
-        <div class="clearfix"></div>
+    <style>
+        .datagrid-mask-msg {
+            height: 36px !important;
+        }
 
-        <div class="widget-box">
-            <div class="widget-content nopadding">
-                <table class="table table-bordered table-hover data-table">
-                    <thead>
-                        <tr>
-                            <th style="width:5%;text-align:center;">@T("序号")</th>
-                            <th>@T("图号")</th>
-                            <th>@T("板件号")</th>
-                            <th>@T("焊缝类型")</th>
-                            <th>@T("板厚")</th>
-                            <th>@T("焊缝位置")</th>
-                            <th>@T("焊缝截面积")</th>
-                            <th>@T("焊缝长度")</th>
-                            <th>@T("焊缝数量")</th>
-                            <th>@T("梁段数量")</th>
-                            <th>@T("焊缝质量")</th>
-                            <th>@T("消耗系数")</th>
-                            <th>@T("焊材质量")</th>
-                        </tr>
-                    </thead>
-                </table>
+        .table_bottom_total {
+            height: 37px;
+            padding: 7px;
+            float: right;
+        }
+    </style>
+    <!--Action boxes-->
+    <div class="row">
+        <div class="col-sm-12">
+            <input type="hidden" id="beamId" value="@ViewBag.BeamId" />
+            <form class="form-inline" id="SearchForm">
+                <div class="form-group pull-right">
+                    <a href="ExportToExcel?beamId=@ViewBag.BeamId" class="btn btn-sm btn-success" data-toggle="tooltip" data-placement="top" title="导出Excel" id="btnScoreExport">
+                        <i class="fa fa-download"></i> 导出Excel
+                    </a>
+                </div>
+            </form>
+            <div class="clearfix"></div>
+
+            <div class="widget-box">
+                <div class="widget-content nopadding">
+                    <table class="table table-bordered table-hover data-table">
+                        <thead>
+                            <tr>
+                                <th style="width:5%;text-align:center;">@T("序号")</th>
+                                <th>@T("图号")</th>
+                                <th>@T("板件号")</th>
+                                <th>@T("焊缝类型")</th>
+                                <th>@T("板厚")</th>
+                                <th>@T("焊缝位置")</th>
+                                <th>@T("焊缝截面积")</th>
+                                <th>@T("焊缝长度")</th>
+                                <th>@T("焊缝数量")</th>
+                                <th>@T("梁段数量")</th>
+                                <th>@T("焊缝质量")</th>
+                                <th>@T("消耗系数")</th>
+                                <th>@T("焊材质量")</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
-@section scripts_Foot
+    @section scripts_Foot
 {
-    <script src="~/Scripts/EasyUI/jquery.easyui.min.js"></script>
-    <script src="http://static.runoob.com/assets/jquery-validation-1.14.0/dist/localization/messages_zh.js"></script>
-    <script type="text/javascript">
-        //$('[data-toggle="tooltip"]').tooltip();
-        var popMenu;
-        var IdCur;
+        <script src="~/Scripts/EasyUI/jquery.easyui.min.js"></script>
+        <script src="http://static.runoob.com/assets/jquery-validation-1.14.0/dist/localization/messages_zh.js"></script>
+        <script type="text/javascript">
+            //$('[data-toggle="tooltip"]').tooltip();
+            var popMenu;
+            var IdCur;
 
-        $(document).ready(function () {
-            LEAP.Common.MainPop.options.dataTable = $('.data-table').dataTable(jQuery.extend(true, datatableSetting, {
-                "ajax": {
-                    "url": "GetWeldingDetailList?beamId=" + $('#beamId').val()
-                },
-                "paging": true,
-                "info": false,
-                "aoColumns": [
-                    { "mData": 'Index' },
-                    { "mData": 'FigureNumber' },
-                    { "mData": 'BoardNumber' },
-                    { "mData": 'WeldType' },
-                    { "mData": 'Thickness' },
-                    { "mData": 'WeldLocation' },
-                    { "mData": 'SectionArea' },
-                    { "mData": 'WeldLength' },
-                    { "mData": 'Quantity' },
-                    { "mData": 'BeamNum' },
-                    { "mData": 'WeldQuanlity' },
-                    { "mData": 'ConsumeFactor' },
-                    { "mData": 'WeldingQuanlity' }
-                ],
-                "columnDefs": [{
-                    "targets": 0,
-                    "render": function (data, type, full, meta) {                       
-                        return full.Index;
+            $(document).ready(function () {
+                LEAP.Common.MainPop.options.dataTable = $('.data-table').dataTable(jQuery.extend(true, datatableSetting, {
+                    "ajax": {
+                        "url": "GetWeldingDetailList?beamId=" + $('#beamId').val()
+                    },
+                    "paging": true,
+                    "info": false,
+                    "aoColumns": [
+                        { "mData": 'Index' },
+                        { "mData": 'FigureNumber' },
+                        { "mData": 'BoardNumber' },
+                        { "mData": 'WeldType' },
+                        { "mData": 'Thickness' },
+                        { "mData": 'WeldLocation' },
+                        { "mData": 'SectionArea' },
+                        { "mData": 'WeldLength' },
+                        { "mData": 'Quantity' },
+                        { "mData": 'BeamNum' },
+                        { "mData": 'WeldQuanlity' },
+                        { "mData": 'ConsumeFactor' },
+                        { "mData": 'WeldingQuanlity' }
+                    ],
+                    "columnDefs": [{
+                        "targets": 0,
+                        "render": function (data, type, full, meta) {
+                            return full.Index;
+                        }
+                    }],
+                    fnDrawCallback: function () {
+                        $('[data-toggle="tooltip"]').tooltip();
+                        if ($('.total-count').length > 0) {
+                            $('.total-count').remove();
+                        }
+                        $('.dataTables_wrapper .dataTables_length').append('<label class="total-count" style="margin-left:30px">总条数：' + LEAP.Common.MainPop.options.dataTable.fnSettings().fnRecordsTotal() + '条</label>');
                     }
-                }],
-                fnDrawCallback: function () {
-                    $('[data-toggle="tooltip"]').tooltip();
-                    if ($('.total-count').length > 0) {
-                        $('.total-count').remove();
-                    }
-                    $('.dataTables_wrapper .dataTables_length').append('<label class="total-count" style="margin-left:30px">总条数：' + LEAP.Common.MainPop.options.dataTable.fnSettings().fnRecordsTotal() + '条</label>');
+                }));
+                //inital select2
+                $('.select2').css("width", "362px").select2({ allowClear: true });
+            });
+            $('#btnScoreExport').on('click', function () {
+                var para = '';
+                var beamId = $('#beamId').val();
+                if (!BeforeExport(dSearch)) {
+                    return false;
                 }
-            }));
-            //inital select2
-            $('.select2').css("width", "362px").select2({ allowClear: true });
-        });
-        $('#btnScoreExport').on('click', function () {
-            var para = '';
-            var beamId = $('#beamId').val();
-            if (!BeforeExport(dSearch)) {
-                return false;
-            }
-            para += 'beamId=' + beamId + '&';
-            $.download("ExportToExcel", para + "t=" + (new Date()).getTime());
-            return true;
-        });
-    </script>
-}
+                para += 'beamId=' + beamId + '&';
+                $.download("ExportToExcel", para + "t=" + (new Date()).getTime());
+                return true;
+            });
+        </script>
+    }
 
