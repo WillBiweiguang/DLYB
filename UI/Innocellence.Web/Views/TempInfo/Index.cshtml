@@ -28,8 +28,8 @@
                     <a href="#" class="btn btn-sm" id="btnSearch" data-toggle="tooltip" data-placement="top" title="查询条件"><i class="fa fa-search"></i>查询</a>
                 </div>
                 <div class="form-group pull-right">
-                    <a href="/BeamInfo/Index?ProjectId=@ViewBag.ProjectId" class="btn btn-info btn-sm" id="btnReturn" data-toggle="tooltip" data-placement="top" title="返回">
-                       返回
+                    <a href="/BeamInfo/Index?ProjectId=@ViewBag.ProjectId" class="btn btn-success btn-sm" id="btnReturn" data-toggle="tooltip" data-placement="top" title="返回">
+                        返回
                     </a>
                 </div>
             </form>
@@ -43,7 +43,7 @@
                             <tr>
                                 <th style="width:5%;text-align:center;">@T("ID")</th>
                                 <th>@T("项目名称")</th>
-                                <th>@T("文件名称")</th>
+                                <th>@T("PDF文件名")</th>
                                 <th>@T("梁段名")</th>
                                 <th>@T("图号")</th>
                                 @*<th>@T("杆件编号")</th>*@
@@ -70,7 +70,7 @@
             $(document).ready(function () {
                 LEAP.Common.MainPop.options.dataTable = $('.data-table').dataTable(jQuery.extend(true, datatableSetting, {
                     "ajax": {
-                        "url": "GetData"
+                        "url": "GetList"
                     },
                     "paging": true,
                     "info": false,
@@ -82,10 +82,15 @@
                         { "mData": 'FigureNumber' },
                         //{ "mData": 'BarNumber' },
                     ],
-                    "columnDefs": [
+                    "columnDefs": jQuery.extend(true, datatableSetting.columnDefs, [
                         {
-
-                        }],
+                            "targets": 0,
+                            "render": function (data, type, full, meta) {
+                                return meta.row + 1
+                                    ;
+                            }
+                        },
+                    ]),
                     fnDrawCallback: function () {
 
                         $('[data-toggle="tooltip"]').tooltip();

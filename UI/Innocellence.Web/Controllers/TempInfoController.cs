@@ -44,7 +44,7 @@ namespace Innocellence.Web.Controllers
             return View();
         }
 
-        public override ActionResult GetList()
+        public  ActionResult GetList1()
         {
             GridRequest gridRequest = new GridRequest(Request);
             string strCondition = Request["search_condition"];
@@ -64,21 +64,36 @@ namespace Innocellence.Web.Controllers
 
             return this.GetPageResult(listEx, gridRequest);
         }
-        public ActionResult GetData()
+        public override ActionResult GetList()
         {
             GridRequest gridRequest = new GridRequest(Request);
-            var list = _TempInfoService.Repository.Entities.Select
-                (x=> new TempInfoView { BeamName = x.BeamName, FileName = x.FileName, ProjectName =x.ProjectName, FigureNumber =x.FigureNumber }).Distinct().
-                  OrderBy(x => x.BeamName).
-                Skip(gridRequest.PageCondition.PageSize * gridRequest.PageCondition.RowCount).
-                Take(gridRequest.PageCondition.PageSize);
-
+            var list = new List<TempInfoView>();
+            string strCondition = Request["search_condition"];
+            if (!string.IsNullOrEmpty(strCondition))
+            {
+                list = _TempInfoService.Repository.Entities.
+                    Where(x => x.BeamName.Contains(strCondition) ||
+                x.FileName.Contains(strCondition) || x.ProjectName.Contains(strCondition) || x.FigureNumber.Contains(strCondition))
+                    .Select
+                  (x => new TempInfoView { BeamName = x.BeamName, FileName = x.FileName, ProjectName = x.ProjectName, FigureNumber = x.FigureNumber }).Distinct().
+                    OrderBy(x => x.BeamName).
+                  Skip(gridRequest.PageCondition.PageSize * gridRequest.PageCondition.RowCount).
+                  Take(gridRequest.PageCondition.PageSize).ToList();
+            }
+            else
+            {
+                list = _TempInfoService.Repository.Entities.Select
+                  (x => new TempInfoView { BeamName = x.BeamName, FileName = x.FileName, ProjectName = x.ProjectName, FigureNumber = x.FigureNumber }).Distinct().
+                    OrderBy(x => x.BeamName).
+                  Skip(gridRequest.PageCondition.PageSize * gridRequest.PageCondition.RowCount).
+                  Take(gridRequest.PageCondition.PageSize).ToList();
+            }
             return Json(new
             {
                 sEcho = Request["draw"],
                 iTotalRecords = gridRequest.PageCondition.RowCount,
                 iTotalDisplayRecords = gridRequest.PageCondition.RowCount,
-                aaData = list.ToList()
+                aaData = list
             }, JsonRequestBehavior.AllowGet);
         }
     }

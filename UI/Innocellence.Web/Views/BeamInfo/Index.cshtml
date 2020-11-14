@@ -35,12 +35,12 @@
             <div>
                 <input class="form-control" type="text" id="search_condition" name="search_condition" placeholder="文件名" onkeydown='if(event.keyCode==13) return false;'>
                 <a href="#" class="btn btn-info btn-sm" id="btnSearch" data-toggle="tooltip" data-placement="top" title="查询条件"><i class="fa fa-search">查询</i></a>
-                <a href="/TempInfo/index?ProjectId=@ViewBag.ProjectId" class="btn btn-info btn-sm" id="btnSearch1" data-toggle="tooltip" data-placement="top" title="查询条件"><i class="fa fa-search">梁段信息查询</i></a>
+                <a href="/TempInfo/index?ProjectId=@ViewBag.ProjectId" class="btn btn-primary btn-sm" id="btnSearch1" data-toggle="tooltip" data-placement="top" title="查询条件"><i class="fa fa-search">梁段信息查询</i></a>
                 <div class="form-group pull-right">
                     @*<a href="" class="btn btn-info btn-info" id="btnProject" data-toggle="tooltip" data-placement="top" title="项目管理">
                 项目管理
             </a>*@
-                    <a href="/Project/Index" class="btn btn-info btn-sm" id="btnReturn" data-toggle="tooltip" data-placement="top" title="返回">
+                    <a href="/Project/Index" class="btn btn-success btn-sm" id="btnReturn" data-toggle="tooltip" data-placement="top" title="返回">
                         项目管理
                     </a>
 
@@ -66,7 +66,7 @@
                             <th style="width:5%;text-align:center;">@T("ID")</th>
                             <th>@T("项目")</th>
                             <th>@T("梁段名")</th>
-                            <th>@T("文件名")</th>
+                            <th>@T("DWG文件名")</th>
                             <th>@T("梁段数量")</th>
                             @*<th>@T("上传进度")</th>*@
                             <th>@T("状态")</th>
@@ -199,7 +199,7 @@
                             if (full.TaskStatus != tastStatus.pending && full.TaskStatus != tastStatus.approved) {
                                 opstr = opstr + '<a href="#" onclick="CategoryStat( ' + full.ProjectId + ',' + full.Id + ');return false;" class="artDailog btn btn-info  btn-xs" style="margin-right:4px;" data-toggle="tooltip" data-placement="top" title="焊缝类别统计">类别统计</a>';
                                 if (full.ProcessStatus > 0) {
-                                    opstr = opstr + '<a href="#" onclick="weldcategory(' + full.ProjectId + ',' + full.Id + ');return false;" class="artDailog btn btn-info  btn-xs" style="margin-right:4px;" data-toggle="tooltip" data-placement="top" title="焊缝类别标注">类别标注</a>';
+                                    opstr = opstr + '<a href="#" onclick="weldcategory(' + full.ProjectId + ',' + full.Id + ');return false;" class="artDailog btn btn-primary btn-xs" style="margin-right:4px;" data-toggle="tooltip" data-placement="top" title="焊缝类别标注">类别标注</a>';
                                 }
                                 if (full.CreatedUserID == $('#currentUserId').val()) {
                                     opstr = opstr + '<a href="#" onclick="LEAP.Common.MainPop.RowClick(\'' + full.Id + '\',2);return false;" class="btn btn-danger btn-xs" id="btnDelete" data-toggle="tooltip" data-placement="top" title="删除"><i class="fa fa-trash-o"></i></a>';
@@ -209,7 +209,7 @@
                                 //    '<a href="#" onclick="LEAP.Common.MainPop.RowClick(\'' + full.Id + '\',2);return false;" class="btn btn-danger btn-xs" id="btnDelete" data-toggle="tooltip" data-placement="top" title="删除">' +
                                 //    '<i class="fa fa-trash-o"></i></a>';
                             } else {
-                                opstr = opstr + '<a href="#" onclick="weldcategory(' + full.ProjectId + ',' + full.Id + ', 1);return false;" class="artDailog btn btn-info  btn-xs" style="margin-right:4px;" data-toggle="tooltip" data-placement="top" title="查看焊缝标注"><i class="ace-icon glyphicon  glyphicon-eye-open"></i></a>';
+                                opstr = opstr + '<a href="#" onclick="weldcategory(' + full.ProjectId + ',' + full.Id + ', 1);return false;" class="artDailog btn btn-success  btn-xs" style="margin-right:4px;" data-toggle="tooltip" data-placement="top" title="查看焊缝标注"><i class="ace-icon glyphicon  glyphicon-eye-open"></i></a>';
                             }
                             return opstr;
                         }

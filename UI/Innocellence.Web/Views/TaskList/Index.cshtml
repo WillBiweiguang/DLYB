@@ -46,7 +46,7 @@
                 @*<a href="#" class="btn btn-info btn-sm" id="btnAdd" data-toggle="tooltip" data-placement="top" title="文件上传">
             文件上传
         </a>*@
-                <input class="form-control" type="text" id="search_condition" name="search_condition" placeholder="文件名">
+                <input class="form-control" type="text" id="search_condition" name="search_condition" placeholder="DWG文件名">
                 <input class="form-control" type="text" id="project_name" name="project_name" placeholder="项目名">
                 <select class="chosen-select form-control" id="task_status" name="task_status">
                     <option value="-1">选择审核状态</option>
@@ -56,7 +56,7 @@
                 </select>
                 <a href="#" class="btn btn-info btn-sm" id="btnSearch" data-toggle="tooltip" data-placement="top" title="查询条件" style="max-width:64px!important;"><i class="fa fa-search">查询</i></a>
                 <div class="form-group pull-right">
-                    <a href="#" class="btn btn-info btn-sm" id="btnDownload" data-toggle="tooltip" data-placement="top" title="下载">
+                    <a href="#" class="btn btn-success btn-sm" id="btnDownload" data-toggle="tooltip" data-placement="top" title="下载">
                         <i class="glyphicon glyphicon-arrow-down">批量下载</i>
                     </a>
                 </div>
@@ -369,7 +369,7 @@
                             if ((full.TaskStatus == tastStatus.new || full.TaskStatus == tastStatus.rejected) && (isapprover || userId == full.CreatedUserID)) {
                                 opstr = opstr + '<a href="#" onclick="raiseApproval(\'' + full.Id + '\');return false;" class="artDailog btn btn-info  btn-xs" style="margin-right:4px;" data-toggle="tooltip" data-placement="top" title="提交审核"><i class="ace-icon glyphicon glyphicon-cog"></i></a>';
                             }
-                            opstr = opstr + '<a href="#" onclick="weldcategory(' + full.ProjectId + ',' + full.BeamId + ', 1);return false;" class="artDailog btn btn-info  btn-xs" style="margin-right:4px;" data-toggle="tooltip" data-placement="top" title="查看焊缝标注"><i class="ace-icon glyphicon  glyphicon-eye-open"></i></a>';
+                            opstr = opstr + '<a href="#" onclick="weldcategory(' + full.ProjectId + ',' + full.BeamId + ', 1);return false;" class="artDailog btn btn-success btn-xs" style="margin-right:4px;" data-toggle="tooltip" data-placement="top" title="查看焊缝标注"><i class="ace-icon glyphicon  glyphicon-eye-open"></i></a>';
                             return opstr;
                         }
                     }],
