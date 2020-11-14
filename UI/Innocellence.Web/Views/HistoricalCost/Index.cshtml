@@ -165,6 +165,8 @@
                         bootbox.alert("上传成功");
                         LEAP.Common.MainPop.options.dataTable.fnDraw(false);
                     }
+                    $('#ModalTable .close').click();
+                    //清空文件状态
                     $('#upload-input').val('');
                 }
             });

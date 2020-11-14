@@ -374,7 +374,7 @@ function GetWelding() {
     var weldData = [];
     for (var i = 0; i < m_ResWeldArr.length; i++) {
         var handleArray = GetWeldHandle(m_ResWeldArr[i]);
-        weldData.push({ WeldType: m_ResWeldArr[i].myWelType, HandleID: m_ResWeldArr[i].myWelArrow.myArrowObjectID + ',' + handleArray.toString(), CircleId: m_ResWeldArr[i].circleHandle });
+        weldData.push({ WeldType: m_ResWeldArr[i].myWelType, HandleID: m_ResWeldArr[i].myWelArrow.myArrowObjectID + ',' + handleArray.toString() + ',' + m_ResWeldArr[i].circleHandle, CircleId: m_ResWeldArr[i].circleHandle });
     }
     saveWeldData(weldData, 0);
 }

@@ -28,13 +28,15 @@ namespace Innocellence.Web.Controllers
         private readonly IBeamInfoService _beamInfoService;
         private readonly IProjectService _projectService;
         private readonly ITaskListService _taskListService;
+        private readonly ITempInfoService _tempInfoService;
 
         public BeamInfoController(IBeamInfoService beamInfoService, IProjectService projectService,
-            ITaskListService taskListService) : base(beamInfoService)
+            ITaskListService taskListService,ITempInfoService tempInfoService) : base(beamInfoService)
         {
             _beamInfoService = beamInfoService;
             _projectService = projectService;
             _taskListService = taskListService;
+            _tempInfoService = tempInfoService;
         }
         // GET: Address
         public override ActionResult Index()
@@ -111,6 +113,8 @@ namespace Innocellence.Web.Controllers
                 return Json(GetErrorJson(), JsonRequestBehavior.AllowGet);
             }
             string repeatFiles = "";
+            string errorBeam = "";
+            var project = _projectService.GetList<ProjectView>(1, x => !x.IsDeleted && x.Id == ProjectId).FirstOrDefault();
             if (Request.Files.Count > 0)
             {
                 for (int i = 0; i < Request.Files.Count; i++)
@@ -119,8 +123,7 @@ namespace Innocellence.Web.Controllers
                     objModal = objModal ?? new BeamInfoView();
                     objModal.DwgFile = System.IO.Path.GetFileName(file.FileName);
                     objModal.ProjectId = ProjectId;
-                    objModal.BeamNum = 1;
-                    var project = _projectService.GetList<ProjectView>(1, x => !x.IsDeleted && x.Id == ProjectId).FirstOrDefault();
+                    objModal.BeamNum = 1;                    
                     if (project != null)
                     {
                         objModal.ProjectName = project.ProjectName;
@@ -137,6 +140,11 @@ namespace Innocellence.Web.Controllers
                         System.IO.Directory.CreateDirectory(Server.MapPath("/Files/BeamInfo/" + ProjectId + SLASH));
                     }
                     string path = "/Files/BeamInfo/" + ProjectId + SLASH + objModal.DwgFile;
+                    if (!_tempInfoService.Repository.Entities.Any(x => x.ProjectName == project.ProjectName && x.AffiliatedInstitution == project.AffiliatedInstitution && x.BeamName == objModal.BridgeComponent))
+                    {
+                        errorBeam += objModal.BridgeComponent + ",";
+                        continue;
+                    }
                     var beam = _beamInfoService.GetList<BeamInfoView>(1, x => !x.IsDeleted && x.ProjectId == ProjectId && x.DwgFile == objModal.DwgFile).FirstOrDefault();
                     if (beam == null || !System.IO.File.Exists(Server.MapPath(path)))
                     {
@@ -157,11 +165,14 @@ namespace Innocellence.Web.Controllers
                     }
                 }
             }
-            if (!string.IsNullOrEmpty(repeatFiles))
+            if (!string.IsNullOrEmpty(repeatFiles) || !string.IsNullOrEmpty(errorBeam))
             {
                 repeatFiles = repeatFiles.TrimEnd(',');
-                AjaxResult<int> result = new AjaxResult<int>();            
-                result.Message = new JsonMessage(103, "文件：" + repeatFiles + "已存在，请勿重复上传");
+                errorBeam = errorBeam.TrimEnd(',');
+                string errMsg = string.IsNullOrEmpty(repeatFiles) ? "" : "文件：" + repeatFiles + "已存在，请勿重复上传.";
+                errMsg = string.IsNullOrEmpty(errorBeam) ? errMsg : errMsg + "梁段：" + errorBeam + "不存在.";
+                AjaxResult<int> result = new AjaxResult<int>();
+                result.Message = new JsonMessage(103, errMsg);
                 return Json(result, JsonRequestBehavior.AllowGet);
             }
             return Json(doJson(null), JsonRequestBehavior.AllowGet);
