@@ -169,6 +169,16 @@ namespace DLYB.Web.Controllers
 
             List<WeldCategoryStatisticsVView> listEx = _wcsvService.GetList<WeldCategoryStatisticsVView>(expression, gridRequest.PageCondition);
             listEx = TableListHelper.GenerateIndex(listEx, gridRequest.PageCondition);
+            var query = from s in listEx
+                        join l in _weldCategoryService.Repository.Entities.Where(x => !x.IsDeleted) 
+                        on new { s.BeamId, WeldingModel = s.WeldingModel } equals new { l.BeamId, WeldingModel = l.WeldingType }
+                        group l by s.WeldingModel into g
+                        select new KeyValuePair<string, double>(g.Key, g.Sum(x => x.WeldQuanlity));
+            var qualities = query.ToList();
+            listEx.ForEach(x => { if (qualities.Any(p => p.Key == x.WeldingModel))
+                {
+                    x.Quality = qualities.First(p => p.Key == x.WeldingModel).Value;
+                } });
             return this.GetPageResult(listEx, gridRequest);
         }
         [HttpPost]
@@ -301,6 +311,19 @@ namespace DLYB.Web.Controllers
                     //query.Where(a => a.ProjectName.Contains(strCondition));
                 }
                 var reportList1 = _wcsvService.GetList<WeldCategoryStatisticsVView>(int.MaxValue, expression).ToList();
+                //获取总质量
+                var query = from s in reportList1
+                            join l in _weldCategoryService.Repository.Entities.Where(x => !x.IsDeleted)
+                            on new { s.BeamId, WeldingModel = s.WeldingModel } equals new { l.BeamId, WeldingModel = l.WeldingType }
+                            group l by s.WeldingModel into g
+                            select new KeyValuePair<string, double>(g.Key, g.Sum(x => x.WeldQuanlity));
+                var qualities = query.ToList();
+                reportList1.ForEach(x => {
+                    if (qualities.Any(p => p.Key == x.WeldingModel))
+                    {
+                        x.Quality = qualities.First(p => p.Key == x.WeldingModel).Value;
+                    }
+                });
                 int i = 1;
                 ;
                 foreach (var v in reportList1)
@@ -317,6 +340,7 @@ namespace DLYB.Web.Controllers
                     if (welding != null)
                     {
                         row.CreateCell(j++).SetCellValue(welding.WeldingSpecific);
+                        row.CreateCell(j++).SetCellValue(v.Quality);
                         row.CreateCell(j++).SetCellValue(welding.WeldingUnit);
                     }
 

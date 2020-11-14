@@ -43,6 +43,13 @@ namespace Infrastructure.Web.Domain.ModelsView
 
         public string AffiliatedInstitution { get; set; }
 
+        public double Quality { get; set; }
+
+        public string WeldingSpecific { get; set; }
+
+        public string WeldingUnit { get; set; }
+
+
         public IViewModel ConvertAPIModel(object obj) {
             var entity = (WeldCategoryStatisticsV)obj;
             Id = entity.Id;
@@ -62,6 +69,8 @@ namespace Infrastructure.Web.Domain.ModelsView
             IsDeleted = entity.IsDeleted;
             BeamId = entity.BeamId;
             AffiliatedInstitution = entity.AffiliatedInstitution;
+            WeldingSpecific = entity.WeldingSpecific;
+            WeldingUnit = entity.WeldingUnit;
             return this;
         }
 	}
