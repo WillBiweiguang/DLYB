@@ -61,7 +61,8 @@ namespace DLYB.Web.Controllers
             }
             ViewBag.isApprover = role != null && role.RoleId == 1 ? 1 : 0;
             ViewBag.UserId = objLoginInfo.Id;
-            ViewBag.list = _weldCategoryService.Repository.Entities.Where(a => !a.IsDeleted).ToList();
+           // ViewBag.list = _weldCategoryService.Repository.Entities.Where(a => !a.IsDeleted).
+                //Select(x=>x.BeamId).ToList();
             ViewBag.Stat = _wcsvService.Repository.Entities.Where(a => !a.IsDeleted).ToList();
             ViewBag.ThirdNav = "审核列表";
             return View();
@@ -250,7 +251,7 @@ namespace DLYB.Web.Controllers
                     row.CreateCell(j++).SetCellValue(v.WeldLocation);
                     row.CreateCell(j++).SetCellValue(v.SectionArea);
                     row.CreateCell(j++).SetCellValue(v.WeldLength);
-                    row.CreateCell(j++).SetCellValue(v.WeldingNumber);
+                    //row.CreateCell(j++).SetCellValue(v.WeldingNumber);
                     row.CreateCell(j++).SetCellValue(v.Quantity);
                     row.CreateCell(j++).SetCellValue(v.BeamNum.HasValue ? v.BeamNum.Value : 0);
                     row.CreateCell(j++).SetCellValue(v.WeldQuanlity);

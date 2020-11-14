@@ -39,6 +39,8 @@ namespace Innocellence.Web.Controllers
         // GET: Address
         public override ActionResult Index()
         {
+            string projectId = Request["projectId"];
+            ViewBag.ProjectId = projectId;
             return View();
         }
 
