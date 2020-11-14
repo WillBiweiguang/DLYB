@@ -64,7 +64,7 @@ namespace DLYB.Web.Controllers
 
         [HttpPost]
         [ValidateInput(true)]
-        public ActionResult PostFile(HistoricalCostView objModal, string Id)
+        public ActionResult PostFile(HistoricalCostView objModal, int projectId)
         {
             //验证错误
             if (!ModelState.IsValid)
@@ -76,18 +76,25 @@ namespace DLYB.Web.Controllers
                 var file = Request.Files[0];
                 objModal = objModal ?? new HistoricalCostView();
                 objModal.HistoricalFile = file.FileName;
+                objModal.ProjectId = projectId;
                 var fileExtension = System.IO.Path.GetExtension(file.FileName);
+                string path = $"/Files/HistoricalCost/{projectId}/{file.FileName}";
                 if (fileExtension.ToLower() != ".xls" && fileExtension.ToLower() != ".xlsx")
                 {
                     var result = GetErrorJson();
                     result.Message = new JsonMessage(103, "请上传excel文件");
                     return Json(result, JsonRequestBehavior.AllowGet);
                 }
-                if (!System.IO.Directory.Exists(Server.MapPath("/Files/HistoricalCost/")))
+                if (_service.Repository.Entities.Any(x => !x.IsDeleted && x.ProjectId == projectId && x.HistoricalFile == objModal.HistoricalFile))
                 {
-                    System.IO.Directory.CreateDirectory(Server.MapPath("/Files/HistoricalCost/"));
+                    var result = GetErrorJson();
+                    result.Message = new JsonMessage(103, "文件已存在");
+                    return Json(result, JsonRequestBehavior.AllowGet);
                 }
-                string path = "/Files/HistoricalCost/" + file.FileName;
+                if (!System.IO.Directory.Exists(Server.MapPath($"/Files/HistoricalCost/{projectId}/")))
+                {
+                    System.IO.Directory.CreateDirectory(Server.MapPath($"/Files/HistoricalCost/{projectId}/"));
+                }                
                 file.SaveAs(Server.MapPath(path));
                 _service.InsertView(objModal);
             }

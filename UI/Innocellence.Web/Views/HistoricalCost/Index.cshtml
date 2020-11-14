@@ -159,8 +159,8 @@
                 rewriteDocumentId: '',
                 processBarId: 'progress-bar',
                 callBack: function (data) {
-                    if (data.error) {
-                        bootbox.alert(data.error.message);
+                    if (data.Message.Status != 200) {
+                        bootbox.alert(data.Message.Text);
                     } else {
                         bootbox.alert("上传成功");
                         LEAP.Common.MainPop.options.dataTable.fnDraw(false);
