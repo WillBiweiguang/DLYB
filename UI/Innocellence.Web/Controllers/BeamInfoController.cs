@@ -106,7 +106,7 @@ namespace Innocellence.Web.Controllers
         [HttpPost]
         [ValidateInput(true)]
         public ActionResult PostFile(BeamInfoView objModal, int ProjectId)
-        {
+        {     
             //验证错误
             if (!ModelState.IsValid)
             {
