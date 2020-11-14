@@ -9,5 +9,7 @@ using Infrastructure.Web.Domain.ModelsView;
 
 namespace Infrastructure.Web.Domain.Contracts
 {
-    public interface IWeldCategoryLabelingService : IDependency, IBaseService<WeldCategoryLabeling> { }
+    public interface IWeldCategoryLabelingService : IDependency, IBaseService<WeldCategoryLabeling> {
+        List<WeldCategoryLabelingView> GetWeldCategoryQuerys();
+    }
 }

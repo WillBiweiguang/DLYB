@@ -16,6 +16,7 @@ namespace Infrastructure.Web.Domain.Entity
         public override int Id { get => base.Id; set => base.Id = value; }
         public int BeamId { get; set; }
         public string FigureNumber { get; set; }
+        public string BarNumber { get; set; }
         public string BoardNumber { get; set; }
         public string WeldType { get; set; }
         public double Thickness { get; set; }

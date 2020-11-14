@@ -67,8 +67,9 @@ namespace Innocellence.Web.Controllers
         public ActionResult GetData()
         {
             GridRequest gridRequest = new GridRequest(Request);
-            var list = _TempInfoService.Repository.Entities.Distinct().
-                  OrderBy(x => x.Id).
+            var list = _TempInfoService.Repository.Entities.Select
+                (x=> new TempInfoView { BeamName = x.BeamName, FileName = x.FileName, ProjectName =x.ProjectName, FigureNumber =x.FigureNumber }).Distinct().
+                  OrderBy(x => x.BeamName).
                 Skip(gridRequest.PageCondition.PageSize * gridRequest.PageCondition.RowCount).
                 Take(gridRequest.PageCondition.PageSize);
 

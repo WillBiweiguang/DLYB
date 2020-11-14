@@ -40,5 +40,14 @@ namespace Infrastructure.Web.Domain.Services
     /// </summary>
     public partial class WeldCategoryLabelingService : BaseService<WeldCategoryLabeling>, IWeldCategoryLabelingService
     {
+        public List<WeldCategoryLabelingView> GetWeldCategoryQuerys()
+        {
+            return Repository.Entities.Where(y => y.IsDeleted != true).Select(x => new WeldCategoryLabelingView()
+            {
+                FigureNumber = x.FigureNumber,
+                BarNumber = x.BarNumber,
+                BoardNumber = x.BoardNumber
+            }).Distinct().ToList();
+        }
     }
 }

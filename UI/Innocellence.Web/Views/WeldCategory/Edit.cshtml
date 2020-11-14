@@ -13,10 +13,12 @@
     .datagrid-mask-msg {
         height: 36px !important;
     }
+
     label.ClassName::before {
         content: '* ';
         color: red;
     }
+
     .main-container {
         overflow: scroll;
         min-height: 700px;
@@ -65,8 +67,9 @@
     .form-control {
         min-width: 160px !important;
     }
+
     .ui-dialog-content {
-        width: 300px!important;
+        width: 300px !important;
         max-width: 300px !important;
         max-height: 200px !important;
     }
@@ -87,13 +90,13 @@
 
             <div class="modal-body">
                 <form action="Post" id="ff" method="get" class="form-horizontal" datasource="Get">
-                    <input type="hidden" id="ID" name="ID" value="0" />
+                    <input type="hidden" id="ID" name="ID" value="@ViewBag.Id" />
                     <input type="hidden" id="Ids" name="Ids" value="@Model.Ids" />
                     <input type="hidden" id="beamId" name="beamId" value="@ViewBag.BeamId" />
                     <input type="hidden" id="HandleID" name="HandleID" value="" data-bind="value: HandleID" />
                     <input type="hidden" name="LengthVal" id="LengthVal" class="form-control" data-bind="value: LengthVal" />
                     <input type="hidden" name="WidthVal" id="WidthVal" class="form-control" data-bind="value: WidthVal" />
-                    <input type="hidden" name="BeamNum" id="BeamNum" class="form-control" value="4"/>
+                    <input type="hidden" name="BeamNum" id="BeamNum" class="form-control" value="4" />
                     <table>
                         <tr class="row">
                             <td class="first-td">
@@ -102,34 +105,52 @@
                             <td class="second-td">
                                 <div class="col-sm-7">
                                     <select class="single-select form-control" name="FigureNumber" id="FigureNumber" data-placeholder="请选择图号" data-bind="value: FigureNumber" title="图号">
-                                        @foreach (SelectListItem a in ViewBag.Figures)
+                                        @*@foreach (SelectListItem a in ViewBag.Figures)
                                         {
                                             if (!string.IsNullOrEmpty(a.Value))
                                             {
                                                 <option value="@a.Value">@a.Text</option>
                                             }
-                                        }
+                                        }*@
                                     </select>
                                 </div>
                             </td>
                             <td class="thrid-td">
-                                <label for="BoardNumber" class="col-sm-5 control-label ClassName">板件号:</label>
+                                <label for="BarNumber" class="col-sm-5 control-label ">杆件编号:</label>
                             </td>
                             <td>
                                 <div class="col-sm-7">
-                                    <select class="single-select form-control" name="BoardNumber" id="BoardNumber" data-placeholder="请选择板件号" data-bind="value: BoardNumber">
-                                        @foreach (SelectListItem a in ViewBag.Boards)
-                                        {
-                                            if (!string.IsNullOrEmpty(a.Value))
+                                    <select class="single-select form-control" name="BarNumber" id="BarNumber" data-placeholder="请选择杆件编号" data-bind="value: BarNumber">
+
+                                        @*@foreach (SelectListItem a in ViewBag.Bars)
                                             {
-                                                <option value="@a.Value">@a.Text</option>
-                                            }
-                                        }
+                                                if (!string.IsNullOrEmpty(a.Value))
+                                                {
+                                                    <option value="@a.Value">@a.Text</option>
+                                                }
+                                            }*@
+
                                     </select>
                                 </div>
                             </td>
                         </tr>
                         <tr class="row">
+                            <td class="thrid-td">
+                                <label for="BoardNumber" class="col-sm-5 control-label ClassName">钢板编号:</label>
+                            </td>
+                            <td>
+                                <div class="col-sm-7">
+                                    <select class="single-select form-control" name="BoardNumber" id="BoardNumber" data-placeholder="请选择钢板编号" data-bind="value: BoardNumber">
+                                        @*@foreach (SelectListItem a in ViewBag.Boards)
+                                            {
+                                                if (!string.IsNullOrEmpty(a.Value))
+                                                {
+                                                    <option value="@a.Value">@a.Text</option>
+                                                }
+                                            }*@
+                                    </select>
+                                </div>
+                            </td>
                             <td>
                                 <label class="col-sm-5 control-label ClassName">焊缝类型:</label>
                             </td>
@@ -147,6 +168,9 @@
                                 </div>
                             </td>
 
+
+                        </tr>
+                        <tr class="row">
                             <td>
                                 <label class="col-sm-5 control-label ClassName">焊缝位置:</label>
                             </td>
@@ -163,8 +187,6 @@
                                     </select>
                                 </div>
                             </td>
-                        </tr>
-                        <tr class="row">
                             <td>
                                 <label class="col-sm-5 control-label ClassName">焊接边数:</label>
                             </td>
@@ -183,6 +205,7 @@
                             </td>
 
                         </tr>
+                        <tr style="border:3px solid blue;"></tr>
                         <tr class="row">
                             <td>
                                 <label class="col-sm-5 control-label">焊缝长度:</label>
@@ -216,7 +239,7 @@
                             </td>
                             <td>
                                 <div class="col-sm-7">
-                                    <input type="text" name="MentalDensity" id="MentalDensity" class="form-control"  data-bind="value: MentalDensity" />
+                                    <input type="text" name="MentalDensity" id="MentalDensity" class="form-control" data-bind="value: MentalDensity" />
                                 </div>
                             </td>
                             <td>
@@ -236,7 +259,7 @@
                             </td>
                             <td>
                                 <div class="col-sm-7">
-                                    <select class="single-select form-control" name="WeldingType" id="WeldingType" data-placeholder="请选择焊材类型" validate="{required:true}" >
+                                    <select class="single-select form-control" name="WeldingType" id="WeldingType" data-placeholder="请选择焊材类型" validate="{required:true}">
                                         @foreach (string a in ViewBag.WeldingModels)
                                         {
                                             if (!string.IsNullOrEmpty(a))
@@ -263,9 +286,9 @@
 
 
                         </tr>
-                        
+
                         <tr class="row">
-                          
+
                             <td>
                                 <label class="col-sm-5 control-label ClassName">焊缝数量:</label>
                             </td>
@@ -281,7 +304,7 @@
                             <td>
                                 <div class="col-sm-7">
 
-                                    <input type="text" name="WeldQuanlity" id="WeldQuanlity" class="form-control"  data-bind="value: WeldQuanlity" />
+                                    <input type="text" name="WeldQuanlity" id="WeldQuanlity" class="form-control" data-bind="value: WeldQuanlity" />
                                 </div>
                             </td>
                         </tr>
@@ -313,6 +336,7 @@
 {
     <script src="~/Scripts/EasyUI/jquery.easyui.min.js"></script>
     <script src="http://static.runoob.com/assets/jquery-validation-1.14.0/dist/localization/messages_zh.js"></script>
+    <script src="~/Scripts/linq/linq.min.js"></script>
     <script type="text/javascript">
         //$('[data-toggle="tooltip"]').tooltip();
         var popMenu;
@@ -391,6 +415,89 @@
         //    // 弹出框动作
         //    $('#frameContainer').show();
         //});
+        var FigureNumber = document.getElementById('FigureNumber');
+        var BoardNumber = document.getElementById('BoardNumber');
+        var BarNumber = document.getElementById('BarNumber');
+        //杆件编号
+        $("#FigureNumber").change(function () {
+            $('#BarNumber').empty();
+            $('#BoardNumber').empty();
+
+            if ($("#BarNumber").val() != '') {
+                //showChild(TherapeuticArea, TradeName, tradeNameArr, $('#TradeName'));
+                var queryResult = Enumerable.From(BiddingQuerys)
+                    .Where(function (x) { return x.FigureNumber == FigureNumber.value })
+                    .Select(function (x) { return x.BarNumber }).Distinct().ToArray();
+                showChild1(BarNumber, queryResult);
+                $('#BarNumber').removeAttr("disabled");
+                var queryResult1 = Enumerable.From(BiddingQuerys)
+                    .Where(function (x) {
+                        return x.FigureNumber == FigureNumber.value
+                    })
+                    .Select(function (x) { return x.BoardNumber }).Distinct().ToArray();
+                showChild1(BoardNumber, queryResult1);
+                $('#BoardNumber').removeAttr("disabled");
+            }
+        });
+        // 钢板编号
+        $('#BarNumber').change(function () {
+
+            $('#BoardNumber').empty();
+
+            //showChild(TradeName, DosageForm, dosageFormArr, $('#DosageForm'));
+            var queryResult = Enumerable.From(BiddingQuerys)
+                .Where(function (x) {
+                    return x.FigureNumber == FigureNumber.value && x.BarNumber == BarNumber.value
+                })
+                .Select(function (x) { return x.BoardNumber }).Distinct().ToArray();
+            showChild1(BoardNumber, queryResult);
+            $('#BoardNumber').removeAttr("disabled");
+
+        });
+        $.ajax({
+            cache: true,
+            type: "GET",
+            url: "GetWeldSearchQuerys?ID=" + $('#ID').val(),
+            async: true,
+            error: function (request) {
+                artDialog.alert("查询条件信息获取失败。");
+            },
+            success: function (data) {
+                if (data == null) {
+                    artDialog.alert("查询条件信息获取失败。");
+                    return;
+                }
+                BiddingQuerys = data;
+                var queryResult = Enumerable.From(BiddingQuerys)
+                    .Select(function (x) { return x.FigureNumber })
+                    .Distinct()
+                    .ToArray();
+                showChild1(FigureNumber, queryResult);
+            }
+        });
+
+
+        function showChild1(child, childArr) {
+            //child.empty();
+            var count = childArr.length;
+
+            var childOption = document.createElement('option');
+            //ie不支持option对象的value,所以加childOption.text
+            childOption.value = childOption.text = '';
+            child.options.add(childOption);
+
+            for (var i = 0; i < count; i++) {
+                //判断所选的值即父类，与当前节点第一个数组元素是否相市'
+                //不取第一个数组元市'因为第一个是父类，所以j市'开始，而不市'
+
+                childOption = document.createElement('option');
+                //ie不支持option对象的value,所以加childOption.text
+                childOption.value = childOption.text = childArr[i];
+                child.options.add(childOption);
+
+            }
+        }
+
         $(document).on('change', '#BoardNumber', function () {
             var postVaule = { "FigureNumber": $("#FigureNumber").val(), "BoardNumber": $("#BoardNumber").val() }
             var jsonVaule = JSON.stringify(postVaule);
@@ -421,27 +528,27 @@
 
             if (txt == '长') {
                 $("#WeldLength").val($("#LengthVal").val());
-                
+
             }
             if (txt == '宽') {
                 $("#WeldLength").val($("#WidthVal").val());
-               
+
             }
             if (txt == '长+宽') {
                 $("#WeldLength").val(parseInt($("#LengthVal").val()) + parseInt($("#WidthVal").val()));
-               
+
             }
             if (txt == '2*宽+长') {
                 $("#WeldLength").val(2 * parseInt($("#WidthVal").val()) + parseInt($("#LengthVal").val()));
-               
+
             }
             if (txt == '2*长+宽') {
                 $("#WeldLength").val(2 * parseInt($("#LengthVal").val()) + parseInt($("#WidthVal").val()));
-               
+
             }
             if (txt == '2*(长+宽)') {
                 $("#WeldLength").val(2 * (parseInt($("#LengthVal").val()) + parseInt($("#WidthVal").val())));
-             
+
             }
 
             WeldQuantity();
@@ -460,42 +567,42 @@
         function WeldQuantity() {
             $("#WeldQuanlity").val($("#WeldLength").val() * $("#BeamNum").val()
                 * $("#Quantity").val() * $("#SectionArea").val() * 7.85 / 1000000)
-            $("#WeldQuanlity").val(Math.floor($("#WeldQuanlity").val() * 100) / 100); 
+            $("#WeldQuanlity").val(Math.floor($("#WeldQuanlity").val() * 100) / 100);
         }
         //焊缝数量
         $("input[name='Quantity']").keyup(function () {
             $(this).val($(this).val().replace(/[^0-9.]/g, ''));
-        }).bind("paste", function () {  //CTR+V事件处理    
+        }).bind("paste", function () {  //CTR+V事件处理
             $(this).val($(this).val().replace(/[^0-9.]/g, ''));
-        }).css("ime-mode", "disabled"); //CSS设置输入法不可用     
+        }).css("ime-mode", "disabled"); //CSS设置输入法不可用
         //焊缝长度
         $("input[name='WeldLength']").keyup(function () {
             $(this).val($(this).val().replace(/[^0-9.]/g, ''));
-        }).bind("paste", function () {  //CTR+V事件处理    
+        }).bind("paste", function () {  //CTR+V事件处理
             $(this).val($(this).val().replace(/[^0-9.]/g, ''));
-        }).css("ime-mode", "disabled"); //CSS设置输入法不可用   
+        }).css("ime-mode", "disabled"); //CSS设置输入法不可用
 
         //熔度
         $("input[name='MentalDensity']").keyup(function () {
             $(this).val($(this).val().replace(/[^0-9.]/g, ''));
-        }).bind("paste", function () {  //CTR+V事件处理    
+        }).bind("paste", function () {  //CTR+V事件处理
             $(this).val($(this).val().replace(/[^0-9.]/g, ''));
-        }).css("ime-mode", "disabled"); //CSS设置输入法不可用   
+        }).css("ime-mode", "disabled"); //CSS设置输入法不可用
 
         //消耗系数
         $("input[name='ConsumeFactor']").keyup(function () {
             $(this).val($(this).val().replace(/[^0-9.]/g, ''));
-        }).bind("paste", function () {  //CTR+V事件处理    
+        }).bind("paste", function () {  //CTR+V事件处理
             $(this).val($(this).val().replace(/[^0-9.]/g, ''));
-        }).css("ime-mode", "disabled"); //CSS设置输入法不可用    
+        }).css("ime-mode", "disabled"); //CSS设置输入法不可用
 
         //焊缝质量
         $("input[name='WeldQuanlity']").keyup(function () {
             var tmptxt = $(this).val();
             $(this).val($(this).val().replace(/[^0-9.]/g, ''));
-        }).bind("paste", function () {  //CTR+V事件处理    
+        }).bind("paste", function () {  //CTR+V事件处理
             $(this).val($(this).val().replace(/[^0-9.]/g, ''));
-        }).css("ime-mode", "disabled"); //CSS设置输入法不可用   
+        }).css("ime-mode", "disabled"); //CSS设置输入法不可用
 
         function saveWeldData(list, mode) {
             if (!list) {

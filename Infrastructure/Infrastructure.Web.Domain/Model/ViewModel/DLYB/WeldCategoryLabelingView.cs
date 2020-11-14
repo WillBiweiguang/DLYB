@@ -16,6 +16,8 @@ namespace Infrastructure.Web.Domain.ModelsView
         [Required(ErrorMessage = "图号是必填项")]
         public string FigureNumber { get; set; }
 
+        public string BarNumber { get; set; }
+
         [Required(ErrorMessage = "板件号是必填项")]
         public string BoardNumber { get; set; }
 
@@ -77,6 +79,7 @@ namespace Infrastructure.Web.Domain.ModelsView
             Id = entity.Id;
             BeamId = entity.BeamId;
             FigureNumber = entity.FigureNumber;
+            BarNumber = entity.BarNumber;
             BoardNumber = entity.BoardNumber;
             Thickness = entity.Thickness;
             WeldType = entity.WeldType;
