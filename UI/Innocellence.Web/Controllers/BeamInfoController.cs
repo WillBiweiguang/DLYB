@@ -186,14 +186,20 @@ namespace Innocellence.Web.Controllers
             return Json(doJson(null), JsonRequestBehavior.AllowGet);
         }
 
-        public ActionResult UpdateBeamNum(int beamId, int beamNum)
+        public ActionResult UpdateBeamNum(int beamId, int? beamNum)
         {
+            if(!beamNum.HasValue || beamNum <= 1)
+            {
+                var result = GetErrorJson();
+                result.Message.Text = "请输入大于1的整数";
+                return Json(result, JsonRequestBehavior.AllowGet);
+            }
             var beam = _beamInfoService.GetList<BeamInfoView>(1, x => !x.IsDeleted && x.Id == beamId).FirstOrDefault();
             if (beam == null || beamNum <= 0)
             {
                 return Json(GetErrorJson(), JsonRequestBehavior.AllowGet);
             }
-            beam.BeamNum = beamNum;
+            beam.BeamNum = beamNum.Value;
             _beamInfoService.UpdateView(beam);
             return Json(doJson(null), JsonRequestBehavior.AllowGet);
         }

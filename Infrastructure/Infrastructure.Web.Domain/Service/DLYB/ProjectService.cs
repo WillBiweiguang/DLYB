@@ -55,8 +55,8 @@ namespace Infrastructure.Web.Domain.Services
         public IList<HanjiProportionModel> HancaiQuanlityByType(LiMaiApiViewModel query)
         {
             string sql = @"select p.ProjectName, p.LmProjectId AS ProjectId, p.AffiliatedInstitution as Department, p.LmAffiliatedId AS AffiliatedId,  
-p.ProjectType as BridgeType, p.LmBridgeTypeId as BridgeTypeId, sum(t.ConsumeFactor  * t.WeldQuanlity / 100) as HanjiTotal, 
-sum(t.WeldQuanlity) as HancaiTotal, t.WeldingType as HanjiType
+p.ProjectType as BridgeType, p.LmBridgeTypeId as BridgeTypeId, sum(b.BeamNum * t.ConsumeFactor * t.WeldQuanlity / 100) as HanjiTotal, 
+sum(b.BeamNum * t.WeldQuanlity) as HancaiTotal, t.WeldingType as HanjiType
 from t_weldcategorylabeling t
 inner join t_BeamInfo b on t.BeamId = b.Id
 inner join t_ProjectInfo p on b.ProjectId = p.Id
@@ -90,7 +90,7 @@ group by p.ProjectName,p.LmProjectId, p.AffiliatedInstitution,p.LmAffiliatedId, 
         public IList<HanjiProportionModel> HancaiQuanlity(LiMaiApiViewModel query)
         {
             string sql = @"select p.ProjectName, p.AffiliatedInstitution as Department , p.ProjectType as BridgeType, p.LmProjectId, p.LmAffiliatedId, p.LmBridgeTypeId,
-sum(t.ConsumeFactor  * t.WeldQuanlity / 100) as HanjiTotal, sum(t.WeldQuanlity) as HancaiTotal 
+sum(b.BeamNum * t.ConsumeFactor  * t.WeldQuanlity / 100) as HanjiTotal, sum(b.BeamNum * t.WeldQuanlity) as HancaiTotal 
 from t_weldcategorylabeling t
 inner join t_BeamInfo b on t.BeamId = b.Id
 inner join t_ProjectInfo p on b.ProjectId = p.Id

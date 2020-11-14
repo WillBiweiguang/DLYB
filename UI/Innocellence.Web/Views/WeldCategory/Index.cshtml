@@ -39,7 +39,7 @@
             </div>*@
         <form class="form-inline" id="SearchForm" onsubmit="return false;">
             <div class="form-group">
-                <input class="form-control" type="text" id="search_condition" name="search_condition" placeholder="图号">
+                <input class="form-control" type="text" id="search_condition" name="search_condition" placeholder="图号" onkeydown='if(event.keyCode==13) return false;'>
                 <input id="locatedId" name="locatedId" type="hidden" value="0" />
                 <a href="#" class="btn btn-info btn-sm" id="btnSearch" data-toggle="tooltip" data-placement="top" title="查询" data-original-title="查询"><i class="fa fa-search">查询</i></a>
                 <input type="button" id="btnShowAll" class="btn btn-info  btn-sm" value="显示所有" style="display:none" onclick="showAll();">
@@ -50,7 +50,7 @@
                     <input type="button" id="weldingFinding" class="btn btn-info  btn-sm" value="焊接符号识别" data-toggle="tooltip" title="焊接符号识别" onclick="GetRecogedHandls();">
                     <input type="button" class="btn btn-info  btn-sm" value="提交审核" data-toggle="tooltip" title="提交审核" onclick="requestApprove();">
                     @*<input type="button" class="btn btn-sm" value="隐藏图层" onclick="DoCmd(3);">
-            <input type="button" class="btn btn-sm" value="显示图层" onclick="DoCmd(4);">*@
+                        <input type="button" class="btn btn-sm" value="显示图层" onclick="DoCmd(4);">*@
                     <input type="button" class="btn btn-info  btn-sm" value="顺时针转90度" data-toggle="tooltip" title="顺时针转90度" onclick="DoCmd(6);">
                     <input type="button" class="btn btn-info  btn-sm" value="逆时针转90度" data-toggle="tooltip" title="逆时针转90度" onclick="DoCmd(7)">
                     <input type="button" class="btn btn-info  btn-sm" value="批量编辑" data-toggle="tooltip" title="批量编辑" onclick="batchEdit()">
@@ -69,7 +69,7 @@
                     @*<a href="#" class="btn btn-info btn-sm" id="nextBeam" onclick="nextBeam(@ViewBag.ProjectId,@ViewBag.BeamId); return false;" data-toggle="tooltip" data-placement="top" title="进行下一梁段">
                             进行下一梁段
                         </a>*@
-                    <a href="~/beaminfo/index" class="btn btn-info btn-sm" id="nextBeam"  data-toggle="tooltip" data-placement="top" title="进行下一梁段">
+                    <a href="~/beaminfo/index" class="btn btn-info btn-sm" id="nextBeam" data-toggle="tooltip" data-placement="top" title="进行下一梁段">
                         进行下一梁段
                     </a>
                     <a href="#" class="btn btn-info btn-sm" id="btnSaveFile" data-toggle="tooltip" data-placement="top" title="保存文件">
@@ -236,12 +236,12 @@
                         </div>
 
                         @*<div class="form-group col-lg-6">
-                            <label class="col-sm-5 control-label">焊接边数:</label>
-                            <div class="col-sm-7">
+                                <label class="col-sm-5 control-label">焊接边数:</label>
+                                <div class="col-sm-7">
 
-                                <input type="text" name="WeldingNumber" id="WeldingNumber" class="form-control" validate="{required:true}" data-bind="value: WeldingNumber" />
-                            </div>
-                        </div>*@
+                                    <input type="text" name="WeldingNumber" id="WeldingNumber" class="form-control" validate="{required:true}" data-bind="value: WeldingNumber" />
+                                </div>
+                            </div>*@
                     </div>
                     <div class="row">
                         <div class="form-group col-lg-6">
@@ -405,7 +405,7 @@
                     $(this).attr('title', '折叠');
                 }
             });
-       
+
             $('#btnSaveFile').click(function () {
                 if (window.confirm("确定保存当前文件到服务器？")) {
                     if (lastCircleHandle) {
@@ -515,7 +515,7 @@
             }
 
             $.post('/WeldCategory/PostWeld',
-                { beamId: $('#beamId').val(), dwgfile: filename, weldList: list }
+                { beamId: $('#beamId').val(), dwgfile: filename, weldList: list, mode: mode }
             ).done(function (r) {
                 if (r.result != 'success') {
                     alert('操作失败');
@@ -568,7 +568,7 @@
             $.get('/WeldCategory/GetAllHandles', { 'beamId': $('#beamId').val(), 'v': Math.random() }).done(function (r) {
                 if (r.result == 'success') {
                     existingHandles = r.data;
-                } 
+                }
                 myclick5();
             });
         }

@@ -94,7 +94,7 @@ namespace Innocellence.FaultSearch.Controllers
 
         public JsonResult GetAllHandles(int beamId)
         {
-            var data = _weldCategoryService.GetList<WeldCategoryLabelingView>(int.MaxValue, x => x.BeamId == beamId && !x.IsDeleted && x.CircleId.HasValue).ToList();
+            var data = _weldCategoryService.GetList<WeldCategoryLabelingView>(int.MaxValue, x => x.BeamId == beamId && !x.IsDeleted && !string.IsNullOrEmpty(x.CircleId)).ToList();
             if(data !=null && data.Count > 0)
             {
                 var handles = data.Select(x => x.CircleId).ToList();

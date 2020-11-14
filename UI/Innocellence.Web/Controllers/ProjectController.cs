@@ -52,6 +52,7 @@ namespace Innocellence.Web.Controllers
             {
                 ViewBag.Layout = "~/Views/Shared/_LayoutWithoutMenu.cshtml";
             }
+            ViewBag.ThirdNav = "项目管理";
             return View();
         }
 
