@@ -154,9 +154,29 @@ namespace DLYB.Web.Controllers
         public ActionResult GetWeldingDownloadList()
         {
             GridRequest gridRequest = new GridRequest(Request);
-            string strCondition = Request["search_condition"];
             Expression<Func<WeldCategoryStatisticsV, bool>> expression = FilterHelper.GetExpression<WeldCategoryStatisticsV>(gridRequest.FilterGroup);
             expression = expression.AndAlso<WeldCategoryStatisticsV>(x => x.IsDeleted != true);
+            IEnumerable<WeldCategoryStatisticsVView> queryList = GetBatchWeldingListQuery(ref expression);
+            //if (!string.IsNullOrEmpty(objLoginInfo.Department))
+            //{
+            //    var department = objLoginInfo.Department.Split('_')[1];
+            //    query = query.Where(x => x.AffiliatedInstitution == department);
+            //}
+            //if (!string.IsNullOrEmpty(strCondition))
+            //{
+            //    query = query.Where(x => x.ProjectName.Contains(strCondition));
+            //}
+            var listEx = queryList.Distinct().Skip((gridRequest.PageCondition.PageIndex - 1) * gridRequest.PageCondition.PageSize)
+                .Take(gridRequest.PageCondition.PageSize).ToList();
+            //List<WeldCategoryStatisticsVView> listEx = _wcsvService.GetList<WeldCategoryStatisticsVView>(expression, gridRequest.PageCondition);
+            //GetWeldQuality(listEx);
+            listEx = TableListHelper.GenerateIndex(listEx, gridRequest.PageCondition);
+            return this.GetPageResult(listEx, gridRequest);
+        }
+
+        private IEnumerable<WeldCategoryStatisticsVView> GetBatchWeldingListQuery(ref Expression<Func<WeldCategoryStatisticsV, bool>> expression)
+        {
+            string strCondition = Request["search_condition"];
             if (!string.IsNullOrEmpty(objLoginInfo.Department))
             {
                 var department = objLoginInfo.Department.Split('_')[1];
@@ -166,22 +186,59 @@ namespace DLYB.Web.Controllers
             {
                 expression = expression.AndAlso<WeldCategoryStatisticsV>(x => x.ProjectName.Contains(strCondition));
             }
-            int rowCount = gridRequest.PageCondition.RowCount;
+            //实际不需要group 2次，没有任何作用。
+            var query = from s in _wcsvService.GetList<WeldCategoryStatisticsVView>(int.MaxValue, expression)
+                        join l in _weldCategoryService.GetList<WeldCategoryLabelingView>(int.MaxValue, x => !x.IsDeleted)
+                        on new { s.BeamId, s.WeldType, s.WeldingModel } equals new { l.BeamId, l.WeldType, WeldingModel = l.WeldingType }
+                        group l by new
+                        {
+                            s.AffiliatedInstitution,
+                            s.ProjectName,
+                            s.AddressName,
+                            s.WeldType,
+                            s.WeldingModel,
+                            s.WeldingSpecific,
+                            s.WeldingUnit,
+                            s.BeamId
+                        } into g
+                        select new WeldCategoryStatisticsVView
+                        {
+                            AffiliatedInstitution = g.Key.AffiliatedInstitution,
+                            ProjectName = g.Key.ProjectName,
+                            AddressName = g.Key.AddressName,
+                            WeldType = g.Key.WeldType,
+                            WeldingModel = g.Key.WeldingModel,
+                            WeldingSpecific = g.Key.WeldingSpecific,
+                            WeldingUnit = g.Key.WeldingUnit,
+                            BeamId = g.Key.BeamId,
+                            Quality = g.Sum(x => x.WeldingQuanlity.Value)
+                        };
 
-            List<WeldCategoryStatisticsVView> listEx = _wcsvService.GetList<WeldCategoryStatisticsVView>(expression, gridRequest.PageCondition);
-            listEx = TableListHelper.GenerateIndex(listEx, gridRequest.PageCondition);
-            var query = from s in listEx
-                        join l in _weldCategoryService.Repository.Entities.Where(x => !x.IsDeleted) 
-                        on new { s.BeamId, WeldingModel = s.WeldingModel } equals new { l.BeamId, WeldingModel = l.WeldingType }
-                        group l by s.WeldingModel into g
-                        select new KeyValuePair<string, double>(g.Key, g.Sum(x => x.WeldQuanlity));
-            var qualities = query.ToList();
-            listEx.ForEach(x => { if (qualities.Any(p => p.Key == x.WeldingModel))
-                {
-                    x.Quality = qualities.First(p => p.Key == x.WeldingModel).Value;
-                } });
-            return this.GetPageResult(listEx, gridRequest);
+            var queryList = from s in query
+                            group s by new
+                            {
+                                s.AffiliatedInstitution,
+                                s.ProjectName,
+                                s.AddressName,
+                                s.WeldType,
+                                s.WeldingModel,
+                                s.WeldingSpecific,
+                                s.WeldingUnit
+                            } into g
+                            select new WeldCategoryStatisticsVView
+                            {
+                                AffiliatedInstitution = g.Key.AffiliatedInstitution,
+                                ProjectName = g.Key.ProjectName,
+                                AddressName = g.Key.AddressName,
+                                WeldType = g.Key.WeldType,
+                                WeldingModel = g.Key.WeldingModel,
+                                WeldingSpecific = g.Key.WeldingSpecific,
+                                WeldingUnit = g.Key.WeldingUnit,
+                                Quality = g.Sum(x => x.Quality)
+                            };
+            return queryList;
         }
+
         [HttpPost]
         [ValidateInput(true)]
         public ActionResult PostFile(TaskListView objModal, int ProjectName)
@@ -284,49 +341,26 @@ namespace DLYB.Web.Controllers
             }
 
         }
-        public ActionResult ExportToExcelDownload(int beamId = 0)
+        public ActionResult ExportToExcelDownload(int beamId = 0, string Ids = "")
         {
             string fileName = "批量焊材_" + DateTime.Now.ToString("yyyyMMddHHmmssfff") + ".xlsx";
-
+    
             string templateFilename = Server.MapPath(templateExcelFilenameDownload);
             using (FileStream file = new FileStream(templateFilename, FileMode.Open, FileAccess.Read))
             {
                 var workbook = new XSSFWorkbook(file);
                 var sheet1 = workbook.GetSheet("焊材");
-
-                //var query = _wcsvService.Repository.Entities.Where(a => !a.IsDeleted);
+                
 
                 Expression<Func<WeldCategoryStatisticsV, bool>> expression = (x) => !x.IsDeleted;
-                //var query = _wcsvService.Repository.Entities.Where(a => !a.IsDeleted);
-                string strCondition = Request["search_condition"];
-
-                if (!string.IsNullOrEmpty(objLoginInfo.Department))
+                if (!string.IsNullOrEmpty(Ids))
                 {
-                    var department = objLoginInfo.Department.Split('_')[1];
-                    expression = expression.AndAlso<WeldCategoryStatisticsV>(x => x.AffiliatedInstitution == department);
-                    //query.Where(a => a.DepartmentID == departmentid);
+                    var selectedIds = Ids.TrimEnd(',').Split(',');
+                    expression = expression.AndAlso<WeldCategoryStatisticsV>(x => selectedIds.Contains(x.Id.ToString()));
                 }
-                if (!string.IsNullOrEmpty(strCondition))
-                {
-                    expression = expression.AndAlso<WeldCategoryStatisticsV>(x => x.ProjectName.Contains(strCondition));
-                    //query.Where(a => a.ProjectName.Contains(strCondition));
-                }
-                var reportList1 = _wcsvService.GetList<WeldCategoryStatisticsVView>(int.MaxValue, expression).ToList();
-                //获取总质量
-                var query = from s in reportList1
-                            join l in _weldCategoryService.Repository.Entities.Where(x => !x.IsDeleted)
-                            on new { s.BeamId, WeldingModel = s.WeldingModel } equals new { l.BeamId, WeldingModel = l.WeldingType }
-                            group l by s.WeldingModel into g
-                            select new KeyValuePair<string, double>(g.Key, g.Sum(x => x.WeldQuanlity));
-                var qualities = query.ToList();
-                reportList1.ForEach(x => {
-                    if (qualities.Any(p => p.Key == x.WeldingModel))
-                    {
-                        x.Quality = qualities.First(p => p.Key == x.WeldingModel).Value;
-                    }
-                });
-                int i = 1;
-                ;
+                IEnumerable<WeldCategoryStatisticsVView> queryList = GetBatchWeldingListQuery(ref expression);
+                var reportList1 = queryList.ToList();
+                int i = 1;                
                 foreach (var v in reportList1)
                 {
                     var welding = _weldingService.Repository.Entities.FirstOrDefault(x => x.WeldingModel == v.WeldingModel);
@@ -359,6 +393,31 @@ namespace DLYB.Web.Controllers
                 }
             }
         }
+
+        private void GetWeldQuality(List<WeldCategoryStatisticsVView> viewlist)
+        {            
+            var beams = viewlist.Select(x => x.BeamId);
+            //var query = _weldCategoryService.Repository.Entities.Where(x => !x.IsDeleted && beams.Contains(x.BeamId)).ToList();
+            var query = from s in viewlist
+                        join l in _weldCategoryService.Repository.Entities.Where(x => !x.IsDeleted)
+                        on new { s.BeamId, WeldingModel = s.WeldingModel } equals new { l.BeamId, WeldingModel = l.WeldingType }
+                        group l by new { s.ProjectName, s.AddressName, s.WeldingModel } into g
+                        select new KeyValuePair<WeldCategoryStatisticsVView, double>(
+                            new WeldCategoryStatisticsVView
+                            {
+                                ProjectName = g.Key.ProjectName,
+                                AddressName = g.Key.AddressName,
+                                WeldingModel = g.Key.WeldingModel
+                            },
+                            g.Sum(x => x.WeldQuanlity));
+            var qualities = query.ToList();
+            viewlist.ForEach(x =>
+            {
+                var item = qualities.FirstOrDefault(p => p.Key.WeldingModel == x.WeldingModel && p.Key.ProjectName == x.ProjectName && p.Key.AddressName == x.AddressName);
+                x.Quality = item.Value;
+            });
+        }
+
         public ActionResult ApproveTask(int Id, int option)
         {
             var task = _TaskListService.GetList<TaskListView>(1, x => !x.IsDeleted && x.Id == Id).FirstOrDefault();

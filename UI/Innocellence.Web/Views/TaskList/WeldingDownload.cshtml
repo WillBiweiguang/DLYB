@@ -56,9 +56,9 @@
             <a href="#" class="btn btn-info btn-sm" id="btnSearch" data-toggle="tooltip" data-placement="top" title="查询条件"><i class="fa fa-search">查询</i></a>
         </div>
         <div class="form-group pull-right">
-            <a href="ExportToExcelDownload" class="btn btn-sm btn-success" data-toggle="tooltip" data-placement="top" title="导出Excel" id="btnDownloadExport">
+            <span href="ExportToExcelDownload" class="btn btn-sm btn-success" data-toggle="tooltip" data-placement="top" title="导出Excel" id="btnDownloadExport">
                 <i class="fa fa-download"></i> 导出Excel
-            </a>
+            </span>
         </div>
     </form>
     <div class="clearfix"></div>
@@ -69,6 +69,7 @@
                 <table class="table table-bordered table-hover data-table">
                     <thead>
                         <tr>
+                            
                             <th style="width:5%;text-align:center;">@T("序号")</th>
                             <th>@T("项目名称")</th>
                             <th>@T("厂址")</th>
@@ -120,6 +121,7 @@
                         "targets": 0,
                         "render": function (data, type, full, meta) {
                             return full.Index;
+                            //return '<input type="checkbox" value="' + full.Id + '" title="' + full.Index + '" id="checkbox" />';
                         }
                     }],
                 fnDrawCallback: function () {
@@ -148,10 +150,19 @@
                 $('#btnDownloadExport').attr('href', "ExportToExcelDownload?" + para + "t=" + (new Date()).getTime());
             });
         });
-        //$(document).on('click', '.pop-btn', function () {
-        //    $('#ModalTableDetail').modal(500);
-        //    $('#ModalTable').modal('hide');
-        //});
+        $(document).on('click', '#btnDownloadExport', function () {
+            var idPara = '';
+            var ids = '';
+            $('.data-table td input[type=checkbox]').each(function (index, ctr) {
+                if (ctr.checked) {
+                    ids += $(ctr).val() + ',';
+                }
+            });
+            if (ids.length > 0) {
+                idPara = '&Ids=' + ids;
+            }
+            window.location.href = $('#btnDownloadExport').attr('href') + idPara;
+        });
     </script>
 }
 

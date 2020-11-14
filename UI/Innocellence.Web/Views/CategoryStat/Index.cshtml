@@ -149,7 +149,7 @@
                         <div class="form-group">
                             <label class="col-sm-3 control-label">厂址:</label>
                             <div class="col-sm-9">
-                                <select class="single-select form-control" id="AddressName" name="AddressId" style="" data-bind="value:AddressId" validate="{required:true}" data-geturl="/Address/GetDropdownList"></select>
+                                <select class="chosen-select form-control" id="AddressName" name="AddressId" style="" data-bind="value:AddressId" validate="{required:true}" data-geturl="/Address/GetDropdownList"></select>
                                 @if (ViewBag.IsAdmin)
                                 {
                                     <span class="func-btn redirect-btn" href="/Address/Index">厂址管理</span>
@@ -161,7 +161,7 @@
                         <div class="form-group">
                             <label class="col-sm-3 control-label">焊缝类型:</label>
                             <div class="col-sm-9">
-                                <select class="single-select form-control" id="WeldType" name="WeldTypeId" style="" data-bind="value:WeldTypeId" validate="{required:true}" data-geturl="/WeldGeometry/GetDropdownList"></select>
+                                <select class="chosen-select form-control" id="WeldType" name="WeldTypeId" style="" data-bind="value:WeldTypeId" validate="{required:true}" data-geturl="/WeldGeometry/GetDropdownList"></select>
                                 @if (ViewBag.IsAdmin)
                                 {
                                     <span class="func-btn redirect-btn" href="/WeldGeometry/Index">焊缝类型管理</span>
@@ -173,7 +173,7 @@
                         <div class="form-group">
                             <label class="col-sm-3 control-label">焊缝位置:</label>
                             <div class="col-sm-9">
-                                <select class="single-select form-control" id="WeldLocationType" name="WeldLocationId" style="" data-bind="value: WeldLocationId" validate="{required:true}" data-geturl="/WeldLocation/GetDropdownList"></select>
+                                <select class="chosen-select form-control" id="WeldLocationType" name="WeldLocationId" style="" data-bind="value: WeldLocationId" validate="{required:true}" data-geturl="/WeldLocation/GetDropdownList"></select>
                                 @if (ViewBag.IsAdmin)
                                 {
                                     <span class="func-btn redirect-btn" href="/WeldLocation/Index">焊缝位置管理</span>
@@ -185,7 +185,7 @@
                         <div class="form-group">
                             <label class="col-sm-3 control-label">焊接位置:</label>
                             <div class="col-sm-9">
-                                <select class="single-select form-control" id="HanJieType" name="HanjieId" style="" data-bind="value: HanjieId" validate="{required:true}" data-geturl="/HanjieLocation/GetDropdownList"></select>
+                                <select class="chosen-select form-control" id="HanJieType" name="HanjieId" style="" data-bind="value: HanjieId" validate="{required:true}" data-geturl="/HanjieLocation/GetDropdownList"></select>
                                 @if (ViewBag.IsAdmin)
                                 {
                                     <span class="func-btn redirect-btn" href="/HanJieLocation/Index">焊接位置管理</span>
@@ -514,7 +514,14 @@
             };
             var refreshSelect = function (obj) {
                 if (obj && $(obj).prop('nodeName').toUpperCase() == 'select'.toUpperCase()) {
-                    BindSelect(obj);
+                    if ($(obj).attr("class").indexOf("chosen-select") >= 0) {
+                        $(obj).chosen("destroy");
+                        var url = $(obj).attr('data-geturl');
+                        BindChosen(url, obj, InitChosen);
+                    }
+                    else {
+                        BindSelect(obj);                       
+                    }
                     popObj = undefined;
                 }
             };
@@ -525,7 +532,11 @@
                 //获取项目信息
 
                 BindChosen('/Project/GetDropdownList', $('#ProjectName'), InitChosen);
-                $.each($('.single-select '), function (i, obj) {
+                $.each($('.chosen-select'), function (i, obj) {
+                    var url = $(obj).attr('data-geturl');
+                    BindChosen(url, obj, InitChosen);
+                });
+                $.each($('.single-select'), function (i, obj) {
                     BindSelect(obj);
                 });
                 $(document).on('change', '#WeldingType', function () {
@@ -543,6 +554,10 @@
                     $('#rightPanel').append(frame);
                     popObj = $(this).parent().find('select');
                     $('#rightPanel').show(300);
+                });
+                $('#ModalTable').on('show.bs.modal', function () {
+                    // 弹出框打开动作
+                    $('.chosen-container').css({ 'width': 300 });
                 });
                 $('#ModalTable').on('hide.bs.modal', function () {
                     // 弹出框关闭动作
@@ -691,14 +706,19 @@
 
             //应当出去js包
             function InitChosen(select) {
-                $(select).chosen({ allow_single_deselect: true }).change(function () { console.log('change'); });
+                $(select).chosen({
+                    width: '300px',
+                    placeholder_text: '请选择',
+                    no_results_text: '没有找到结果',
+                    search_contains: true
+                }).change(function () { console.log('change'); });
+                $(select).next().css({ 'width': 300 });
+                $(select).next().next().css({ 'width': 110 });
+                $('.chosen-container-single').css("width", "300px");
                 $(select).bind("change", function () {
+                    console.log('select change');
                     $(select).trigger('chosen:updated');
                 });
-                setTimeout(function () {
-                    var pwidth = Math.min($(select).parent().width(), 300);
-                    $(select).next().css({ 'width': pwidth });
-                }, 1000);
 
                 //resize the chosen on window resize
                 $(window).on('resize.chosen', function () {

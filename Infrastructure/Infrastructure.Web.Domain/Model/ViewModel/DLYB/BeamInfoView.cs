@@ -29,6 +29,9 @@ namespace Infrastructure.Web.Domain.ModelsView
         public int ProcessStatus { get; set; }
         //非存储字段
         public string ProjectName { get; set; }
+        /// <summary>
+        /// 梁段名，通过dwgfile字段解析
+        /// </summary>
         public string BridgeComponent { get {
                 if (this.DwgFile.IndexOf("dwg") > -1)
                 {
