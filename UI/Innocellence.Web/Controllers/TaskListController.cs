@@ -157,15 +157,6 @@ namespace DLYB.Web.Controllers
             Expression<Func<WeldCategoryStatisticsV, bool>> expression = FilterHelper.GetExpression<WeldCategoryStatisticsV>(gridRequest.FilterGroup);
             expression = expression.AndAlso<WeldCategoryStatisticsV>(x => x.IsDeleted != true);
             IEnumerable<WeldCategoryStatisticsVView> queryList = GetBatchWeldingListQuery(ref expression);
-            //if (!string.IsNullOrEmpty(objLoginInfo.Department))
-            //{
-            //    var department = objLoginInfo.Department.Split('_')[1];
-            //    query = query.Where(x => x.AffiliatedInstitution == department);
-            //}
-            //if (!string.IsNullOrEmpty(strCondition))
-            //{
-            //    query = query.Where(x => x.ProjectName.Contains(strCondition));
-            //}
             var listEx = queryList.Distinct().Skip((gridRequest.PageCondition.PageIndex - 1) * gridRequest.PageCondition.PageSize)
                 .Take(gridRequest.PageCondition.PageSize).ToList();
             //List<WeldCategoryStatisticsVView> listEx = _wcsvService.GetList<WeldCategoryStatisticsVView>(expression, gridRequest.PageCondition);
@@ -186,57 +177,57 @@ namespace DLYB.Web.Controllers
             {
                 expression = expression.AndAlso<WeldCategoryStatisticsV>(x => x.ProjectName.Contains(strCondition));
             }
-            //实际不需要group 2次，没有任何作用。
+            //首先根据项目、焊缝位置检索。然后根据厂址做分组
             var query = from s in _wcsvService.GetList<WeldCategoryStatisticsVView>(int.MaxValue, expression)
                         join l in _weldCategoryService.GetList<WeldCategoryLabelingView>(int.MaxValue, x => !x.IsDeleted)
-                        on new { s.BeamId, s.WeldType, s.WeldingModel } equals new { l.BeamId, l.WeldType, WeldingModel = l.WeldingType }
+                        on new { s.BeamId, WeldLocation = s.WeldLocationType, s.WeldingModel }
+                        equals new { l.BeamId, l.WeldLocation, WeldingModel = l.WeldingType }
                         group l by new
                         {
-                            s.AffiliatedInstitution,
+                            s.ProjectId,
                             s.ProjectName,
                             s.AddressName,
-                            s.WeldType,
-                            s.WeldingModel,
+                            //l.WeldLocation,
+                            l.WeldType,
+                            l.WeldingType,
                             s.WeldingSpecific,
-                            s.WeldingUnit,
-                            s.BeamId
+                            s.WeldingUnit
                         } into g
                         select new WeldCategoryStatisticsVView
                         {
-                            AffiliatedInstitution = g.Key.AffiliatedInstitution,
                             ProjectName = g.Key.ProjectName,
                             AddressName = g.Key.AddressName,
                             WeldType = g.Key.WeldType,
-                            WeldingModel = g.Key.WeldingModel,
+                            WeldingModel = g.Key.WeldingType,
                             WeldingSpecific = g.Key.WeldingSpecific,
                             WeldingUnit = g.Key.WeldingUnit,
-                            BeamId = g.Key.BeamId,
-                            Quality = g.Sum(x => x.WeldingQuanlity.Value)
+                            //WeldLocationType = g.Key.WeldLocation,
+                            Quality = g.Sum(x => x.WeldQuanlity)
                         };
 
-            var queryList = from s in query
-                            group s by new
-                            {
-                                s.AffiliatedInstitution,
-                                s.ProjectName,
-                                s.AddressName,
-                                s.WeldType,
-                                s.WeldingModel,
-                                s.WeldingSpecific,
-                                s.WeldingUnit
-                            } into g
-                            select new WeldCategoryStatisticsVView
-                            {
-                                AffiliatedInstitution = g.Key.AffiliatedInstitution,
-                                ProjectName = g.Key.ProjectName,
-                                AddressName = g.Key.AddressName,
-                                WeldType = g.Key.WeldType,
-                                WeldingModel = g.Key.WeldingModel,
-                                WeldingSpecific = g.Key.WeldingSpecific,
-                                WeldingUnit = g.Key.WeldingUnit,
-                                Quality = g.Sum(x => x.Quality)
-                            };
-            return queryList;
+            //var queryList = from s in query
+            //                group s by new
+            //                {
+            //                    s.AffiliatedInstitution,
+            //                    s.ProjectName,
+            //                    s.AddressName,
+            //                    s.WeldType,
+            //                    s.WeldingModel,
+            //                    s.WeldingSpecific,
+            //                    s.WeldingUnit
+            //                } into g
+            //                select new WeldCategoryStatisticsVView
+            //                {
+            //                    AffiliatedInstitution = g.Key.AffiliatedInstitution,
+            //                    ProjectName = g.Key.ProjectName,
+            //                    AddressName = g.Key.AddressName,
+            //                    WeldType = g.Key.WeldType,
+            //                    WeldingModel = g.Key.WeldingModel,
+            //                    WeldingSpecific = g.Key.WeldingSpecific,
+            //                    WeldingUnit = g.Key.WeldingUnit,
+            //                    Quality = g.Sum(x => x.Quality)
+            //                };
+            return query.OrderBy(x => x.ProjectName).ThenBy(x => x.AddressName).ThenBy(x => x.WeldType).ThenBy(x => x.WeldingModel);
         }
 
         [HttpPost]
@@ -353,13 +344,14 @@ namespace DLYB.Web.Controllers
                 
 
                 Expression<Func<WeldCategoryStatisticsV, bool>> expression = (x) => !x.IsDeleted;
+                IEnumerable<WeldCategoryStatisticsVView> queryList = GetBatchWeldingListQuery(ref expression);           
+                var reportList1 = queryList.ToList();
                 if (!string.IsNullOrEmpty(Ids))
                 {
                     var selectedIds = Ids.TrimEnd(',').Split(',');
-                    expression = expression.AndAlso<WeldCategoryStatisticsV>(x => selectedIds.Contains(x.Id.ToString()));
+                    reportList1 = TableListHelper.GenerateIndex(reportList1, new PageCondition { PageIndex = 1, PageSize = int.MaxValue });
+                    reportList1 = reportList1.Where(x => selectedIds.Contains(x.Index.ToString())).ToList();
                 }
-                IEnumerable<WeldCategoryStatisticsVView> queryList = GetBatchWeldingListQuery(ref expression);
-                var reportList1 = queryList.ToList();
                 int i = 1;                
                 foreach (var v in reportList1)
                 {

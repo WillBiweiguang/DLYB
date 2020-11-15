@@ -269,12 +269,13 @@ function GetWelding() {
                 var pt2 = polyline.GetPointAt(1);
                 var pt3 = polyline.GetPointAt(2);
                 var pt4 = polyline.GetPointAt(3);
+                var jd_d = 0.1;
                 if (polyline.IsClosedStatus == true)//相同
                 {
                     var mL1 = pt1.DistanceTo(pt2);
                     var mL2 = pt1.DistanceTo(pt3);
                     var mL3 = pt2.DistanceTo(pt3);
-                    if ((mL1 <= mL2 + 0.07 && mL1 >= mL2 - 0.07) || (mL2 <= mL1 + 0.07 && mL2 >= mL1 - 0.07)) {
+                    if (((mL1 <= mL2 + jd_d && mL1 >= mL2 - jd_d) || (mL2 <= mL1 + jd_d && mL2 >= mL1 - jd_d)) && mL3 > 0.1) {
                         var x = (pt2.x + pt3.x) / 2;
                         var y = (pt2.y + pt3.y) / 2;
                         var midP = mxOcx.NewPoint();
@@ -284,7 +285,7 @@ function GetWelding() {
                         var myArrowtest = new myArrow(MObjectID, pt1, pt2, pt3, midP)
                         ArrowArray[ArrowArray.length] = myArrowtest;
                     }
-                    else if ((mL2 <= mL3 + 0.07 && mL2 >= mL3 - 0.07) || (mL3 <= mL2 + 0.07 && mL3 >= mL2 - 0.07)) {
+                    else if (((mL2 <= mL3 + jd_d && mL2 >= mL3 - jd_d) || (mL3 <= mL2 + jd_d && mL3 >= mL2 - jd_d)) && mL1 > 0.1) {
                         var x = (pt1.x + pt2.x) / 2;
                         var y = (pt1.y + pt2.y) / 2;
                         var midP = mxOcx.NewPoint();
@@ -294,14 +295,14 @@ function GetWelding() {
                         var myArrowtest = new myArrow(MObjectID, pt3, pt1, pt2, midP)
                         ArrowArray[ArrowArray.length] = myArrowtest;
                     }
-                    else if ((mL1 <= mL3 + 0.07 && mL1 >= mL3 - 0.07) || (mL3 <= mL1 + 0.07 && mL3 >= mL1 - 0.07)) {
+                    else if (((mL1 <= mL3 + jd_d && mL1 >= mL3 - jd_d) || (mL3 <= mL1 + jd_d && mL3 >= mL1 - jd_d)) && mL2 > 0.1) {
                         var x = (pt1.x + pt3.x) / 2;
                         var y = (pt1.y + pt3.y) / 2;
                         var midP = mxOcx.NewPoint();
                         midP.x = x;
                         midP.y = y;
                         var MObjectID = HatchArrow.handle;
-                        var myArrowtest = new myArrow(MObjectID, pt2, pt1, pt3, midP);
+                        var myArrowtest = new myArrow(MObjectID, pt2, pt1, pt3, midP)
                         ArrowArray[ArrowArray.length] = myArrowtest;
                     }
 

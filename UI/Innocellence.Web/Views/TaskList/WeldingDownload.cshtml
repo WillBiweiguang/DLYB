@@ -69,8 +69,8 @@
                 <table class="table table-bordered table-hover data-table">
                     <thead>
                         <tr>
-                            
-                            <th style="width:5%;text-align:center;">@T("序号")</th>
+                            <th><input type="checkbox" value="全选" /></th>
+                            <th style="text-align:center;">@T("序号")</th>
                             <th>@T("项目名称")</th>
                             <th>@T("厂址")</th>
                             <th>@T("焊材类型")</th>
@@ -108,6 +108,7 @@
                 "info": false,
                 "aoColumns": [
                     { "mData": 'Index' },
+                    { "mData": 'Index' },
                     { "mData": 'ProjectName' },
                     { "mData": 'AddressName' },
                     { "mData": 'WeldType' },
@@ -120,8 +121,13 @@
                     {
                         "targets": 0,
                         "render": function (data, type, full, meta) {
-                            return full.Index;
-                            //return '<input type="checkbox" value="' + full.Id + '" title="' + full.Index + '" id="checkbox" />';
+                            return '<input type="checkbox" value="' + full.Index + '" title="' + full.Index + '" id="checkbox" />';
+                        }
+                    },
+                    {
+                        "targets": 1,
+                        "render": function (data, type, full, meta) {
+                            return full.Index;                            
                         }
                     }],
                 fnDrawCallback: function () {
@@ -159,7 +165,11 @@
                 }
             });
             if (ids.length > 0) {
-                idPara = '&Ids=' + ids;
+                if ($('#btnDownloadExport').attr('href').indexOf('?') > -1) {
+                    idPara = '&Ids=' + ids;
+                } else {
+                    idPara = '?Ids=' + ids;
+                }           
             }
             window.location.href = $('#btnDownloadExport').attr('href') + idPara;
         });

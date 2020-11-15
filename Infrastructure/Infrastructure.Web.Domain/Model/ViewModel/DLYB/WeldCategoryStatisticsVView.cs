@@ -9,6 +9,8 @@ namespace Infrastructure.Web.Domain.ModelsView
     public partial class WeldCategoryStatisticsVView : ViewModelBase, IViewModel
 	{	
 		public Int32 Id { get;set; }
+
+        public int ProjectId { get; set; }
                 
         public string ProjectName { get; set; }
         
@@ -53,6 +55,7 @@ namespace Infrastructure.Web.Domain.ModelsView
         public IViewModel ConvertAPIModel(object obj) {
             var entity = (WeldCategoryStatisticsV)obj;
             Id = entity.Id;
+            ProjectId = entity.ProjectId;
             ProjectName = entity.ProjectName;
             AddressName = entity.AddressName;
             HanJieType = entity.HanJieType;

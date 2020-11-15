@@ -14,6 +14,7 @@ namespace Infrastructure.Web.Domain.Entity
     public partial class WeldCategoryStatisticsV : EntityBase<int>
     {
         public override int Id { get => base.Id; set => base.Id = value; }
+        public int ProjectId { get; set; }
         [Column("ProjectName")]
         public string ProjectName { get; set; }
         [Column("Address_Name")]

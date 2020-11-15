@@ -152,6 +152,14 @@ namespace DLYB.Web.Controllers
                 return Json(GetErrorJson(), JsonRequestBehavior.AllowGet);
             }
             var entity = objModal.ConvertView();
+            //验证焊缝位置是否已经用在其他厂址
+            if (_service.Repository.Entities.Any(x => !x.IsDeleted && x.BeamId == entity.BeamId && x.WeldLocationId == entity.WeldLocationId && x.AddressId != entity.AddressId))
+            {
+                var result = GetErrorJson();
+                result.Message.Status = 103;
+                result.Message.Text = "焊缝位置已经存在于其他的厂址";
+                return Json(result, JsonRequestBehavior.AllowGet);
+            }
             if (string.IsNullOrEmpty(Id) || Id == "0")
             {
                 _service.InsertView(entity);
