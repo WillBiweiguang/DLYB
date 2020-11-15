@@ -287,7 +287,7 @@ namespace Innocellence.FaultSearch.Controllers
         }
         public JsonResult GetWeldingByHandle(int beamId, string handleId)
         {
-            var item = _weldCategoryService.GetList<WeldCategoryLabelingView>(1, x => !x.IsDeleted && x.BeamId == beamId && x.HandleID.Contains(handleId)).FirstOrDefault();
+            var item = _weldCategoryService.GetList<WeldCategoryLabelingView>(1, x => !x.IsDeleted && x.BeamId == beamId && (x.HandleID.Contains(handleId) || x.CircleId == handleId)).FirstOrDefault();
             if (item != null)
             {
                 return new JsonResult { Data = new { result = "success", data = item.HandleID, item.Id }, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
