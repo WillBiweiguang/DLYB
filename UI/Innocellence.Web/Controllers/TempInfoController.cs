@@ -66,14 +66,22 @@ namespace Innocellence.Web.Controllers
         }
         public override ActionResult GetList()
         {
+            string projectId = Request["projectId"];
+            int pid = 0;
+            string projectName = "";
+            if (int.TryParse(projectId, out pid))
+            {
+                var project = _projectService.Repository.Entities.FirstOrDefault(x => x.Id == pid);
+                projectName = project?.ProjectName;
+            }
             GridRequest gridRequest = new GridRequest(Request);
             var list = new List<TempInfoView>();
             string strCondition = Request["search_condition"];
             if (!string.IsNullOrEmpty(strCondition))
             {
                 list = _TempInfoService.Repository.Entities.
-                    Where(x => x.BeamName.Contains(strCondition) ||
-                x.FileName.Contains(strCondition) || x.ProjectName.Contains(strCondition) || x.FigureNumber.Contains(strCondition))
+                    Where(x => (x.BeamName.Contains(strCondition) ||
+                x.FileName.Contains(strCondition) ||x.FigureNumber.Contains(strCondition))&& x.ProjectName== projectName)
                     .Select
                   (x => new TempInfoView { BeamName = x.BeamName, FileName = x.FileName, ProjectName = x.ProjectName, FigureNumber = x.FigureNumber }).Distinct().
                     OrderBy(x => x.BeamName).
@@ -82,7 +90,7 @@ namespace Innocellence.Web.Controllers
             }
             else
             {
-                list = _TempInfoService.Repository.Entities.Select
+                list = _TempInfoService.Repository.Entities.Where(x=>x.ProjectName == projectName).Select
                   (x => new TempInfoView { BeamName = x.BeamName, FileName = x.FileName, ProjectName = x.ProjectName, FigureNumber = x.FigureNumber }).Distinct().
                     OrderBy(x => x.BeamName).
                   Skip(gridRequest.PageCondition.PageSize * gridRequest.PageCondition.RowCount).

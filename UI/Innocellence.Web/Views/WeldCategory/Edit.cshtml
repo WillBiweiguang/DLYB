@@ -106,12 +106,12 @@
                                 <div class="col-sm-7">
                                     <select class="single-select form-control" name="FigureNumber" id="FigureNumber" data-placeholder="请选择图号" data-bind="value: FigureNumber" title="图号">
                                         @*@foreach (SelectListItem a in ViewBag.Figures)
-                                        {
-                                            if (!string.IsNullOrEmpty(a.Value))
                                             {
-                                                <option value="@a.Value">@a.Text</option>
-                                            }
-                                        }*@
+                                                if (!string.IsNullOrEmpty(a.Value))
+                                                {
+                                                    <option value="@a.Value">@a.Text</option>
+                                                }
+                                            }*@
                                     </select>
                                 </div>
                             </td>
@@ -205,7 +205,7 @@
                             </td>
 
                         </tr>
-                        <tr style="border:3px solid blue;"></tr>
+                        @*<tr style="border:3px solid blue;"></tr>*@
                         <tr class="row">
                             <td>
                                 <label class="col-sm-5 control-label">焊缝长度:</label>
@@ -493,7 +493,10 @@
                 childOption = document.createElement('option');
                 //ie不支持option对象的value,所以加childOption.text
                 childOption.value = childOption.text = childArr[i];
-                child.options.add(childOption);
+                if (childOption.text!="null") {
+                    child.options.add(childOption);
+                }
+
 
             }
         }
