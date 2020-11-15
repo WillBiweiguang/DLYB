@@ -419,6 +419,9 @@
                 }
             });
             window.onbeforeunload = function (event) {
+                if (isViewModel) {
+                    return;
+                }
                 if (!isApproval) {
                     var dialogText = '确认要离开此页面？您对图纸的修改将无法保存，如有修改，请先保存文件。';
                     saveFile();

@@ -4862,6 +4862,8 @@ document.getElementById("MxDrawXCtrl").ImpExplodeFun = ExplodeFun;
 document.getElementById("MxDrawXCtrl").ImpGetGripPointsFun = GetGripPointsFun;
 document.getElementById("MxDrawXCtrl").ImpMoveGripPointsAtFun = MoveGripPointsFun;
 setTimeout(function () {
-    document.getElementById("MxDrawXCtrl").ImplementMouseEventFun = MouseEvent;
+    if (!isViewModel) {
+        document.getElementById("MxDrawXCtrl").ImplementMouseEventFun = MouseEvent;
+    }
 }, 1000);
 //document.getElementById("MxDrawXCtrl").ImplementMouseEventFun = MouseEvent;
