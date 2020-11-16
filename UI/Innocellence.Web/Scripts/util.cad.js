@@ -2,6 +2,7 @@ var mxOcx = document.getElementById("MxDrawXCtrl");
 var lastCircleHandle = 0;
 var existingHandles = [];
 var isBrowner = false;
+//var isViewModel = 0;
     // 执行控件命令
  function DoCmd(iCmd) {     
         mxOcx.DoCommand(iCmd);
@@ -73,11 +74,13 @@ function DoCommandEventFunc(iCmd) {
         var ss = mxOcx.NewSelectionSet();
         //构造一个过滤链表
         var spFilte = mxOcx.NewResbuf();
-        spFilte.AddStringEx("HATCH", 5020);
+        spFilte.AddStringEx("CIRCLE", 5020);
+        //spFilte.AddStringEx("HATCH", 5020);
         //用户选择对象  得到用户选取的实体
         ss.Select2(8, null, null, null, spFilte);
         if (ss.Count > 1 || ss.Count == 0) {
-            alert("请选择一个焊缝标注的箭头");
+            //alert("请选择一个焊缝标注的箭头");
+            alert("请选择一个已标注焊缝的圆圈");
         }
         var ent = ss.Item(i);
         var entHandleID = ent.handle;
@@ -85,7 +88,6 @@ function DoCommandEventFunc(iCmd) {
         newEnt = ent.Copy();
         var newEntHandleID = newEnt.handle;
         //handleArray[handleArray.length] = newEntHandleID;
-
 
         // 创建一个与用户交互取点的对象。
         var getPt = mxOcx.NewComObject("IMxDrawUiPrPoint");
@@ -100,7 +102,10 @@ function DoCommandEventFunc(iCmd) {
             pt = polyline.GetPointAt(0);
         }
         else if (newEnt.ObjectName == "McDbPolyline") {
-            pt = newEnt.GetPointAt(0)
+            pt = newEnt.GetPointAt(0);
+        }
+        else if (newEnt.ObjectName == "McDbCircle") {
+            pt = newEnt.Center;
         }
         newEnt.Move(pt, getPt.value());
 
@@ -119,7 +124,7 @@ function DoCommandEventFunc(iCmd) {
             }
             //保存复制的焊缝到数据库
             var weldData = [];
-            weldData.push({ WeldType: 'ManJiaoH', HandleID: handleArray.toString(), CopyOriginId: Id });
+            weldData.push({ WeldType: 'ManJiaoH', HandleID: handleArray.toString(), CircleId: newEntHandleID, CopyOriginId: Id });
             saveWeldData(weldData, 2);
         });
 
@@ -4866,5 +4871,5 @@ setTimeout(function () {
     if (!isViewModel) {
         document.getElementById("MxDrawXCtrl").ImplementMouseEventFun = MouseEvent;
     }
-}, 1000);
+}, 4000);
 //document.getElementById("MxDrawXCtrl").ImplementMouseEventFun = MouseEvent;
