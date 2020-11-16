@@ -13,7 +13,7 @@
             <form class="form-inline" id="SearchForm">
                 <div class="form-group">
 
-                    <input class="form-control" type="text" id="search_condition" name="search_condition" placeholder="厂址名称">
+                    <input class="form-control" type="text" id="search_condition" name="search_condition" placeholder="厂址名称" onkeydown='if(event.keyCode==13) return false;'>
 
                     <a href="#" class="btn btn-info btn-sm" id="btnSearch" data-toggle="tooltip" data-placement="top" title="查询条件"><i class="fa fa-search">查询</i></a>
 
@@ -87,6 +87,7 @@
 {
         <script src="~/Scripts/EasyUI/jquery.easyui.min.js"></script>
         <script src="http://static.runoob.com/assets/jquery-validation-1.14.0/dist/localization/messages_zh.js"></script>
+        <script src="~/Scripts/reSizer/iframeResizer.contentWindow.js"></script>
         <script type="text/javascript">
             //$('[data-toggle="tooltip"]').tooltip();
             var popMenu;

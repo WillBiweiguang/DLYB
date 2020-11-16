@@ -175,7 +175,7 @@ namespace DLYB.Web.Controllers
             }
             if (!string.IsNullOrEmpty(strCondition))
             {
-                expression = expression.AndAlso<WeldCategoryStatisticsV>(x => x.ProjectName.Contains(strCondition));
+                expression = expression.AndAlso<WeldCategoryStatisticsV>(x => x.ProjectName.Contains(strCondition)||x.AddressName.Contains(strCondition)||x.WeldType.Contains(strCondition));
             }
             //首先根据项目、焊缝位置检索。然后根据厂址做分组
             var query = from s in _wcsvService.GetList<WeldCategoryStatisticsVView>(int.MaxValue, expression)
