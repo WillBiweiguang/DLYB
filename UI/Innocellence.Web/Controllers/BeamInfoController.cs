@@ -69,6 +69,8 @@ namespace Innocellence.Web.Controllers
             GridRequest gridRequest = new GridRequest(Request);
             string strCondition = Request["search_condition"];
             string projectId = Request["project_id"];
+            string projectName = Request["project_name"];
+            string beamName = Request["beam_name"];
             int pid = string.IsNullOrEmpty(projectId) ? 0 : int.Parse(projectId);
             Expression<Func<BeamInfo, bool>> expression = FilterHelper.GetExpression<BeamInfo>(gridRequest.FilterGroup);
             expression = expression.AndAlso<BeamInfo>(x => x.IsDeleted != true);
@@ -79,6 +81,17 @@ namespace Innocellence.Web.Controllers
            if (!string.IsNullOrEmpty(strCondition))
             {
                 expression = expression.AndAlso<BeamInfo>(x => x.DwgFile.Contains(strCondition));
+            }
+            //项目名
+            if (!string.IsNullOrEmpty(projectName))
+            {
+                var pids = _projectService.GetList<ProjectView>(1000, x => !x.IsDeleted && x.ProjectName.Contains(projectName)).Select(x => x.Id).ToList();
+                expression = expression.AndAlso<BeamInfo>(x => pids.Contains(x.ProjectId));
+            }
+            //梁段名
+            if (!string.IsNullOrEmpty(beamName))
+            {
+                expression = expression.AndAlso<BeamInfo>(x => x.DwgFile.Contains(beamName));
             }
             if (!string.IsNullOrEmpty(objLoginInfo.Department))
             {

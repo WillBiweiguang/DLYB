@@ -44,7 +44,7 @@ namespace Innocellence.Web.Controllers
             return View();
         }
 
-        public  ActionResult GetList1()
+        public ActionResult GetList1()
         {
             GridRequest gridRequest = new GridRequest(Request);
             string strCondition = Request["search_condition"];
@@ -79,22 +79,50 @@ namespace Innocellence.Web.Controllers
             string strCondition = Request["search_condition"];
             if (!string.IsNullOrEmpty(strCondition))
             {
-                list = _TempInfoService.Repository.Entities.
+                if (!string.IsNullOrEmpty(projectName))
+                {
+                    list = _TempInfoService.Repository.Entities.
+                                        Where(x => (x.BeamName.Contains(strCondition) ||
+                                    x.FileName.Contains(strCondition) || x.FigureNumber.Contains(strCondition)) && x.ProjectName == projectName)
+                                        .Select
+                                      (x => new TempInfoView { BeamName = x.BeamName, FileName = x.FileName, ProjectName = x.ProjectName, FigureNumber = x.FigureNumber }).Distinct().
+                                        OrderBy(x => x.BeamName).
+                                      Skip(gridRequest.PageCondition.PageSize * gridRequest.PageCondition.RowCount).
+                                      Take(gridRequest.PageCondition.PageSize).ToList();
+                }
+                else
+                {
+                    list = _TempInfoService.Repository.Entities.
                     Where(x => (x.BeamName.Contains(strCondition) ||
-                x.FileName.Contains(strCondition) ||x.FigureNumber.Contains(strCondition))&& x.ProjectName== projectName)
+                x.FileName.Contains(strCondition) || x.FigureNumber.Contains(strCondition)))
                     .Select
                   (x => new TempInfoView { BeamName = x.BeamName, FileName = x.FileName, ProjectName = x.ProjectName, FigureNumber = x.FigureNumber }).Distinct().
                     OrderBy(x => x.BeamName).
                   Skip(gridRequest.PageCondition.PageSize * gridRequest.PageCondition.RowCount).
                   Take(gridRequest.PageCondition.PageSize).ToList();
+                }
+
             }
             else
             {
-                list = _TempInfoService.Repository.Entities.Where(x=>x.ProjectName == projectName).Select
+                if (!string.IsNullOrEmpty(projectName))
+                {
+                    list = _TempInfoService.Repository.Entities.Where(x => x.ProjectName == projectName).Select
                   (x => new TempInfoView { BeamName = x.BeamName, FileName = x.FileName, ProjectName = x.ProjectName, FigureNumber = x.FigureNumber }).Distinct().
                     OrderBy(x => x.BeamName).
                   Skip(gridRequest.PageCondition.PageSize * gridRequest.PageCondition.RowCount).
                   Take(gridRequest.PageCondition.PageSize).ToList();
+                }
+                else
+                {
+                    list = _TempInfoService.Repository.Entities.Select
+                     (x => new TempInfoView { BeamName = x.BeamName, FileName = x.FileName, ProjectName = x.ProjectName, FigureNumber = x.FigureNumber }).Distinct().
+                       OrderBy(x => x.BeamName).
+                     Skip(gridRequest.PageCondition.PageSize * gridRequest.PageCondition.RowCount).
+                     Take(gridRequest.PageCondition.PageSize).ToList();
+
+                }
+                    
             }
             return Json(new
             {

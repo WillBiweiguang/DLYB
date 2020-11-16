@@ -33,6 +33,9 @@
                     </a>
                 </div>*@
             <div>
+
+                <input class="form-control" type="text" id="project_name" name="project_name" placeholder="项目名">
+                <input class="form-control" type="text" id="beam_name" name="beam_name" placeholder="梁段名">
                 <input class="form-control" type="text" id="search_condition" name="search_condition" placeholder="文件名" onkeydown='if(event.keyCode==13) return false;'>
                 <a href="#" class="btn btn-info btn-sm" id="btnSearch" data-toggle="tooltip" data-placement="top" title="查询条件"><i class="fa fa-search">查询</i></a>
                 <a href="/TempInfo/index?ProjectId=@ViewBag.ProjectId" class="btn btn-primary btn-sm" id="btnSearch1" data-toggle="tooltip" data-placement="top" title="查询条件"><i class="fa fa-search">梁段信息查询</i></a>

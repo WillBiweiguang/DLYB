@@ -61,8 +61,8 @@ namespace DLYB.Web.Controllers
             }
             ViewBag.isApprover = role != null && role.RoleId == 1 ? 1 : 0;
             ViewBag.UserId = objLoginInfo.Id;
-           // ViewBag.list = _weldCategoryService.Repository.Entities.Where(a => !a.IsDeleted).
-                //Select(x=>x.BeamId).ToList();
+            // ViewBag.list = _weldCategoryService.Repository.Entities.Where(a => !a.IsDeleted).
+            //Select(x=>x.BeamId).ToList();
             ViewBag.Stat = _wcsvService.Repository.Entities.Where(a => !a.IsDeleted).ToList();
             ViewBag.ThirdNav = "审核列表";
             return View();
@@ -104,11 +104,11 @@ namespace DLYB.Web.Controllers
                 expression = expression.AndAlso<TaskList>(x => pids.Contains(x.ProjectId));
             }
             //状态
-            if (status >0)
+            if (status > 0)
             {
                 expression = expression.AndAlso<TaskList>(x => x.TaskStatus == status);
             }
-            int rowCount = gridRequest.PageCondition.RowCount;            
+            int rowCount = gridRequest.PageCondition.RowCount;
             List<TaskListView> listEx = GetListEx(expression, gridRequest.PageCondition);
             var projectIDs = listEx.Select(x => x.ProjectId).ToList();
             var projects = _projectService.GetList<ProjectView>(int.MaxValue, x => projectIDs.Contains(x.Id)).ToList();
@@ -176,7 +176,7 @@ namespace DLYB.Web.Controllers
             }
             if (!string.IsNullOrEmpty(strCondition))
             {
-                expression = expression.AndAlso<WeldCategoryStatisticsV>(x => x.ProjectName.Contains(strCondition));
+                expression = expression.AndAlso<WeldCategoryStatisticsV>(x => x.ProjectName.Contains(strCondition) || x.AddressName.Contains(strCondition) || x.WeldType.Contains(strCondition));
             }
             //首先根据项目、焊缝位置检索。然后根据厂址做分组
             var query = from s in _wcsvService.GetList<WeldCategoryStatisticsVView>(int.MaxValue, expression)
@@ -271,7 +271,7 @@ namespace DLYB.Web.Controllers
             }
             return Json(doJson(null), JsonRequestBehavior.AllowGet);
         }
-        public ActionResult ExportToExcel(int beamId = 0,string Ids = "")
+        public ActionResult ExportToExcel(int beamId = 0, string Ids = "")
         {
             string fileName = "焊材_" + DateTime.Now.ToString("yyyyMMddHHmmssfff") + ".xlsx";
 
@@ -283,45 +283,45 @@ namespace DLYB.Web.Controllers
 
                 // 导出 焊材详情表 
                 //var answer = _pollingResultService.GetList(Id);
+                var reportList1 = _weldCategoryService.Repository.Entities.Where(a => !a.IsDeleted && a.BeamId == beamId).ToList();
                 if (!string.IsNullOrEmpty(Ids))
                 {
                     var selectedIds = Ids.TrimEnd(',').Split(',');
-
-                    var reportList1 = _weldCategoryService.Repository.Entities.Where(a => !a.IsDeleted && a.BeamId == beamId && selectedIds.Contains(a.Id.ToString())).ToList();
-                    int i = 1;
-                    string beamName = "";
-                    int projectId = 0;
-                    string projectName = "";
-                    foreach (var v in reportList1)
+                    reportList1 = _weldCategoryService.Repository.Entities.Where(a => !a.IsDeleted && a.BeamId == beamId && selectedIds.Contains(a.Id.ToString())).ToList();
+                }
+                int i = 1;
+                string beamName = "";
+                int projectId = 0;
+                string projectName = "";
+                foreach (var v in reportList1)
+                {
+                    var beam = _beamInfoService.Repository.Entities.FirstOrDefault(x => x.Id == v.BeamId);
+                    if (beam.DwgFile.IndexOf("dwg") > 0)
                     {
-                        var beam = _beamInfoService.Repository.Entities.FirstOrDefault(x => x.Id == v.BeamId);
-                        if (beam.DwgFile.IndexOf("dwg") > 0)
-                        {
-                            beamName = beam.DwgFile.Substring(0, beam.DwgFile.IndexOf("dwg") - 1);
-                            projectId = beam.ProjectId;
-                            var project = _projectService.Repository.Entities.FirstOrDefault(x => x.Id == projectId);
-                            projectName = project.ProjectName;
-                        }
-                        int j = 0;
-                        var row = sheet1.CreateRow(i++);
-                        row.CreateCell(j++).SetCellValue(i - 1);
-                        row.CreateCell(j++).SetCellValue(projectName);
-                        row.CreateCell(j++).SetCellValue(beamName);
-                        row.CreateCell(j++).SetCellValue(v.FigureNumber);
-                        row.CreateCell(j++).SetCellValue(v.BoardNumber);
-                        row.CreateCell(j++).SetCellValue(v.WeldType);
-                        row.CreateCell(j++).SetCellValue(v.Thickness);
-                        row.CreateCell(j++).SetCellValue(v.WeldLocation);
-                        row.CreateCell(j++).SetCellValue(v.SectionArea);
-                        row.CreateCell(j++).SetCellValue(v.WeldLength);
-                        //row.CreateCell(j++).SetCellValue(v.WeldingNumber);
-                        row.CreateCell(j++).SetCellValue(v.Quantity);
-                        row.CreateCell(j++).SetCellValue(v.BeamNum.HasValue ? v.BeamNum.Value : 0);
-                        row.CreateCell(j++).SetCellValue(v.WeldQuanlity);
-                        row.CreateCell(j++).SetCellValue(v.ConsumeFactor);
-                        row.CreateCell(j++).SetCellValue(v.ConsumeFactor * v.WeldQuanlity);
-
+                        beamName = beam.DwgFile.Substring(0, beam.DwgFile.IndexOf("dwg") - 1);
+                        projectId = beam.ProjectId;
+                        var project = _projectService.Repository.Entities.FirstOrDefault(x => x.Id == projectId);
+                        projectName = project.ProjectName;
                     }
+                    int j = 0;
+                    var row = sheet1.CreateRow(i++);
+                    row.CreateCell(j++).SetCellValue(i - 1);
+                    row.CreateCell(j++).SetCellValue(projectName);
+                    row.CreateCell(j++).SetCellValue(beamName);
+                    row.CreateCell(j++).SetCellValue(v.FigureNumber);
+                    row.CreateCell(j++).SetCellValue(v.BoardNumber);
+                    row.CreateCell(j++).SetCellValue(v.WeldType);
+                    row.CreateCell(j++).SetCellValue(v.Thickness);
+                    row.CreateCell(j++).SetCellValue(v.WeldLocation);
+                    row.CreateCell(j++).SetCellValue(v.SectionArea);
+                    row.CreateCell(j++).SetCellValue(v.WeldLength);
+                    //row.CreateCell(j++).SetCellValue(v.WeldingNumber);
+                    row.CreateCell(j++).SetCellValue(v.Quantity);
+                    row.CreateCell(j++).SetCellValue(v.BeamNum.HasValue ? v.BeamNum.Value : 0);
+                    row.CreateCell(j++).SetCellValue(v.WeldQuanlity);
+                    row.CreateCell(j++).SetCellValue(v.ConsumeFactor);
+                    row.CreateCell(j++).SetCellValue(v.ConsumeFactor * v.WeldQuanlity);
+
                 }
 
                 using (MemoryStream ms = new MemoryStream())
@@ -336,21 +336,21 @@ namespace DLYB.Web.Controllers
                 }
 
             }
-
         }
+
         public ActionResult ExportToExcelDownload(int beamId = 0, string Ids = "")
         {
             string fileName = "批量焊材_" + DateTime.Now.ToString("yyyyMMddHHmmssfff") + ".xlsx";
-    
+
             string templateFilename = Server.MapPath(templateExcelFilenameDownload);
             using (FileStream file = new FileStream(templateFilename, FileMode.Open, FileAccess.Read))
             {
                 var workbook = new XSSFWorkbook(file);
                 var sheet1 = workbook.GetSheet("焊材");
-                
+
 
                 Expression<Func<WeldCategoryStatisticsV, bool>> expression = (x) => !x.IsDeleted;
-                IEnumerable<WeldCategoryStatisticsVView> queryList = GetBatchWeldingListQuery(ref expression);           
+                IEnumerable<WeldCategoryStatisticsVView> queryList = GetBatchWeldingListQuery(ref expression);
                 var reportList1 = queryList.ToList();
                 if (!string.IsNullOrEmpty(Ids))
                 {
@@ -358,7 +358,7 @@ namespace DLYB.Web.Controllers
                     reportList1 = TableListHelper.GenerateIndex(reportList1, new PageCondition { PageIndex = 1, PageSize = int.MaxValue });
                     reportList1 = reportList1.Where(x => selectedIds.Contains(x.Index.ToString())).ToList();
                 }
-                int i = 1;                
+                int i = 1;
                 foreach (var v in reportList1)
                 {
                     var welding = _weldingService.Repository.Entities.FirstOrDefault(x => x.WeldingModel == v.WeldingModel);
@@ -393,7 +393,7 @@ namespace DLYB.Web.Controllers
         }
 
         private void GetWeldQuality(List<WeldCategoryStatisticsVView> viewlist)
-        {            
+        {
             var beams = viewlist.Select(x => x.BeamId);
             //var query = _weldCategoryService.Repository.Entities.Where(x => !x.IsDeleted && beams.Contains(x.BeamId)).ToList();
             var query = from s in viewlist

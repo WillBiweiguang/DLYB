@@ -12,7 +12,7 @@
     <div class="col-sm-12">
         <form class="form-inline" id="SearchForm">
             <div class="form-group">
-                <input class="form-control" type="text" id="search_condition" name="search_condition" placeholder="文件名">
+                <input class="form-control" type="text" id="search_condition" name="search_condition" placeholder="文件名" onkeydown='if(event.keyCode==13) return false;'>
                 <input type="hidden" id="project_id" name="project_id" value="@ViewBag.ProjectId" />
                 <a href="#" class="btn btn-info btn-sm" id="btnSearch" data-toggle="tooltip" data-placement="top" title="查询条件"><i class="fa fa-search">查询</i></a>
             </div>
@@ -36,7 +36,7 @@
                 <table class="table table-bordered table-hover data-table">
                     <thead>
                         <tr>
-                            <th style="width:5%;text-align:center;">@T("序号")</th>
+                            <th style="width:10%;text-align:center;">@T("序号")</th>
                             <th>@T("EXCEL文件名")</th>
                             <th>@T("上传者")</th>
                             <th>@T("上传日期")</th>

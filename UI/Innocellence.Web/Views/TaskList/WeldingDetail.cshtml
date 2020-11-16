@@ -34,7 +34,7 @@
                     <table class="table table-bordered table-hover data-table">
                         <thead>
                             <tr>
-                                <th style="width:5%;text-align:center;">@T("序号")</th>
+                                <th style="width:10%;text-align:center;">@T("序号")</th>
                                 <th>@T("图号")</th>
                                 <th>@T("板件号")</th>
                                 <th>@T("焊缝类型")</th>
@@ -92,12 +92,7 @@
                             return '<input type="checkbox" value="' + full.Id + '" title="' + full.Index + '" id="checkbox" />';
                         }
                     },
-                    {
-                        "targets": 1,
-                        "render": function (data, type, full, meta) {
-                            return full.Index;
-                        }
-                    }],
+                   ],
                     fnDrawCallback: function () {
                         $('[data-toggle="tooltip"]').tooltip();
                         if ($('.total-count').length > 0) {
@@ -127,7 +122,7 @@
                 var idPara = '';
                 var ids = '';
                 var beamId = $('#beamId').val();
-                idPara += 'beamId=' + beamId;
+                idPara += '?beamId=' + beamId;
                 $('.data-table td input[type=checkbox]').each(function (index, ctr) {
                     if (ctr.checked) {
                         ids += $(ctr).val() + ',';
@@ -141,7 +136,7 @@
                         idPara = '?Ids=' + ids;
                     }
                 }
-                $.download("ExportToExcel", idPara + "t=" + (new Date()).getTime());
+                window.location.href = $('#btnScoreExport').attr('href') + idPara;
             });
         </script>
     }
