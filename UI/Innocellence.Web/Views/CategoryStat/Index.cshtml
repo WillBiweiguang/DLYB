@@ -43,6 +43,7 @@
 
         #rightPanel {
             background-color: white;
+            min-width:600px;
         }
 
             #rightPanel .widget-box {
@@ -212,7 +213,7 @@
                                 <select class="chosen-select form-control" id="GrooveTypeId" name="GrooveTypeId" style="" data-bind="value: GrooveTypeId" validate="{required:true}" data-geturl="/GrooveType/GetDropdownList"></select>
                                 @if (ViewBag.IsAdmin)
                                 {
-                                    <span class="func-btn redirect-btn" href="/GrooveTypeText/Index">坡口形式管理</span>
+                                    <span class="func-btn redirect-btn big-pop" href="/GrooveTypeText/Index">坡口形式管理</span>
                                 }
                                 @*<input type="text" name="GrooveClearance" class="form-control" placeholder="请输入" data-bind="value: GrooveClearance"
                                     validate="{required:true}" />*@
@@ -580,9 +581,16 @@
                     $('#rightPanel').remove('iframe');
                     $('#rightPanel .widget-title').text($(this).text());
                     var url = $(this).attr('href');
+                    if ($(this).hasClass('big-pop')) {
+                        $('#rightPanel').css('width', '70%');
+                    }
+                    else {
+                        $('#rightPanel').css('width', '60%');
+                    }
                     var frame = '<iframe id="iframei" src="' + url + '" style="position:absolute; border:none; visibility:inherit; top:38px; left:0px;  height:100%; width:100%; z-index:-1; filter: progid:DXImageTransform.Microsoft.Alpha(style=0,opacity=0);"></iframe>';
                     $('#rightPanel').append(frame);
                     popObj = $(this).parent().find('select');
+               
                     $('#rightPanel').show(300);
                 });
                 $('#ModalTable').on('show.bs.modal', function () {

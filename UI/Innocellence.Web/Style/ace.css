@@ -8,7 +8,7 @@ body {
     min-height: 100%;
     padding-bottom: 0;
     /*font-family: 'Open Sans';*/
-    font-size: 14px;
+    font-size: 1.4em;
     color: #393939;
     line-height: 1.5;
 }
@@ -5971,7 +5971,8 @@ body.mob-safari .sidebar.sidebar-fixed {
     bottom: 4px;
     padding: 8px;
     line-height: 36px;
-    border-top: 3px double #e5e5e5;
+    width: calc(100% - 200px);
+    /*border-top: 3px double #e5e5e5;*/
 }
 
 .footer.footer-fixed .footer-inner {
@@ -15116,7 +15117,7 @@ ul.attachment-list {
         }
 
     .dataTable > thead > tr > th[class*=sorting_] {
-        color: #307ecc;
+        color: #05498c;
     }
 
     .dataTable > thead > tr > th.sorting_desc, .dataTable > thead > tr > th.sorting_asc {
