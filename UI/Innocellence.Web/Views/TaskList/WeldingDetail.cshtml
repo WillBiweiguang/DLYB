@@ -89,7 +89,7 @@
                     "columnDefs": [{
                         "targets": 0,
                         "render": function (data, type, full, meta) {
-                            return '<input type="checkbox" value="' + full.Id + '" title="' + full.Index + '" id="checkbox" />';
+                            return meta.row+1;
                         }
                     },
                    ],
@@ -104,40 +104,40 @@
                 //inital select2
                 $('.select2').css("width", "362px").select2({ allowClear: true });
             });
-            //$('#btnScoreExport').on('click', function () {
-            //    var para = '';
-            //    var beamId = $('#beamId').val();
-            //    var dSearch = $("#SearchForm").serializeArray();
-            //    if (!BeforeExport(dSearch)) {
-            //        return false;
-            //    }
-            //    para += 'beamId=' + beamId + '&';
-            //    $.each(dSearch, function (key, val) {
-            //        para += val.name + '=' + val.value + '&';
-            //    });
-            //    $.download("ExportToExcel", para + "t=" + (new Date()).getTime());
-            //    return true;
-            //});
-            $(document).on('click', '#btnScoreExport', function () {
-                var idPara = '';
-                var ids = '';
+            $('#btnScoreExport').on('click', function () {
+                var para = '';
                 var beamId = $('#beamId').val();
-                idPara += '?beamId=' + beamId;
-                $('.data-table td input[type=checkbox]').each(function (index, ctr) {
-                    if (ctr.checked) {
-                        ids += $(ctr).val() + ',';
-                    }
-                });
-                if (ids.length > 0) {
-
-                    if ($('#btnScoreExport').attr('href').indexOf('?') > -1) {
-                        idPara += '&Ids=' + ids;
-                    } else {
-                        idPara = '?Ids=' + ids;
-                    }
+                var dSearch = $("#SearchForm").serializeArray();
+                if (!BeforeExport(dSearch)) {
+                    return false;
                 }
-                window.location.href = $('#btnScoreExport').attr('href') + idPara;
+                para += 'beamId=' + beamId + '&';
+                $.each(dSearch, function (key, val) {
+                    para += val.name + '=' + val.value + '&';
+                });
+                $.download("ExportToExcel", para + "t=" + (new Date()).getTime());
+                return true;
             });
+            //$(document).on('click', '#btnScoreExport', function () {
+            //    var idPara = '';
+            //    var ids = '';
+            //    var beamId = $('#beamId').val();
+            //    idPara += '?beamId=' + beamId;
+            //    $('.data-table td input[type=checkbox]').each(function (index, ctr) {
+            //        if (ctr.checked) {
+            //            ids += $(ctr).val() + ',';
+            //        }
+            //    });
+            //    if (ids.length > 0) {
+
+            //        if ($('#btnScoreExport').attr('href').indexOf('?') > -1) {
+            //            idPara += '&Ids=' + ids;
+            //        } else {
+            //            idPara = '?Ids=' + ids;
+            //        }
+            //    }
+            //    window.location.href = $('#btnScoreExport').attr('href') + idPara;
+            //});
         </script>
     }
 
