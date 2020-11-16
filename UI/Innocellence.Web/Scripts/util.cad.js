@@ -226,7 +226,7 @@ function BrownerMode() {
     //隐藏工具条
     //mxOcx.ShowToolBar("常用工具", isShow);
     mxOcx.ShowToolBar("绘图工具", isShow);
-    //mxOcx.ShowToolBar("编辑工具", isShow);
+    mxOcx.ShowToolBar("编辑工具", isShow);
     mxOcx.ShowToolBar("特性", isShow);
     mxOcx.ShowToolBar("ET工具", isShow);
     //隐藏菜单栏
