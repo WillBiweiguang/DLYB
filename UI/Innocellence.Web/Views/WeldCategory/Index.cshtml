@@ -337,7 +337,7 @@
             + ((screen.width - 600) / 2) + 'px;resizable:yes;center:yes;status:no;'
             ; //编辑模态窗口参数
         var tableModalSetting = {}; //数据列表窗口参数
-        var isViewModel = @ViewBag.ViewModel;
+        
         var lstPaging = {};
         var isApproval = 0;
 
@@ -657,6 +657,7 @@
 
 <!--以下是CAD控件对象-->
 <SCRIPT language="JavaScript">
+    var isViewModel = @ViewBag.ViewModel;
     document.oncontextmenu = new Function('event.returnValue=false;'); //禁用右键
     function LoadMxDrawX(id, dwgfile, cabpath, msipath) {
         var s, classid, Sys = {}, ua = navigator.userAgent.toLowerCase();

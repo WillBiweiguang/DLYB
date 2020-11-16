@@ -131,7 +131,8 @@ group by p.ProjectName,p.AffiliatedInstitution, p.ProjectType,p.LmProjectId,p.Lm
                 UpdateView(project);
             }
             else if (_beamInfoService.Repository.Entities.Any(x => !x.IsDeleted && x.ProjectId == project.Id && x.ProcessStatus != (int)BeamProcessStatus.Complete)
-                 || _taskListService.Repository.Entities.Any(x => !x.IsDeleted && x.ProjectId == project.Id && x.TaskStatus != (int)TaskStatus.Approved))
+                 || _taskListService.Repository.Entities.Any(x => !x.IsDeleted && x.ProjectId == project.Id && x.TaskStatus != (int)TaskStatus.Approved)
+                 || !_beamInfoService.Repository.Entities.Any(x => !x.IsDeleted && x.ProjectId == project.Id))
             {
                 project.Status = ProjectStauts.NotComplete;
                 UpdateView(project);
