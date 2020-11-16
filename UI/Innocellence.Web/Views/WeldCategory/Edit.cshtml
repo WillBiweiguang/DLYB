@@ -372,6 +372,7 @@
                 }
             });
             LEAP.Common.MainPop.ShowUpdateInfo(@Model.Id);
+
             //$('#ModalTable').show();
         });
         $('#iframei').on('mousedown', function (e) {
@@ -422,7 +423,7 @@
         $("#FigureNumber").change(function () {
             $('#BarNumber').empty();
             $('#BoardNumber').empty();
-
+            
             if ($("#BarNumber").val() != '') {
                 //showChild(TherapeuticArea, TradeName, tradeNameArr, $('#TradeName'));
                 var queryResult = Enumerable.From(BiddingQuerys)
@@ -473,6 +474,7 @@
                     .Distinct()
                     .ToArray();
                 showChild1(FigureNumber, queryResult);
+                InitSelect();
             }
         });
 
@@ -636,6 +638,23 @@
         $('#btnCancel').on('click', function () {
             window.close();
         });
+        function InitSelect() {
+            //select 初始化
+            var figureNum = '@Model.FigureNumber';
+            var barNum = '@Model.BarNumber';
+            var boardNum = '@Model.BoardNumber';
+            if (figureNum) {
+                setTimeout(function () {
+                    $('#FigureNumber').change();
+                    if (barNum) {
+                        $('#BarNumber').val(barNum);
+                    }
+                    if (boardNum) {
+                        $('#BoardNumber').val(boardNum);
+                    }
+                }, 1000);       
+            } 
+        }
     </script>
 
 }

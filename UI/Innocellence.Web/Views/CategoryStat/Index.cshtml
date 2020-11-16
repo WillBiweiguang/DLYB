@@ -50,6 +50,7 @@
 
         #rightPanel {
             background-color: white;
+            min-width:600px;
         }
 
             #rightPanel .widget-box {
@@ -219,7 +220,8 @@
                                 <select class="chosen-select form-control " id="GrooveTypeId" name="GrooveTypeId" style="" data-bind="value: GrooveTypeId" validate="{required:true}" data-geturl="/GrooveType/GetDropdownList"></select>
                                 @if (ViewBag.IsAdmin)
                                 {
-                                    <span class="func-btn redirect-btn btn_color" href="/GrooveTypeText/Index">坡口形式管理</span>
+                                    <span class="func-btn redirect-btn big-pop btn_color" href="/GrooveTypeText/Index">坡口形式管理</span>
+
                                 }
                                 @*<input type="text" name="GrooveClearance" class="form-control" placeholder="请输入" data-bind="value: GrooveClearance"
                                     validate="{required:true}" />*@
@@ -262,8 +264,10 @@
                 </div>
             </div>
         </div>
-        <div id="rightPanel" class="modal-dialog" style="z-index:1050; top:10px;left:25%; position:absolute; float:right; height:90%;width:65%;display:none;">
+
+        <div id="rightPanel" class="modal-dialog" style="z-index:1050; top:10px;left:25%; position:absolute; float:right; height:600px;width:65%;display:none;">
             <div class="widget-header btn_color1 ">
+            <div class="widget-header">
                 <h4 class="widget-title"></h4>
                 <div class="widget-toolbar">
                     <a href="#" id="closePanel">
@@ -560,9 +564,16 @@
                     $('#rightPanel').remove('iframe');
                     $('#rightPanel .widget-title').text($(this).text());
                     var url = $(this).attr('href');
+                    if ($(this).hasClass('big-pop')) {
+                        $('#rightPanel').css('width', '70%');
+                    }
+                    else {
+                        $('#rightPanel').css('width', '60%');
+                    }
                     var frame = '<iframe id="iframei" src="' + url + '" style="position:absolute; border:none; visibility:inherit; top:38px; left:0px;  height:100%; width:100%; z-index:-1; filter: progid:DXImageTransform.Microsoft.Alpha(style=0,opacity=0);"></iframe>';
                     $('#rightPanel').append(frame);
                     popObj = $(this).parent().find('select');
+               
                     $('#rightPanel').show(300);
                 });
                 $('#ModalTable').on('show.bs.modal', function () {
