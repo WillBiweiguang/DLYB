@@ -64,11 +64,16 @@
     @RenderSection("HeaderContent", required: false)
     <style>
         .navbar {
-            background: #009CDA;
+            /*background: #009CDA;*/
+            background: rgb(64,114,246) !important;
         }
 
         .dropdown-toggle {
-            background: #009CDA;
+            background: rgb(64,114,246) !important;
+        }
+
+        .footer .footer-inner {
+            left: 0px !important;
         }
 
         .layout-top li {
@@ -317,24 +322,24 @@
                         }
                         @if (!string.IsNullOrEmpty(ViewBag.SecondNav))
                         {
-                        <li>
-                            <i class="ace-icon fa active"></i>
-                            <span>@ViewBag.SecondNav</span>
-                        </li>
+                            <li>
+                                <i class="ace-icon fa active"></i>
+                                <span>@ViewBag.SecondNav</span>
+                            </li>
                         }
                         @if (!string.IsNullOrEmpty(ViewBag.ThirdNav))
                         {
-                        <li>
-                            <i class="ace-icon fa active"></i>
-                            <span>@ViewBag.ThirdNav</span>
-                        </li>
+                            <li>
+                                <i class="ace-icon fa active"></i>
+                                <span>@ViewBag.ThirdNav</span>
+                            </li>
                         }
                         @if (!string.IsNullOrEmpty(ViewBag.ForthNav))
                         {
-                        <li>
-                            <i class="ace-icon fa active"></i>
-                            <span>@ViewBag.ForthNav</span>
-                        </li>
+                            <li>
+                                <i class="ace-icon fa active"></i>
+                                <span>@ViewBag.ForthNav</span>
+                            </li>
                         }
 
                     </ul>
