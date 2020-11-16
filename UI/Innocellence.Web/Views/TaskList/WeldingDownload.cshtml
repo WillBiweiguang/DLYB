@@ -129,6 +129,12 @@
                         "render": function (data, type, full, meta) {
                             return full.Index;                            
                         }
+                    },
+                    {
+                        "targets": 7,
+                        "render": function (data, type, full, meta) {
+                            return full.Quality.toFixed(2);
+                        }
                     }],
                 fnDrawCallback: function () {
                     $('[data-toggle="tooltip"]').tooltip();

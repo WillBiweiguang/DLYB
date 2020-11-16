@@ -162,6 +162,7 @@ namespace DLYB.Web.Controllers
             //List<WeldCategoryStatisticsVView> listEx = _wcsvService.GetList<WeldCategoryStatisticsVView>(expression, gridRequest.PageCondition);
             //GetWeldQuality(listEx);
             listEx = TableListHelper.GenerateIndex(listEx, gridRequest.PageCondition);
+            gridRequest.PageCondition.RowCount = listEx.Count;
             return this.GetPageResult(listEx, gridRequest);
         }
 

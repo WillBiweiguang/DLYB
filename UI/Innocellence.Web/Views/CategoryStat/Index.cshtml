@@ -197,7 +197,7 @@
                         <div class="form-group">
                             <label class="col-sm-3 control-label">板厚(mm):</label>
                             <div class="col-sm-9">
-                                <select class="single-select form-control" id="ThickType" name="ThicknessId" style="" data-bind="value: ThicknessId" validate="{required:true}" data-geturl="/Thickness/GetDropdownList"></select>
+                                <select class="chosen-select form-control" id="ThickType" name="ThicknessId" style="" data-bind="value: ThicknessId" validate="{required:true}" data-geturl="/Thickness/GetDropdownList"></select>
                                 @if (ViewBag.IsAdmin)
                                 {
                                     <span class="func-btn redirect-btn" href="/Thickness/Index">板厚管理</span>
@@ -209,7 +209,7 @@
                         <div class="form-group">
                             <label class="col-sm-3 control-label">坡口形式:</label>
                             <div class="col-sm-9">
-                                <select class="single-select form-control" id="GrooveTypeId" name="GrooveTypeId" style="" data-bind="value: GrooveTypeId" validate="{required:true}" data-geturl="/GrooveType/GetDropdownList"></select>
+                                <select class="chosen-select form-control" id="GrooveTypeId" name="GrooveTypeId" style="" data-bind="value: GrooveTypeId" validate="{required:true}" data-geturl="/GrooveType/GetDropdownList"></select>
                                 @if (ViewBag.IsAdmin)
                                 {
                                     <span class="func-btn redirect-btn" href="/GrooveTypeText/Index">坡口形式管理</span>
@@ -550,7 +550,7 @@
                     $('#rightPanel').remove('iframe');
                     $('#rightPanel .widget-title').text($(this).text());
                     var url = $(this).attr('href');
-                    var frame = '<iframe id="iframei" src="' + url + '" style="position:absolute; border:none; visibility:inherit; top:38px; left:0px;  height:100%; width:100%; z-index:-1; filter: progid:DXImageTransform.Microsoft.Alpha(style=0,opacity=0);"></iframe>';
+                    var frame = '<iframe id="iframei" src="' + url + '" style="position:absolute; border:none; visibility:inherit; top:38px; left:0px;  height:90%; width:65%; z-index:-1; filter: progid:DXImageTransform.Microsoft.Alpha(style=0,opacity=0);"></iframe>';
                     $('#rightPanel').append(frame);
                     popObj = $(this).parent().find('select');
                     $('#rightPanel').show(300);
