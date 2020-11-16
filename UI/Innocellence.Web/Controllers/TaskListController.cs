@@ -270,7 +270,7 @@ namespace DLYB.Web.Controllers
             }
             return Json(doJson(null), JsonRequestBehavior.AllowGet);
         }
-        public ActionResult ExportToExcel(int beamId = 0)
+        public ActionResult ExportToExcel(int beamId = 0,string Ids = "")
         {
             string fileName = "焊材_" + DateTime.Now.ToString("yyyyMMddHHmmssfff") + ".xlsx";
 
@@ -282,40 +282,45 @@ namespace DLYB.Web.Controllers
 
                 // 导出 焊材详情表 
                 //var answer = _pollingResultService.GetList(Id);
-                var reportList1 = _weldCategoryService.Repository.Entities.Where(a => !a.IsDeleted && a.BeamId == beamId).ToList();
-                int i = 1;
-                string beamName = "";
-                int projectId = 0;
-                string projectName = "";
-                foreach (var v in reportList1)
+                if (!string.IsNullOrEmpty(Ids))
                 {
-                    var beam = _beamInfoService.Repository.Entities.FirstOrDefault(x => x.Id == v.BeamId);
-                    if (beam.DwgFile.IndexOf("dwg") > 0)
-                    {
-                        beamName = beam.DwgFile.Substring(0, beam.DwgFile.IndexOf("dwg") - 1);
-                        projectId = beam.ProjectId;
-                        var project = _projectService.Repository.Entities.FirstOrDefault(x => x.Id == projectId);
-                        projectName = project.ProjectName;
-                    }
-                    int j = 0;
-                    var row = sheet1.CreateRow(i++);
-                    row.CreateCell(j++).SetCellValue(i - 1);
-                    row.CreateCell(j++).SetCellValue(projectName);
-                    row.CreateCell(j++).SetCellValue(beamName);
-                    row.CreateCell(j++).SetCellValue(v.FigureNumber);
-                    row.CreateCell(j++).SetCellValue(v.BoardNumber);
-                    row.CreateCell(j++).SetCellValue(v.WeldType);
-                    row.CreateCell(j++).SetCellValue(v.Thickness);
-                    row.CreateCell(j++).SetCellValue(v.WeldLocation);
-                    row.CreateCell(j++).SetCellValue(v.SectionArea);
-                    row.CreateCell(j++).SetCellValue(v.WeldLength);
-                    //row.CreateCell(j++).SetCellValue(v.WeldingNumber);
-                    row.CreateCell(j++).SetCellValue(v.Quantity);
-                    row.CreateCell(j++).SetCellValue(v.BeamNum.HasValue ? v.BeamNum.Value : 0);
-                    row.CreateCell(j++).SetCellValue(v.WeldQuanlity);
-                    row.CreateCell(j++).SetCellValue(v.ConsumeFactor);
-                    row.CreateCell(j++).SetCellValue(v.ConsumeFactor * v.WeldQuanlity);
+                    var selectedIds = Ids.TrimEnd(',').Split(',');
 
+                    var reportList1 = _weldCategoryService.Repository.Entities.Where(a => !a.IsDeleted && a.BeamId == beamId && selectedIds.Contains(a.Id.ToString())).ToList();
+                    int i = 1;
+                    string beamName = "";
+                    int projectId = 0;
+                    string projectName = "";
+                    foreach (var v in reportList1)
+                    {
+                        var beam = _beamInfoService.Repository.Entities.FirstOrDefault(x => x.Id == v.BeamId);
+                        if (beam.DwgFile.IndexOf("dwg") > 0)
+                        {
+                            beamName = beam.DwgFile.Substring(0, beam.DwgFile.IndexOf("dwg") - 1);
+                            projectId = beam.ProjectId;
+                            var project = _projectService.Repository.Entities.FirstOrDefault(x => x.Id == projectId);
+                            projectName = project.ProjectName;
+                        }
+                        int j = 0;
+                        var row = sheet1.CreateRow(i++);
+                        row.CreateCell(j++).SetCellValue(i - 1);
+                        row.CreateCell(j++).SetCellValue(projectName);
+                        row.CreateCell(j++).SetCellValue(beamName);
+                        row.CreateCell(j++).SetCellValue(v.FigureNumber);
+                        row.CreateCell(j++).SetCellValue(v.BoardNumber);
+                        row.CreateCell(j++).SetCellValue(v.WeldType);
+                        row.CreateCell(j++).SetCellValue(v.Thickness);
+                        row.CreateCell(j++).SetCellValue(v.WeldLocation);
+                        row.CreateCell(j++).SetCellValue(v.SectionArea);
+                        row.CreateCell(j++).SetCellValue(v.WeldLength);
+                        //row.CreateCell(j++).SetCellValue(v.WeldingNumber);
+                        row.CreateCell(j++).SetCellValue(v.Quantity);
+                        row.CreateCell(j++).SetCellValue(v.BeamNum.HasValue ? v.BeamNum.Value : 0);
+                        row.CreateCell(j++).SetCellValue(v.WeldQuanlity);
+                        row.CreateCell(j++).SetCellValue(v.ConsumeFactor);
+                        row.CreateCell(j++).SetCellValue(v.ConsumeFactor * v.WeldQuanlity);
+
+                    }
                 }
 
                 using (MemoryStream ms = new MemoryStream())
