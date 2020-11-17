@@ -2,6 +2,7 @@ var mxOcx = document.getElementById("MxDrawXCtrl");
 var lastCircleHandle = 0;
 var existingHandles = [];
 var isBrowner = false;
+var isFileOpened = false;
 //var isViewModel = 0;
     // 执行控件命令
  function DoCmd(iCmd) {     
@@ -209,9 +210,9 @@ function InitMxDrawX() {
 
             if (!filePath) {
                 var path = "http://" + window.location.host + '/Files/BeamInfo/' + filename;
-                mxOcx.OpenWebDwgFile(path);
+                isFileOpened = mxOcx.OpenWebDwgFile(path);
             } else {
-                mxOcx.OpenWebDwgFile(filePath);
+                isFileOpened = mxOcx.OpenWebDwgFile(filePath);
             }
             //隐藏菜单栏
             
@@ -229,7 +230,7 @@ function BrownerMode() {
     //mxOcx.ShowMenuBar = !isBrowner;
     //mxOcx.ShowPropertyWindow = !isBrowner;
     //隐藏工具条
-    //mxOcx.ShowToolBar("常用工具", isShow);
+    mxOcx.ShowToolBar("常用工具", isShow);
     mxOcx.ShowToolBar("绘图工具", isShow);
     mxOcx.ShowToolBar("编辑工具", isShow);
     mxOcx.ShowToolBar("特性", isShow);

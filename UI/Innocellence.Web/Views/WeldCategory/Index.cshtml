@@ -419,7 +419,7 @@
                 }
             });
             window.onbeforeunload = function (event) {
-                if (isViewModel) {
+                if (isViewModel || !isFileOpened) {
                     return;
                 }
                 if (!isApproval) {
@@ -624,6 +624,10 @@
             }
         }
         function saveFile() {
+            if (!isFileOpened) {
+                alert('文件没有正确打开');
+                return true;
+            }
             if (mxOcx.SaveDwgFile($('#fileServerPath').val())) {
                 return true;
             } else {

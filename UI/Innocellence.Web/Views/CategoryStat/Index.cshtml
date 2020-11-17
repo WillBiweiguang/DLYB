@@ -636,7 +636,7 @@
             $.ajax({
                 cache: true,
                 type: "GET",
-                url: "/GrooveType/GetGrooveTypeSearchQuerys",
+                url: "/GrooveType/GetGrooveTypeSearchQuerys" + "?v" + Math.random(),
                 async: true,
                 error: function (request) {
                     artDialog.alert("查询条件信息获取失败。");
@@ -714,6 +714,14 @@
 
             function BindSelect(select) {
                 var url = $(select).attr('data-geturl');
+                if (!url) {
+                    return;
+                }
+                if (url.indexOf('?') > 0) {
+                    url += "&v=" + Math.random();
+                } else {
+                    url += "?v=" + Math.random();
+                }
                 if (url) {
                     $(select).children().remove();
                     $(select).append('<option value></option>');
@@ -729,6 +737,11 @@
             function BindChosen(url, select, callback, search) {
                 $(select).children().remove();
                 $(select).append('<option value></option>');
+                if (url.indexOf('?') > 0) {
+                    url += "&v=" + Math.random();
+                } else {
+                    url += "?v=" + Math.random();
+                }
                 $.ajax(url)
                     .done(function (data) {
                         $.each(data, function (i, op) {
@@ -741,7 +754,7 @@
             }
 
             function GetWeldingModel(id) {
-                $.ajax({ url: '/Welding/GetModelById', data: { id: id } })
+                $.ajax({ url: '/Welding/GetModelById', data: { id: id, v: Math.random() } })
                     .done(function (data) {
                         $('#WeldingModel').val(data);
                     });

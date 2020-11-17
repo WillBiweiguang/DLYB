@@ -133,10 +133,12 @@ namespace Innocellence.Web.Controllers
                 for (int i = 0; i < Request.Files.Count; i++)
                 {
                     var file = Request.Files[i];
+                    var fileName = System.IO.Path.GetFileName(file.FileName);
                     objModal = objModal ?? new BeamInfoView();
-                    objModal.DwgFile = System.IO.Path.GetFileName(file.FileName);
+                    objModal.DwgFile = fileName.Replace("+", "");
                     objModal.ProjectId = ProjectId;
-                    objModal.BeamNum = 1;                    
+                    objModal.BeamNum = 1;
+                    objModal.BridgeComponent = fileName.Substring(0, fileName.IndexOf("dwg") - 1);
                     if (project != null)
                     {
                         objModal.ProjectName = project.ProjectName;

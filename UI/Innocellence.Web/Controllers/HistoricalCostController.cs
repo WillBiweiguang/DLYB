@@ -75,10 +75,10 @@ namespace DLYB.Web.Controllers
             {
                 var file = Request.Files[0];
                 objModal = objModal ?? new HistoricalCostView();
-                objModal.HistoricalFile = file.FileName;
+                objModal.HistoricalFile = System.IO.Path.GetFileName(file.FileName);
                 objModal.ProjectId = projectId;
                 var fileExtension = System.IO.Path.GetExtension(file.FileName);
-                string path = $"/Files/HistoricalCost/{projectId}/{file.FileName}";
+                string path = $"/Files/HistoricalCost/{projectId}/{objModal.HistoricalFile}";
                 if (fileExtension.ToLower() != ".xls" && fileExtension.ToLower() != ".xlsx")
                 {
                     var result = GetErrorJson();

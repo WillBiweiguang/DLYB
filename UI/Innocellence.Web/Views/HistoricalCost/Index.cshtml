@@ -152,6 +152,9 @@
 
         function uploadFile(obj) {
             var strUrl = "PostFile?ProjectId=" + $('#project_id').val();
+            if (!$(obj).val()) {
+                return;
+            }
             $(obj).FileUpload({
                 self: obj,
                 url: strUrl,
