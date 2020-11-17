@@ -135,10 +135,10 @@ namespace Innocellence.Web.Controllers
                     var file = Request.Files[i];
                     var fileName = System.IO.Path.GetFileName(file.FileName);
                     objModal = objModal ?? new BeamInfoView();
-                    objModal.DwgFile = fileName.Replace("+", "");
+                    objModal.DwgFile = fileName;
                     objModal.ProjectId = ProjectId;
                     objModal.BeamNum = 1;
-                    objModal.BridgeComponent = fileName.Substring(0, fileName.IndexOf("dwg") - 1);
+                    
                     if (project != null)
                     {
                         objModal.ProjectName = project.ProjectName;
@@ -154,7 +154,7 @@ namespace Innocellence.Web.Controllers
                     {
                         System.IO.Directory.CreateDirectory(Server.MapPath("/Files/BeamInfo/" + ProjectId + SLASH));
                     }
-                    string path = "/Files/BeamInfo/" + ProjectId + SLASH + objModal.DwgFile;
+                    string path = "/Files/BeamInfo/" + ProjectId + SLASH + objModal.DwgFile.Replace("+", "");
                     if (!_tempInfoService.Repository.Entities.Any(x => x.ProjectName == project.ProjectName && x.AffiliatedInstitution == project.AffiliatedInstitution && x.BeamName == objModal.BridgeComponent))
                     {
                         errorBeam += objModal.BridgeComponent + ",";

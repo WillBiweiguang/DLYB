@@ -32,7 +32,17 @@ namespace Infrastructure.Web.Domain.ModelsView
         /// <summary>
         /// 梁段名，通过dwgfile字段解析
         /// </summary>
-        public string BridgeComponent { get;set; }
+        public string BridgeComponent
+        {
+            get
+            {
+                if (this.DwgFile.IndexOf("dwg") > -1)
+                {
+                    return this.DwgFile.Substring(0, this.DwgFile.IndexOf("dwg") - 1);
+                }
+                return "";
+            }
+        }
 
         public int TaskStatus { get; set; }
 

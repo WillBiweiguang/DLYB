@@ -89,10 +89,18 @@
                     "columnDefs": [{
                         "targets": 0,
                         "render": function (data, type, full, meta) {
-                            return meta.row+1;
+                            return meta.row + 1;
                         }
-                    },
-                   ],
+                    }, {
+                        "targets": 12,
+                            "render": function (data, type, full, meta) {
+                                if (full.WeldingQuanlity == 0) {
+                                    return full.WeldingQuanlity;
+                                }
+                            return full.WeldingQuanlity.toFixed(2);
+                        }
+                    }
+                    ],
                     fnDrawCallback: function () {
                         $('[data-toggle="tooltip"]').tooltip();
                         if ($('.total-count').length > 0) {
