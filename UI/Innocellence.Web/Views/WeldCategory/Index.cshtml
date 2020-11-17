@@ -69,7 +69,7 @@
                     @*<a href="#" class="btn btn-info btn-sm" id="nextBeam" onclick="nextBeam(@ViewBag.ProjectId,@ViewBag.BeamId); return false;" data-toggle="tooltip" data-placement="top" title="进行下一梁段">
                             进行下一梁段
                         </a>*@
-                    <a href="~/beaminfo/index" class="btn btn-info btn-sm" id="nextBeam" data-toggle="tooltip" data-placement="top" title="进行下一梁段">
+                    <a href="~/beaminfo/index?ProjectId=@ViewBag.ProjectId" class="btn btn-info btn-sm" id="nextBeam" data-toggle="tooltip" data-placement="top" title="进行下一梁段">
                         进行下一梁段
                     </a>
                     <a href="#" class="btn btn-primary btn-sm" id="btnSaveFile" data-toggle="tooltip" data-placement="top" title="保存文件">
