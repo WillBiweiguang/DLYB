@@ -205,8 +205,8 @@ namespace Innocellence.Web.Controllers
             if (Request.Files.Count > 0)
             {
                 var beam = _beamInfoService.GetList<BeamInfoView>(1, x => x.Id == BeamId).FirstOrDefault();
-                var file = Request.Files[0];
-                string path = "/Files/BeamInfo/" + beam.ProjectId + SLASH + beam.DwgFile;
+                var file = Request.Files[0];                
+                string path = "/Files/BeamInfo/" + beam.ProjectId + SLASH + beam.DwgFile.Replace("+", "");
                 file.SaveAs(Server.MapPath(path));
             }
             return Json(doJson(null), JsonRequestBehavior.AllowGet);
