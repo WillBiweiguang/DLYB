@@ -107,5 +107,20 @@ namespace Innocellence.Web.Controllers
         .Select(x => new { key = x.Id, value = x.ProjectName }).ToList();
             return new JsonResult { Data = list, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
         }
+
+        public JsonResult DeleteProject(int Id)
+        {
+            try
+            {
+                _projectService.DeleteProject(Id);
+                return Json(doJson(null), JsonRequestBehavior.AllowGet);
+            }
+            catch(Exception ex)
+            {
+                var result = GetErrorJson();
+                result.Message.Text = ex.Message;
+                return Json(result, JsonRequestBehavior.AllowGet);
+            }
+        }
     }
 }
