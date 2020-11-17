@@ -109,7 +109,7 @@ function DoCommandEventFunc(iCmd) {
             pt = newEnt.Center;
         }
         newEnt.Move(pt, getPt.value());
-
+        
         LocateWelding(entHandleID, function (handles, Id) {
             //var hdar = ["2E7B81", "2E7B82", "2E7B83", "2E7B84"];
             var hdar = handles.split(',');
@@ -127,6 +127,7 @@ function DoCommandEventFunc(iCmd) {
             var weldData = [];
             weldData.push({ WeldType: 'ManJiaoH', HandleID: handleArray.toString(), CircleId: newEntHandleID, CopyOriginId: Id });
             saveWeldData(weldData, 2);
+            mxOcx.UpdateDisplay();
         });
 
         //handleArray---为焊缝符号所有图元的handle数组，第一个值为箭头的handle
