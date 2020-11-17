@@ -21,12 +21,23 @@ input, select, textarea {
     background: rgb(64,114,246) !important;
     color: white;
 }
-    .modal-dialog .modal-content .modal-header .blue {
-        color: white !important;
-    }
-    .mt10 {
-        margin-top: 10px !important
-    }
+
+
+.modal-header .close{
+    color:white !important;
+}
+.modal-dialog .modal-content .modal-header .blue {
+    color: white !important;
+}
+button.close{
+    opacity:1 !important;
+}
+.widget-toolbar > a, .widget-toolbar > .widget-menu > a{
+    color:white;
+}
+.mt10 {
+    margin-top: 10px !important
+}
 
 .mr10 {
     margin-right: 10px
