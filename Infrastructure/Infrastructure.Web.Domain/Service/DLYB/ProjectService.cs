@@ -147,5 +147,22 @@ group by p.ProjectName,p.AffiliatedInstitution, p.ProjectType,p.LmProjectId,p.Lm
                 UpdateProjectStatus(project);
             }
         }
+
+        public void DeleteProject(int projectId)
+        {
+            var project = GetList<ProjectView>(1, x => !x.IsDeleted && x.Id == projectId).FirstOrDefault();
+            var sql = string.Format("update t_ProjectInfo set isdeleted = 1 where id = {0} ;", projectId);
+            var sqlbeam = string.Format("update t_BeamInfo set isdeleted = 1 where ProjectId = {0};", projectId);
+            var sqlTask = string.Format("update t_TaskList set isdeleted = 1 where ProjectId = {0};", projectId);
+            var sqldelete = "";
+            if (!string.IsNullOrEmpty(project.LmProjectId))
+            {
+                sqldelete = string.Format("delete from t_TempInfo where ProjectId = '{0}';", project.LmProjectId);
+            }
+            Repository.UnitOfWork.ExecuteSqlCommand(Core.TransactionalBehavior.DoNotEnsureTransaction, sql);
+            Repository.UnitOfWork.ExecuteSqlCommand(Core.TransactionalBehavior.DoNotEnsureTransaction, sqlbeam);
+            Repository.UnitOfWork.ExecuteSqlCommand(Core.TransactionalBehavior.DoNotEnsureTransaction, sqlTask);
+            Repository.UnitOfWork.ExecuteSqlCommand(Core.TransactionalBehavior.DoNotEnsureTransaction, sqldelete);
+        }
     }
 }

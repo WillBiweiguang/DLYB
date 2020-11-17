@@ -153,8 +153,9 @@
                     {
                         "targets": 6,
                         "render": function (data, type, full, meta) {
-                            return '<a href="#" onclick="showHistoricalCost(\'' + full.Id + '\');return false;" class="artDailog btn btn-info  btn-xs" style="margin-right:4px;" data-toggle="tooltip" data-placement="top" title="历史消耗">历史消耗</a>' +
-                                '<a href="#" onclick="showBeamInfo(\'' + full.Id + '\');return false;" class="artDailog btn btn-info  btn-xs" style="margin-right:4px;" data-toggle="tooltip" data-placement="top" title="文件管理">文件管理</a>';
+                            return '<a href="#" onclick="showHistoricalCost(\'' + full.Id + '\');return false;" class="artDailog btn btn-info btn-xs" style="margin-right:4px;" data-toggle="tooltip" data-placement="top" title="历史消耗">历史消耗</a>' +
+                                '<a href="#" onclick="showBeamInfo(\'' + full.Id + '\');return false;" class="artDailog btn btn-info btn-xs" style="margin-right:4px;" data-toggle="tooltip" data-placement="top" title="文件管理">文件管理</a>' +
+                                '<a href="#" onclick="deleteProject(\'' + full.Id + '\');return false;" class="artDailog btn btn-danger btn-xs" style="margin-right:4px;" data-toggle="tooltip" data-placement="top" title="删除"><i class="fa fa-trash-o"></i></a>';
                         }
                         }],
                 fnDrawCallback: function () {
@@ -180,6 +181,25 @@
         }
         function showBeamInfo(pid) {
             window.location = '/BeamInfo/index?projectid=' + pid;
+        }
+        function deleteProject(id) {
+            bootbox.confirm({
+                message: "确认要删除项目？", buttons: { confirm: { label: '确定' }, cancel: { label: '取消' } }, callback: function (value) {
+                    if (value) {
+                        $.get('deleteproject', { Id: id }).done(function (result) {
+                            if (result.Message.Status == 200) {
+                                bootbox.alert('删除成功');
+                                LEAP.Common.MainPop.options.dataTable.fnDraw(false);
+                            }
+                            else {
+                                bootbox.alert('删除失败，' + result.Message.Text);
+                            }
+                        });
+                    }
+                }
+            });
+          
+      
         }
     </script>
 }
