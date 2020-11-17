@@ -154,7 +154,7 @@ namespace Innocellence.Web.Controllers
                     {
                         System.IO.Directory.CreateDirectory(Server.MapPath("/Files/BeamInfo/" + ProjectId + SLASH));
                     }
-                    string path = "/Files/BeamInfo/" + ProjectId + SLASH + objModal.DwgFile.Replace("+", "");
+                    string path = "/Files/BeamInfo/" + ProjectId + SLASH + Utility.ReplaceWebFileName(objModal.DwgFile);
                     if (!_tempInfoService.Repository.Entities.Any(x => x.ProjectName == project.ProjectName && x.AffiliatedInstitution == project.AffiliatedInstitution && x.BeamName == objModal.BridgeComponent))
                     {
                         errorBeam += objModal.BridgeComponent + ",";
@@ -205,8 +205,8 @@ namespace Innocellence.Web.Controllers
             if (Request.Files.Count > 0)
             {
                 var beam = _beamInfoService.GetList<BeamInfoView>(1, x => x.Id == BeamId).FirstOrDefault();
-                var file = Request.Files[0];                
-                string path = "/Files/BeamInfo/" + beam.ProjectId + SLASH + beam.DwgFile.Replace("+", "");
+                var file = Request.Files[0];
+                string path = "/Files/BeamInfo/" + beam.ProjectId + SLASH + Utility.ReplaceWebFileName(beam.DwgFile);
                 file.SaveAs(Server.MapPath(path));
             }
             return Json(doJson(null), JsonRequestBehavior.AllowGet);

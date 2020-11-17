@@ -5971,7 +5971,7 @@ body.mob-safari .sidebar.sidebar-fixed {
     bottom: 4px;
     padding: 8px;
     line-height: 36px;
-    width: calc(100% - 200px);
+    width: 98%;
     /*border-top: 3px double #e5e5e5;*/
 }
 

@@ -61,8 +61,8 @@ namespace Innocellence.FaultSearch.Controllers
                     ViewBag.ProjectId = beam.ProjectId;
                     ViewBag.ProjectName = projectName;
                     ViewBag.FileName = beam.DwgFile;
-                    ViewBag.FilePath = GetFilePath(beam.ProjectId, beam.DwgFile.Replace("+", ""));
-                    ViewBag.FileServerPath = GetFileAbsolutePath(beam.ProjectId, beam.DwgFile.Replace("+", ""));
+                    ViewBag.FilePath = GetFilePath(beam.ProjectId, Utility.ReplaceWebFileName(beam.DwgFile));
+                    ViewBag.FileServerPath = GetFileAbsolutePath(beam.ProjectId, Utility.ReplaceWebFileName(beam.DwgFile));
                     var isView = Request["viewMode"];
                     ViewBag.ViewModel = 0;
                     if (!string.IsNullOrEmpty(isView) && isView == "1")

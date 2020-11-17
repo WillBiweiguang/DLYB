@@ -8,9 +8,22 @@ namespace Infrastructure.Web.Domain.Common
 {
    public class Utility
     {
-        public static string ReplaceFileSign(string filename)
+        public static string ReplaceWebFileName(string filename)
         {
-            return filename.Replace("+", "");
+            //处理符号 ;/?:@&=+$,#' 
+            return filename.Replace("+", "-(")
+                .Replace("'", "-(")
+                .Replace(";", "-(")
+                .Replace("/", "-(")
+                .Replace("?", "-(")
+                .Replace(":", "-(")
+                .Replace("@", "-(")
+                .Replace("&", "-(")
+                .Replace("=", "-(")
+                .Replace("$", "-(")
+                .Replace(",", "-(")
+                .Replace("#", "-(")
+                .Replace(" ", "-(");
         }
     }
 }
