@@ -17,10 +17,16 @@ input, select, textarea {
 .mr5 {
     margin-right: 5px
 }
-
-.mt10 {
-    margin-top: 10px !important
+.modal-dialog .modal-content .modal-header {
+    background: rgb(64,114,246) !important;
+    color: white;
 }
+    .modal-dialog .modal-content .modal-header .blue {
+        color: white !important;
+    }
+    .mt10 {
+        margin-top: 10px !important
+    }
 
 .mr10 {
     margin-right: 10px

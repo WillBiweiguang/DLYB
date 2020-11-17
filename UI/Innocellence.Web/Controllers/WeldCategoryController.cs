@@ -174,6 +174,7 @@ namespace Innocellence.FaultSearch.Controllers
         {
             if (string.IsNullOrEmpty(objModal.Ids) || !objModal.Ids.Contains(","))
             {
+                objModal.WeldQuanlity = Math.Round(objModal.WeldQuanlity, 2);
                 return base.Post(objModal, Id);
             }
             //批量更新
@@ -198,7 +199,7 @@ namespace Innocellence.FaultSearch.Controllers
                     item.MentalDensity = objModal.MentalDensity;
                     item.SectionArea = objModal.SectionArea;
                     item.WeldLength = objModal.WeldLength;
-                    item.WeldQuanlity = objModal.WeldQuanlity;
+                    item.WeldQuanlity = Math.Round(objModal.WeldQuanlity, 2);
                     item.WeldingNumber = objModal.WeldingNumber;
                     item.WeldingQuanlity = objModal.WeldingQuanlity;
                     item.BeamNum = objModal.BeamNum;
