@@ -56,7 +56,7 @@ namespace DLYB.Web.Controllers
                     ViewBag.IsSuperAdmin = true;
                 }
             }
-            if (user != null && user.UserName == EngineContext.Current.WebConfig.SupperUser)
+            if (user != null && user.UserName == EngineContext.Current.WebConfig.SupperUser || this.objLoginInfo.Menus.Any(x => x.Id == (int)EnumMenuId.Admin))
             {
                 ViewBag.IsRole = true;
                 ViewBag.IsUser = true;
