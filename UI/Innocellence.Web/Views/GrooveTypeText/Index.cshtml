@@ -234,8 +234,9 @@
                     {
                         "targets": 13,
                         "render": function (data, type, full, meta) {
-                            return '<img src="' + full.PreviewImage + '" style="max-width:100px" />'
-                                ;
+                            return '<a href="' + full.PreviewImage + '"target="_blank">' +
+                                '<img src="' + full.PreviewImage + '"style="height:60px;">' +
+                                '</a>';
                         }
                     },
                     //{

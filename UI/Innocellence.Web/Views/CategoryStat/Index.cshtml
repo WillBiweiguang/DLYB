@@ -243,7 +243,7 @@
                         <div class="form-group">
                             <label class="col-sm-3 control-label">焊缝截面积:</label>
                             <div class="col-sm-9">
-                                <input type="text" id="SectionalArea" name="SectionalArea" class="form-control" placeholder="请输入" data-bind="value: SectionalArea"
+                                <input type="text" id="SectionalArea" name="SectionalArea" class="form-control" placeholder="" data-bind="value: SectionalArea"
                                        validate="{required:true}" />
                                 <span class="func-btn pop-btn btn_color">焊缝截面积管理</span>
                             </div>
@@ -294,7 +294,7 @@
                         <div style="width:70%;float:left">
 
                             <div class="row">
-                                <div class="form-group col-lg-8">
+                                <div class="form-group col-lg-11">
                                     <label class="col-sm-5 control-label">焊缝类型:</label>
                                     <div class="col-sm-7">
                                         <select class="single-select form-control" name="WeldGeometry" id="WeldGeometry" data-placeholder="请选择焊缝类型" data-bind="value: WeldGeometry">
@@ -307,7 +307,7 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="form-group col-lg-8">
+                                <div class="form-group col-lg-11">
                                     <label class="col-sm-5 control-label">坡口类型:</label>
                                     <div class="col-sm-7">
                                         <select class="single-select form-control" name="GrooveType" id="GrooveType" data-placeholder="请选择坡口类型" data-bind="value: GrooveType">
@@ -323,21 +323,21 @@
                         </div>
 
                         <div style="width:29%;float:right">
-                            <img style="width:100%;height:auto" id="PreviewImage" src="" />
+                            <a href="" id="PreviewImagehref" target="blank"><img style="width:100%;height:auto" id="PreviewImage" src="" /></a>
                         </div>
                         <div style="border:1px solid;padding-top:3px;clear:both">
                             <div class="row">
                                 <div class="form-group col-lg-6" id="poh">
                                     <label class="col-sm-5 control-label">坡口深度h:</label>
                                     <div class="col-sm-7">
-                                        <input type="text" name="WorksThicknessH1" id="WorksThicknessH1" class="form-control" placeholder="请输入" data-bind="value: WorksThicknessH1"
+                                        <input type="text" name="WorksThicknessH1" id="WorksThicknessH1" class="form-control" placeholder="" data-bind="value: WorksThicknessH1"
                                                validate="{required:true}" />
                                     </div>
                                 </div>
                                 <div class="form-group col-lg-6" id="ygH">
                                     <label class="col-sm-5 control-label">余高H:</label>
                                     <div class="col-sm-7">
-                                        <input type="text" name="WorksThicknessH2" id="WorksThicknessH2" class="form-control" placeholder="请输入" data-bind="value: WorksThicknessH2"
+                                        <input type="text" name="WorksThicknessH2" id="WorksThicknessH2" class="form-control" placeholder="" data-bind="value: WorksThicknessH2"
                                                validate="{required:true}" />
                                     </div>
                                 </div>
@@ -346,14 +346,14 @@
                                 <div class="form-group col-lg-6" id="zdjfC">
                                     <label class="col-sm-5 control-label">组对间隙c:</label>
                                     <div class="col-sm-7">
-                                        <input type="text" name="GrooveClearance" id="GrooveClearance" class="form-control" placeholder="请输入" data-bind="value: GrooveClearance"
+                                        <input type="text" name="GrooveClearance" id="GrooveClearance" class="form-control" placeholder="" data-bind="value: GrooveClearance"
                                                validate="{required:true}" />
                                     </div>
                                 </div>
                                 <div class="form-group col-lg-6" id="dbgdP">
                                     <label class="col-sm-5 control-label">钝边高度p:</label>
                                     <div class="col-sm-7">
-                                        <input type="text" name="BluntThickness" id="BluntThickness" class="form-control" placeholder="请输入" data-bind="value: BluntThickness"
+                                        <input type="text" name="BluntThickness" id="BluntThickness" class="form-control" placeholder="" data-bind="value: BluntThickness"
                                                validate="{required:true}" />
                                     </div>
                                 </div>
@@ -363,14 +363,14 @@
                                 <div class="form-group col-lg-6" id="pkjdA1">
                                     <label class="col-sm-5 control-label">坡口角度a1:</label>
                                     <div class="col-sm-7">
-                                        <input type="text" name="GrooveAngleA1" id="GrooveAngleA1" class="form-control" placeholder="请输入" data-bind="value: GrooveAngleA1"
+                                        <input type="text" name="GrooveAngleA1" id="GrooveAngleA1" class="form-control" placeholder="" data-bind="value: GrooveAngleA1"
                                                validate="{required:true}" />
                                     </div>
                                 </div>
                                 <div class="form-group col-lg-6" id="pojdA">
                                     <label class="col-sm-5 control-label">坡口角度a:</label>
                                     <div class="col-sm-7">
-                                        <input type="text" name="GrooveAngleA2" id="GrooveAngleA2" class="form-control" placeholder="请输入" data-bind="value: GrooveAngleA2"
+                                        <input type="text" name="GrooveAngleA2" id="GrooveAngleA2" class="form-control" placeholder="" data-bind="value: GrooveAngleA2"
                                                validate="{required:true}" />
                                     </div>
                                 </div>
@@ -379,14 +379,14 @@
                                 <div class="form-group col-lg-6" id="rkL">
                                     <label class="col-sm-5 control-label">熔宽l:</label>
                                     <div class="col-sm-7">
-                                        <input type="text" name="GrooveArcR1" id="GrooveArcR1" class="form-control" placeholder="请输入" data-bind="value: GrooveArcR1"
+                                        <input type="text" name="GrooveArcR1" id="GrooveArcR1" class="form-control" placeholder="" data-bind="value: GrooveArcR1"
                                                validate="{required:true}" />
                                     </div>
                                 </div>
                                 <div class="form-group col-lg-6" id="hjccK">
                                     <label class="col-sm-5 control-label">焊脚尺寸K:</label>
                                     <div class="col-sm-7">
-                                        <input type="text" name="GrooveArcR2" id="GrooveArcR2" class="form-control" placeholder="请输入" data-bind="value: GrooveArcR2"
+                                        <input type="text" name="GrooveArcR2" id="GrooveArcR2" class="form-control" placeholder="" data-bind="value: GrooveArcR2"
                                                validate="{required:true}" />
                                     </div>
                                 </div>
@@ -395,14 +395,14 @@
                                 <div class="form-group col-lg-6" id="yhbjR">
                                     <label class="col-sm-5 control-label">圆弧半径R:</label>
                                     <div class="col-sm-7">
-                                        <input type="text" name="CircleArcR" id="CircleArcR" class="form-control" placeholder="请输入" data-bind="value: CircleArcR"
+                                        <input type="text" name="CircleArcR" id="CircleArcR" class="form-control" placeholder="" data-bind="value: CircleArcR"
                                                validate="{required:true}" />
                                     </div>
                                 </div>
                                 <div class="form-group col-lg-6" id="kkbhT">
                                     <label class="col-sm-5 control-label">开坡口板厚t:</label>
                                     <div class="col-sm-7">
-                                        <input type="text" name="GrooveThicknessT" id="GrooveThicknessT" class="form-control" placeholder="请输入" data-bind="value: GrooveThicknessT"
+                                        <input type="text" name="GrooveThicknessT" id="GrooveThicknessT" class="form-control" placeholder="" data-bind="value: GrooveThicknessT"
                                                validate="{required:true}" />
                                     </div>
                                 </div>
@@ -411,14 +411,14 @@
                                 @*<div class="form-group col-lg-6">
                                         <label class="col-sm-5 control-label">深度h1:</label>
                                         <div class="col-sm-7">
-                                            <input type="text" name="WorksThicknessH3" id="WorksThicknessH3" class="form-control" placeholder="请输入" data-bind="value: WorksThicknessH3"
+                                            <input type="text" name="WorksThicknessH3" id="WorksThicknessH3" class="form-control" placeholder="" data-bind="value: WorksThicknessH3"
                                                    validate="{required:true}" />
                                         </div>
                                     </div>*@
                                 <div class="form-group col-lg-6" id="hjccK1">
                                     <label class="col-sm-5 control-label">焊脚尺寸K1:</label>
                                     <div class="col-sm-7">
-                                        <input type="text" name="WeldLeg1" id="WeldLeg1" class="form-control" placeholder="请输入" data-bind="value: WeldLeg1"
+                                        <input type="text" name="WeldLeg1" id="WeldLeg1" class="form-control" placeholder="" data-bind="value: WeldLeg1"
                                                validate="{required:true}" />
                                     </div>
                                 </div>
@@ -614,6 +614,7 @@
                         .Where(function (x) {
                             return x.WeldGeometry == WeldGeometry.value && x.GrooveType == GrooveType.value
                         }).ToArray();
+                    $("#PreviewImagehref").attr('href', queryResult[0].PreviewImage);
                     $("#PreviewImage").attr('src', queryResult[0].PreviewImage);
                     $("#WorksThicknessH1").val(queryResult[0].WorksThicknessH1);
                     $("#WorksThicknessH2").val(queryResult[0].WorksThicknessH2);
