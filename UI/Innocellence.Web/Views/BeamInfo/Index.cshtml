@@ -1,155 +1,146 @@
 ﻿@model IEnumerable<Infrastructure.Web.Domain.ModelsView.BeamInfoView>
-@section easyui_css{
-    <link rel="stylesheet" href="~/Style/EasyUI/easyui.css" />
-}
-<style>
-    .datagrid-mask-msg {
-        height: 36px !important;
+    @section easyui_css{
+        <link rel="stylesheet" href="~/Style/EasyUI/easyui.css" />
     }
+    <style>
+        .datagrid-mask-msg {
+            height: 36px !important;
+        }
 
-    .chosen-container {
-        width: 100%;
-        max-width: 362px;
-    }
+        .chosen-container {
+            width: 100%;
+            max-width: 362px;
+        }
 
-    .progress {
-        width: 100%;
-        max-width: 362px;
-    }
-</style>
-<!--Action boxes-->
-<div class="row">
-    <div class="col-sm-12">
-        <form class="form-inline" id="SearchForm" onsubmit="return false;">
-            <input type="hidden" id="project_id" name="project_id" value="@ViewBag.ProjectId" />
-            <input type="hidden" id="currentUserId" value="@ViewBag.CurUserId" />
-            @*<div class="form-group">
-                    <input class="form-control" type="text" id="search_condition" name="search_condition" placeholder="文件名称">
-                    <a href="#" class="btn btn-sm" id="btnSearch" data-toggle="tooltip" data-placement="top" title="查询条件"><i class="fa fa-search"></i>查询</a>
+        .progress {
+            width: 100%;
+            max-width: 362px;
+        }
+    </style>
+    <!--Action boxes-->
+    <div class="row">
+        <div class="col-sm-12">
+            <form class="form-inline" id="SearchForm" onsubmit="return false;">
+                <input type="hidden" id="project_id" name="project_id" value="@ViewBag.ProjectId" />
+                <input type="hidden" id="currentUserId" value="@ViewBag.CurUserId" />
+                @*<div class="form-group">
+                        <input class="form-control" type="text" id="search_condition" name="search_condition" placeholder="文件名称">
+                        <a href="#" class="btn btn-sm" id="btnSearch" data-toggle="tooltip" data-placement="top" title="查询条件"><i class="fa fa-search"></i>查询</a>
+                    </div>
+                    <div class="form-group pull-right">
+                        <a href="#" class="btn btn-info btn-sm" id="btnAdd" data-toggle="tooltip" data-placement="top" title="文件上传">
+                            文件上传
+                        </a>
+                    </div>*@
+                <div>
+
+                    <input class="form-control" type="text" id="project_name" name="project_name" placeholder="项目名">
+                    <input class="form-control" type="text" id="beam_name" name="beam_name" placeholder="梁段名">
+                    <input class="form-control" type="text" id="search_condition" name="search_condition" placeholder="文件名" onkeydown='if(event.keyCode==13) return false;'>
+                    <a href="#" class="btn btn-info btn-sm" id="btnSearch" data-toggle="tooltip" data-placement="top" title="查询条件"><i class="fa fa-search">查询</i></a>
+                    <a href="/TempInfo/index?ProjectId=@ViewBag.ProjectId" class="btn btn-primary btn-sm" id="btnSearch1" data-toggle="tooltip" data-placement="top" title="查询条件"><i class="fa fa-search">梁段信息查询</i></a>
+                    <div class="form-group pull-right">
+                        @*<a href="" class="btn btn-info btn-info" id="btnProject" data-toggle="tooltip" data-placement="top" title="项目管理">
+                                项目管理
+                            </a>*@
+                        <a href="/Project/Index" class="btn btn-success btn-sm" id="btnReturn" data-toggle="tooltip" data-placement="top" title="返回">
+                            项目管理
+                        </a>
+
+                        <a href="#" class="btn btn-info btn-sm" id="btnAdd" data-toggle="tooltip" data-placement="top" title="文件上传">
+                            文件上传
+                        </a>
+                    </div>
+                    @*<div style="float:right">
+                            <button type="button" id="btnDeleteAll" class="btn btn-info btn-sm" data-toggle="tooltip" data-placement="top" title="批量删除">批量删除</button>
+                            <button type="button" id="btnFileAnalysis" class="btn btn-info btn-sm" data-toggle="tooltip" data-placement="top" title="归档分析">归档分析</button>
+                            <button type="button" id="btnDownloadDWG" class="btn btn-info btn-sm" data-toggle="tooltip" data-placement="top" title="DWG下载">DWG下载</button>
+                        </div>*@
                 </div>
-                <div class="form-group pull-right">
-                    <a href="#" class="btn btn-info btn-sm" id="btnAdd" data-toggle="tooltip" data-placement="top" title="文件上传">
-                        文件上传
-                    </a>
-                </div>*@
-            <div>
+            </form>
 
-                <input class="form-control" type="text" id="project_name" name="project_name" placeholder="项目名">
-                <input class="form-control" type="text" id="beam_name" name="beam_name" placeholder="梁段名">
-                <input class="form-control" type="text" id="search_condition" name="search_condition" placeholder="文件名" onkeydown='if(event.keyCode==13) return false;'>
-                <a href="#" class="btn btn-info btn-sm" id="btnSearch" data-toggle="tooltip" data-placement="top" title="查询条件"><i class="fa fa-search">查询</i></a>
-                <a href="/TempInfo/index?ProjectId=@ViewBag.ProjectId" class="btn btn-primary btn-sm" id="btnSearch1" data-toggle="tooltip" data-placement="top" title="查询条件"><i class="fa fa-search">梁段信息查询</i></a>
-                <div class="form-group pull-right">
-                    @*<a href="" class="btn btn-info btn-info" id="btnProject" data-toggle="tooltip" data-placement="top" title="项目管理">
-                项目管理
-            </a>*@
-                    <a href="/Project/Index" class="btn btn-success btn-sm" id="btnReturn" data-toggle="tooltip" data-placement="top" title="返回">
-                        项目管理
-                    </a>
+            <div class="clearfix"></div>
 
-                    <a href="#" class="btn btn-info btn-sm" id="btnAdd" data-toggle="tooltip" data-placement="top" title="文件上传">
-                        文件上传
-                    </a>
+            <div class="widget-box">
+                <div class="widget-content nopadding">
+                    <table class="table table-bordered table-hover data-table">
+                        <thead>
+                            <tr>
+                                <th style="width:5%;text-align:center;">@T("ID")</th>
+                                <th>@T("项目")</th>
+                                <th>@T("梁段名")</th>
+                                <th>@T("DWG文件名")</th>
+                                <th>@T("梁段数量")</th>
+                                @*<th>@T("上传进度")</th>*@
+                                <th>@T("状态")</th>
+                                <th style="width:25%;">@T("操作")</th>
+                            </tr>
+
+                        </thead>
+                    </table>
                 </div>
-                @*<div style="float:right">
-            <button type="button" id="btnDeleteAll" class="btn btn-info btn-sm" data-toggle="tooltip" data-placement="top" title="批量删除">批量删除</button>
-            <button type="button" id="btnFileAnalysis" class="btn btn-info btn-sm" data-toggle="tooltip" data-placement="top" title="归档分析">归档分析</button>
-            <button type="button" id="btnDownloadDWG" class="btn btn-info btn-sm" data-toggle="tooltip" data-placement="top" title="DWG下载">DWG下载</button>
-        </div>*@
-            </div>
-        </form>
-
-        <div class="clearfix"></div>
-
-        <div class="widget-box">
-            <div class="widget-content nopadding">
-                <table class="table table-bordered table-hover data-table">
-                    <thead>
-                        <tr>
-                            <th style="width:5%;text-align:center;">@T("ID")</th>
-                            <th>@T("项目")</th>
-                            <th>@T("梁段名")</th>
-                            <th>@T("DWG文件名")</th>
-                            <th>@T("梁段数量")</th>
-                            @*<th>@T("上传进度")</th>*@
-                            <th>@T("状态")</th>
-                            <th style="width:25%;">@T("操作")</th>
-                        </tr>
-
-                    </thead>
-                </table>
             </div>
         </div>
     </div>
-</div>
-<div id="ModalTable" class="modal" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="blue bigger">请选择文件上传</h4>
-            </div>
+    <div id="ModalTable" class="modal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="blue bigger">请选择dwg文件上传</h4>
+                </div>
 
 
-            <div class="modal-body">
-                <form action="PostFile" id="ff" method="post" class="form-horizontal" data-ajax="false" enctype="multipart/form-data">
-                    <input type="hidden" id="ID" name="ID" value="0" />
-                    <div class="form-group">
-                        <label class="col-sm-3 control-label">项目:</label>
-                        <div class="col-sm-9">
-                            @if (string.IsNullOrEmpty(ViewBag.ProjectId))
-                            {
-                                <select class="chosen-select form-control" id="ProjectName" name="ProjectId" style="" data-bind="value:ProjectId" validate="{required:true}"></select>
-                            }
-                            else
-                            {
-                                <span class="form-control" style="max-width: 362px">@ViewBag.ProjectName</span>
-                            }
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="col-sm-3 control-label">上传文件:</label>
-                        <div class="col-sm-9">
-                            @*<input type="file" id="upload-input" multiple="multiple" name="uploadfile" class="form-control" placeholder="请输入"
-                                accept="application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-                                validate="{required:true}" />*@
-                            <input id="upload-input" class="form-control " multiple="multiple" type="file" name="file" onchange="return uploadFile(this);"
-                                   accept="*" />
-                            <div class="progress" style="margin-bottom: 0px;margin-top:5px;">
-                                <div id="progress-bar" class="progress-bar" style="width:0">0</div>
+                <div class="modal-body">
+                    <form action="PostFile" id="ff" method="post" class="form-horizontal" data-ajax="false" enctype="multipart/form-data">
+                        <input type="hidden" id="ID" name="ID" value="0" />
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">项目:</label>
+                            <div class="col-sm-9">
+                                @if (string.IsNullOrEmpty(ViewBag.ProjectId))
+                                {
+                                    <select class="chosen-select form-control" id="ProjectName" name="ProjectId" style="" data-bind="value:ProjectId" validate="{required:true}"></select>
+                                }
+                                else
+                                {
+                                    <span class="form-control" style="max-width: 362px">@ViewBag.ProjectName</span>
+                                }
                             </div>
                         </div>
-                    </div>
-                </form>
-            </div>
+                        
+                            <div id="uploader" class="wu-example">
+                                <!--用来存放文件信息-->
+                                <div id="thelist" class="uploader-list"></div>
+                            </div>
+                            @*<div class="col-sm-9">
+                                    <input id="upload-input" class="form-control " multiple="multiple" type="file" name="file" onchange="return uploadFile(this);"
+                                           accept="*" />
+                                    <div class="progress" style="margin-bottom: 0px;margin-top:5px;">
+                                        <div id="progress-bar" class="progress-bar" style="width:0">0</div>
+                                    </div>
+                                </div>*@
+                        
+                    </form>
+                </div>
 
-            <div class="modal-footer">
-                @*<button class="btn btn-sm" data-dismiss="modal">
-                        <i class="ace-icon fa fa-times"></i>
-                        取消
-                    </button>*@<button class="btn btn-sm" data-dismiss="modal">
-                    <i class="ace-icon fa fa-times"></i>
-                </button>
-                @*<button class="btn btn-sm btn-info" data-action="save" id="btnSave">
-                        <i class="ace-icon fa fa-check"></i>
-                        完成
-                    </button>*@
-                @*<button class="btn btn-sm btn-info" data-action="save" id="btnSave">
-                    <i class="ace-icon fa fa-check"></i>
-                </button>*@
+                <div class="modal-footer">
+                    <div class="btns">
+                        <div id="picker">选择文件</div>
+                        <button id="ctlBtn" class="btn btn-default btn-sm btn-primary">开始上传</button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
-<div id="ModalNum" class="modal" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button id="closeNum" type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="bigger">输入梁段数量</h4>
-            </div>
-            <div class="modal-body">
+    <div id="ModalNum" class="modal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button id="closeNum" type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="bigger">输入梁段数量</h4>
+                </div>
+                <div class="modal-body">
                     <input type="hidden" id="beamId" name="beamId" value="0" />
                     <div class="form-group" style="margin-bottom:30px;">
                         <label class="col-sm-3 control-label">数量:</label>
@@ -158,202 +149,248 @@
                                    validate="{required:true}" onkeyup="value=value.replace(/[^\d]/g,'')" />
                         </div>
                     </div>
-            </div>
+                </div>
 
-            <div class="modal-footer">
-                <button class="btn btn-sm btn-info"  id="btnSaveNum">
+                <div class="modal-footer">
+                    <button class="btn btn-sm btn-info" id="btnSaveNum">
                         <i class="ace-icon fa fa-check"></i>
                         完成
                     </button>
+                </div>
             </div>
         </div>
     </div>
-</div>
-@section scripts_Foot
+    @section scripts_Foot
 {
-    <script src="~/Scripts/ace/chosen.jquery.js?v=1"></script>
-    <script type="text/javascript">
-        $('[data-toggle="tooltip"]').tooltip();
-        var popMenu;
-        var IdCur;
-        var tastStatus = { new: 0, pending: 1, approved: 2, rejected: 3 };
-        $(document).ready(function () {
-            LEAP.Common.MainPop.options.dataTable = $('.data-table').dataTable(jQuery.extend(true, datatableSetting, {
-                "ajax": {
-                    "url": "GetList?project_id=" + $('#project_id').val()
-                },
-                "paging": true,
-                "info": false,
-                "aoColumns": [
-                    { "mData": 'Index' },
-                    { "mData": 'ProjectName' },
-                    { "mData": 'BridgeComponent' },
-                    { "mData": 'DwgFile' },
-                    { "mData": 'BeamNum' },
-                    //{ "mData": 'TheModel' },
-                    { "mData": 'Status' }
-                ],
-                "columnDefs": [
-                    {
-                        "targets": 6,
-                        "render": function (data, type, full, meta) {
-                            var opstr = '';
-                            //opstr = opstr + '<a href="#" onclick="tasklist(\'' + full.Id + '\');return false;" class="artDailog btn btn-info  btn-xs" style="margin-right:4px;" data-toggle="tooltip" data-placement="top" title="审核列表"><i class="ace-icon glyphicon glyphicon-list"></i></a>';
-                            if (full.TaskStatus != tastStatus.pending && full.TaskStatus != tastStatus.approved) {
-                                opstr = opstr + '<a href="#" onclick="CategoryStat( ' + full.ProjectId + ',' + full.Id + ');return false;" class="artDailog btn btn-info  btn-xs" style="margin-right:4px;" data-toggle="tooltip" data-placement="top" title="焊缝类别统计">类别统计</a>';
-                                if (full.ProcessStatus > 0) {
-                                    opstr = opstr + '<a href="#" onclick="weldcategory(' + full.ProjectId + ',' + full.Id + ');return false;" class="artDailog btn btn-primary btn-xs" style="margin-right:4px;" data-toggle="tooltip" data-placement="top" title="焊缝类别标注">类别标注</a>';
+        <script src="~/Scripts/ace/chosen.jquery.js?v=1"></script>
+        <script src="~/Scripts/util.common.js"></script>
+        <script type="text/javascript">
+            $('[data-toggle="tooltip"]').tooltip();
+            var popMenu;
+            var IdCur;
+            var tastStatus = { new: 0, pending: 1, approved: 2, rejected: 3 };
+            var $ = jQuery,
+                $list = $('#thelist'),
+                $btn = $('#ctlBtn'),
+                state = 'pending',
+                uploader;
+            $(document).ready(function () {
+                LEAP.Common.MainPop.options.dataTable = $('.data-table').dataTable(jQuery.extend(true, datatableSetting, {
+                    "ajax": {
+                        "url": "GetList?project_id=" + $('#project_id').val()
+                    },
+                    "paging": true,
+                    "info": false,
+                    "aoColumns": [
+                        { "mData": 'Index' },
+                        { "mData": 'ProjectName' },
+                        { "mData": 'BridgeComponent' },
+                        { "mData": 'DwgFile' },
+                        { "mData": 'BeamNum' },
+                        //{ "mData": 'TheModel' },
+                        { "mData": 'Status' }
+                    ],
+                    "columnDefs": [
+                        {
+                            "targets": 6,
+                            "render": function (data, type, full, meta) {
+                                var opstr = '';
+                                //opstr = opstr + '<a href="#" onclick="tasklist(\'' + full.Id + '\');return false;" class="artDailog btn btn-info  btn-xs" style="margin-right:4px;" data-toggle="tooltip" data-placement="top" title="审核列表"><i class="ace-icon glyphicon glyphicon-list"></i></a>';
+                                if (full.TaskStatus != tastStatus.pending && full.TaskStatus != tastStatus.approved) {
+                                    opstr = opstr + '<a href="#" onclick="CategoryStat( ' + full.ProjectId + ',' + full.Id + ');return false;" class="artDailog btn btn-info  btn-xs" style="margin-right:4px;" data-toggle="tooltip" data-placement="top" title="焊缝类别统计">类别统计</a>';
+                                    if (full.ProcessStatus > 0) {
+                                        opstr = opstr + '<a href="#" onclick="weldcategory(' + full.ProjectId + ',' + full.Id + ');return false;" class="artDailog btn btn-primary btn-xs" style="margin-right:4px;" data-toggle="tooltip" data-placement="top" title="焊缝类别标注">类别标注</a>';
+                                    }
+                                    if (full.CreatedUserID == $('#currentUserId').val()) {
+                                        opstr = opstr + '<a href="#" onclick="LEAP.Common.MainPop.RowClick(\'' + full.Id + '\',2);return false;" class="btn btn-danger btn-xs" id="btnDelete" data-toggle="tooltip" data-placement="top" title="删除"><i class="fa fa-trash-o"></i></a>';
+                                    }
+                                    opstr = opstr + '<a href="#" onclick="updateNum(' + full.Id + ');return false;" class="artDailog btn btn-info  btn-xs" style="margin-right:4px;" data-toggle="tooltip" data-placement="top" title="修改数量">修改数量</a>';
+                                    //opstr = opstr + '<a href="#" onclick="weldcategory(\'' + full.Id + '\');return false;" class="artDailog btn btn-info  btn-xs" style="margin-right:4px;" data-toggle="tooltip" data-placement="top" title="焊缝类别标注"><i class="ace-icon glyphicon  glyphicon-credit-card"></i></a>' +
+                                    //    '<a href="#" onclick="LEAP.Common.MainPop.RowClick(\'' + full.Id + '\',2);return false;" class="btn btn-danger btn-xs" id="btnDelete" data-toggle="tooltip" data-placement="top" title="删除">' +
+                                    //    '<i class="fa fa-trash-o"></i></a>';
+                                } else {
+                                    opstr = opstr + '<a href="#" onclick="weldcategory(' + full.ProjectId + ',' + full.Id + ', 1);return false;" class="artDailog btn btn-success  btn-xs" style="margin-right:4px;" data-toggle="tooltip" data-placement="top" title="查看焊缝标注"><i class="ace-icon glyphicon  glyphicon-eye-open"></i></a>';
                                 }
-                                if (full.CreatedUserID == $('#currentUserId').val()) {
-                                    opstr = opstr + '<a href="#" onclick="LEAP.Common.MainPop.RowClick(\'' + full.Id + '\',2);return false;" class="btn btn-danger btn-xs" id="btnDelete" data-toggle="tooltip" data-placement="top" title="删除"><i class="fa fa-trash-o"></i></a>';
-                                }
-                                opstr = opstr + '<a href="#" onclick="updateNum(' + full.Id + ');return false;" class="artDailog btn btn-info  btn-xs" style="margin-right:4px;" data-toggle="tooltip" data-placement="top" title="修改数量">修改数量</a>';
-                                //opstr = opstr + '<a href="#" onclick="weldcategory(\'' + full.Id + '\');return false;" class="artDailog btn btn-info  btn-xs" style="margin-right:4px;" data-toggle="tooltip" data-placement="top" title="焊缝类别标注"><i class="ace-icon glyphicon  glyphicon-credit-card"></i></a>' +
-                                //    '<a href="#" onclick="LEAP.Common.MainPop.RowClick(\'' + full.Id + '\',2);return false;" class="btn btn-danger btn-xs" id="btnDelete" data-toggle="tooltip" data-placement="top" title="删除">' +
-                                //    '<i class="fa fa-trash-o"></i></a>';
-                            } else {
-                                opstr = opstr + '<a href="#" onclick="weldcategory(' + full.ProjectId + ',' + full.Id + ', 1);return false;" class="artDailog btn btn-success  btn-xs" style="margin-right:4px;" data-toggle="tooltip" data-placement="top" title="查看焊缝标注"><i class="ace-icon glyphicon  glyphicon-eye-open"></i></a>';
+                                return opstr;
                             }
-                            return opstr;
-                        }
-                    }],
-                fnDrawCallback: function () {
-                    $('[data-toggle="tooltip"]').tooltip();
-                }
-            }));
-            //inital select2
-            $('.select2').css("width", "362px").select2({ allowClear: true });
-            setTimeout(function () {
-                $('.chosen-container').removeAttr('style');
-            }, 3000);
-            $('#btnSaveNum').bind('click', function () {
-                //if ($('#beamNum').val() == '') {
-                //    bootbox.alert('请输入数量');
-                //}
-                //if ($('#beamNum').val() <= 0) {
-                //    bootbox.alert('请输入大于1的数字');
-                //}
-                $.ajax('UpdateBeamNum?beamid=' + $('#beamId').val() + '&beamNum=' + $('#beamNum').val())
-                    .done(function (data) {
-                        if (data.Message.Status == 200) {
-                            //bootbox.alert('更新成功');
-                            LEAP.Common.MainPop.options.dataTable.fnDraw(false);
-                            $('#closeNum').click();
-                        }
-                        else {
-                            //bootbox.alert('更新失败: ' + data.Message.Text);
-                        }                        
-                    });
-            });
-            $('#closeNum').bind('click', function () {
-                $('#beamId').val('');
-                $('#beamNum').val('');
-            });
-        });
-        function ShowInfo(pid, id) {
-            window.location = '/TempInfo/index?ProjectId=' + pid + '&beamId=' + id;
-        }
-        function CategoryStat(pid, id) {
-            window.location = '/CategoryStat/index?ProjectId=' + pid + '&beamId=' + id;
-        }
-
-        function weldcategory(pid, id, view) {
-            var url = view ? '/weldcategory/index?beamId=' + id + '&viewMode=1' : '/weldcategory/index?beamId=' + id;
-            window.location = url;
-        }
-        function weldcognize(dwgfile) {
-            window.location = '/WeldCognition/index?fileName=' + dwgfile;
-        }
-        function tasklist(pid) {
-            window.location = '/tasklist/index?projectid=' + pid;
-        }
-        function ProjectPage() {
-            window.location = '/Project/Index?projectid=' + $('#project_id').val();
-        }
-        $(document).on('click', '#btnSave', function (e) {
-            $('.form-horizontal').submit();
-        });
-        function uploadFile(obj) {          
-            var pid = $('#project_id').val();
-            if (!pid) {                
-                pid = $('#ProjectName').val();
-            }
-            if (!pid) {
-                bootbox.alert('没有选择项目，请刷新页面重试');
-                return;
-            }
-            var strUrl = "PostFile?ProjectId=" + pid + '&v=' + Math.random();
-            if (!$(obj).val()) {
-                return;
-            }
-            $(obj).FileUpload({
-                self: obj,
-                url: strUrl,
-                allowExtension: '.dwg',
-                rewriteDocumentId: '',
-                processBarId: 'progress-bar',
-                callBack: function (data) {
-                    if (data.Message.Status != 200) {
-                        bootbox.alert(data.Message.Text);
-                        LEAP.Common.MainPop.options.dataTable.fnDraw(false);
-                        //location.reload();
-                    } else {
-                        bootbox.alert("上传成功");
-                        LEAP.Common.MainPop.options.dataTable.fnDraw(false);
-                        //location.reload();                        
+                        }],
+                    fnDrawCallback: function () {
+                        $('[data-toggle="tooltip"]').tooltip();
                     }
-                    $('#ModalTable .close').click();
-                    //清空文件状态
-                    $('#upload-input').val('');
-                    
-                }
+                }));
+                //inital select2
+                $('.select2').css("width", "362px").select2({ allowClear: true });
+                setTimeout(function () {
+                    $('.chosen-container').removeAttr('style');
+                }, 3000);
+                $('#btnSaveNum').bind('click', function () {
+                    //if ($('#beamNum').val() == '') {
+                    //    bootbox.alert('请输入数量');
+                    //}
+                    //if ($('#beamNum').val() <= 0) {
+                    //    bootbox.alert('请输入大于1的数字');
+                    //}
+                    $.ajax('UpdateBeamNum?beamid=' + $('#beamId').val() + '&beamNum=' + $('#beamNum').val())
+                        .done(function (data) {
+                            if (data.Message.Status == 200) {
+                                //bootbox.alert('更新成功');
+                                LEAP.Common.MainPop.options.dataTable.fnDraw(false);
+                                $('#closeNum').click();
+                            }
+                            else {
+                                //bootbox.alert('更新失败: ' + data.Message.Text);
+                            }
+                        });
+                });
+                $('#closeNum').bind('click', function () {
+                    $('#beamId').val('');
+                    $('#beamNum').val('');
+                });
+                //web uploader 初始化
+                initWebUploader();
             });
-        }
-        //获取项目信息
-        BindChosen('/Project/GetDropdownList', $('#ProjectName'), InitChosen);
-        //应当出去js包
-        function InitChosen(select) {
-            $(select).chosen({ allow_single_deselect: true, width: '362px' }).change(function () { console.log('change'); });
-            $(select).bind("change", function () {
-                $(select).trigger('chosen:updated');
-                $('#project_id').val($('#ProjectName').val());
-            });
-            setTimeout(function () {
-                var w = Math.min($('.chosen-select').parent().width(), 362);
-                $('.chosen-container').css('width', w)
-            }, 1000);
+            function ShowInfo(pid, id) {
+                window.location = '/TempInfo/index?ProjectId=' + pid + '&beamId=' + id;
+            }
+            function CategoryStat(pid, id) {
+                window.location = '/CategoryStat/index?ProjectId=' + pid + '&beamId=' + id;
+            }
 
-            //resize the chosen on window resize
-            $(window).on('resize.chosen', function () {
-                var w = Math.min($('.chosen-select').parent().width(), 362);
-                $('.chosen-select').next().css({ 'width': w });
-            }).trigger('resize.chosen');
-        }
-        function BindChosen(url, select, callback, search) {
-            var pid = $('#project_id').val();
-            $(select).children().remove();
-            $(select).append('<option value></option>');
-            $.ajax(url)
-                .done(function (data) {
-                    $.each(data, function (i, op) {
-                        if (op.key == pid) {
-                            $(select).append('<option selected="selected" value="' + op.key + '">' + op.value + '</option>');
+            function weldcategory(pid, id, view) {
+                var url = view ? '/weldcategory/index?beamId=' + id + '&viewMode=1' : '/weldcategory/index?beamId=' + id;
+                window.location = url;
+            }
+            function weldcognize(dwgfile) {
+                window.location = '/WeldCognition/index?fileName=' + dwgfile;
+            }
+            function tasklist(pid) {
+                window.location = '/tasklist/index?projectid=' + pid;
+            }
+            function ProjectPage() {
+                window.location = '/Project/Index?projectid=' + $('#project_id').val();
+            }
+            $(document).on('click', '#btnSave', function (e) {
+                $('.form-horizontal').submit();
+            });
+            function uploadFile(obj) {
+                var pid = $('#project_id').val();
+                if (!pid) {
+                    pid = $('#ProjectName').val();
+                }
+                if (!pid) {
+                    bootbox.alert('没有选择项目，请刷新页面重试');
+                    return;
+                }
+                var strUrl = "PostFile?ProjectId=" + pid + '&v=' + Math.random();
+                if (!$(obj).val()) {
+                    return;
+                }
+                $(obj).FileUpload({
+                    self: obj,
+                    url: strUrl,
+                    allowExtension: '.dwg',
+                    rewriteDocumentId: '',
+                    processBarId: 'progress-bar',
+                    callBack: function (data) {
+                        if (data.Message.Status != 200) {
+                            bootbox.alert(data.Message.Text);
+                            LEAP.Common.MainPop.options.dataTable.fnDraw(false);
+                            //location.reload();
+                        } else {
+                            bootbox.alert("上传成功");
+                            LEAP.Common.MainPop.options.dataTable.fnDraw(false);
+                            //location.reload();
                         }
-                        else {
-                            $(select).append('<option value="' + op.key + '">' + op.value + '</option>');
-                        }
-                    });
-                    if (callback) {
-                        callback(select);
+                        $('#ModalTable .close').click();
+                        //清空文件状态
+                        $('#upload-input').val('');
+
                     }
                 });
-        }
+            }
+            //获取项目信息
+            BindChosen('/Project/GetDropdownList', $('#ProjectName'), InitChosen);
+            //应当出去js包
+            function InitChosen(select) {
+                $(select).chosen({ allow_single_deselect: true, width: '362px' }).change(function () {
+                    console.log('change');
+                    var pid = $('#ProjectName').val();
+                    uploader.options.server = "PostFile?ProjectId=" + pid + '&v=' + Math.random();
+                });
+                $(select).bind("change", function () {
+                    $(select).trigger('chosen:updated');
+                    $('#project_id').val($('#ProjectName').val());
+                });
+                setTimeout(function () {
+                    var w = Math.min($('.chosen-select').parent().width(), 362);
+                    $('.chosen-container').css('width', w)
+                }, 1000);
 
-        function updateNum(id) {
-            $('#beamId').val(id);
-            $('#beamNum').val('');
-            $('#ModalNum').modal(300);
-        }
+                //resize the chosen on window resize
+                $(window).on('resize.chosen', function () {
+                    var w = Math.min($('.chosen-select').parent().width(), 362);
+                    $('.chosen-select').next().css({ 'width': w });
+                }).trigger('resize.chosen');
+            }
+            function BindChosen(url, select, callback, search) {
+                var pid = $('#project_id').val();
+                $(select).children().remove();
+                $(select).append('<option value></option>');
+                $.ajax(url)
+                    .done(function (data) {
+                        $.each(data, function (i, op) {
+                            if (op.key == pid) {
+                                $(select).append('<option selected="selected" value="' + op.key + '">' + op.value + '</option>');
+                            }
+                            else {
+                                $(select).append('<option value="' + op.key + '">' + op.value + '</option>');
+                            }
+                        });
+                        if (callback) {
+                            callback(select);
+                        }
+                    });
+            }
 
-    </script>
-}
+            function updateNum(id) {
+                $('#beamId').val(id);
+                $('#beamNum').val('');
+                $('#ModalNum').modal(300);
+            }
+            function clearFiles() {
+                $list.children().remove();
+            }
+            function initWebUploader(url) {
+                var pid = $('#project_id').val();
+                uploader = WebUploader.create({
+                    // swf文件路径
+                    swf: 'Scripts/webuploader/Uploader.swf',
+                    // 文件接收服务端。
+                    server: "PostFile?ProjectId=" + pid + '&v=' + Math.random(),
+                    // 选择文件的按钮。可选。
+                    // 内部根据当前运行是创建，可能是input元素，也可能是flash.
+                    pick: '#picker',
+                    fileNumLimit: 8,
+                    // 不压缩image, 默认如果是jpeg，文件上传前会压缩一把再上传！
+                    resize: false,
+                    // 只允许选择什么类型文件。
+                    accept: {
+                        title: 'dwg文件',
+                        extensions: 'dwg'
+                    },
+                    threads: 1, //线程数量
+                });
+                initWebuploaderEvent(uploader);
+                uploader.on('beforeFileQueued', function (file, response) {
+                    var pid = $('#project_id').val();
+                    if (!pid) {
+                        pid = $('#ProjectName').val();
+                    }
+                    if (!pid) {
+                        bootbox.alert('请选择项目');
+                        return false;
+                    }
+                });
+            }
+        </script>
+    }

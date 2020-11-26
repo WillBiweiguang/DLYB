@@ -45,6 +45,7 @@ namespace Infrastructure.Web.Domain.ModelsView
             PasswordHash = entity.PasswordHash;
             SecurityStamp = entity.SecurityStamp;
             Department = entity.Department;
+            CreatedDate = entity.CreatedDate;
             return this;
         }
 	}

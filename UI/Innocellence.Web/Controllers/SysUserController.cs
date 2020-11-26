@@ -24,7 +24,6 @@ namespace DLYB.Web.Controllers
             ServiceRole = _ServiceRole;
         }
 
-
         public override ActionResult Index()
         {
             ViewBag.Roles = ServiceRole.Repository.Entities.Where(a => !a.IsDeleted.Value & a.Name != "Super Admin").ToList();
@@ -42,7 +41,8 @@ namespace DLYB.Web.Controllers
             string strModeId = Request["SearchLoadModeId"];
             string strGroup = Request["SearchGroup"];
             string strCondition = Request["search_condition"];
-
+        
+            var superUser = Infrastructure.Core.Infrastructure.EngineContext.Current.WebConfig.SupperUser;
             if (!string.IsNullOrEmpty(strCondition))
             {
                 strCondition = strCondition.Trim().ToLower();
@@ -50,8 +50,18 @@ namespace DLYB.Web.Controllers
                         x.UserName.ToLower().Contains(strCondition) ||
                         x.UserTrueName.ToLower().Contains(strCondition));
             }
-            
-            var q = _objService.GetList<SysUserView>(predicate.AndAlso(x => x.IsDeleted == false), ConPage);
+            if(objLoginInfo.UserName != superUser)
+            {
+                if (!string.IsNullOrEmpty(objLoginInfo.Department))
+                {
+                    predicate = predicate.AndAlso(x => x.Department == objLoginInfo.Department);
+                }
+                else
+                {
+                    predicate = predicate.AndAlso(x => x.Department == "");
+                }          
+            }
+            var q = _objService.GetList<SysUserView>(predicate.AndAlso(x => x.IsDeleted == false && x.UserName != superUser), ConPage);
 
             return q.ToList();
         }

@@ -54,7 +54,7 @@ namespace DLYB.Web.Controllers
 
             // ConPage.SortConditions.Add(new SortCondition("CreatedDate", System.ComponentModel.ListSortDirection.Descending));
 
-            var q = _objService.GetList<SysRoleView>(predicate.AndAlso(x => x.IsDeleted == false), ConPage);
+            var q = _objService.GetList<SysRoleView>(predicate.AndAlso(x => x.IsDeleted == false && x.Name != "超级管理员"), ConPage);
 
            // var pluginDescriptors = _pluginFinder.GetRoleDescriptors(loadMode, 0, strGroup).ToList();
 

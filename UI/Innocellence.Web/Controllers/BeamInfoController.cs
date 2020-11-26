@@ -121,10 +121,10 @@ namespace Innocellence.Web.Controllers
         public ActionResult PostFile(BeamInfoView objModal, int ProjectId)
         {     
             //验证错误
-            if (!ModelState.IsValid)
-            {
-                return Json(GetErrorJson(), JsonRequestBehavior.AllowGet);
-            }
+            //if (!ModelState.IsValid)
+            //{
+            //    return Json(GetErrorJson(), JsonRequestBehavior.AllowGet);
+            //}
             string repeatFiles = "";
             string errorBeam = "";
             var project = _projectService.GetList<ProjectView>(1, x => !x.IsDeleted && x.Id == ProjectId).FirstOrDefault();
@@ -184,8 +184,8 @@ namespace Innocellence.Web.Controllers
             {
                 repeatFiles = repeatFiles.TrimEnd(',');
                 errorBeam = errorBeam.TrimEnd(',');
-                string errMsg = string.IsNullOrEmpty(repeatFiles) ? "" : "文件：" + repeatFiles + "已存在，请勿重复上传.";
-                errMsg = string.IsNullOrEmpty(errorBeam) ? errMsg : errMsg + "梁段：" + errorBeam + "不存在.";
+                string errMsg = string.IsNullOrEmpty(repeatFiles) ? "" : "文件已存在";
+                errMsg = string.IsNullOrEmpty(errorBeam) ? errMsg : errMsg + "梁段不存在";
                 AjaxResult<int> result = new AjaxResult<int>();
                 result.Message = new JsonMessage(103, errMsg);
                 return Json(result, JsonRequestBehavior.AllowGet);

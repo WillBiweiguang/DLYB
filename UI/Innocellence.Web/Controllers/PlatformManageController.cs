@@ -37,7 +37,7 @@ namespace DLYB.Web.Controllers
         {
             var user = Session["UserInfo"] as SysUser;
             ViewBag.NeedLoadRoels = true;
-            ViewBag.Roles = _roleService.Repository.Entities.Where(a => !a.IsDeleted.Value && a.Name != "Super Admin").ToList();
+            ViewBag.Roles = _roleService.Repository.Entities.Where(a => !a.IsDeleted.Value && a.Name != "超级管理员").ToList();
             ViewBag.IsRole = false;
             ViewBag.IsUser = false;
             ViewBag.IsSuperAdmin = false;
@@ -56,14 +56,25 @@ namespace DLYB.Web.Controllers
                     ViewBag.IsSuperAdmin = true;
                 }
             }
-            if (user != null && user.UserName == EngineContext.Current.WebConfig.SupperUser || this.objLoginInfo.Menus.Any(x => x.Id == (int)EnumMenuId.Admin))
+            if (user != null && user.UserName == EngineContext.Current.WebConfig.SupperUser)
             {
                 ViewBag.IsRole = true;
                 ViewBag.IsUser = true;
+                var departmentList = Departments.Select(x => new SelectListItem { Value = x.Key.ToString(), Text = x.Value }).ToList();
+                //departmentList.Insert(0, new SelectListItem { Value = "0", Text = "" });
+                ViewBag.Department = departmentList;
             }
-            var departmentList = Departments.Select(x => new SelectListItem { Value = x.Key.ToString(), Text = x.Value }).ToList();
-            //departmentList.Insert(0, new SelectListItem { Value = "0", Text = "" });
-            ViewBag.Department = departmentList;
+            else if (this.objLoginInfo.Menus.Any(x => x.Id == (int)EnumMenuId.Admin))
+            {
+                ViewBag.IsUser = true;
+                if (!string.IsNullOrEmpty(objLoginInfo.Department))
+                {
+                    var departmentName = objLoginInfo.Department.Split('_')[1];
+                    ViewBag.Department = Departments.Where(x => x.Value == departmentName)
+                        .Select(x => new SelectListItem { Value = x.Key.ToString(), Text = x.Value }).ToList();
+                }
+            }
+
             ViewBag.ThirdNav = "系统管理";
             return View();
         }

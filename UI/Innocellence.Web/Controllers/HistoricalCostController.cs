@@ -67,10 +67,10 @@ namespace DLYB.Web.Controllers
         public ActionResult PostFile(HistoricalCostView objModal, int projectId)
         {
             //验证错误
-            if (!ModelState.IsValid)
-            {
-                return Json(GetErrorJson(), JsonRequestBehavior.AllowGet);
-            }
+            //if (!ModelState.IsValid)
+            //{
+            //    return Json(GetErrorJson(), JsonRequestBehavior.AllowGet);
+            //}
             if (Request.Files.Count > 0)
             {
                 var file = Request.Files[0];

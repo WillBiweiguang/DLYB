@@ -516,3 +516,49 @@ input[readonly].textbox-prompt {
     text-align: center;
 }
 
+.uploader-list{
+    width:95%;
+    margin-left:10px;
+}
+
+    .uploader-list .remove-this {
+        margin-left: 15px;
+        padding: 2px;
+        vertical-align: middle;
+        float: right;
+        border: 1px solid;
+        border-radius: 10px;
+        background-color: lightsalmon;
+    }
+    .uploader-list .remove-this:hover{
+        cursor:pointer;
+    }
+
+    .uploader-list .item {
+        border: 1px solid goldenrod;
+        border-radius: 5px;
+        padding: 1px 10px;
+        margin-bottom: 4px;
+        vertical-align: middle;
+    }
+        .uploader-list .item span {
+            margin-right: 8px;
+            display: inline-block;
+        }
+
+        .uploader-list .item .state {
+            float: right;
+            color: blueviolet;
+        }
+
+#picker {
+    display: inline-block;
+    line-height: 1.428571429;
+    vertical-align: middle;
+    margin: 0 12px 0 0;
+}
+
+.webuploader-pick {
+    padding: 4px 9px !important;    
+    border-radius: 0px !important;    
+}

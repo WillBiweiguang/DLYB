@@ -149,6 +149,8 @@ namespace Infrastructure.Web.Domain.Entity
         public String UserId { get; set; }
 
         public string Department { get; set; }
+
+        public DateTime? CreatedDate { get; set; }
         /// <summary>
         ///     Constructor
         /// </summary>
