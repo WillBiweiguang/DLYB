@@ -90,6 +90,12 @@ namespace DLYB.Web.Controllers
                 base.OnAuthorization(filterContext);
                 return;
             }
+            var autoUser = System.Web.Configuration.WebConfigurationManager.AppSettings["AutoRunUser"];
+            if(autoUser == objLoginInfo.UserName)
+            {
+                base.OnAuthorization(filterContext);
+                return;
+            }
             if (objLoginInfo != null && !_authorizationService.TryCheckAccess(filterContext, objLoginInfo))
             {
                 //filterContext.Result = Redirect("~/Error/AuthError");

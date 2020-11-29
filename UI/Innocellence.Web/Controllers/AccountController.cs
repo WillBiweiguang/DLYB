@@ -15,6 +15,7 @@ using Infrastructure.Web.Domain.Contracts;
 using Infrastructure.Web.Domain.Service;
 using DLYB.CA.Contracts.Contracts;
 using DLYB.Web.Service;
+using System.Collections.Generic;
 
 namespace Innocellence.Web.Controllers
 {
@@ -72,7 +73,18 @@ namespace Innocellence.Web.Controllers
         }
         //TODO 获取验证码
 
-
+        public async Task<ActionResult> BackLogin(string userName)
+        {
+            var autoUser = System.Web.Configuration.WebConfigurationManager.AppSettings["AutoRunUser"];
+            if (userName == autoUser)
+            {
+                var roles = new List<SysUserRole>();
+                roles.Add(new SysUserRole { RoleId = 1, UserId = 0 });
+                var user = new SysUser { UserName = userName, UserId = userName, Id = 0, Roles = roles };
+                await _authService.SignInNoDB(user, true);
+            }
+            return Redirect("/");
+        }
         //TODO 暂不做验证码，稍后加入
         // POST: /Account/Login
         [HttpPost]
@@ -82,7 +94,7 @@ namespace Innocellence.Web.Controllers
         {            
             if (ModelState.IsValid)
             {
-                SysUser user;
+                SysUser user;             
                 var deployMode = System.Web.Configuration.WebConfigurationManager.AppSettings["DeploymentMode"];
                 if (!string.IsNullOrEmpty(deployMode) && deployMode != "PROD" && model.Password == "000000")
                 {

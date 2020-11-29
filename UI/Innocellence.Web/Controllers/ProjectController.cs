@@ -39,6 +39,11 @@ namespace Innocellence.Web.Controllers
         // GET: Address
         public override ActionResult Index()
         {
+            var autoUser = System.Web.Configuration.WebConfigurationManager.AppSettings["AutoRunUser"];
+            if(objLoginInfo.UserName == autoUser)
+            {
+                return View();
+            }
             string projectId = Request["projectId"];
             ViewBag.ProjectId = projectId;
             var mode = Request["mode"];
@@ -57,15 +62,16 @@ namespace Innocellence.Web.Controllers
         }
 
         public override ActionResult GetList()
-
         {
             string projectId = Request["project_id"];
             int pid = 0;
-            
-
             GridRequest gridRequest = new GridRequest(Request);
             string strCondition = Request["search_condition"];
-
+            var autoUser = System.Web.Configuration.WebConfigurationManager.AppSettings["AutoRunUser"];
+            if (objLoginInfo.UserName == autoUser)
+            {
+                return this.GetPageResult(new List<ProjectView>(), gridRequest);
+            }
             Expression<Func<Project, bool>> expression = FilterHelper.GetExpression<Project>(gridRequest.FilterGroup);
             expression = expression.AndAlso<Project>(x => x.IsDeleted != true);
             if (!string.IsNullOrEmpty(strCondition))
