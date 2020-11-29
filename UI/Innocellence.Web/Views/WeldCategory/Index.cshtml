@@ -72,9 +72,6 @@
                     <a href="~/beaminfo/index?ProjectId=@ViewBag.ProjectId" class="btn btn-info btn-sm" id="nextBeam" data-toggle="tooltip" data-placement="top" title="进行下一梁段">
                         进行下一梁段
                     </a>
-                    <a href="#" class="btn btn-primary btn-sm" id="btnSaveFile" data-toggle="tooltip" data-placement="top" title="保存文件">
-                        保存文件
-                    </a>
                 }
                 <a href="#" class="btn btn-info btn-sm" id="btnCollapse" data-action="collapse" title="折叠">
                     <i class="ace-icon fa fa-chevron-up">折叠</i>
@@ -380,7 +377,7 @@
                             }
                             oprStr += '<a href="#" onclick="DingWei(\'' + full.HandleID + '\');return false;" class="artDailog btn btn-info  btn-xs" style="margin-right:4px;" data-toggle="tooltip" data-placement="top" title="定位">定位</a>';
                             if (!isViewModel) {
-                                oprStr += '<a href="#" onclick="DeleteData(\'' + full.Id + '\',2);return false;" class="btn btn-danger btn-xs" id="btnDelete" data-toggle="tooltip" data-placement="top" title="删除"><i class="fa fa-trash-o"></i></a>';
+                                oprStr += '<a href="#" onclick="DeleteData(\'' + full.Id + '\',' + full.Mode + ',\'' + full.HandleID+ '\');return false;" class="btn btn-danger btn-xs" id="btnDelete" data-toggle="tooltip" data-placement="top" title="删除"><i class="fa fa-trash-o"></i></a>';
                             }
                             return oprStr;
                         }
@@ -614,12 +611,25 @@
             //    }
             //});
         }
-        function DeleteData(id) {
+        function DeleteData(id, weldMode, handle) {
+            var handleId = handle;
             if (confirm('您确认删除此记录吗? ')) {
                 $.get("Delete", {
-                    "sIds": id
+                    "sIds": id,
+                    "v": Math.random()
                 }, function (r) {
                     LEAP.Common.MainPop.options.dataTable.fnDraw(false);
+                    if (weldMode == 2 && handleId.length > 0) {
+                        var handles = handleId.split(',');
+                        for (var i = 0; i < handles.length; i++) {
+                            var database = mxOcx.GetDatabase();
+                            var ent = database.HandleToObject(handles[i]);
+                            ent.Erase();
+                        }                        
+                        if (mxOcx) {
+                            mxOcx.UpdateDisplay();
+                        }
+                    }
                 });
             }
         }

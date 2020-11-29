@@ -72,6 +72,8 @@ namespace Infrastructure.Web.Domain.ModelsView
 
         public string CircleId { get; set; }
 
+        public string Mode { get; set; }
+
         public string Ids { get; set; }
 
         public IViewModel ConvertAPIModel(object obj) {
@@ -104,6 +106,7 @@ namespace Infrastructure.Web.Domain.ModelsView
             UpdatedUserID = entity.UpdatedUserID;
             IsDeleted = entity.IsDeleted;
             CircleId = entity.CircleId;
+            Mode = entity.Mode;
             return this;
         }
 	}

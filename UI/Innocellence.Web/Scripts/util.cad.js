@@ -19,7 +19,7 @@ function DoCommandEventFunc(iCmd) {
     if (iCmd === 1) {
         var handleid = JiaoWeldAdd();
         var weldData = [];
-        weldData.push({ WeldType: 'ManJiaoH', HandleID: handleid.toString() });
+        weldData.push({ WeldType: 'ManJiaoH', HandleID: handleid.toString(), mode: '2' });
         saveWeldData(weldData, 2);
     }
     if (iCmd == 2) {
@@ -52,7 +52,7 @@ function DoCommandEventFunc(iCmd) {
     if (iCmd == 100) {
         var handleid = JiaoWeldAdd();
         var weldData = [];
-        weldData.push({ WeldType: 'ManJiaoH', HandleID: handleid.toString() });
+        weldData.push({ WeldType: 'ManJiaoH', HandleID: handleid.toString(), mode:'2' });
         console.log(handleid);
         saveWeldData(weldData, 2);
     }
@@ -125,7 +125,7 @@ function DoCommandEventFunc(iCmd) {
             }
             //保存复制的焊缝到数据库
             var weldData = [];
-            weldData.push({ WeldType: 'ManJiaoH', HandleID: handleArray.toString(), CircleId: newEntHandleID, CopyOriginId: Id });
+            weldData.push({ WeldType: 'ManJiaoH', HandleID: handleArray.toString(), CircleId: newEntHandleID, CopyOriginId: Id ,mode: '2'});
             saveWeldData(weldData, 2);
             mxOcx.UpdateDisplay();
         });
@@ -151,7 +151,7 @@ function DoCommandEventFunc(iCmd) {
     if (iCmd == 103) {
         var handleid = DuiJieWeldAdd();
         var weldData = [];
-        weldData.push({ WeldType: 'ManDuiJieH', HandleID: handleid.toString() });
+        weldData.push({ WeldType: 'ManDuiJieH', HandleID: handleid.toString(), mode: '2' });
         console.log(handleid);
         saveWeldData(weldData, 2);
     }
@@ -159,7 +159,7 @@ function DoCommandEventFunc(iCmd) {
     if (iCmd == 104) {
         var handleid = RongTouWeldAdd();
         var weldData = [];
-        weldData.push({ WeldType: 'ManRongTouH', HandleID: handleid.toString() });
+        weldData.push({ WeldType: 'ManRongTouH', HandleID: handleid.toString(), mode: '2' });
         console.log(handleid);
         saveWeldData(weldData, 2);
     }
@@ -167,7 +167,7 @@ function DoCommandEventFunc(iCmd) {
     if (iCmd == 105) {
         var handleid = PoKouWeldAdd();
         var weldData = [];
-        weldData.push({ WeldType: 'ManPoKouH', HandleID: handleid.toString() });
+        weldData.push({ WeldType: 'ManPoKouH', HandleID: handleid.toString(), mode: '2' });
         console.log(handleid);
         saveWeldData(weldData, 2);
     }
@@ -382,7 +382,7 @@ function GetWelding() {
     var weldData = [];
     for (var i = 0; i < m_ResWeldArr.length; i++) {
         var handleArray = GetWeldHandle(m_ResWeldArr[i]);
-        weldData.push({ WeldType: m_ResWeldArr[i].myWelType, HandleID: m_ResWeldArr[i].myWelArrow.myArrowObjectID + ',' + handleArray.toString(), CircleId: m_ResWeldArr[i].circleHandle });
+        weldData.push({ WeldType: m_ResWeldArr[i].myWelType, HandleID: m_ResWeldArr[i].myWelArrow.myArrowObjectID + ',' + handleArray.toString(), CircleId: m_ResWeldArr[i].circleHandle, mode: '1' });
     }
     saveWeldData(weldData, 0);
 }

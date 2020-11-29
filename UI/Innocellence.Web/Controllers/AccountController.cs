@@ -128,7 +128,7 @@ namespace Innocellence.Web.Controllers
             }
 
             // 如果我们进行到这一步时某个地方出错，则重新显示表单
-            return View(model);
+            return Json(GetErrorJson(), JsonRequestBehavior.AllowGet);
         }
 
         //
@@ -202,12 +202,11 @@ namespace Innocellence.Web.Controllers
         //
         // POST: /Account/Manage
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public async Task<ActionResult> Manage(ManageUserViewModel model)
         {
             bool hasPassword = HasPassword();
             ViewBag.HasLocalPassword = hasPassword;
-            ViewBag.ReturnUrl = Url.Action("Manage");
+            ViewBag.ReturnUrl = Url.Action("Profile", "PlatformManage");
             if (hasPassword)
             {
                 if (ModelState.IsValid)
@@ -215,11 +214,13 @@ namespace Innocellence.Web.Controllers
                     IdentityResult result = await UserManager.UserContext.ChangePasswordAsync(int.Parse(User.Identity.GetUserId()), model.OldPassword, model.NewPassword);
                     if (result.Succeeded)
                     {
-                        return RedirectToAction("Manage", new { Message = ManageMessageId.ChangePasswordSuccess });
+                        return Json(doJson(null), JsonRequestBehavior.AllowGet);
+                        //return RedirectToAction("Manage", new { Message = ManageMessageId.ChangePasswordSuccess });
                     }
                     else
                     {
-                        AddErrors(result);
+                        ModelState.AddModelError("", result.Errors.FirstOrDefault());
+                        return Json(GetErrorJson(), JsonRequestBehavior.AllowGet);
                     }
                 }
             }

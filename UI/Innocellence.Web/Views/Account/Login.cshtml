@@ -79,6 +79,12 @@
         input, select, textarea{
             max-width : 1000px!important;
         }
+        canvas{
+            display:inline;
+            position:absolute;
+            top:1px;
+            right:0px;
+        }
     </style>
 </head>
 <body class="login-layout light-login" style="background:#dfe0e2 url(/Content/images/yb/login1.png) no-repeat fixed;background-size:100%;min-height:600px;">
@@ -89,10 +95,10 @@
                     <div class="login-container" style="margin-top:5%;">
                         <div class="center" style="margin-bottom: 30%;width:130%;margin-left:-35px;">
                             @*<img src="~/Content/images/yb/login-logo.png" style="position: relative; float: left; margin-top: -22px;" />
-                            <h3>
-                                <span class="white" id="id-text2">钢结构定额自动化系统</span>
-                            </h3>
-                            <h4 class="blue" id="id-company-text"></h4>*@
+                                <h3>
+                                    <span class="white" id="id-text2">钢结构定额自动化系统</span>
+                                </h3>
+                                <h4 class="blue" id="id-company-text"></h4>*@
                         </div>
 
                         <div class="space-6"></div>
@@ -102,7 +108,7 @@
                                 <div class="widget-body">
                                     <div class="widget-main">
                                         <h4 class="header blue lighter bigger">
-                                             用户登录
+                                            用户登录
                                         </h4>
 
                                         <div class="space-6"></div>
@@ -123,12 +129,14 @@
                                                     </span>
                                                 </label>
 
-                                                @*<label class="block clearfix">
+                                                <label class="block clearfix">
                                                     <span class="block input-icon input-icon-right">
-                                                        <input type="text" class="form-control" name="Capcha" value="" placeholder="请输入验证码" validate="{required:true}" />
-                                                        <img id="capchat" />
+                                                        <input type="text" class="form-control" style="width: calc(100% - 90px);" name="Capcha" id="Capcha" value="" placeholder="请输入验证码" validate="{required:true}" />
+                                                        @*<img id="capchat" />*@
+                                                        <canvas width="90" height="32" id="captcha1" title="点此刷新"></canvas>
                                                     </span>
-                                                </label>*@
+                                                    <input type="hidden" id="capchaCode" />
+                                                </label>
 
                                                 <div class="space"></div>
 
@@ -228,6 +236,8 @@
     </div>
     <!-- basic scripts -->
     <!-- inline scripts related to this page -->
+    <script type="text/javascript" src="~/Scripts/captcha.js"></script>
+    <script src="~/Scripts/bootbox.js"></script>
     <script type="text/javascript">
         jQuery(function ($) {
             $(document).on('click', '.toolbar a[data-target]', function (e) {
@@ -254,8 +264,11 @@
                 e.preventDefault();
                 var validator = $('#fmLogin').validate();
                 if (!validator.form()) { return false; }
+                if ($('#Capcha').val().toLowerCase() != $('#capchaCode').val().toLowerCase()) {
+                    bootbox.alert('验证码错误');
+                    return false;
+                }
                 var postData = $('#fmLogin').serializeArray();
-
                 $.post("/Account/Login", postData, function (data) {
                     if (ReturnValueFilter(data)) {
                         window.location.href = "/";
@@ -288,7 +301,14 @@
 
                 e.preventDefault();
             });
+        });
 
+        $(document).ready(function () {
+            var captcha1 = new CaptchaMini();
+            captcha1.draw(document.querySelector('#captcha1'), function (r) {
+                $('#capchaCode').val(r);
+                console.log(r, '验证码1');
+            });
         });
     </script>
 </body>

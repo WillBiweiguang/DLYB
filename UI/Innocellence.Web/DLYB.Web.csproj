@@ -400,6 +400,7 @@
     <Content Include="notauthed-lock.html" />
     <Content Include="notauthed.html" />
     <Content Include="Scripts\ace\chosen.jquery.js" />
+    <Content Include="Scripts\captcha.js" />
     <Content Include="Scripts\date-time\bootstrap-datetimepicker.min.js" />
     <Content Include="Scripts\dialogs\polling\polling.css" />
     <Content Include="Scripts\dialogs\polling\polling.html" />
@@ -994,7 +995,7 @@
     <Content Include="Views\HistoricalCost\Index.cshtml" />
     <Content Include="Views\WeldCognition\Index.cshtml" />
     <Content Include="Views\PlatformManage\Index.cshtml" />
-    <Content Include="Views\PlatformManage\PasswordChange.cshtml" />
+    <Content Include="Views\PlatformManage\Profile.cshtml" />
     <Content Include="Views\Address\_ViewStart.cshtml" />
     <Content Include="Views\Address\ListContent.cshtml" />
     <Content Include="Views\Shared\_LayoutWithoutMenu.cshtml" />

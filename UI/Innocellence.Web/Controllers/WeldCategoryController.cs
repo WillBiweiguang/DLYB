@@ -17,6 +17,7 @@ namespace Innocellence.FaultSearch.Controllers
 {
     public class WeldCategoryController : BaseController<WeldCategoryLabeling, WeldCategoryLabelingView>
     {
+        private const string ManualAddedWeldMode = "2";
         private readonly IWeldCategoryLabelingService _weldCategoryService;
         private readonly IBeamInfoService _beamInfoService;
         private readonly IWeldGeometryService _weldGeometryService;
@@ -317,6 +318,7 @@ namespace Innocellence.FaultSearch.Controllers
         }
         public JsonResult PostWeld(int? beamId, string dwgfile, List<WeldCategoryLabelingView> weldList)
         {
+            //mode = 2手动添加。
             if (string.IsNullOrEmpty(dwgfile) || !beamId.HasValue || weldList == null || weldList.Count == 0)
             {
                 return new JsonResult { Data = new { result = "failed" }, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
@@ -367,6 +369,7 @@ namespace Innocellence.FaultSearch.Controllers
                             weldInfo.WidthVal = entity.WidthVal;
                             weldInfo.BeamId = beam.Id;
                             weldInfo.WeldType = entity.WeldType;
+                            weldInfo.Mode = ManualAddedWeldMode;
                         }
                         else
                         {

@@ -34,6 +34,7 @@ namespace Infrastructure.Web.Domain.Entity
         public string WeldingType { get; set; }
         public string HandleID { get; set; }
         public string CircleId { get; set; }
+        public string Mode { get; set; }
         public DateTime? CreatedDate { get; set; }
 
         public int? CreatedUserID { get; set; }

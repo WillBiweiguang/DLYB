@@ -80,8 +80,10 @@ namespace DLYB.Web.Controllers
         }
 
         [AllowAnonymous]
-        public ActionResult PasswordChange()
+        public ActionResult Profile()
         {
+            ViewBag.SecondNav = "个人中心";
+            ViewBag.CurrentUser = objLoginInfo;
             return View();
         }
 

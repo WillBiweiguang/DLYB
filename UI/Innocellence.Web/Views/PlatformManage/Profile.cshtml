@@ -1,4 +1,5 @@
 ﻿@using Infrastructure.Web.Domain.Entity;
+@model Infrastructure.Web.Domain.Entity.SysUser
 @{
     ViewBag.Title = "平台管理中心";
 }
@@ -7,52 +8,68 @@
     <link rel="stylesheet" href="~/styles/layout/layout.css" />
     <link rel="stylesheet" href="~/styles/style.css" />
 }
+<style type="text/css">
+    .form-group{
+        height: 33px;
+    }
+</style>
+
+
 <div id="PlateformManage">
-        <div class="modal-dialog" id="change-pass">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="blue bigger">请填写以下内容</h4>
-                </div>
-
-                <div class="modal-body">
-                    <form id="change-password-form" method="post" class="form-horizontal">
-                        <input type="hidden" id="Id-popup" name="Id" value="0" />
-
-                        <div class="form-group">
-                            <div class="col-sm-2 ">姓名:</div>
-                            <div id="name-popup" class="col-sm-10 ">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="col-sm-2">原始密码:</div>
-                            <div class="col-sm-10">
-                                <input type="password" id="password-popup" name="PasswordHash" class="form-control" placeholder="原始密码" data-bind="value: PasswordHash"
-                                       validate="{required:true}" />
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="col-sm-2">密码:</div>
-                            <div class="col-sm-10">
-                                <input type="password" id="new-password" class="form-control" placeholder="密码" validate="{required:true}" />
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="col-sm-2">确认密码:</div>
-                            <div class="col-sm-10">
-                                <input type="password" id="new-password-confirm" class="form-control" placeholder="确认密码" validate="{required:true}" />
-                            </div>
-                        </div>
-                    </form>
-                </div>
-
-                <div class="modal-footer">
-                    <button class="btn btn-sm btn-primary" id="save-btn">
-                        <i class="ace-icon fa fa-check"></i>
-                        保存
-                    </button>
-                </div>
+    <div class="modal-dialog" id="change-pass">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="blue bigger">个人信息</h4>
             </div>
-        </div>  
+
+            <div class="modal-body">
+                <form id="change-password-form" method="post" class="form-horizontal">
+                    <input type="hidden" id="Id-popup" name="Id" value="0" />
+                    <div class="form-group">
+                        <div class="col-sm-2 ">手机号:</div>
+                        <div id="username" class="col-sm-10 ">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-2 ">姓名:</div>
+                        <div id="name-popup" class="col-sm-10 ">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-2 ">所属机构:</div>
+                        <div id="department" class="col-sm-10 ">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-2">原始密码:</div>
+                        <div class="col-sm-10">
+                            <input type="password" id="password-popup" name="PasswordHash" class="form-control" placeholder="原始密码" data-bind="value: PasswordHash"
+                                   validate="{required:true}" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-2">密码:</div>
+                        <div class="col-sm-10">
+                            <input type="password" id="new-password" class="form-control" placeholder="密码" validate="{required:true}" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-2">确认密码:</div>
+                        <div class="col-sm-10">
+                            <input type="password" id="new-password-confirm" class="form-control" placeholder="确认密码" validate="{required:true}" />
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-sm btn-primary" id="save-btn">
+                    <i class="ace-icon fa fa-check"></i>
+                    保存
+                </button>
+            </div>
+        </div>
+    </div>
 </div>
 
 @section scripts_Foot
@@ -82,24 +99,29 @@
         }
 
         $(document).ready(function () {
-            LoadUserInfo();          
+            LoadUserInfo();
         });
 
         $("#save-btn").on('click', function () {
+            var oldPWD = $("#password-popup").val();
             var newPWD = $('#change-pass #new-password').val();
             var confirmPWD = $('#new-password-confirm').val();
             if (ValidatePsw('#change-pass', true)) {
                 $.ajax({
-                    url: "http://" + window.location.host + "/SysUser/ChangePassword?newPWD=" + newPWD,
+                    url: "http://" + window.location.host + "/Account/Manage",
+                    data: {
+                        OldPassword: oldPWD,
+                        NewPassword: newPWD,
+                        ConfirmPassword: confirmPWD
+                    },
                     type: "POST",
-                    data: $("#change-password-form").serialize(),
                     datatype: "json",
                     success: function (result) {
-                        if (result.Status == 200) {
-                            artDialog.alertOkCallBack('密码修改成功，点击确定重新登录', "", function () {
-                                window.location.href = "http://" + window.location.host ;
-                            });
-                            
+                        if (result.Message.Status == 200) {
+                            artDialog.alert("密码修改成功");
+                            //artDialog.alertOkCallBack('密码修改成功，点击确定重新登录', "", function () {
+                            //    window.location.href = "http://" + window.location.host ;
+                            //});
                         }
                         else {
                             artDialog.alert(result.Message);
@@ -132,11 +154,11 @@
                 return false;
             }
 
-            //if (!checkPass(newPWD)) {
-            //    artDialog.alert("新密码复杂度不够, 请重新输入(6位及以上, 由数字或英文组成.)");
-            //    $(modalId + ' #new-password').focus();
-            //    return false;
-            //}
+            if (!checkPass(newPWD)) {
+                artDialog.alert("新密码复杂度不够, 请重新输入(6位及以上, 由数字或英文组成.)");
+                $(modalId + ' #new-password').focus();
+                return false;
+            }
 
             if (newPWD != confirmPWD) {
                 artDialog.alert("两次输入的新密码不同, 请重新输入.");
@@ -156,19 +178,9 @@
         }
 
         function LoadUserInfo() {
-            $.ajax({
-                url: "http://" + window.location.host + "/SysUser/GetCurrentUser?t=" + (new Date()).getTime(),
-                type: "get",
-                data: {},
-                datatype: "json",
-                success: function (result) {
-                    $("#name-popup").text(result.UserName);
-                    //$("#password-popup").val(result.PasswordHash);
-                    $("#Id-popup").val(result.Id);
-                },
-                error: function (msg) {
-                }
-            });
+            $("#name-popup").text('@ViewBag.CurrentUser.UserTrueName');
+            $("#username").text('@ViewBag.CurrentUser.UserName');
+            $("#department").text('@ViewBag.CurrentUser.Department'.split('_')[1]);
         }
     </script>
 }
