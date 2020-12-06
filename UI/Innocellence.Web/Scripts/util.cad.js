@@ -192,7 +192,7 @@ function CopyWeld() {
         var ent = ss.Item(i);
         newEnt = ent.Copy();
     }
-    return newEnt
+    return newEnt;
 }
 //初始化
 
@@ -4828,6 +4828,9 @@ function ZoomByHandle(m_handle) {
     var mxOcx = document.all.item("MxDrawXCtrl");
     var database = mxOcx.GetDatabase();
     var ent = database.HandleToObject(m_handle);
+    if (!ent) {
+        return;
+    }
     var HatchArrow = ent;
     var PolylineArray = HatchArrow.GetPolylines();
     var polyline = PolylineArray.AtObject(0);
@@ -4857,10 +4860,17 @@ function TwinkeEntByHandle(m_handle) {
 
 //通过实体handle实现关闭实体动画效果
 function StopTwinkeEntByHandle(m_handle) {
-    var database = mxOcx.GetDatabase();
-    var ent = database.HandleToObject(m_handle);
-    var entId = ent.ObjectID;
-    mxOcx.StopTwinkeEnt(entId);
+    try {
+        var database = mxOcx.GetDatabase();
+        var ent = database.HandleToObject(m_handle);
+        if (!ent) {
+            return;
+        }
+        var entId = ent.ObjectID;
+        mxOcx.StopTwinkeEnt(entId);
+    } catch (err) {
+        console.log(err);
+    }
 }
 
 

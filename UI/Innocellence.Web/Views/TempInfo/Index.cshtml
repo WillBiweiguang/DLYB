@@ -46,6 +46,7 @@
                                 <th>@T("PDF文件名")</th>
                                 <th>@T("梁段名")</th>
                                 <th>@T("图号")</th>
+                                <th>@T("操作")</th>
                                 @*<th>@T("杆件编号")</th>*@
 
                             </tr>
@@ -57,16 +58,59 @@
         </div>
     </div>
 
+    <div id="ModalTable" class="modal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="blue bigger">请选择dwg文件上传</h4>
+                </div>
 
+                <div class="modal-body">
+                    <form action="PostFile" id="ff" method="post" class="form-horizontal" data-ajax="false" enctype="multipart/form-data">
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">项目:</label>
+                            <div class="col-sm-9">
+                                <span id="projectName" class="form-control" style="max-width: 362px"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">梁段名:</label>
+                            <div class="col-sm-9">
+                                <span id="beamName" class="form-control" style="max-width: 362px"></span>
+                            </div>
+                        </div>
+                        <div id="uploader" class="wu-example">
+                            <!--用来存放文件信息-->
+                            <div id="thelist" class="uploader-list"></div>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="modal-footer">
+                    <div class="btns">
+                        <div id="picker">选择文件</div>
+                        <button id="ctlBtn" class="btn btn-default btn-sm btn-primary">开始上传</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     @section scripts_Foot
 {
         <script src="~/Scripts/ace/chosen.jquery.js?v=1"></script>
+        <script src="~/Scripts/util.common.js"></script>
         <script type="text/javascript">
             $('[data-toggle="tooltip"]').tooltip();
             var popMenu;
             var IdCur;
             var tastStatus = { new: 0, pending: 1, approved: 2, rejected: 3 };
+            var $ = jQuery,
+                $list = $('#thelist'),
+                $btn = $('#ctlBtn'),
+                state = 'pending',
+                uploader;
             $(document).ready(function () {
                 LEAP.Common.MainPop.options.dataTable = $('.data-table').dataTable(jQuery.extend(true, datatableSetting, {
                     "ajax": {
@@ -89,7 +133,16 @@
                                 return meta.row + 1
                                     ;
                             }
-                        },
+                        }, {
+                            "targets": 5,
+                            "render": function (data, type, full, meta) {
+                                var oprStr = '';
+                                if (!full.fileName) {
+                                    oprStr += '<a href="#" onclick="uploadFile(\'' + full.ProjectName + '\',\'' + full.BeamName + '\',\''+ full.ProjectId + '\'); return false; " class="artDailog btn btn - info  btn-xs" style="margin - right: 4px; " data-toggle="tooltip" data-placement="top" title="上传文件"><i class="fa fa-upload"></i></a>';
+                                }
+                                return oprStr;
+                            }
+                        }
                     ]),
                     fnDrawCallback: function () {
 
@@ -102,9 +155,40 @@
                 setTimeout(function () {
                     $('.chosen-container').removeAttr('style');
                 }, 3000);
+                //web uploader 初始化
+                initWebUploader();
             });
+            function clearFiles() {
+                $list.children().remove();
+            }
+            function initWebUploader(url) {
+                uploader = WebUploader.create({
+                    // swf文件路径
+                    swf: 'Scripts/webuploader/Uploader.swf',
+                    // 文件接收服务端。
+                    //server: "PostFile?Id=" + id + '&v=' + Math.random(),
+                    // 选择文件的按钮。可选。
+                    // 内部根据当前运行是创建，可能是input元素，也可能是flash.
+                    pick: { id: '#picker', multiple: false},
+                    fileNumLimit: 1,
+                    // 不压缩image, 默认如果是jpeg，文件上传前会压缩一把再上传！
+                    resize: false,
+                    // 只允许选择什么类型文件。
+                    accept: {
+                        title: 'dwg文件',
+                        extensions: 'dwg'
+                    },
+                    threads: 1, //线程数量             
+                });
+                initWebuploaderEvent(uploader);       
+            }
 
-
+            function uploadFile(project, beam, id) {
+                $('#projectName').text(project);
+                $('#beamName').text(beam);
+                $('#ModalTable').modal('show');
+                uploader.options.server = "PostFile?projectId=" + id + "&beamName=" + beam + "&v=" + Math.random();
+            }
 
         </script>
     }

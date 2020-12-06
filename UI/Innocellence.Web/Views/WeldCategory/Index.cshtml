@@ -43,14 +43,16 @@
                 <input id="locatedId" name="locatedId" type="hidden" value="0" />
                 <a href="#" class="btn btn-info btn-sm" id="btnSearch" data-toggle="tooltip" data-placement="top" title="查询" data-original-title="查询"><i class="fa fa-search">查询</i></a>
                 <input type="button" id="btnShowAll" class="btn btn-info  btn-sm" value="显示所有" style="display:none" onclick="showAll();">
+                <input type="button" id="btnShowAll" class="btn btn-info  btn-sm" value="焊材详情统计" style="" onclick="ShowWeldingDetail(@ViewBag.BeamId);">
             </div>
             <div class="form-group">
                 @if (ViewBag.ViewModel == 0)
                 {
                     <input type="button" id="weldingFinding" class="btn btn-primary btn-sm" value="焊接符号识别" data-toggle="tooltip" title="焊接符号识别" onclick="GetRecogedHandls();">
+                    <input type="button" style="display:none" id="autoFinding" class="btn btn-primary btn-sm" value="后台识别" data-toggle="tooltip" title="后台识别" onclick="AutuRecoged();">
                     <input type="button" class="btn btn-success  btn-sm" value="提交审核" data-toggle="tooltip" title="提交审核" onclick="requestApprove();">
                     @*<input type="button" class="btn btn-sm" value="隐藏图层" onclick="DoCmd(3);">
-                        <input type="button" class="btn btn-sm" value="显示图层" onclick="DoCmd(4);">*@
+            <input type="button" class="btn btn-sm" value="显示图层" onclick="DoCmd(4);">*@
                     <input type="button" class="btn btn-info  btn-sm" value="顺时针转90度" data-toggle="tooltip" title="顺时针转90度" onclick="DoCmd(6);">
                     <input type="button" class="btn btn-primary btn-sm" value="逆时针转90度" data-toggle="tooltip" title="逆时针转90度" onclick="DoCmd(7)">
                     <input type="button" class="btn btn-success  btn-sm" value="批量编辑" data-toggle="tooltip" title="批量编辑" onclick="batchEdit()">
@@ -320,6 +322,18 @@
     <iframe id='iframei' src="javascript:0" style="position:absolute; border:none; visibility:inherit; top:-20px; left:-20px;  height:300%; width:100%; z-index:-1; filter: progid:DXImageTransform.Microsoft.Alpha(style=0,opacity=0);"></iframe>
 </div>
 
+<div id="rightPanel" class="modal-dialog" style="z-index:1050; top:-30px;left:15%; position:absolute; float:right; height:100%;width:70%;display:none;">
+    <div class="widget-header btn_color1">
+        <h4 class="widget-title"></h4>
+        <div class="widget-toolbar">
+            <a href="#" id="closePanel">
+                <i class="ace-icon fa fa-times"></i>
+            </a>
+        </div>
+    </div>
+    <iframe id='iframei' src="javascript:0" style="position:absolute; border:none; visibility:inherit; top:38px; left:0px;  height:100%; width:100%; z-index:-1; filter: progid:DXImageTransform.Microsoft.Alpha(style=0,opacity=0);"></iframe>
+</div>
+
 
 @section scripts_Foot
 {
@@ -428,6 +442,11 @@
                     saveFile();
                 }
             }
+            $('#closePanel').on('click', function () {
+                $('.modal-backdrop').remove();
+                $('#rightPanel').hide(300);
+                $('#iframei').remove();
+            });
         });
         $('#iframei').on('mousedown', function (e) {
             //获取x坐标和y坐标
@@ -572,7 +591,13 @@
                 myclick5();
             });
         }
-
+        function AutuRecoged() {
+            $.get('/WeldCategory/AutoCog', { 'beamId': $('#beamId').val(), 'v': Math.random() }).done(function (r) {
+                if (r.result == 'success') {
+                    existingHandles = r.data;
+                }
+            });
+        }
         function DingWei(hd) {
             ZoomByHandle(hd);
             if ($('#tableDiv').is(':visible')) {
@@ -664,6 +689,16 @@
                 return;
             }
             showEditForm(ids);
+        }
+        //显示统计信息
+        function ShowWeldingDetail(id) {
+            $('#rightPanel').remove('iframe');
+            var url = '/tasklist/weldingdetail?beamid=' + id;
+            var frame = '<iframe id="iframei" src="' + url + '" style="position:absolute; border:none; visibility:inherit; top:38px; left:0px;  height:100%; width:100%; z-index:1010; filter: progid:DXImageTransform.Microsoft.Alpha(style=0,opacity=0);"></iframe>';
+            $('#rightPanel').append(frame);
+            $('.widget-title').text('焊材详情统计');
+            $('#rightPanel').show(300);
+            $('body').append('<div class="modal-backdrop in"></div>');
         }
     </script>
 }

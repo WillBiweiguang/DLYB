@@ -326,7 +326,7 @@ namespace Innocellence.FaultSearch.Controllers
             }
             return new JsonResult { Data = new { result = "failed" }, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
         }
-        public JsonResult PostWeld(int? beamId, string dwgfile, List<WeldCategoryLabelingView> weldList)
+        public JsonResult PostWeld(int? beamId, string dwgfile, List<WeldCategoryLabelingView> weldList,int? mode)
         {
             //mode = 2手动添加。
             if (string.IsNullOrEmpty(dwgfile) || !beamId.HasValue || weldList == null || weldList.Count == 0)
@@ -339,13 +339,19 @@ namespace Innocellence.FaultSearch.Controllers
                 return new JsonResult { Data = new { result = "failed" }, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
             }
             var existing = _weldCategoryService.GetList<WeldCategoryLabelingView>(int.MaxValue, x => !x.IsDeleted && x.BeamId == beam.Id).ToList();
-
+            if (mode.HasValue && mode.Value != 2)
+            {
+                foreach (var item in existing)
+                {
+                    item.IsDeleted = true;
+                }
+            }      
             foreach (var weldInfo in weldList)
             {
                 if (!string.IsNullOrEmpty(weldInfo.HandleID) && !string.IsNullOrEmpty(weldInfo.WeldType))
                 {
                     //有现有数据，是重复识别，更新circleId
-                    var existedItem = existing.FirstOrDefault(x => !x.IsDeleted && x.BeamId == beamId && x.HandleID.Contains(weldInfo.HandleID));
+                    var existedItem = existing.FirstOrDefault(x => x.BeamId == beamId && x.HandleID.Contains(weldInfo.HandleID));
                     if (existedItem != null)
                     {
                         if (existedItem.WeldType != weldInfo.WeldType)
@@ -387,6 +393,16 @@ namespace Innocellence.FaultSearch.Controllers
                             weldInfo.WeldType = GetWeldType(weldInfo.WeldType);
                         }
                         weldInfo.Id = _weldCategoryService.InsertView(weldInfo);
+                    }
+                }
+            }
+            if (mode.HasValue && mode.Value != 2)
+            {
+                foreach (var item in existing)
+                {
+                    if (item.IsDeleted)
+                    {
+                        _weldCategoryService.UpdateView(item);
                     }
                 }
             }

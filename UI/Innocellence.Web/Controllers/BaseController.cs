@@ -91,7 +91,7 @@ namespace DLYB.Web.Controllers
                 return;
             }
             var autoUser = System.Web.Configuration.WebConfigurationManager.AppSettings["AutoRunUser"];
-            if(autoUser == objLoginInfo.UserName)
+            if (objLoginInfo != null && autoUser == objLoginInfo.UserName)
             {
                 base.OnAuthorization(filterContext);
                 return;

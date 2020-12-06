@@ -3,6 +3,7 @@ LEAP.Common = {};
 LEAP.Common.Controller = '.';
 
 var datatableSetting = {
+    "scrollY": '350px', //支持垂直滚动
     "serverSide": true,
     "Paginat": true,
     bAutoWidth: false,
