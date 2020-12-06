@@ -105,7 +105,7 @@
         $(document).ready(function () {
             LEAP.Common.MainPop.options.dataTable = $('.data-table').dataTable(jQuery.extend(true, datatableSetting, {
                 "ajax": {
-                    "url": "GetWeldingDownloadList?projectId=" + ViewBag.ProjectId
+                    "url": "GetWeldingDownloadList?projectId=" + @ViewBag.ProjectId
                 },
                 "paging": true,
                 "info": false,

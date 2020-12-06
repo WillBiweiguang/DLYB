@@ -394,7 +394,7 @@ namespace Innocellence.FaultSearch.Controllers
                         else
                         {
                             weldInfo.BeamId = beam.Id;
-                            weldInfo.Mode = ManualAddedWeldMode;
+                            weldInfo.Mode = mode.HasValue ? mode.ToString() : "";
                             weldInfo.WeldType = GetWeldType(weldInfo.WeldType);
                         }
                         weldInfo.Id = _weldCategoryService.InsertView(weldInfo);

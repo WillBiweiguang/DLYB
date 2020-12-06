@@ -139,7 +139,7 @@ namespace DLYB.Web.Controllers
             ViewBag.ProjectId = "";
             if (projectId.HasValue)
             {
-                ViewBag.ProjectId = projectId;
+                ViewBag.ProjectId = projectId.ToString();
             }
             return View();
         }
