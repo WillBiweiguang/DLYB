@@ -154,11 +154,11 @@ namespace Innocellence.FaultSearch.Controllers
                     //ViewBag.Figures = _tempInfoService.Repository.Entities.Where(x => x.BeamName == fileName && x.ProjectName == projectName).Select(x => x.FigureNumber).Distinct().Select(x => new SelectListItem { Value = x, Text = x }).ToList();
                     //ViewBag.Bars = _tempInfoService.Repository.Entities.Where(x => x.BeamName == fileName && x.ProjectName == projectName).Select(x => x.BarNumber).Distinct().Select(x => new SelectListItem { Value = x, Text = x }).ToList();
                     //ViewBag.Boards = _tempInfoService.Repository.Entities.Where(x => x.BeamName == fileName && x.ProjectName == projectName).Select(x => x.BoardNumber).Distinct().Select(x => new SelectListItem { Value = x, Text = x }).ToList();
-                    ViewBag.Areas = statistics.Select(x => x.SectionalArea).Distinct().ToList();
-                    ViewBag.weldGeometries = statistics.Select(x => x.WeldType).Distinct().ToList();
+                    ViewBag.Area = statistics.FirstOrDefault().SectionalArea;
+                    ViewBag.WeldType = statistics.FirstOrDefault().WeldType;
                     ViewBag.weldLocations = statistics.Select(x => x.WeldLocationType).Distinct().ToList();
-                    ViewBag.WeldingModels = statistics.Select(x => x.WeldingModel).Distinct().ToList();
-                    ViewBag.ThickTypes = statistics.Select(x => x.ThickType).Distinct().ToList();
+                    ViewBag.WeldingModel = statistics.FirstOrDefault().WeldingModel;
+                    ViewBag.ThickType = statistics.FirstOrDefault().ThickType;
                     return View(model);
                 }
                 else
@@ -300,6 +300,16 @@ namespace Innocellence.FaultSearch.Controllers
         public JsonResult GetWeldingBarProperty(string figureNumber)
         {
             var item = _tempInfoService.Repository.Entities.Where(x => x.FigureNumber == figureNumber).Select(X => X.BarNumber).FirstOrDefault();
+            if (item != null)
+            {
+                return new JsonResult { Data = new { result = "success", data1 = item }, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
+            }
+            return new JsonResult { Data = new { result = "failed" }, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
+        }
+        [HttpPost]
+        public JsonResult GetWeldTypeProperty(int beamId, string WeldLocation)
+        {
+            var item = _weldCategoryStatisticsVService.Repository.Entities.Where(x => x.BeamId == beamId && x.WeldLocationType == WeldLocation).Select(X => new { WeldType = X.WeldType, ThickType = X.ThickType, WeldingModel = X.WeldingModel, SectionalArea = X.SectionalArea }).FirstOrDefault();
             if (item != null)
             {
                 return new JsonResult { Data = new { result = "success", data1 = item }, JsonRequestBehavior = JsonRequestBehavior.AllowGet };

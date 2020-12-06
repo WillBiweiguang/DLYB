@@ -106,12 +106,12 @@
                                 <div class="col-sm-7">
                                     <select class="single-select form-control" name="FigureNumber" id="FigureNumber" data-placeholder="请选择图号" data-bind="value: FigureNumber" title="图号">
                                         @*@foreach (SelectListItem a in ViewBag.Figures)
-                        {
-                            if (!string.IsNullOrEmpty(a.Value))
-                            {
-                                <option value="@a.Value">@a.Text</option>
-                            }
-                        }*@
+                                            {
+                                                if (!string.IsNullOrEmpty(a.Value))
+                                                {
+                                                    <option value="@a.Value">@a.Text</option>
+                                                }
+                                            }*@
                                     </select>
                                 </div>
                             </td>
@@ -123,12 +123,12 @@
                                     <select class="single-select form-control" name="BarNumber" id="BarNumber" data-placeholder="请选择杆件编号" data-bind="value: BarNumber">
 
                                         @*@foreach (SelectListItem a in ViewBag.Bars)
-                        {
-                            if (!string.IsNullOrEmpty(a.Value))
-                            {
-                                <option value="@a.Value">@a.Text</option>
-                            }
-                        }*@
+                                            {
+                                                if (!string.IsNullOrEmpty(a.Value))
+                                                {
+                                                    <option value="@a.Value">@a.Text</option>
+                                                }
+                                            }*@
 
                                     </select>
                                 </div>
@@ -142,12 +142,12 @@
                                 <div class="col-sm-7">
                                     <select class="single-select form-control" name="BoardNumber" id="BoardNumber" data-placeholder="请选择钢板编号" data-bind="value: BoardNumber">
                                         @*@foreach (SelectListItem a in ViewBag.Boards)
-                        {
-                            if (!string.IsNullOrEmpty(a.Value))
-                            {
-                                <option value="@a.Value">@a.Text</option>
-                            }
-                        }*@
+                                            {
+                                                if (!string.IsNullOrEmpty(a.Value))
+                                                {
+                                                    <option value="@a.Value">@a.Text</option>
+                                                }
+                                            }*@
                                     </select>
                                 </div>
                             </td>
@@ -214,15 +214,16 @@
                             </td>
                             <td>
                                 <div class="col-sm-7">
-                                    <select class="single-select form-control" id="WeldType" name="WeldType" style="" data-bind="value:WeldType" validate="{required:true}" data-geturl="/WeldGeometry/GetDropdownList">
-                                        @foreach (string a in ViewBag.weldGeometries)
-                                        {
-                                            if (!string.IsNullOrEmpty(a))
+                                    @*<select class="single-select form-control" id="WeldType" name="WeldType" style="" data-bind="value:WeldType" validate="{required:true}" data-geturl="/WeldGeometry/GetDropdownList">
+                                            @foreach (string a in ViewBag.weldGeometries)
                                             {
-                                                <option value="@a">@a</option>
+                                                if (!string.IsNullOrEmpty(a))
+                                                {
+                                                    <option value="@a">@a</option>
+                                                }
                                             }
-                                        }
-                                    </select>
+                                        </select>*@
+                                    <input type="text" name="WeldType" id="WeldType" class="form-control" data-bind="value: WeldType" value="@ViewBag.WeldType" disabled />
                                 </div>
                             </td>
                         </tr>
@@ -233,15 +234,16 @@
                             </td>
                             <td>
                                 <div class="col-sm-7">
-                                    <select class="single-select form-control" name="Thickness" id="Thickness" data-placeholder="请选择板厚" validate="{required:true}">
-                                        @foreach (string a in ViewBag.ThickTypes)
-                                        {
-                                            if (!string.IsNullOrEmpty(a))
+                                    @*<select class="single-select form-control" name="Thickness" id="Thickness" data-placeholder="请选择板厚" validate="{required:true}">
+                                            @foreach (string a in ViewBag.ThickTypes)
                                             {
-                                                <option value="@a">@a</option>
+                                                if (!string.IsNullOrEmpty(a))
+                                                {
+                                                    <option value="@a">@a</option>
+                                                }
                                             }
-                                        }
-                                    </select>
+                                        </select>*@
+                                    <input type="text" name="Thickness" id="Thickness" class="form-control" data-bind="value: Thickness" value="@ViewBag.ThickType" disabled />
                                 </div>
                             </td>
                             <td>
@@ -249,15 +251,16 @@
                             </td>
                             <td>
                                 <div class="col-sm-7">
-                                    <select class="single-select form-control" name="WeldingType" id="WeldingType" data-placeholder="请选择焊材类型" validate="{required:true}">
-                                        @foreach (string a in ViewBag.WeldingModels)
-                                        {
-                                            if (!string.IsNullOrEmpty(a))
+                                    @*<select class="single-select form-control" name="WeldingType" id="WeldingType" data-placeholder="请选择焊材类型" validate="{required:true}">
+                                            @foreach (string a in ViewBag.WeldingModels)
                                             {
-                                                <option value="@a">@a</option>
+                                                if (!string.IsNullOrEmpty(a))
+                                                {
+                                                    <option value="@a">@a</option>
+                                                }
                                             }
-                                        }
-                                    </select>
+                                        </select>*@
+                                    <input type="text" name="WeldingType" id="WeldingType" class="form-control" data-bind="value: WeldingType" value="@ViewBag.WeldingModel" disabled />
                                 </div>
                             </td>
 
@@ -270,12 +273,13 @@
                             </td>
                             <td>
                                 <div class="col-sm-7">
-                                    <select class="single-select form-control" name="SectionArea" id="SectionArea" validate="{required:true}" data-placeholder="请选择焊缝截面积" data-bind="value: SectionArea">
-                                        @foreach (string a in ViewBag.Areas)
-                                        {
-                                            <option value="@a">@a</option>
-                                        }
-                                    </select>
+                                    @*<select class="single-select form-control" name="SectionArea" id="SectionArea" validate="{required:true}" data-placeholder="请选择焊缝截面积" data-bind="value: SectionArea">
+                                            @foreach (string a in ViewBag.Areas)
+                                            {
+                                                <option value="@a">@a</option>
+                                            }
+                                        </select>*@
+                                    <input type="text" name="SectionArea" id="SectionArea" class="form-control" data-bind="value: SectionArea" value="@ViewBag.Area" disabled />
                                 </div>
                             </td>
                         </tr>
@@ -309,7 +313,7 @@
                             <td>
                                 <div class="col-sm-7">
 
-                                    <input type="text" name="WeldQuanlity" id="WeldQuanlity" class="form-control" data-bind="value: WeldQuanlity" disabled/>
+                                    <input type="text" name="WeldQuanlity" id="WeldQuanlity" class="form-control" data-bind="value: WeldQuanlity" disabled />
                                 </div>
                             </td>
                         </tr>
@@ -428,7 +432,7 @@
         $("#FigureNumber").change(function () {
             $('#BarNumber').empty();
             $('#BoardNumber').empty();
-            
+
             if ($("#BarNumber").val() != '') {
                 //showChild(TherapeuticArea, TradeName, tradeNameArr, $('#TradeName'));
                 var queryResult = Enumerable.From(BiddingQuerys)
@@ -507,7 +511,6 @@
 
             }
         }
-
         $(document).on('change', '#BoardNumber', function () {
             var postVaule = { "FigureNumber": $("#FigureNumber").val(), "BoardNumber": $("#BoardNumber").val() }
             var jsonVaule = JSON.stringify(postVaule);
@@ -524,6 +527,31 @@
                             $("#LengthVal").val(Data.data1.LengthVal);
                             $("#BeamNum").val(Data.data1.BeamNum);
                             $("#Quantity").val(Data.data1.WeldNum);
+                            WeldQuantity();
+                        }
+                    }
+                    else {
+                        alert("未查询到图号对应的焊缝信息.")
+                    }
+                }
+            });
+        });
+        $(document).on('change', '#WeldLocation', function () {
+            var postVaule = { "beamId": $('#beamId').val(), "WeldLocation": $("#WeldLocation").val() }
+            var jsonVaule = JSON.stringify(postVaule);
+
+            $.ajax({
+                url: "/WeldCategory/GetWeldTypeProperty",
+                type: "post",
+                contentType: "application/json",
+                data: jsonVaule,
+                success: function (Data) {
+                    if (Data != null) {
+                        if (Data.result.indexOf('success') > -1) {
+                            $("#WeldingType").val(Data.data1.WeldingModel);
+                            $("#WeldType").val(Data.data1.WeldType);
+                            $("#Thickness").val(Data.data1.ThickType);
+                            $("#SectionArea").val(Data.data1.SectionalArea);
                             WeldQuantity();
                         }
                     }
@@ -657,8 +685,8 @@
                     if (boardNum) {
                         $('#BoardNumber').val(boardNum);
                     }
-                }, 1000);       
-            } 
+                }, 1000);
+            }
         }
     </script>
 
