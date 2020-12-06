@@ -223,7 +223,7 @@
                                                 }
                                             }
                                         </select>*@
-                                    <input type="text" name="WeldType" id="WeldType" class="form-control" data-bind="value: WeldType" value="@ViewBag.WeldType" disabled />
+                                    <input type="text" name="WeldType" id="WeldType" class="form-control" data-bind="value: WeldType" readonly />
                                 </div>
                             </td>
                         </tr>
@@ -243,7 +243,7 @@
                                                 }
                                             }
                                         </select>*@
-                                    <input type="text" name="Thickness" id="Thickness" class="form-control" data-bind="value: Thickness" value="@ViewBag.ThickType" disabled />
+                                    <input type="text" name="Thickness" id="Thickness" class="form-control" data-bind="value: Thickness" readonly />
                                 </div>
                             </td>
                             <td>
@@ -260,7 +260,7 @@
                                                 }
                                             }
                                         </select>*@
-                                    <input type="text" name="WeldingType" id="WeldingType" class="form-control" data-bind="value: WeldingType" value="@ViewBag.WeldingModel" disabled />
+                                    <input type="text" name="WeldingType" id="WeldingType" class="form-control" data-bind="value: WeldingType" readonly/>
                                 </div>
                             </td>
 
@@ -279,7 +279,7 @@
                                                 <option value="@a">@a</option>
                                             }
                                         </select>*@
-                                    <input type="text" name="SectionArea" id="SectionArea" class="form-control" data-bind="value: SectionArea" value="@ViewBag.Area" disabled />
+                                    <input type="text" name="SectionArea" id="SectionArea" class="form-control" data-bind="value: SectionArea"  readonly/>
                                 </div>
                             </td>
                         </tr>
@@ -313,7 +313,7 @@
                             <td>
                                 <div class="col-sm-7">
 
-                                    <input type="text" name="WeldQuanlity" id="WeldQuanlity" class="form-control" data-bind="value: WeldQuanlity" disabled />
+                                    <input type="text" name="WeldQuanlity" id="WeldQuanlity" class="form-control" data-bind="value: WeldQuanlity" readonly />
                                 </div>
                             </td>
                         </tr>
@@ -353,6 +353,7 @@
         var lastCircleHandle;
 
         $(document).ready(function () {
+            $('#WeldLocation').change();
             var beamId = $('')
 
             //inital select2
@@ -679,6 +680,7 @@
             if (figureNum) {
                 setTimeout(function () {
                     $('#FigureNumber').change();
+                   
                     if (barNum) {
                         $('#BarNumber').val(barNum);
                     }
