@@ -343,7 +343,10 @@ namespace Innocellence.FaultSearch.Controllers
             {
                 foreach (var item in existing)
                 {
-                    item.IsDeleted = true;
+                    if (item.Mode != ManualAddedWeldMode)
+                    {
+                        item.IsDeleted = true;
+                    }
                 }
             }      
             foreach (var weldInfo in weldList)
@@ -358,6 +361,7 @@ namespace Innocellence.FaultSearch.Controllers
                         {
                             existedItem.WeldType = GetWeldType(weldInfo.WeldType);
                             existedItem.CircleId = weldInfo.CircleId;
+                            existedItem.IsDeleted = false;
                             weldInfo.Id = _weldCategoryService.UpdateView(existedItem);
                         }
                     }
@@ -390,6 +394,7 @@ namespace Innocellence.FaultSearch.Controllers
                         else
                         {
                             weldInfo.BeamId = beam.Id;
+                            weldInfo.Mode = ManualAddedWeldMode;
                             weldInfo.WeldType = GetWeldType(weldInfo.WeldType);
                         }
                         weldInfo.Id = _weldCategoryService.InsertView(weldInfo);
@@ -400,7 +405,7 @@ namespace Innocellence.FaultSearch.Controllers
             {
                 foreach (var item in existing)
                 {
-                    if (item.IsDeleted)
+                    if (item.IsDeleted && item.Mode != ManualAddedWeldMode)
                     {
                         _weldCategoryService.UpdateView(item);
                     }

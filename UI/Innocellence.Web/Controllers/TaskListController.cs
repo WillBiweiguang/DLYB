@@ -134,8 +134,13 @@ namespace DLYB.Web.Controllers
             ViewBag.BeamId = beamId;
             return View();
         }
-        public ActionResult WeldingDownload()
+        public ActionResult WeldingDownload(int? projectId)
         {
+            ViewBag.ProjectId = "";
+            if (projectId.HasValue)
+            {
+                ViewBag.ProjectId = projectId;
+            }
             return View();
         }
 
@@ -151,11 +156,15 @@ namespace DLYB.Web.Controllers
             return this.GetPageResult(listEx, gridRequest);
         }
 
-        public ActionResult GetWeldingDownloadList()
+        public ActionResult GetWeldingDownloadList(int? projectId)
         {
             GridRequest gridRequest = new GridRequest(Request);
             Expression<Func<WeldCategoryStatisticsV, bool>> expression = FilterHelper.GetExpression<WeldCategoryStatisticsV>(gridRequest.FilterGroup);
             expression = expression.AndAlso<WeldCategoryStatisticsV>(x => x.IsDeleted != true);
+            if (projectId.HasValue && projectId.Value > 0)
+            {
+                expression = expression.AndAlso<WeldCategoryStatisticsV>(x => x.ProjectId == projectId);
+            }
             IEnumerable<WeldCategoryStatisticsVView> queryList = GetBatchWeldingListQuery(ref expression);
             var listEx = queryList.Distinct().Skip((gridRequest.PageCondition.PageIndex - 1) * gridRequest.PageCondition.PageSize)
                 .Take(gridRequest.PageCondition.PageSize).ToList();

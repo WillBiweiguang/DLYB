@@ -144,15 +144,15 @@ namespace Innocellence.Web.Controllers
         [HttpPost]
         [ValidateInput(true)]
         public ActionResult PostFile(string projectId, string beamName)
-        {
-            var tempInfo = _TempInfoService.GetList<TempInfoView>(1, x => x.ProjectId == projectId && x.BeamName == beamName).FirstOrDefault();
-            var project = _projectService.GetList<ProjectView>(1, x => !x.IsDeleted && x.LmProjectId == tempInfo.ProjectId).FirstOrDefault();            
+        {            
+            var project = _projectService.GetList<ProjectView>(1, x => !x.IsDeleted && x.LmProjectId == projectId).FirstOrDefault();         
             if (project == null)
             {
                 var result = GetErrorJson();
                 result.Message = new JsonMessage(101, "该项目在系统中找不到");
                 return Json(result, JsonRequestBehavior.AllowGet);
             }
+            var tempInfo = _TempInfoService.GetList<TempInfoView>(1, x => x.ProjectId == projectId && x.BeamName == beamName).FirstOrDefault();
             var dwgfile = tempInfo.BeamName.ToLower() + ".dwg";
             var beam = _beamInfoService.GetList<BeamInfoView>(1, x => !x.IsDeleted && x.ProjectId == project.Id && x.DwgFile.ToLower() == dwgfile).FirstOrDefault();
             if (beam != null)

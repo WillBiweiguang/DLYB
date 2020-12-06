@@ -43,7 +43,7 @@
                 <input id="locatedId" name="locatedId" type="hidden" value="0" />
                 <a href="#" class="btn btn-info btn-sm" id="btnSearch" data-toggle="tooltip" data-placement="top" title="查询" data-original-title="查询"><i class="fa fa-search">查询</i></a>
                 <input type="button" id="btnShowAll" class="btn btn-info  btn-sm" value="显示所有" style="display:none" onclick="showAll();">
-                <input type="button" id="btnShowAll" class="btn btn-info  btn-sm" value="焊材详情统计" style="" onclick="ShowWeldingDetail(@ViewBag.BeamId);">
+                <input type="button" id="btnShowAll" class="btn btn-info  btn-sm" value="焊材统计" style="" onclick="ShowWeldingDetail(@ViewBag.ProjectId);">
             </div>
             <div class="form-group">
                 @if (ViewBag.ViewModel == 0)
@@ -549,6 +549,11 @@
                     LEAP.Common.MainPop.options.dataTable.fnDraw(false);
                 } else { //全图识别操作
                     alert("识别完成");
+                    $.get('/WeldCategory/GetAllHandles', { 'beamId': $('#beamId').val(), 'v': Math.random() }).done(function (r) {
+                        if (r.result == 'success') {
+                            existingHandles = r.data;
+                        }
+                    });
                 }
             });
 
@@ -693,7 +698,7 @@
         //显示统计信息
         function ShowWeldingDetail(id) {
             $('#rightPanel').remove('iframe');
-            var url = '/tasklist/weldingdetail?beamid=' + id;
+            var url = '/tasklist/WeldingDownload?projectId=' + id;
             var frame = '<iframe id="iframei" src="' + url + '" style="position:absolute; border:none; visibility:inherit; top:38px; left:0px;  height:100%; width:100%; z-index:1010; filter: progid:DXImageTransform.Microsoft.Alpha(style=0,opacity=0);"></iframe>';
             $('#rightPanel').append(frame);
             $('.widget-title').text('焊材详情统计');
