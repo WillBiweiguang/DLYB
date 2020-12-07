@@ -352,8 +352,7 @@
         var IdCur;
         var lastCircleHandle;
 
-        $(document).ready(function () {
-            $('#WeldLocation').change();
+        $(document).ready(function () {   
             var beamId = $('')
 
             //inital select2
@@ -382,7 +381,7 @@
                 }
             });
             LEAP.Common.MainPop.ShowUpdateInfo(@Model.Id);
-
+            setTimeout(function () { $('#WeldLocation').trigger('change'); }, 500);
             //$('#ModalTable').show();
         });
         $('#iframei').on('mousedown', function (e) {
