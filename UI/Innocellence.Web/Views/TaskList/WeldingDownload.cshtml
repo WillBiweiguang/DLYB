@@ -55,14 +55,13 @@
             <input class="form-control" type="text" id="search_condition" name="search_condition" placeholder="项目名称/厂址/焊缝类型" onkeydown='if(event.keyCode==13) return false;'>
             <a href="#" class="btn btn-info btn-sm" id="btnSearch" data-toggle="tooltip" data-placement="top" title="查询条件"><i class="fa fa-search">查询</i></a>
         </div>
-        @if (string.IsNullOrEmpty(ViewBag.ProjectId))
-        {
+ 
             <div class="form-group pull-right">
-                <span href="ExportToExcelDownload" class="btn btn-sm btn-success" data-toggle="tooltip" data-placement="top" title="导出Excel" id="btnDownloadExport">
+                <span href="ExportToExcelDownload?projectId=@ViewBag.ProjectId" class="btn btn-sm btn-success" data-toggle="tooltip" data-placement="top" title="导出Excel" id="btnDownloadExport">
                     <i class="fa fa-download"></i> 导出Excel
                 </span>
             </div>
-        }
+        
     </form>
     <div class="clearfix"></div>
     <div class="col-sm-12">
@@ -105,7 +104,7 @@
         $(document).ready(function () {
             LEAP.Common.MainPop.options.dataTable = $('.data-table').dataTable(jQuery.extend(true, datatableSetting, {
                 "ajax": {
-                    "url": "GetWeldingDownloadList?projectId=" + @ViewBag.ProjectId
+                    "url": "GetWeldingDownloadList?projectId=" + "@ViewBag.ProjectId"
                 },
                 "paging": true,
                 "info": false,
@@ -162,7 +161,8 @@
                 $.each(dSearch, function (key, val) {
                     para += val.name + '=' + val.value + '&';
                 });
-                $('#btnDownloadExport').attr('href', "ExportToExcelDownload?" + para + "t=" + (new Date()).getTime());
+                var pid = $('#projectId').val();
+                $('#btnDownloadExport').attr('href', "ExportToExcelDownload?" + para + "projectId=" + pid + "&t=" + (new Date()).getTime());
             });
         });
         $(document).on('click', '#btnDownloadExport', function () {

@@ -347,7 +347,7 @@ namespace DLYB.Web.Controllers
             }
         }
 
-        public ActionResult ExportToExcelDownload(int beamId = 0, string Ids = "")
+        public ActionResult ExportToExcelDownload(int beamId = 0, string Ids = "", int? projectId = null)
         {
             string fileName = "批量焊材_" + DateTime.Now.ToString("yyyyMMddHHmmssfff") + ".xlsx";
 
@@ -359,6 +359,10 @@ namespace DLYB.Web.Controllers
 
 
                 Expression<Func<WeldCategoryStatisticsV, bool>> expression = (x) => !x.IsDeleted;
+                if (projectId.HasValue && projectId.Value > 0)
+                {
+                    expression = expression.AndAlso<WeldCategoryStatisticsV>(x => x.ProjectId == projectId);
+                }
                 IEnumerable<WeldCategoryStatisticsVView> queryList = GetBatchWeldingListQuery(ref expression);
                 var reportList1 = queryList.ToList();
                 if (!string.IsNullOrEmpty(Ids))

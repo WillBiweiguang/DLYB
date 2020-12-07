@@ -248,6 +248,17 @@ $(document).ready(function () {
         });
         d.show();
     });
+    //resize和scroll事件一定要优化
+    $.resizeWaiter = false;
+    $(window).resize(function () {
+        if (!$.resizeWaiter) {
+            $.resizeWaiter = true;
+            setTimeout(function () {
+                LEAP.Common.MainPop.options.dataTable && LEAP.Common.MainPop.options.dataTable.fnDraw(false);
+                $.resizeWaiter = false;
+            }, 300);
+        }
+    });
 });
 
 function BeforeSearch() {
