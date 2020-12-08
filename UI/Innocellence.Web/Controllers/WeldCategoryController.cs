@@ -154,6 +154,15 @@ namespace Innocellence.FaultSearch.Controllers
                     //ViewBag.Figures = _tempInfoService.Repository.Entities.Where(x => x.BeamName == fileName && x.ProjectName == projectName).Select(x => x.FigureNumber).Distinct().Select(x => new SelectListItem { Value = x, Text = x }).ToList();
                     //ViewBag.Bars = _tempInfoService.Repository.Entities.Where(x => x.BeamName == fileName && x.ProjectName == projectName).Select(x => x.BarNumber).Distinct().Select(x => new SelectListItem { Value = x, Text = x }).ToList();
                     //ViewBag.Boards = _tempInfoService.Repository.Entities.Where(x => x.BeamName == fileName && x.ProjectName == projectName).Select(x => x.BoardNumber).Distinct().Select(x => new SelectListItem { Value = x, Text = x }).ToList();
+                    if (statistics.Count == 0)
+                    {
+                        ViewBag.Area = "";
+                        ViewBag.WeldType = "";
+                        ViewBag.weldLocations = "";
+                        ViewBag.WeldingModel = "";
+                        ViewBag.ThickType = "";
+                        return View(model);
+                    }
                     ViewBag.Area = statistics.FirstOrDefault().SectionalArea;
                     ViewBag.WeldType = statistics.FirstOrDefault().WeldType;
                     ViewBag.weldLocations = statistics.Select(x => x.WeldLocationType).Distinct().ToList();
