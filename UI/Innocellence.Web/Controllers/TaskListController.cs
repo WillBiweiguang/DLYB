@@ -189,6 +189,8 @@ namespace DLYB.Web.Controllers
             }
             //首先根据项目、焊缝位置检索。然后根据厂址做分组
             var query = from s in _wcsvService.GetList<WeldCategoryStatisticsVView>(int.MaxValue, expression)
+                        join b in _beamInfoService.GetList<BeamInfoView>(int.MaxValue, x => !x.IsDeleted)
+                        on s.BeamId equals b.Id
                         join l in _weldCategoryService.GetList<WeldCategoryLabelingView>(int.MaxValue, x => !x.IsDeleted)
                         on new { s.BeamId, WeldLocation = s.WeldLocationType, s.WeldingModel }
                         equals new { l.BeamId, l.WeldLocation, WeldingModel = l.WeldingType }
