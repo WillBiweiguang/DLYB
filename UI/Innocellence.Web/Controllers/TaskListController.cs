@@ -200,17 +200,19 @@ namespace DLYB.Web.Controllers
                             s.ProjectName,
                             s.AddressName,
                             //l.WeldLocation,
-                            l.WeldType,
-                            l.WeldingType,
+                            //l.WeldType,
+                            s.WeldingType,
                             s.WeldingSpecific,
-                            s.WeldingUnit
+                            s.WeldingUnit,
+                            s.WeldingModel
                         } into g
                         select new WeldCategoryStatisticsVView
                         {
                             ProjectName = g.Key.ProjectName,
                             AddressName = g.Key.AddressName,
-                            WeldType = g.Key.WeldType,
-                            WeldingModel = g.Key.WeldingType,
+                            WeldingType = g.Key.WeldingType,
+                            //WeldType = g.Key.WeldType,
+                            WeldingModel = g.Key.WeldingModel,
                             WeldingSpecific = g.Key.WeldingSpecific,
                             WeldingUnit = g.Key.WeldingUnit,
                             //WeldLocationType = g.Key.WeldLocation,

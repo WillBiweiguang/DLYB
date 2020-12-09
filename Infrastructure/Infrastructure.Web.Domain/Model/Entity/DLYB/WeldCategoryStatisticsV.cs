@@ -37,8 +37,8 @@ namespace Infrastructure.Web.Domain.Entity
         public string WeldingSpecific { get; set; }
         [Column("Welding_Unit")]
         public string WeldingUnit { get; set; }
-        //[Column("Welding_Type")]
-        //public string WeldingType { get; set; }
+        [Column("Welding_Type")]
+        public string WeldingType { get; set; }
         public string DepartmentID { get; set; }
         public string AffiliatedInstitution { get; set; }
 

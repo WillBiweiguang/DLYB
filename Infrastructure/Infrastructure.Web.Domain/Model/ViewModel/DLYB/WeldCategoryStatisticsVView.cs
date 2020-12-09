@@ -29,8 +29,8 @@ namespace Infrastructure.Web.Domain.ModelsView
         public string SectionalArea { get; set; }
 
         public string WeldingModel { get; set; }
-        
-        //public string WeldingType { get; set; }
+
+        public string WeldingType { get; set; }
         public DateTime? CreatedDate { get; set; }
 
         public int? CreatedUserID { get; set; }
@@ -52,7 +52,8 @@ namespace Infrastructure.Web.Domain.ModelsView
         public string WeldingUnit { get; set; }
 
 
-        public IViewModel ConvertAPIModel(object obj) {
+        public IViewModel ConvertAPIModel(object obj)
+        {
             var entity = (WeldCategoryStatisticsV)obj;
             Id = entity.Id;
             ProjectId = entity.ProjectId;
@@ -64,7 +65,7 @@ namespace Infrastructure.Web.Domain.ModelsView
             ThickType = entity.ThickType;
             GrooveType = entity.GrooveType;
             SectionalArea = entity.SectionalArea;
-            WeldingModel =entity.WeldingModel;
+            WeldingModel = entity.WeldingModel;
             CreatedDate = entity.CreatedDate;
             CreatedUserID = entity.CreatedUserID;
             UpdatedDate = entity.UpdatedDate;
@@ -74,6 +75,7 @@ namespace Infrastructure.Web.Domain.ModelsView
             AffiliatedInstitution = entity.AffiliatedInstitution;
             WeldingSpecific = entity.WeldingSpecific;
             WeldingUnit = entity.WeldingUnit;
+            WeldingType = entity.WeldingType;
             return this;
         }
 	}
