@@ -385,7 +385,7 @@ namespace DLYB.Web.Controllers
                     row.CreateCell(j++).SetCellValue(i - 1);
                     row.CreateCell(j++).SetCellValue(v.ProjectName);
                     row.CreateCell(j++).SetCellValue(v.AddressName);
-                    row.CreateCell(j++).SetCellValue(v.WeldType);
+                    row.CreateCell(j++).SetCellValue(v.WeldingType);
                     row.CreateCell(j++).SetCellValue(v.WeldingModel);
                     if (welding != null)
                     {
