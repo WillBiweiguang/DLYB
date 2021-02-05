@@ -51,6 +51,7 @@ namespace Infrastructure.Web.Domain.Entity
             Mapper.CreateMap<HistoricalCostView, HistoricalCost>();
             Mapper.CreateMap<TaskListView, TaskList>();
             Mapper.CreateMap<WeldCognitionView, WeldCognition>();
+            Mapper.CreateMap<LoginLogView, LoginLog>();
         }
 
     }

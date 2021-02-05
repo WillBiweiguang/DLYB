@@ -25,8 +25,12 @@ namespace Innocellence.Web.Controllers
         private readonly ILoginService _loginService;
         private readonly ISysUserRoleService _sysUserRoleService;
         private readonly ISysMenuService _sysMenuService;
+        private readonly ILoginLogService _loginLogService;
+        private readonly ISysUserService _sysUserService;
+        
         public AccountController(ISysUserService userManager, IAuthenticationService authService, IOauthClientDataService clientDataService
-            ,ILoginService loginService, ISysUserRoleService sysUserRoleService,ISysMenuService sysMenuService)
+            ,ILoginService loginService, ISysUserRoleService sysUserRoleService,ISysMenuService sysMenuService,ILoginLogService loginLogService
+            ,ISysUserService sysUserService)
             : base(userManager)
         {
             UserManager = userManager;
@@ -36,6 +40,8 @@ namespace Innocellence.Web.Controllers
             _loginService = loginService;
             _sysUserRoleService = sysUserRoleService;
             _sysMenuService = sysMenuService;
+            _loginLogService = loginLogService;
+            _sysUserService = sysUserService;
         }
 
         private readonly IAuthenticationService _authService;
@@ -107,8 +113,19 @@ namespace Innocellence.Web.Controllers
                     return Json(GetErrorJson(), JsonRequestBehavior.AllowGet);
                 }
                 model.RememberMe = true;
-                user.Roles = _sysUserRoleService.Repository.Entities.Where(x => x.UserId == user.Id).ToList();
-                await _authService.SignInNoDB(user, true);
+                user.Roles = _sysUserRoleService.Repository.Entities.Where(x => x.UserId == user.Id).ToList();            
+                
+                await _authService.SignInNoDB(user, true);    
+                LoginLogView log = new LoginLogView
+                {
+                    UserName = user.UserName,
+                    UserTrueName = user.UserTrueName,
+                    IpAddress = Request.UserHostAddress,
+                    Operation = "登录",
+                    OperationDate = DateTime.Now,
+                    AffiliatedInstitution = !string.IsNullOrEmpty(user.Department) ? user.Department.Split('_')[1] : ""
+                };
+                _loginLogService.InsertView(log);
                 
                 return Json(doJson(null, returnUrl), JsonRequestBehavior.AllowGet);
                 // BaseService<SysUserClaim> a = new BaseService<SysUserClaim>();
@@ -382,6 +399,17 @@ namespace Innocellence.Web.Controllers
         {
             //AuthenticationManager.SignOut();
             //Session.RemoveAll();
+            var user = Session["UserInfo"] as SysUser;
+            LoginLogView log = new LoginLogView
+            {
+                UserName = user.UserName,
+                UserTrueName = user.UserTrueName,
+                IpAddress = Request.UserHostAddress,
+                Operation = "注销登录",
+                OperationDate = DateTime.Now,
+                AffiliatedInstitution = !string.IsNullOrEmpty(user.Department) ? user.Department.Split('_')[1] : ""
+            };
+            _loginLogService.InsertView(log);
             var isReturnExternal = false;
 
             if (!string.IsNullOrEmpty(returnUrl) && !string.IsNullOrEmpty(clientid))

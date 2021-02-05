@@ -83,7 +83,7 @@ namespace Innocellence.Web.Controllers
                 expression = expression.AndAlso<Project>(x => x.Id == pid);
             }
 
-            if (!string.IsNullOrEmpty(objLoginInfo.Department))
+            if (!string.IsNullOrEmpty(objLoginInfo.Department) && !Infrastructure.Core.Infrastructure.EngineContext.Current.WebConfig.SupperUser.Contains(objLoginInfo.UserName))
             {
                 var department = objLoginInfo.Department.Split('_')[1];
                 expression = expression.AndAlso<Project>(x => x.AffiliatedInstitution == department);

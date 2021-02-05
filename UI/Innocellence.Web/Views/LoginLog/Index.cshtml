@@ -1,0 +1,108 @@
+﻿@model IEnumerable<Infrastructure.Web.Domain.ModelsView.LoginLogView>
+@{
+    Layout = ViewBag.Layout;
+}
+@section easyui_css{
+    <link rel="stylesheet" href="~/Style/EasyUI/easyui.css" />
+}
+<style>
+    .datagrid-mask-msg {
+        height: 36px !important;
+    }
+
+    table.gridtable {
+        font-family: verdana,arial,sans-serif;
+        font-size: 11px;
+        color: #333333;
+        border-width: 1px;
+        border-color: #666666;
+        border-collapse: collapse;
+    }
+
+        table.gridtable th {
+            border-width: 1px;
+            padding: 8px;
+            border-style: solid;
+            border-color: #666666;
+            background-color: #dedede;
+        }
+
+        table.gridtable td {
+            border-width: 1px;
+            padding: 8px;
+            border-style: solid;
+            border-color: #666666;
+            background-color: #ffffff;
+        }
+</style>
+<!--Action boxes-->
+<div class="row">
+    <div class="col-sm-12">
+        <form class="form-inline" id="SearchForm" method="post">            
+            <div class="form-group">
+                <input class="form-control" type="text" id="search_condition" name="search_condition" placeholder="用户名" onkeydown='if(event.keyCode==13) return false;'>
+                <a href="#" class="btn btn-info btn-sm" id="btnSearch" data-toggle="tooltip" data-placement="top" title="查询条件"><i class="fa fa-search">查询</i></a>
+            </div>            
+        </form>
+        <div class="clearfix"></div>
+
+        <div class="widget-box">
+            <div class="widget-content nopadding">
+                <table class="table table-bordered table-hover data-table">
+                    <thead>
+                        <tr>
+                            <th style="width:5%;text-align:center;">@T("序号")</th>
+                            <th>@T("用户名(手机号)")</th>
+                            <th>@T("真实姓名")</th>
+                            <th>@T("IP")</th>
+                            <th>@T("操作")</th>
+                            <th style="width:10%;">@T("时间")</th>                            
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section scripts_Foot
+{
+    <script type="text/javascript">
+        $('[data-toggle="tooltip"]').tooltip();
+        var popMenu;
+        var IdCur;
+
+        $(document).ready(function () {
+            LEAP.Common.MainPop.options.dataTable = $('.data-table').dataTable(jQuery.extend(true, datatableSetting, {
+                "ajax": {
+                    "url": "GetList"
+                },
+                "paging": true,
+                "info": false,
+                "aoColumns": [
+                    { "mData": 'Index' },
+                    { "mData": 'UserName' },
+                    { "mData": 'UserTrueName' },
+                    { "mData": 'IpAddress' },
+                    { "mData": 'Operation' },
+                    { "mData": 'OperationDate' }
+                ],
+                "columnDefs": [
+                    {
+                        "targets": 0,
+                        "render": function (data, type, full, meta) {
+                            return full.Index;
+                        }
+                        }],
+                fnDrawCallback: function () {
+
+                    $('[data-toggle="tooltip"]').tooltip();
+
+                }
+            }));
+            //inital select2
+            $('.select2').css("width", "362px").select2({ allowClear: true });
+        });
+    </script>
+}

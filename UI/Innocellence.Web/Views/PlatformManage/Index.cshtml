@@ -76,9 +76,10 @@
         {
             <li role="presentation" class="active"><a href="#partOne" role="tab" data-toggle="tab">用户角色管理</a></li>
             <li role="presentation"><a href="#partTwo" role="tab" data-toggle="tab">用户管理</a></li>
-            if (ViewBag.IsSuperAdmin!=null&& ViewBag.IsSuperAdmin==true)
+            
+            if (ViewBag.IsSuperAdmin != null && ViewBag.IsSuperAdmin == true)
             {
-            @*<li role="presentation"><a href="/SysMenu/Index">权限管理</a></li>*@
+                @*<li role="presentation"><a href="/SysMenu/Index">权限管理</a></li>*@
             }
         }
         else if (ViewBag.IsRole)

@@ -17,7 +17,7 @@ namespace DLYBWindowsService
             ServiceBase[] ServicesToRun;
             ServicesToRun = new ServiceBase[]
             {
-                new Service1()
+                new ServiceAuto()
             };
             ServiceBase.Run(ServicesToRun);
         }

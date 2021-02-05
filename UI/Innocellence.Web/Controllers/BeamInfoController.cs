@@ -93,7 +93,7 @@ namespace Innocellence.Web.Controllers
             {
                 expression = expression.AndAlso<BeamInfo>(x => x.DwgFile.Contains(beamName));
             }
-            if (!string.IsNullOrEmpty(objLoginInfo.Department))
+            if (!string.IsNullOrEmpty(objLoginInfo.Department) && !Infrastructure.Core.Infrastructure.EngineContext.Current.WebConfig.SupperUser.Contains(objLoginInfo.UserName))
             {
                 var department = objLoginInfo.Department.Split('_')[1];
                 var projectIds = _projectService.GetList<ProjectView>(int.MaxValue, x => !x.IsDeleted && x.AffiliatedInstitution == department).Select(x => x.Id).ToArray();

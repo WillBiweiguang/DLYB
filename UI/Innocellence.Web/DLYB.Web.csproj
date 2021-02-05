@@ -263,6 +263,7 @@
     <Compile Include="Attributes\VerifyParamAttribute.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\API\ApiBaseController.cs" />
+    <Compile Include="Controllers\LoginLogController.cs" />
     <Compile Include="Controllers\TempInfoController.cs" />
     <Compile Include="Controllers\GrooveTypeTextController.cs" />
     <Compile Include="Controllers\LimaiApiController.cs" />
@@ -1015,6 +1016,7 @@
     <Content Include="Views\GrooveTypeText\_ViewStart.cshtml" />
     <Content Include="Views\GrooveTypeText\Index.cshtml" />
     <Content Include="Views\TempInfo\Index.cshtml" />
+    <Content Include="Views\LoginLog\Index.cshtml" />
     <None Include="Views\WeldCategory\cadwelding.cshtml" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
